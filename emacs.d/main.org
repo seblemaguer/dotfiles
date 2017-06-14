@@ -275,6 +275,10 @@ Try to add this key support
   (ivy-mode)
   (setq ivy-display-style 'fancy)
 #+end_src
+** Productivity behavior
+#+begin_src emacs-lisp
+(use-package darkroom :ensure t)
+#+end_src
 * Filetype
 ** C
 *** Global engine
