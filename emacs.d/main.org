@@ -483,6 +483,12 @@ Based mainly on C just few adaptations to do here
                 (add-hook 'before-save-hook 'delete-trailing-whitespace))))
 
 #+end_src
+*** Snippets
+#+begin_src emacs-lisp
+  (use-package java-snippets
+    :ensure t
+    :after yasnippets)
+#+end_src
 *** Javadoc
 #+begin_src emacs-lisp
   (use-package javadoc-lookup
@@ -1567,9 +1573,8 @@ Based mainly on C just few adaptations to do here
 #+end_src
 ** Gradle global support
 #+begin_src emacs-lisp
-
   (use-package gradle-mode
-    :load-path (lambda () (format "%s/subpart/emacs-gradle-mode" config-basedir))
+    :ensure t
     :config
     (setq gradle-gradlew-executable "./gradlew")
     (setq gradle-use-gradlew t)
