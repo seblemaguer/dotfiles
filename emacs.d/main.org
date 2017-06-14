@@ -171,7 +171,7 @@ Try to add this key support
   (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/.*" (getenv "HOME")))
   (add-to-list 'recentf-exclude (format "%s/\\.ido\\.last" (getenv "HOME")))
   (add-to-list 'recentf-exclude (format "%s/\\.recentf" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/\\.elfeed/index" (getenv "HOME")))
+  (add-to-list 'recentf-exclude (format "%s/\\.elfeed/.*" (getenv "HOME")))
   (add-to-list 'recentf-exclude (format "%s/Calendars/.*" (getenv "HOME")))
   (add-to-list 'recentf-exclude ".*todo.org")
 #+end_src
@@ -2925,6 +2925,9 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :ensure t
     :config
 
+    ;; Change the storage directory
+    (setq elfeed-db-directory "~/.emacs.d/elfeed")
+
     ;; Formatting dates
     (setq elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left))
 
@@ -2970,10 +2973,11 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                       (elfeed-search-set-filter "+unread +emacs")
                       (elfeed))))
 #+end_src
-*** COMMENT Org connection
+*** Org connection
 #+begin_src emacs-lisp
   (use-package elfeed-org
     :ensure t
+    :after elfeed
     :config
     (when (file-exists-p "~/Dropbox/org/organisation/rss.org")
       (progn
@@ -3272,7 +3276,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :ensure t
     :after nlinum
     :config
-    (add-hook 'nlinum-mode-hook #'nlinum-hl-mode))
+    (add-hook 'nlinum-mode-hook (lambda () (setq nlinum-highlight-current-line t))))
 
 
   (use-package fill-column-indicator
