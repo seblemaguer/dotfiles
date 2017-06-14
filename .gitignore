@@ -17,4 +17,6 @@ emacs.d/var/
 emacs.d/meghanada/
 emacs.d/projectile.cache
 emacs.d/snippets/
-
+emacs.d/elfeed/
+emacs.d/eshell/
+emacs.d/url/
