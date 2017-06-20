@@ -269,15 +269,37 @@ Try to add this key support
     '(progn
        (setq uniquify-buffer-name-style 'forward)))
 #+end_src
-** swiper
+** Ivy/swipper
 #+begin_src emacs-lisp
-  (use-package ivy :ensure t)
-  (ivy-mode)
-  (setq ivy-display-style 'fancy)
+  (use-package ivy
+    :ensure t
+    :config
+    (ivy-mode)
+    (setq ivy-display-style 'fancy))
 #+end_src
 ** Productivity behavior
+*** Dark room
 #+begin_src emacs-lisp
 (use-package darkroom :ensure t)
+#+end_src
+*** Biblio
+#+begin_src emacs-lisp
+  (use-package ivy-bibtex
+    :ensure t
+    :config
+    (setq ivy-bibtex-bibliography "~/Dropbox/org/work/biblio/index.bib" ;; where your references are stored
+          ivy-bibtex-library-path "~/Dropbox/org/work/biblio/lib/" ;; where your pdfs etc are stored
+          ivy-bibtex-notes-path "~/Dropbox/org/work/biblio/index.org" ;; where your notes are stored
+          bibtex-completion-bibliography "~/Dropbox/org/work/biblio/index.bib" ;; writing completion
+          bibtex-completion-notes-path "~/Dropbox/org/work/biblio/index.org"))
+
+  (use-package org-ref
+    :ensure t
+    :config
+    (setq org-ref-notes-directory "~/Dropbox/org/work/biblio"
+          org-ref-bibliography-notes "~/Dropbox/org/work/biblio/index.org"
+          org-ref-default-bibliography '("~/Dropbox/org/work/biblio/index.bib")
+          org-ref-pdf-directory "~/Dropbox/org/work/biblio/lib/"))
 #+end_src
 * Filetype
 ** C
@@ -645,6 +667,15 @@ Based mainly on C just few adaptations to do here
           )
     (add-hook 'LaTeX-mode-hook 'flyspell-mode))
 #+end_src
+*** Bibtex
+#+begin_src emacs-lisp
+  (setq bibtex-align-at-equal-sign t
+        bibtex-autokey-name-year-separator ""
+        bibtex-autokey-year-title-separator ""
+        bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an")
+        bibtex-autokey-titleword-length 30
+        bibtex-autokey-titlewords 1)
+#+end_src
 *** Completion
 #+begin_src emacs-lisp
   (use-package auctex-latexmk
@@ -681,15 +712,6 @@ Based mainly on C just few adaptations to do here
     :after auctex
     :config
     (add-to-list 'company-backends 'company-math))
-#+end_src
-*** Bibtex
-#+begin_src emacs-lisp
-  (setq bibtex-align-at-equal-sign t
-        bibtex-autokey-name-year-separator ""
-        bibtex-autokey-year-title-separator ""
-        bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an")
-        bibtex-autokey-titleword-length 30
-        bibtex-autokey-titlewords 1)
 #+end_src
 *** Compilation
 #+begin_src emacs-lisp
