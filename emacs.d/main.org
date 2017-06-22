@@ -300,6 +300,10 @@ Try to add this key support
           org-ref-bibliography-notes "~/Dropbox/org/work/biblio/index.org"
           org-ref-default-bibliography '("~/Dropbox/org/work/biblio/index.bib")
           org-ref-pdf-directory "~/Dropbox/org/work/biblio/lib/"))
+
+  (use-package interleave
+    :ensure t
+    :commands (interleave interleave-pdf-mode))
 #+end_src
 * Filetype
 ** C
