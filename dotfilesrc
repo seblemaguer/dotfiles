@@ -13,6 +13,7 @@ ignore = [
     'python',
     'system',
     'vcs',
-    'vim']
+    'vim',
+    'todo.org']
 
 externals = {}
