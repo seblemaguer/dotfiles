@@ -1362,11 +1362,34 @@ Based mainly on C just few adaptations to do here
   (use-package org-capture
     :config
 
-    (setq org-capture-templates
-          `(
-            ("t" "ToDo Entry" entry
-             (file+headline "~/Dropbox/org/todo/todo.org" "To sort")
-             "* TODO %?\n  %i\n  %a"))))
+    ;; Capture
+    (setq org-capture-templates `(("t" "ToDo Entry" entry
+                                   (file+headline "~/Dropbox/org/todo/todo.org" "To sort")
+                                   (file ,(format "%s/third_parties/org-capture-templates/default.org" config-basedir))
+                                   :empty-lines-before 1)
+
+                                  ("m" "mail" entry (file+headline "~/Dropbox/org/todo/todo.org" "Mailing")
+                                   (file ,(format "%s/third_parties/org-capture-templates/mail.org" config-basedir)))
+
+                                  ("L" "Bookmark" entry
+                                   (file+headline "~/Dropbox/org/organisation/bookmarks.org" "To review")
+                                   (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" config-basedir)))
+
+                                  ("l" "RSS" entry
+                                   (file+headline "~/Dropbox/org/organisation/rss.org" "To review")
+                                   (file ,(format "%s/third_parties/org-capture-templates/rss.org" config-basedir)))
+
+                                  ("H" "Hiwi calendar" entry
+                                   (file "~/Calendars/Calendar-MSP-part-timers.org")
+                                   (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir)))
+
+                                  ("M" "MSP calendar" entry
+                                   (file "~/Calendars/Calendar-MSP.org")
+                                   (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir)))
+
+                                  ("P" "Personnal calendar" entry
+                                   (file "~/Calendars/Calendar-Personal.org")
+                                   (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir))))))
 #+end_src
 ** Project/Org-mode agenda/todo list bindings
 #+begin_src emacs-lisp
