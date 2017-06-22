@@ -1236,6 +1236,43 @@ Based mainly on C just few adaptations to do here
     (setq org-deadline-warning-days 7)
     (setq org-timeline-show-empty-dates t)
 
+    ;;
+    (setq org-agenda-category-icon-alist `(
+                                           ;; Tools / utils
+                                           ("[Ee]macs" ,(format "%s/third_parties/icons/emacs24.png" config-basedir) nil nil :ascent center)
+                                           ("[Oo]rg" ,(format "%s/third_parties/icons/org.png" config-basedir) nil nil :ascent center)
+                                           ("^[Hh][Tt][Ss]$" ,(format "%s/third_parties/icons/hts.png" config-basedir) nil nil :ascent center)
+                                           ("^[Mm]ary[tT]\\{2\\}[sS]$" ,(format "%s/third_parties/icons/marytts.png" config-basedir) nil nil :ascent center)
+                                           ("^SFB$" ,(format "%s/third_parties/icons/sfb.png" config-basedir) nil nil :ascent center)
+                                           ("[Ss]ystem" ,(format "%s/third_parties/icons/debian.png" config-basedir) nil nil :ascent center)
+                                           ("[Tt]ools?" ,(format "%s/third_parties/icons/wrench.png" config-basedir) nil nil :ascent center)
+                                           ("[Ex]pe\\(riment\\)s?" ,(format "%s/third_parties/icons/expes.png" config-basedir) nil nil :ascent center)
+
+                                           ;; Admin / meeting
+                                           ("[Aa]dmin" ,(format "%s/third_parties/icons/admin.png" config-basedir) nil nil :ascent center)
+                                           ("[Mm]eeting" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
+                                           ("[Aa]ppointments?" ,(format "%s/third_parties/icons/appointment.png" config-basedir) nil nil :ascent center)
+                                           ("[Vv]isitors" ,(format "%s/third_parties/icons/visitors.png" config-basedir) nil nil :ascent center)
+                                           ("\\([Tt]rip\\|[Dd]eplacement\\)" ,(format "%s/third_parties/icons/trip.png" config-basedir) nil nil :ascent center)
+                                           ("Train" ,(format "%s/third_parties/icons/train.png" config-basedir) nil nil :ascent center)
+
+                                           ;; Deadlines / dates
+                                           ("\\([Pp]resentations?\\)" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
+                                           ("\\([Pp]apers?\\|[Bb]lio?\\|[Aa]rticles?\\)" ,(format "%s/third_parties/icons/book.png" config-basedir) nil nil :ascent center)
+                                           ("[Mm]ails?" ,(format "%s/third_parties/icons/gnus.png" config-basedir) nil nil :ascent center)
+
+                                           ;; Personnal dates
+                                           ("Medical" ,(format "%s/third_parties/icons/medical.png" config-basedir) nil nil :ascent center)
+                                           ("\\(Party\\|Celeb\\)" ,(format "%s/third_parties/icons/party.png" config-basedir) nil nil :ascent center)
+                                           ("Anniv" ,(format "%s/third_parties/icons/anniversary.png" config-basedir) nil nil :ascent center)
+                                           ("\\([Hh]olidays\\|[Vv]acations?\\)" ,(format "%s/third_parties/icons/holidays.png" config-basedir) nil nil :ascent center)
+
+                                           ;; Personnal diverse
+                                           ("Music" ,(format "%s/third_parties/icons/music.png" config-basedir) nil nil :ascent center)
+                                           ("[Pp]rojects?" ,(format "%s/third_parties/icons/project.png" config-basedir) nil nil :ascent center)
+                                           (".*" '(space . (:width (16))))))
+
+
     ;; Some commands
     (setq org-agenda-custom-commands
           '(
