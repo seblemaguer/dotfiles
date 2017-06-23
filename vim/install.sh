@@ -8,7 +8,7 @@ then
     mkdir -p $HOME/.vim/bundle
 
     # link bundle part !
-    ln -s $PWD/Vundle.vim $HOME/.vim/bundle/vundle
+    git clone git@github.com:VundleVim/Vundle.vim.git $HOME/.vim/bundle/vundle
 
     # Prepare powerline
     wget https://raw.githubusercontent.com/powerline/powerline/develop/font/10-powerline-symbols.conf
