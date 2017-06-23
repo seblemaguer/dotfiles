@@ -1,23 +1,2 @@
 # Emacs
-emacs.d/abbrev_defs
-emacs.d/auto-save-list/
-emacs.d/backups/
-emacs.d/custom.el
-emacs.d/elpa/
-emacs.d/emms/
-emacs.d/emojis/
-emacs.d/javadoc-cache/
-emacs.d/magithub/
-emacs.d/main.el
-emacs.d/private-variables.el
-emacs.d/projectile-bookmarks.eld
-emacs.d/recentf
-emacs.d/srecode-map.el
-emacs.d/var/
-emacs.d/meghanada/
-emacs.d/projectile.cache
-emacs.d/snippets/
-emacs.d/elfeed/
-emacs.d/eshell/
-emacs.d/url/
-emacs.d/org-gcal/
+emacs.d/
