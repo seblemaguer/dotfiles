@@ -3387,9 +3387,15 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :ensure t
     :after circe
     :config
+
+    ;; Activate smartparens globally
     (smartparens-global-mode t)
     (show-smartparens-global-mode t)
+
+    ;; Activate smartparens in minibuffer
     (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
+
+    ;; Do not pair simple quotes
     (sp-pair "'" nil :actions :rem)
 
     ;; Disable smartparents for circe
