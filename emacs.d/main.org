@@ -828,14 +828,10 @@ Based mainly on C just few adaptations to do here
 ** Matlab
 *** Global
 #+begin_src emacs-lisp
-  (use-package matlab-mode
-    :ensure t
+  (use-package matlab-load
+    :ensure matlab-mode
+    :mode ("\\.m\\'" . matlab-mode)
     :config
-
-    ;; Loading
-    (load-library "matlab-load")
-    (autoload 'matlab-mode "matlab" "Enter MATLAB mode." t)
-    (autoload 'matlab-shell "matlab" "Interactive MATLAB mode." t)
 
     ;; Command defines
     (setq matlab-shell-command-switches '("-nodesktop -nosplash")
