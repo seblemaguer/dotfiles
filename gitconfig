@@ -10,7 +10,7 @@
 
 [core]
 	excludesfile = /home/slemaguer/.gitignore
-	editor = vim
+	editor = emacs
 
 # [gpg]
 # 	program = gpgv2
