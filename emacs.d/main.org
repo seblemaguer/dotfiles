@@ -1256,6 +1256,7 @@ Based mainly on C just few adaptations to do here
                                            ("\\([Pp]resentations?\\)" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
                                            ("\\([Pp]apers?\\|[Bb]lio?\\|[Aa]rticles?\\)" ,(format "%s/third_parties/icons/book.png" config-basedir) nil nil :ascent center)
                                            ("[Mm]ails?" ,(format "%s/third_parties/icons/gnus.png" config-basedir) nil nil :ascent center)
+                                           ("[Rr]eview?" ,(format "%s/third_parties/icons/review.png" config-basedir) nil nil :ascent center)
 
                                            ;; Personnal dates
                                            ("Medical" ,(format "%s/third_parties/icons/medical.png" config-basedir) nil nil :ascent center)
