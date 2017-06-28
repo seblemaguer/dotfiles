@@ -1811,7 +1811,11 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 ** Git
 *** Magit
 #+begin_src emacs-lisp
-(use-package magit :ensure t)
+  ;; Main
+  (use-package magit :ensure t)
+
+  ;; Some plugins
+  (use-package magit-tbdiff :ensure t :after magit)
 #+end_src
 *** Edition mode
 #+begin_src emacs-lisp
