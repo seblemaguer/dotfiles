@@ -3931,10 +3931,20 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (setq inhibit-startup-message t)
   (setq find-file-suppress-same-file-warnings t)
 
-  (defun custom-startup ()
-    (org-agenda-list 1)
-      (switch-to-buffer "*Org Agenda*"))
-  (add-hook 'window-setup-hook 'custom-startup)
+
+  ;; Or if you use use-package
+  (use-package dashboard
+    :ensure t
+    :after projectile
+    :config
+    (dashboard-setup-startup-hook)
+
+    (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard"
+          dashboard-startup-banner 'official
+          dashboard-items '((agenda . t)
+                            (bookmarks . 5)
+                            (recents  . 5)
+                            (projects . 5))))
 #+end_src
 ** Scratch
 #+begin_src emacs-lisp
