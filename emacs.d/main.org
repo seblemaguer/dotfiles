@@ -250,7 +250,6 @@ Try to add this key support
 #+begin_src emacs-lisp
   (setq read-file-name-completion-ignore-case t)
   (file-name-shadow-mode 1)
-  (icomplete-mode)
   (setq completion-ignore-case t)
   (setq resize-mini-windows t)
 
@@ -275,7 +274,15 @@ Try to add this key support
     :ensure t
     :config
     (ivy-mode)
-    (setq ivy-display-style 'fancy))
+    (setq ivy-display-style 'fancy
+          ivy-use-virtual-buffers t
+          enable-recursive-minibuffers t
+          ivy-use-selectable-prompt t)
+
+    (global-set-key "\C-s" 'swiper)
+    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+    )
+
 #+end_src
 ** Productivity behavior
 *** Dark room
