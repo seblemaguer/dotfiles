@@ -2863,8 +2863,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                                  (:maildir . 30)
                                  (:thread-subject))
 
-             mu4e-headers-date-format "%d %b %Y (%H:%M)" ; date format
-             mu4e-headers-time-format "%H:%M")
+           mu4e-headers-date-format "%d %b %Y (%H:%M)" ; date format
+           mu4e-headers-time-format "%H:%M")
 
      ;; View format
      (setq mu4e-view-show-images t ;; show images
@@ -2928,6 +2928,26 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                  "My settings for message composition."
                  (turn-off-auto-fill)
                  (flyspell-mode)))
+
+     ;; Fontify citation
+     (defun mu4e~fontify-cited ()
+       "Colorize message content based on the citation level. This is
+     used in the view and compose modes."
+       (save-excursion
+         (goto-char (point-min))
+         (when (search-forward-regexp "^\n" nil t) ;; search the first empty line
+           (while (re-search-forward mu4e-cited-regexp nil t)
+             (let* ((level (string-width (replace-regexp-in-string
+                                          "[^>]" "" (match-string 0))))
+                    (face  (unless (zerop level)
+                             (intern-soft (format "mu4e-cited-%d-face" level)))))
+               (when face
+                 (add-text-properties (line-beginning-position 1)
+                                      (+ 1 (point-at-eol)) `(face ,face))))))))
+
+     (custom-set-faces
+      '(mu4e-cited-1-face ((t :foreground "#708090" :background "grey")))
+      '(mu4e-cited-7-face ((t :foreground "#828189"))))
 
      ;; Shortcut
      (global-set-key (kbd "<f2>") 'mu4e))
