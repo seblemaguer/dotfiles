@@ -551,17 +551,21 @@ Based mainly on C just few adaptations to do here
     (use-package js-auto-beautify :ensure t)
     (use-package js-import :ensure t)
 
-    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+    (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode)))
 
-     ;;; adds symbols included by google closure to js2-additional-externs
-    (add-hook 'js2-post-parse-callbacks
-              (lambda ()
-                (let ((buf (buffer-string))
-                      (index 0))
-                  ((when )hile (string-match "\\(goog\\.require\\|goog\\.provide\\)('\\([^'.]*\\)" buf index)
-                   ((save-excursion )tq index (+ 1 (match-end 0)))
-                   (add-to-list 'js2-additional-externs (match-string 2 buf)))))))
+  (use-package company-tern
+    :ensure t
+    :after company
+    :after tern
+    :config
 
+    (add-to-list 'company-backends 'company-tern)
+
+    (setq company-tern-property-marker " <p>"
+          company-tern-property-marker nil
+          company-tern-meta-as-single-line t
+          company-tooltip-align-annotations t)
+    )
 
   (use-package json-mode
     :ensure t
