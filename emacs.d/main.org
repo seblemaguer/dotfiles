@@ -3663,7 +3663,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (use-package spaceline-all-the-icons
     :ensure t
     :after spaceline
-    :config
+    :init
 
     ;; Separator configuration
     (setq spaceline-all-the-icons-separator-type 'wave
