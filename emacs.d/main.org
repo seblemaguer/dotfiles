@@ -1690,12 +1690,12 @@ Based mainly on C just few adaptations to do here
     (esh-section esh-dir
                  "\xf07c"  ;  (faicon folder)
                  (abbreviate-file-name (eshell/pwd))
-                 '(:foreground "gold" :bold ultra-bold :underline t))
+                 '(:foreground "blue" :bold ultra-bold :underline t))
 
     (esh-section esh-git
                  "\xe907"  ;  (git icon)
                  (magit-get-current-branch)
-                 '(:foreground "pink"))
+                 '(:foreground "red"))
 
     (esh-section esh-python
                  "\xe928"  ;  (python icon)
