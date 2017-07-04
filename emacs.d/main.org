@@ -3659,7 +3659,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (use-package spaceline-all-the-icons
     :ensure t
     :after spaceline
-    :init
+    :config
 
     ;; Separator configuration
     (setq spaceline-all-the-icons-separator-type 'wave
@@ -3703,7 +3703,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
         (if tracking-buffers
             (s-join " " (tracking-shorten tracking-buffers))))
 
-      (spaceline-emacs-theme 'circe-track))
+      (spaceline-all-the-icons-theme 'circe-track))
     )
 #+end_src
 
