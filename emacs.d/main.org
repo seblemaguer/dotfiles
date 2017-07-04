@@ -3162,7 +3162,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :config
 
     ;; Change the storage directory
-    (setq elfeed-db-directory "~/.emacs.d/elfeed")
+    (setq elfeed-db-directory "~/Dropbox/emacs/elfeed")
 
     ;; Formatting dates
     (setq elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left))
