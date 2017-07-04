@@ -27,11 +27,12 @@ else
     #############################################################################################################
     #### Plugins
     #############################################################################################################
+    fpath=($HOME/.zsh/gradle-completion $fpath)
     plugins=(mercurial svn # Versioning
              git github git-remote-branch gitfast git-extras # Git helpers
              perl python ruby json-tools # Languages
              history-substring-search # helpers
-             mvn gradle # Building tools
+             mvn gradle-completion # Building tools
              cp docker virtualenv gpg-utils adb # some remapping of the system commands
              gnu-utils colored-man rsync sudo # Diverse helpers
              zgen load
