@@ -163,17 +163,23 @@ Try to add this key support
 #+end_src
 ** Recent file
 #+begin_src emacs-lisp
-  (setq recentf-max-menu-items 100)
-  (recentf-mode 1)
+  (use-package recentf
+    :init
+    (recentf-mode 1)
 
-  ;; Exclusion
-  (add-to-list 'recentf-exclude (format "%s/Dropbox/org/.*" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/.*" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/\\.ido\\.last" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/\\.recentf" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/\\.elfeed/.*" (getenv "HOME")))
-  (add-to-list 'recentf-exclude (format "%s/Calendars/.*" (getenv "HOME")))
-  (add-to-list 'recentf-exclude ".*todo.org")
+    :config
+
+    ;;
+    (setq recentf-max-menu-items 100)
+
+    ;; Exclusion
+    (add-to-list 'recentf-exclude (format "%s/Dropbox/org/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/\\.ido\\.last" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/\\.recentf" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/\\.elfeed/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/Calendars/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude ".*todo.org"))
 #+end_src
 
 ** Backup files
