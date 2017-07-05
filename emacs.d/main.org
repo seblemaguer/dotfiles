@@ -1155,16 +1155,16 @@ Based mainly on C just few adaptations to do here
     (setq org-startup-indented t
           org-enforce-todo-dependencies t
           org-cycle-separator-lines 2
-          org-blank-before-new-entry (quote ((heading) (plain-list-item . auto)))
+          org-blank-before-new-entry '((heading) (plain-list-item . auto))
           org-insert-heading-respect-content nil
           org-reverse-note-order nil
           org-show-following-heading t
           org-show-hierarchy-above t
-          org-show-siblings (quote ((default)))
-          org-id-method (quote uuidgen)
+          org-show-siblings '((default))
+          org-id-method 'uuidgen
           org-deadline-warning-days 30
           org-table-export-default-format "orgtbl-to-csv"
-          org-src-window-setup 'other-frame ; Use the current window for C-c ' source editing
+          org-src-window-setup 'other-window
           org-clone-delete-id t
           org-cycle-include-plain-lists t
           org-src-fontify-natively t
