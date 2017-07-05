@@ -587,7 +587,11 @@ Based mainly on C just few adaptations to do here
     :config
 
     ;; Subpackages
-    (use-package latex-extra :ensure t)
+    (let ((byte-compile-warnings '(not free-vars)))
+      (use-package latex-extra
+        :ensure t
+        :config
+        (add-hook 'LaTeX-mode-hook #'latex-extra-mode)))
 
     ;; Pdf activated by default
     (TeX-global-PDF-mode 1)
