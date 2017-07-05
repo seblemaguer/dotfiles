@@ -1663,6 +1663,7 @@ Based mainly on C just few adaptations to do here
 * Shell
 #+begin_src emacs-lisp
   (use-package eshell
+    :after helm
     :config
     (defmacro with-face (STR &rest PROPS)
       "Return STR propertized with PROPS."
@@ -1733,7 +1734,24 @@ Based mainly on C just few adaptations to do here
 
           eshell-funcs (list esh-dir esh-git esh-python esh-clock esh-num) ;; Choose which eshell-funcs to enable
           eshell-prompt-function 'esh-prompt-func ;; Enable the new eshell prompt
-          ))
+          )
+
+    (defun pcomplete/sudo ()
+      (let ((prec (pcomplete-arg 'last -1)))
+        (cond ((string= "sudo" prec)
+               (while (pcomplete-here*
+                       (funcall pcomplete-command-completion-function)
+                       (pcomplete-arg 'last) t))))))
+
+    (add-hook 'eshell-mode-hook
+              (lambda ()
+                (define-key eshell-mode-map
+                  [remap eshell-pcomplete]
+                  'helm-esh-pcomplete)
+                (define-key eshell-mode-map
+                  (kbd "M-p")
+                  'helm-eshell-history)
+                (eshell/export "NODE_NO_READLINE=1"))))
 #+end_src
 * Compilation
 ** TODO some requires to check
