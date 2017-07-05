@@ -3498,9 +3498,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+begin_src emacs-lisp
   (use-package indent-guide
     :ensure t
-    :config
-    (indent-guide-global-mode)
-    (add-to-list 'indent-guide-inhibit-modes 'emms-playlist-mode))
+    :defer t)
 #+end_src
 *** Column/line
 #+begin_src emacs-lisp
