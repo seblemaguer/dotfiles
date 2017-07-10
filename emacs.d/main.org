@@ -3457,6 +3457,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   (use-package emms
     :ensure t
     :config
+
     (emms-all)
 
     ;; A minor macos adaptation
@@ -3464,9 +3465,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
       (setq emms-source-file-gnu-find "/usr/local/bin/gfind"))
 
     ;; Some behaviour definition
-    (setq emms-info-asynchronously nil
-          emms-info-functions '(emms-info-libtag)
-          later-do-interval 0.0001
+    (setq later-do-interval 0.0001
           emms-directory "~/.emacs.d/emms"
           emms-playlist-buffer-name "*Music*"
           emms-source-file-default-directory (expand-file-name "~/Music")
@@ -3522,6 +3521,13 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     ;; Some shortcuts
     (global-set-key (kbd "<f5>") 'emms-browse-by-artist)
     (global-set-key (kbd "S-<f5>") 'emms-playlist-mode-go))
+
+  (use-package emms-info-libtag
+    :after emms
+    :config
+
+    (setq emms-info-asynchronously nil
+          emms-info-functions '(emms-info-libtag)))
 #+end_src
 ** MPV as a player
 #+begin_src emacs-lisp
