@@ -1181,6 +1181,7 @@ Based mainly on C just few adaptations to do here
       (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
     ;; TODO to sort
+    (use-package ob-async :ensure t)
     (use-package org-checklist)
     (use-package ob-exp)
     (use-package ox-bibtex)
