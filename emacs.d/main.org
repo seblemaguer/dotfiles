@@ -1295,7 +1295,7 @@ Based mainly on C just few adaptations to do here
 
     ;; Todo part
     (setq org-todo-keywords '((sequence
-                               "TODO(t)" "REVIEW(r)" "NEXT(n)" "STARTED(s)"
+                               "TODO(t)" "REVIEW(r)" "NEXT(N)" "STARTED(s)"
                                "WAITING(w)" "DELEGATED(e)" "MAYBE(m)" "|"
                                "DONE(d)" "NOTE(n)" "DEFERRED(f)" "CANCELLED(c@/!)"))
 
