@@ -2045,7 +2045,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (pretty-magit "Clean"   ? (:foreground "#FFBB00" :height 1.2) pretty-magit-prompt)
     (pretty-magit "Docs"    ? (:foreground "#3F681C" :height 1.2) pretty-magit-prompt)
     (pretty-magit "master"  ? (:box t :height 1.2) t)
-    (pretty-magit "origin"  ? (:box t :height 1.2) t)
+    (pretty-magit "origin"  ? (:box t :height 1.2) t)
 
     (defun add-magit-faces ()
       "Add face properties and compose symbols for buffer from pretty-magit."
@@ -3778,8 +3778,8 @@ I actually use this part for minor correction. The tags are done when abcde is c
       #xe907 #xe928)
 
      ("github-octicons"
-      ;;                          
-      #xf091 #xf059 #xf076 #xf075 #xe192  #xf016)
+      ;;                        
+      #xf091 #xf059 #xf076 #xf075 #xf016 #xf00a)
 
      ("Symbola"
       ;; 𝕊    ⨂      ∅      ⟻    ⟼     ⊙      𝕋       𝔽
