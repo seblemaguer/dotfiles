@@ -333,6 +333,75 @@ Try to add this key support
     :ensure t
     :commands (interleave interleave-pdf-mode))
 #+end_src
+* Completion
+** Counsel
+#+BEGIN_SRC emacs-lisp
+  (use-package counsel
+    :ensure t
+    :config
+    (global-set-key (kbd "M-x") 'counsel-M-x))
+#+END_SRC
+** Abbrev
+#+begin_src emacs-lisp
+#+end_src
+** Company
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :config
+    ;; Global
+    (setq company-idle-delay 1
+          company-minimum-prefix-length 1
+          company-show-numbers t
+          company-tooltip-limit 20)
+
+
+    ;; Facing
+    (unless (face-attribute 'company-tooltip :background)
+      (set-face-attribute 'company-tooltip nil :background "black" :foreground "gray40")
+      (set-face-attribute 'company-tooltip-selection nil :inherit 'company-tooltip :background "gray15")
+      (set-face-attribute 'company-preview nil :background "black")
+      (set-face-attribute 'company-preview-common nil :inherit 'company-preview :foreground "gray40")
+      (set-face-attribute 'company-scrollbar-bg nil :inherit 'company-tooltip :background "gray20")
+      (set-face-attribute 'company-scrollbar-fg nil :background "gray40"))
+
+    ;; Default backends
+    (setq company-backends '((company-files)))
+
+    ;; Activating globally
+    (global-company-mode t))
+#+end_src
+** Yasnippet
+*** Normal
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :ensure t
+    :after company
+    :config
+
+    ;; Adding yasnippet support to company
+    (add-to-list 'company-backends '(company-yasnippet))
+
+    ;; Activate global
+    (yas-global-mode))
+#+end_src
+*** Template
+#+begin_src emacs-lisp
+  (use-package yatemplate
+    :ensure t
+    :after yasnippet
+    :config
+
+    ;; Define template directory
+    (setq yatemplate-dir (concat config-basedir "/third_parties/templates"))
+
+    ;; Coupling with auto-insert
+
+    (setq auto-insert-alist nil)
+    (yatemplate-fill-alist)
+    ;; (add-hook 'find-file-hook 'auto-insert)
+    )
+#+end_src
 * Filetype
 ** C
 *** Global engine
@@ -1903,75 +1972,6 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
   )
 #+end_src
 
-* Completion
-** Counsel
-#+BEGIN_SRC emacs-lisp
-  (use-package counsel
-    :ensure t
-    :config
-    (global-set-key (kbd "M-x") 'counsel-M-x))
-#+END_SRC
-** Abbrev
-#+begin_src emacs-lisp
-#+end_src
-** Company
-#+BEGIN_SRC emacs-lisp
-  (use-package company
-    :ensure t
-    :config
-    ;; Global
-    (setq company-idle-delay 0.2
-          company-minimum-prefix-length 1
-          company-show-numbers t
-          company-tooltip-limit 20)
-
-
-    ;; Facing
-    (unless (face-attribute 'company-tooltip :background)
-      (set-face-attribute 'company-tooltip nil :background "black" :foreground "gray40")
-      (set-face-attribute 'company-tooltip-selection nil :inherit 'company-tooltip :background "gray15")
-      (set-face-attribute 'company-preview nil :background "black")
-      (set-face-attribute 'company-preview-common nil :inherit 'company-preview :foreground "gray40")
-      (set-face-attribute 'company-scrollbar-bg nil :inherit 'company-tooltip :background "gray20")
-      (set-face-attribute 'company-scrollbar-fg nil :background "gray40"))
-
-    ;; Default backends
-    (setq company-backends '((company-files)))
-
-    ;; Activating globally
-    (global-company-mode t))
-#+end_src
-** Yasnippet
-*** Normal
-#+begin_src emacs-lisp
-  (use-package yasnippet
-    :ensure t
-    :after company
-    :config
-
-    ;; Adding yasnippet support to company
-    (add-to-list 'company-backends '(company-yasnippet))
-
-    ;; Activate global
-    (yas-global-mode))
-#+end_src
-*** Template
-#+begin_src emacs-lisp
-  (use-package yatemplate
-    :ensure t
-    :after yasnippet
-    :config
-
-    ;; Define template directory
-    (setq yatemplate-dir (concat config-basedir "/third_parties/templates"))
-
-    ;; Coupling with auto-insert
-
-    (setq auto-insert-alist nil)
-    (yatemplate-fill-alist)
-    ;; (add-hook 'find-file-hook 'auto-insert)
-    )
-#+end_src
 * Project management
 ** Configuration projectile
 The commands are based on http://endlessparentheses.com/improving-projectile-with-extra-commands.html?source=rss
