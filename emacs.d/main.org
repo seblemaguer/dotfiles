@@ -313,21 +313,11 @@ Try to add this key support
           org-ref-notes-directory "~/Dropbox/org/work/biblio"
           org-ref-bibliography-notes "~/Dropbox/org/work/biblio/index.org"
           org-ref-default-bibliography '("~/Dropbox/org/work/biblio/index.bib")
-          org-ref-pdf-directory "~/Dropbox/org/work/biblio/lib/"))
+          org-ref-pdf-directory "~/Dropbox/org/work/biblio/lib/")
 
     :config
     (key-chord-define-global "uu" 'org-ref-cite-hydra/body)
-    ;; variables that control bibtex key format for auto-generation
-    ;; I want firstauthor-year-title-words
-    ;; this usually makes a legitimate filename to store pdfs under.
-    (setq bibtex-autokey-year-length 4
-          bibtex-autokey-name-year-separator "-"
-          bibtex-autokey-year-title-separator "-"
-          bibtex-autokey-titleword-separator "-"
-          bibtex-autokey-titlewords 2
-          bibtex-autokey-titlewords-stretch 1
-          bibtex-autokey-titleword-length 5)
-
+    (add-hook 'org-export-before-parsing-hook 'orcp-citeproc))
 
   (use-package interleave
     :ensure t
@@ -872,7 +862,7 @@ Based mainly on C just few adaptations to do here
         bibtex-autokey-name-year-separator ""
         bibtex-autokey-year-title-separator ""
         bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an")
-        bibtex-autokey-titleword-length 30
+        bibtex-autokey-titleword-length 100
         bibtex-autokey-titlewords 1)
 #+end_src
 *** Completion
