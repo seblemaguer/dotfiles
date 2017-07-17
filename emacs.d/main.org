@@ -360,6 +360,13 @@ Try to add this key support
 
     ;; Activating globally
     (global-company-mode t))
+
+
+  (use-package company-quickhelp
+    :ensure t
+    :after company
+    :config
+    (company-quickhelp-mode 1))
 #+end_src
 ** Yasnippet
 *** Normal
