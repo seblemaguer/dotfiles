@@ -458,7 +458,11 @@ Based mainly on C just few adaptations to do here
 ** Configuration and log files
 *** Default unix configuration
 #+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.*rc$" . conf-unix-mode))
+  (use-package config-general-mode
+    :ensure t
+    :config
+     (add-to-list 'auto-mode-alist '("\\.conf$" . config-general-mode))
+     (add-to-list 'auto-mode-alist '("\\.*rc$"  . config-general-mode)))
 #+end_src
 *** Authinfo
 #+begin_src emacs-lisp
