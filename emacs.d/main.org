@@ -3871,13 +3871,13 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+begin_src emacs-lisp
   (defhydra hydra-projectile (:color blue :hint nil :idle 0.4)
     "
-                                                                          ╭────────────┐
-          Files             Search          Buffer             Do         │ Projectile │
+                                                                                  ╭────────────┐
+          Files             Search          Buffer             Do                 │ Projectile │
         ╭─────────────────────────────────────────────────────────────────┴────────────╯
           [_f_] file          [_a_] ag          [_b_] switch         [_g_] magit
           [_l_] file dwim     [_A_] grep        [_v_] show all       [_p_] commander
           [_r_] recent file   [_s_] occur       [_V_] ibuffer        [_i_] info
-          [_d_] dir           [_S_] replace     [_K_] kill all
+          [_d_] dir           [_S_] replace     [_K_] kill all       [_e_] eshell
           [_o_] other         [_t_] find tag
           [_u_] test file     [_T_] make tags
           [_h_] root
@@ -3901,6 +3901,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ("C"   projectile-run-command-in-root)
     ("d"   projectile-find-dir)
     ("D"   projectile-find-dir-other-window)
+    ("e"   projectile-run-eshell)
     ("f"   projectile-find-file)
     ("F"   projectile-find-file-other-window)
     ("g"   projectile-vc)
