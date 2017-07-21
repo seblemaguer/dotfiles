@@ -911,7 +911,8 @@ Based mainly on C just few adaptations to do here
     :after company
     :after auctex
     :config
-    (add-to-list 'company-backends 'company-math))
+    ;; global activation of the unicode symbol completion
+    (add-to-list 'company-backends 'company-math-symbols-unicode))
 #+end_src
 *** Compilation
 #+begin_src emacs-lisp
@@ -1180,10 +1181,10 @@ Based mainly on C just few adaptations to do here
 #+END_SRC
 *** Completion
 #+begin_src emacs-lisp
-(use-package company-php
-  :ensure t
-  :config
-  (add-to-list 'company-backends '(company-php)))
+  (use-package company-php
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-ac-php-backend))
 #+end_src
 
 ** Praat
