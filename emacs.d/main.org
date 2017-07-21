@@ -1203,7 +1203,7 @@ Based mainly on C just few adaptations to do here
         python-indent-offset 4)
 
 #+end_src
-*** JEDI configuration
+*** COMMENT JEDI configuration
 **** Global part
 #+begin_src emacs-lisp
   (use-package jedi
