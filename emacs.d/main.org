@@ -1639,16 +1639,6 @@ Based mainly on C just few adaptations to do here
                                    (file "~/Calendars/Calendar-Personal.org")
                                    (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir))))))
 #+end_src
-** Project/Org-mode agenda/todo list bindings
-#+begin_src emacs-lisp
-(use-package org-projectile
-  :ensure t
-  :config
-  (org-projectile:per-repo)
-  (setq org-projectile:per-repo-filename "todo.org")
-  (setq org-agenda-files
-        (append org-agenda-files (org-projectile:todo-files))))
-#+end_src
 ** Editing
 #+begin_src emacs-lisp
   (use-package org-notebook :ensure t)
@@ -2029,16 +2019,13 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package org-projectile
     :ensure t
-    :after projectile
     :after org
+    :after projectile
     :config
-
-    ;; Per repository analysis
-    (org-projectile:per-repo)
-
-    ;; We add each todo from each repo to the org-agenda-files
-    (setq org-projectile:per-repo-filename "todo.org"
-	  org-agenda-files (append org-agenda-files (org-projectile:todo-files))))
+    ;; (org-projectile-per-repo)
+    (setq org-projectile-per-project-filepath "todo.org"
+          org-agenda-files
+          (append org-agenda-files (org-projectile-todo-files))))
 #+end_src
 ** Completion
 #+begin_src emacs-lisp
@@ -3919,7 +3906,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ("d"   projectile-find-dir)
     ("D"   projectile-find-dir-other-window)
     ("e"   projectile-run-eshell)
-    ("f"   projectile-find-file)
+    ("f"   counsel-projectile)
     ("F"   projectile-find-file-other-window)
     ("g"   projectile-vc)
     ("h"   projectile-dired)
