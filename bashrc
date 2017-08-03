@@ -11,9 +11,9 @@ source ~/.profile
 
 
 if ! type "emacs" > /dev/null; then
-    EDITOR=vim
+    export EDITOR=vim
 else
-    EDITOR=emacs
+    export EDITOR=emacs
 fi
 
 #############################################################################################################
