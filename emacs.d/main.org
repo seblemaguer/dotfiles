@@ -323,6 +323,7 @@ Try to add this key support
 
   (use-package org-ref
     :after org
+    :ensure t
     :init
     (setq org-ref-completion-library 'org-ref-ivy-cite
           org-ref-notes-directory "~/Dropbox/org/work/biblio"
