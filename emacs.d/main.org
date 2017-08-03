@@ -172,14 +172,29 @@ Try to add this key support
     ;;
     (setq recentf-max-menu-items 100)
 
-    ;; Exclusion
-    (add-to-list 'recentf-exclude (format "%s/Dropbox/org/.*" (getenv "HOME")))
+    ;; Emacs
+    (add-to-list 'recentf-exclude (format "%s/.orhc-bibtex-cache" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/configuration/emacs\\.d/\\(?!\\(main.org\\)\\)" (getenv "HOME")))
     (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/.*" (getenv "HOME")))
+
+    ;; Some caches
     (add-to-list 'recentf-exclude (format "%s/\\.ido\\.last" (getenv "HOME")))
     (add-to-list 'recentf-exclude (format "%s/\\.recentf" (getenv "HOME")))
+
+
+    ;; elfeed
     (add-to-list 'recentf-exclude (format "%s/\\.elfeed/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/Dropbox/emacs/elfeed/.*" (getenv "HOME")))
+
+
+    ;; Org/todo/calendars
+    (add-to-list 'recentf-exclude ".*todo.org")
     (add-to-list 'recentf-exclude (format "%s/Calendars/.*" (getenv "HOME")))
-    (add-to-list 'recentf-exclude ".*todo.org"))
+
+    ;; Maildir
+    (add-to-list 'recentf-exclude (format "%s/maildir.*" (getenv "HOME")))
+
+    )
 #+end_src
 
 ** Backup files
