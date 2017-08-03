@@ -1,4 +1,4 @@
-** REVIEW %? [[%:link][%:description]]
+** REVIEW [[%:link][%:description]]
 :LOGBOOK:
 - Added: %U
 :END:
