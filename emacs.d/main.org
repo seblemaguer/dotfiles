@@ -1426,6 +1426,13 @@ Based mainly on C just few adaptations to do here
     (setq org-archive-mark-done t
           org-log-done 'time
           org-archive-location "%s_archive::* Archived Tasks")
+
+    ;; Refiling
+    (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3)))
+        org-completion-use-ido nil
+        org-refile-use-outline-path 'file
+        org-outline-path-complete-in-steps nil
+        org-refile-allow-creating-parent-nodes 'confirm)
     )
 #+end_src
 ** Calendar / Agenda
@@ -1826,7 +1833,6 @@ Based mainly on C just few adaptations to do here
   :config
   (use-package ox-gfm :ensure t :config (require 'ox-gfm)))
 #+end_src
-
 * Documentation
 ** Help
 #+begin_src emacs-lisp
