@@ -3455,7 +3455,21 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
       (elfeed-search-untag-all-unread))
 
 #+end_src
-
+** SX
+#+begin_src emacs-lisp
+(use-package sx
+  :ensure t
+  :config
+  (bind-keys :prefix "C-c s"
+             :prefix-map my-sx-map
+             :prefix-docstring "Global keymap for SX."
+             ("q" . sx-tab-all-questions)
+             ("i" . sx-inbox)
+             ("o" . sx-open-link)
+             ("u" . sx-tab-unanswered-my-tags)
+             ("a" . sx-ask)
+             ("s" . sx-search)))
+#+end_src
 * Music
 ** Global
 #+begin_src emacs-lisp
