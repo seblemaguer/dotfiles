@@ -1324,23 +1324,30 @@ Based mainly on C just few adaptations to do here
 
     ;; Global configuration
     (setq nxml-child-indent 2
-	  nxml-auto-insert-xml-declaration-flag t
-	  nxml-slash-auto-complete-flag t
-	  nxml-bind-meta-tab-to-complete-flag t)
+          nxml-auto-insert-xml-declaration-flag t
+          nxml-slash-auto-complete-flag t
+          nxml-bind-meta-tab-to-complete-flag t)
 
     ;; Outline hook
     (add-hook 'nxml-mode-hook
-	      (lambda ()
-		(outline-minor-mode)
-		(setq outline-regexp "^[ \t]*\<[a-zA-Z]+")))
+              (lambda ()
+                (outline-minor-mode)
+                (setq outline-regexp "^[ \t]*\<[a-zA-Z]+")))
 
     ;; Helper to format
-    (defun xml-format ()
-      "Using xmllint to correctly format the selected region"
-      (interactive)
-      (save-excursion
-	(shell-command-on-region (mark) (point) "xmllint --format -" (buffer-name) t)
-	)))
+    (defun bf-pretty-print-xml-region (begin end)
+    "Pretty format XML markup in region. You need to have nxml-mode
+  http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
+  this.  The function inserts linebreaks to separate tags that have
+  nothing but whitespace between them.  It then indents the markup
+  by using nxml's indentation rules."
+    (interactive "r")
+    (save-excursion
+        (nxml-mode)
+        (goto-char begin)
+        (while (search-forward-regexp "\>[ \\t]*\<" nil t)
+          (backward-char) (insert "\n"))
+        (indent-region begin end))))
 #+END_SRC
 * Org
 ** Global part
