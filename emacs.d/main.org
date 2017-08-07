@@ -1833,6 +1833,14 @@ Based mainly on C just few adaptations to do here
   :config
   (use-package ox-gfm :ensure t :config (require 'ox-gfm)))
 #+end_src
+** COMMENT Async
+#+begin_src emacs-lisp
+
+  ;; Setup the part for asynchronous
+  (setq org-export-in-background t
+        org-export-async-debug t
+        org-export-async-init-file (expand-file-name (format "%s/org-export.el" config-basedir)))
+#+end_src
 * Documentation
 ** Help
 #+begin_src emacs-lisp
