@@ -12,6 +12,7 @@ ignore = [
     'mail',
     'python',
     'system',
+    'texmf'
     'vcs',
     'vim',
     'todo.org']
