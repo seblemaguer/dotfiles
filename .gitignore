@@ -3,3 +3,6 @@ emacs.d/
 
 # htop part
 system/htoprc
+
+# Latex
+texmf/tex/latex/auto/
