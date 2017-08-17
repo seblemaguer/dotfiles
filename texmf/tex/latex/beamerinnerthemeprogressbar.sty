@@ -89,27 +89,27 @@
   \end{tikzpicture}
 }
 
-\def\bibitem{\@ifnextchar<{\beamer@bibitem@store}{\gdef\beamer@bibstore{}\beamer@plainbibitem}}
-\def\beamer@bibitem@store<#1>{\gdef\beamer@bibstore{<#1>}\beamer@plainbibitem}
-\def\beamer@plainbibitem{\@ifnextchar[\@lbibitem\beamer@bibitem}
-\def\@lbibitem[#1]#2{\expandafter\item\beamer@bibstore[\@biblabel{#1}\hfill]%
-  \@ifundefined{beamerbib@#2@\the\c@framenumber}{\if@filesw%
-    {\let\protect\noexpand%
-      \immediate\write\@auxout%
-      {\string\bibcite{#2}{\noexpand\hyperlink{beamerbib#2}{#1}}}}\fi%
-    \global\@namedef{beamerbib@#2@\the\c@framenumber}{\relax}%
-    \hypertarget{beamerbib#2}{}%
-    }{}%
-  \def\newblock{\beamer@newblock}\newblock\hskip-0.8ex}% This is really dirty !
-%  \hbox{}\ignorespaces}
-\def\beamer@bibitem#1{\@bibitem{#1}\ignorespaces}
-\def\@bibitem#1{\expandafter\item\beamer@bibstore\@ifundefined{beamerbib@#1@\the\c@framenumber}%
-  {\if@filesw \immediate\write\@auxout
-    {\string\bibcite{#1}{\noexpand\hyperlink{beamerbib#1}{\the\value{\@listctr}}}}\fi%
-    \global\@namedef{beamerbib@#1@\the\c@framenumber}{\relax}%
-    \hypertarget{beamerbib#1}{}}%
-  {}%
-  \def\newblock{\beamer@newblock}\newblock}
+% \def\bibitem{\@ifnextchar<{\beamer@bibitem@store}{\gdef\beamer@bibstore{}\beamer@plainbibitem}}
+% \def\beamer@bibitem@store<#1>{\gdef\beamer@bibstore{<#1>}\beamer@plainbibitem}
+% \def\beamer@plainbibitem{\@ifnextchar[\@lbibitem\beamer@bibitem}
+% \def\@lbibitem[#1]#2{\expandafter\item\beamer@bibstore[\@biblabel{#1}\hfill]%
+%   \@ifundefined{beamerbib@#2@\the\c@framenumber}{\if@filesw%
+%     {\let\protect\noexpand%
+%       \immediate\write\@auxout%
+%       {\string\bibcite{#2}{\noexpand\hyperlink{beamerbib#2}{#1}}}}\fi%
+%     \global\@namedef{beamerbib@#2@\the\c@framenumber}{\relax}%
+%     \hypertarget{beamerbib#2}{}%
+%     }{}%
+%   \def\newblock{\beamer@newblock}\newblock\hskip-0.8ex}% This is really dirty !
+% %  \hbox{}\ignorespaces}
+% \def\beamer@bibitem#1{\@bibitem{#1}\ignorespaces}
+% \def\@bibitem#1{\expandafter\item\beamer@bibstore\@ifundefined{beamerbib@#1@\the\c@framenumber}%
+%   {\if@filesw \immediate\write\@auxout
+%     {\string\bibcite{#1}{\noexpand\hyperlink{beamerbib#1}{\the\value{\@listctr}}}}\fi%
+%     \global\@namedef{beamerbib@#1@\the\c@framenumber}{\relax}%
+%     \hypertarget{beamerbib#1}{}}%
+%   {}%
+%   \def\newblock{\beamer@newblock}\newblock}
 
 
 
@@ -126,7 +126,7 @@
 % The ultimate trick to prevent the itemize-inside-blocks bug from happening...
 \let\progressbar@tempitemize=\itemize
 \def\progressbar@itemize{\ifhmode\else\vskip-0.85\topsep\fi\progressbar@tempitemize}
-% 
+%
 
 %%% Bruno's factorized version begins %%%
 
@@ -146,11 +146,11 @@
     \advance\progressbar@boxheight by \dp\progressbar@blockbox
     {\parbox[t]{0cm}{
       \usebeamercolor{block body\ifx#1\@empty\else\space#1\fi}
-      \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);} 
+      \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);}
     }}
   {\parbox[t]{0cm}{
       \vskip0.5\baselineskip
-      \ \hfill{\box\progressbar@blockbox}\hfill\ 
+      \ \hfill{\box\progressbar@blockbox}\hfill\
     }}\par
     \vskip-1\baselineskip
   }
@@ -179,15 +179,15 @@
 %%%   \advance\progressbar@boxheight by \dp\progressbar@blockbox
 %%%   {\parbox[t]{0cm}{
 %%%     \usebeamercolor{block body}
-%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);} 
+%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);}
 %%%   }}
 %%% {\parbox[t]{0cm}{
 %%%     \vskip0.5\baselineskip
-%%%     \ \hfill{\box\progressbar@blockbox}\hfill\ 
+%%%     \ \hfill{\box\progressbar@blockbox}\hfill\
 %%%   }}\par
 %%%   \vskip-1\baselineskip
 %%% }
-%%% 
+%%%
 %%% \defbeamertemplate*{block alerted begin}{progressbar theme}
 %%% {
 %%%   \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\vskip-0.25\baselineskip\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title}\usebeamercolor[fg]{block title alerted}\insertblocktitle}\\[-0.3cm]% Just to be "babel-safe"
@@ -203,15 +203,15 @@
 %%%   \advance\progressbar@boxheight by \dp\progressbar@blockbox
 %%%   {\parbox[t]{0cm}{
 %%%     \usebeamercolor{block body alerted}
-%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);} 
+%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);}
 %%%   }}
 %%% {\parbox[t]{0cm}{
 %%%     \vskip0.5\baselineskip
-%%%     \ \hfill{\box\progressbar@blockbox}\hfill\ 
+%%%     \ \hfill{\box\progressbar@blockbox}\hfill\
 %%%   }}\par
 %%%   \vskip-1\baselineskip
 %%% }
-%%% 
+%%%
 %%% \defbeamertemplate*{block example begin}{progressbar theme}
 %%% {
 %%%   \setbox\progressbar@blockbox=\hbox to 0.95\textwidth\bgroup\vbox\bgroup\vskip-0.25\baselineskip\raggedright\begin{minipage}{0.95\textwidth} \ifx\insertblocktitle\@empty\else{\usebeamerfont{block title}\usebeamercolor[fg]{block title example}\insertblocktitle}\\[-0.3cm]% Just to be "babel-safe"
@@ -227,11 +227,11 @@
 %%%   \advance\progressbar@boxheight by \dp\progressbar@blockbox
 %%%   {\parbox[t]{0cm}{
 %%%     \usebeamercolor{block body example}
-%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);} 
+%%%     \tikz[baseline=(current bounding box.north)]{\draw[draw=fg!20!bg,fill=bg, rounded corners=2pt] (0, 0) rectangle (\progressbar@boxwidth, \progressbar@boxheight);}
 %%%   }}
 %%% {\parbox[t]{0cm}{
 %%%     \vskip0.5\baselineskip
-%%%     \ \hfill{\box\progressbar@blockbox}\hfill\ 
+%%%     \ \hfill{\box\progressbar@blockbox}\hfill\
 %%%   }}\par
 %%%   \vskip-1\baselineskip
 %%% }
@@ -327,7 +327,7 @@
 
 \pgfdeclareradialshading[structure.fg,bg]{smallsphere}{\pgfpoint{-0.1479452ex}{0.18287671ex}}%
 {%
-  color(0cm)=(structure.fg!15); 
+  color(0cm)=(structure.fg!15);
   color(0.1315068ex)=(structure.fg!75);
   color(0.2630136ex)=(structure.fg!70!black);
   color(0.36164383ex)=(structure.fg!50!black);
@@ -350,6 +350,6 @@
 \mode
 <all>
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% TeX-master: "~/texmf/tex/latex/beamer/test/test.tex"
-%%% End: 
+%%% End:

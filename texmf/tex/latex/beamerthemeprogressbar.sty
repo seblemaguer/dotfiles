@@ -10,7 +10,7 @@
 % of the GNU Public License, version 2.
 
 \RequirePackage{tikz}
-\RequirePackage{bibunits}
+% \RequirePackage{bibunits}
 
 
 \usecolortheme{progressbar}
@@ -31,15 +31,15 @@
 
 \renewcommand{\appendix}[1][0void0]
 {
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % This piece of code is supposed to introduce a bias in the
   % number of slides
   \makeatletter
   \immediate\write\@auxout{\string\@writefile{nav}%
     {\noexpand\headcommand{\noexpand\def\noexpand\insertintermediateframenumber{\the\c@framenumber}}}}
   \renewcommand{\insertintermediateframenumber}{\inserttotalframenumber}
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-  
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
   \def\tmparg{#1}
   \def\tmpargref{0void0}
   \ifx\tmparg\tmpargref\else
@@ -52,7 +52,7 @@
   \end{frame}
   \fi
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % We recompute the progressbar step and the current position
 
   \progressbar@numer=1
@@ -63,7 +63,7 @@
   \ifnum\progressbar@denom=0\else\divide\progressbar@tmpresult by \progressbar@denom\fi
   \global\progressbar@stepbar=\progressbar@tmpresult
 
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   \makeatother
 }
