@@ -25,17 +25,12 @@
 \makeatletter
 \def\progressbar@headline{none}%
 \def\progressbar@frametitle{picture-section}%
-\def\progressbar@imagename{images/1361-magic-math-wallpaper-wallchan.png}%
 \def\progressbar@titlepage{picture}%
 \define@key{progressbar}{headline}[none]{%
   \def\progressbar@headline{#1}%
 }
 \define@key{progressbar}{frametitle}[picture]{%
   \def\progressbar@frametitle{#1}%
-}
-\define@key{progressbar}{imagename}{%
-  \def\progressbar@imagename{#1}%
-  \pgfdeclareimage[width=0.12\textwidth,interpolate=true]{headlineimage}{\progressbar@imagename}
 }
 \define@key{progressbar}{titlepage}[picture]{%
   \def\progressbar@titlepage{#1}%
@@ -246,10 +241,6 @@
 
 \def\progressbar@separator{--}
 
-\ifx\progressbar@imagename\@relax
-\else
-\pgfdeclareimage[width=0.12\textwidth,interpolate=true]{headlineimage}{\progressbar@imagename}
-\fi
 \ifx\progressbar@frametitle\@relax
 \def\progressbar@frametitle{normal}
 \fi
@@ -264,24 +255,21 @@
 \else
 \edef\tempa{picture-subsection}
 \ifx\progressbar@frametitle\tempa
-\parbox[c]{0.13\textwidth}{\pgfuseimage{headlineimage}}
-\parbox[c]{0.85\textwidth}{
-  \usebeamercolor{frametitle}{\scriptsize \ifx\insertsection\@empty\ \else\insertsection\fi\ifx\insertsubsection\@empty\else\ \progressbar@separator\ \insertsubsection\fi}\\[-0.3cm]\rule{0.7\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par
+\parbox[c]{\textwidth}{
+  \usebeamercolor{frametitle}{\scriptsize \ifx\insertsection\@empty\ \else\insertsection\fi\ifx\insertsubsection\@empty\else\ \progressbar@separator\ \insertsubsection\fi}\\[-0.3cm]\rule{\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par
   \textbf{\vphantom{Hp}\insertframetitle}
 }
 \else
 \edef\tempa{picture-section}
 \ifx\progressbar@frametitle\tempa
-\parbox[c]{0.13\textwidth}{\pgfuseimage{headlineimage}}
-\parbox[c]{0.85\textwidth}{
-  \usebeamercolor{frametitle}{\scriptsize \ifx\insertsection\@empty\ \else\insertsection\fi}\\[-0.3cm]\rule{0.7\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par{}
+\parbox[c]{\textwidth}{
+  \usebeamercolor{frametitle}{\scriptsize \ifx\insertsection\@empty\ \else\insertsection\fi}\\[-0.3cm]\rule{\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par{}
   \textbf{\vphantom{Hp}\insertframetitle}
 }
 \else
-\parbox[c]{0.13\textwidth}{\pgfuseimage{headlineimage}}
-\parbox[c]{0.85\textwidth}{
+\parbox[c]{\textwidth}{
   %~ \usebeamercolor{frametitle}{\scriptsize \ifx\insertsection\@empty\ \else\insertsection\fi}\\[-0.3cm]\rule{0.7\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par
-  \usebeamercolor{frametitle}{\scriptsize\  }\\[-0.3cm]\rule{0.7\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par
+  \usebeamercolor{frametitle}{\scriptsize\  }\\[-0.3cm]\rule{\textwidth}{0.5pt}\par%\vskip-1cm\rule{0.7\textwidth}{0.5pt}\par
   \textbf{\vphantom{Hp}\insertframetitle}
 }
 \fi

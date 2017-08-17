@@ -24,17 +24,12 @@
 
 \def\progressbar@headline{none}%
 \def\progressbar@frametitle{picture-section}%
-\def\progressbar@imagename{images/1361-magic-math-wallpaper-wallchan.png}%
 \def\progressbar@titlepage{picture}%
 \define@key{progressbar}{headline}[none]{%
   \def\progressbar@headline{#1}%
 }
 \define@key{progressbar}{frametitle}[picture]{%
   \def\progressbar@frametitle{#1}%
-}
-\define@key{progressbar}{imagename}{%
-  \def\progressbar@imagename{#1}%
-  \pgfdeclareimage[width=0.12\textwidth,interpolate=true]{headlineimage}{\progressbar@imagename}
 }
 \define@key{progressbar}{titlepage}[picture]{%
   \def\progressbar@titlepage{#1}%
@@ -94,7 +89,7 @@
       \setbox\progressbar@framenumberbox=\hbox{\usebeamerfont{section in head/foot}\color{black}\inserttotalframenumber~/~\inserttotalframenumber}
       \newdimen\progressbar@framenumberboxwidth
       \progressbar@framenumberboxwidth=\wd\progressbar@framenumberbox
-      
+
       \global\advance\progressbar@framenumberrectangle by -0.15cm
       \global\advance\progressbar@framenumberrectangle by -0.5\progressbar@framenumberboxwidth
       \global\advance\progressbar@titlerectangle by -0.3cm
@@ -116,10 +111,10 @@
       \global\progressbar@firstpb=1
     \fi
 
-  
+
     \global\progressbar@currentbarlength=\insertframenumber\progressbar@stepbar
     \global\advance\progressbar@currentbarlength by -\progressbar@stepbar
-    
+
     \begin{tikzpicture}[thin]
       \usebeamercolor{section in head/foot}
       \useasboundingbox (0, 0) rectangle  (\paperwidth, 0.6cm);
@@ -199,7 +194,7 @@
   \end{beamercolorbox}%
   \fi
   }
-  
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -226,10 +221,7 @@
   \edef\tempa{picture}
   \ifx\progressbar@titlepage\tempa
   \vfill
-  \parbox{0.28\textwidth}{
-    \pgfimage[width=0.27\textwidth]{\progressbar@imagename}
-  }\hfill
-  \parbox{0.7\textwidth}{
+  \parbox{\textwidth}{
     \begin{center}
       {\usebeamerfont{title}\usebeamercolor{title}{\color{fg}\inserttitle}}
       \ifx\insertsubtitle\@empty\\[\baselineskip]
@@ -239,19 +231,19 @@
       \else{\usebeamerfont{author}\usebeamercolor{author}{\color{fg}\insertauthor}}\\\fi
       \ifx\insertdate\@empty\ \\
       \else{\usebeamerfont{date}\usebeamercolor{date}{\color{fg}\insertdate}}\\\fi
-      \ifx\insertinstitute\@empty 
+      \ifx\insertinstitute\@empty
       \else{\usebeamerfont{institute}\usebeamercolor{institute}{\color{fg}\insertinstitute}}\\\fi
       \insertlogo
     \end{center}
   }\vfill
   \else
-  \pgfdeclarehorizontalshading{separationtitlepagelineshading}{0.5pt}{color(0cm)=(bg); 
+  \pgfdeclarehorizontalshading{separationtitlepagelineshading}{0.5pt}{color(0cm)=(bg);
     color(0.5\textwidth)=(structure.fg); color(\textwidth)=(bg)}
   \begin{center}
     \vfill
     {\usebeamerfont{title}\usebeamercolor{title}{\color{fg}\inserttitle}}
 
-    \ifx\insertsubtitle\@empty 
+    \ifx\insertsubtitle\@empty
     \else{\usebeamerfont{subtitle}\usebeamercolor{subtitle}{\color{fg}\insertsubtitle}}\\[\baselineskip]\fi
 
     \pgfuseshading{separationtitlepagelineshading}
@@ -259,7 +251,7 @@
     \else{\usebeamerfont{author}\usebeamercolor{author}{\color{fg}\insertauthor}}\\\fi
     \ifx\insertdate\@empty\ \\
     \else{\usebeamerfont{date}\usebeamercolor{date}{\color{fg}\insertdate}}\\\fi
-    \ifx\insertinstitute\@empty 
+    \ifx\insertinstitute\@empty
     \else{\usebeamerfont{institute}\usebeamercolor{institute}{\color{fg}\insertinstitute}}\\\fi
     \insertlogo
     \pgfuseshading{separationtitlepagelineshading}
@@ -272,11 +264,11 @@
 
 % \defbeamertemplate*{title page}{progressbar theme}{
 %   \pgfdeclarehorizontalshading{separationtitlepagelineshading}{0.5pt}{color(0cm)=(bg); color(0.5\textwidth)=(structure.fg); color(\textwidth)=(bg)}
-  
+
 %   \makeatletter
 %   \begin{center}
 %     \textbf{\textcolor{structure.fg}\large\inserttitle}
-    
+
 %     \pgfuseshading{separationtitlepagelineshading}
 %     \vskip\baselineskip
 %     \footnotesize\insertauthor\\[\baselineskip]
@@ -285,7 +277,7 @@
 %     \vskip\baselineskip
 %     \pgfuseshading{separationtitlepagelineshading}
 %     \vfill
-%     \footnotesize    
+%     \footnotesize
 %     \insertdate
 %   \end{center}
 %   \makeatother
@@ -315,7 +307,7 @@
 \setbeamertemplate{background canvas}{}%
 \setbeamertemplate{footline}{
   \begin{beamercolorbox}[wd=\paperwidth,ht=0.6cm,dp=0ex]{structure.fg}%
-    %\quad \insertshorttitle 
+    %\quad \insertshorttitle
     \hfill \insertframenumber~/~\insertintermediateframenumber\quad \ \vskip0.1cm
   \end{beamercolorbox}%
 }
