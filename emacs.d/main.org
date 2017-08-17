@@ -1677,7 +1677,7 @@ Based mainly on C just few adaptations to do here
                                '((emacs-lisp . t)
                                  (dot . t)
                                  (ditaa . t)
-                                 ;; (R . t) [FIXME: see for R]
+                                 (R . t)
                                  (ipython . t)
                                  (ruby . t)
                                  (gnuplot . t)
@@ -1807,11 +1807,11 @@ Based mainly on C just few adaptations to do here
 #+end_src
 *** LaTeX
 #+begin_src emacs-lisp
-(use-package ox-latex
-  :config
-  (setq org-latex-listings t
-	org-export-with-LaTeX-fragments t
-	org-latex-pdf-process (list "latexmk -f -pdf %f")))
+  (use-package ox-latex
+    :config
+    (setq org-latex-listings t
+          org-export-with-LaTeX-fragments t
+          org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 #+end_src
 *** Beamer
 #+begin_src emacs-lisp
@@ -4081,9 +4081,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
 *** Files
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-x C-r") 'counsel-recentf)
-  (global-set-key (kbd "C-x C-d") 'dired)
-
-  (global-set-key (kbd "C-c =") 'compare-windows)
   (global-set-key (kbd "C-x C-d") 'dired)
 
   (global-set-key [(control c) ?1] 'find-name-dired)
