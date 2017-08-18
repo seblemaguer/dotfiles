@@ -677,16 +677,18 @@ Based mainly on C just few adaptations to do here
     ;; Hydra / js2
     (defhydra js2-refactor-hydra (:color blue :hint nil)
       "
+        Javascript
+
     ^Functions^                    ^Variables^               ^Buffer^                      ^sexp^               ^Debugging^
     ------------------------------------------------------------------------------------------------------------------------------
-    [_lp_] Localize Parameter      [_ev_] Extract variable   [_wi_] Wrap buffer in IIFE    [_k_]  js2 kill      [_lt_] log this
-    [_ef_] Extract function        [_iv_] Inline variable    [_ig_] Inject global in IIFE  [_ss_] split string  [_dt_] debug this
-    [_ip_] Introduce parameter     [_rv_] Rename variable    [_ee_] Expand node at point   [_sl_] forward slurp
-    [_em_] Extract method          [_vt_] Var to this        [_cc_] Contract node at point [_ba_] forward barf
-    [_ao_] Arguments to object     [_sv_] Split var decl.    [_uw_] unwrap
-    [_tf_] Toggle fun exp and decl [_ag_] Add var to globals
-    [_ta_] Toggle fun expr and =>  [_ti_] Ternary to if
-    [_q_]  quit"
+    _lp_: Localize Parameter      _ev_: Extract variable   _wi_: Wrap buffer in IIFE    _k_:  js2 kill      _lt_: log this
+    _ef_: Extract function        _iv_: Inline variable    _ig_: Inject global in IIFE  _ss_: split string  _dt_: debug this
+    _ip_: Introduce parameter     _rv_: Rename variable    _ee_: Expand node at point   _sl_: forward slurp
+    _em_: Extract method          _vt_: Var to this        _cc_: Contract node at point _ba_: forward barf
+    _ao_: Arguments to object     _sv_: Split var decl.    _uw_: unwrap
+    _tf_: Toggle fun exp and decl _ag_: Add var to globals
+    _ta_: Toggle fun expr and =>  _ti_: Ternary to if
+  "
       ("ee" js2r-expand-node-at-point)
       ("cc" js2r-contract-node-at-point)
       ("ef" js2r-extract-function)
@@ -737,10 +739,8 @@ Based mainly on C just few adaptations to do here
   (use-package js-auto-beautify
     :ensure t)
 
-
   (use-package js-import
     :ensure t)
-
 
   (use-package company-tern
     :ensure t
@@ -761,8 +761,7 @@ Based mainly on C just few adaptations to do here
     (setq company-tern-property-marker " <p>"
           company-tern-property-marker nil
           company-tern-meta-as-single-line t
-          company-tooltip-align-annotations t)
-    )
+          company-tooltip-align-annotations t))
 
   (use-package json-mode
     :ensure t
@@ -1081,7 +1080,7 @@ Based mainly on C just few adaptations to do here
       (add-to-list 'auto-mode-alist (cons "\\.pdf$" 'pdf-view-mode))
 
       ;; Keys
-        (bind-keys :map pdf-view-mode-map
+      (bind-keys :map pdf-view-mode-map
                  ("/" . hydra-pdftools/body)
                  ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
                  ("g"  . pdf-view-first-page)
@@ -1104,21 +1103,21 @@ Based mainly on C just few adaptations to do here
                  ("r"  . pdf-view-reset-slice))
 
       (defhydra hydra-pdftools (:color blue :hint nil)
-              "
-                                                                            ╭───────────┐
-             Move  History   Scale/Fit     Annotations  Search/Link    Do   │ PDF Tools │
-         ╭──────────────────────────────────────────────────────────────────┴───────────╯
-               ^^_g_^^      _B_    ^↧^    _+_    ^ ^     [_al_] list    [_s_] search    [_u_] revert buffer
-               ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤   [_am_] markup  [_o_] outline   [_i_] info
-               ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^     [_at_] text    [_F_] link      [_d_] dark mode
-               ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   [_ad_] delete  [_f_] search link
-          _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_     [_aa_] dired
-               ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   [_y_]  yank
-               ^^_n_^^      ^ ^  _r_eset slice box
-               ^^^↓^^^
-               ^^_G_^^
-         --------------------------------------------------------------------------------
-              "
+        "
+          PDF tools
+
+       Move  History   Scale/Fit                  Annotations     Search/Link     Do
+    ------------------------------------------------------------------------------------------------
+         ^^_g_^^      _B_    ^↧^    _+_    ^ ^     _al_: list    _s_: search    _u_: revert buffer
+         ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤   _am_: markup  _o_: outline   _i_: info
+         ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^     _at_: text    _F_: link      _d_: dark mode
+         ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   _ad_: delete  _f_: search link
+    _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_     _aa_: dired
+         ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   _y_:  yank
+         ^^_n_^^      ^ ^  _r_eset slice box
+         ^^^↓^^^
+         ^^_G_^^
+    "
               ("\\" hydra-master/body "back")
               ("<ESC>" nil "quit")
               ("al" pdf-annot-list-annotations)
@@ -1457,187 +1456,184 @@ Based mainly on C just few adaptations to do here
 #+end_src
 ** Calendar / Agenda
 #+begin_src emacs-lisp
-  (use-package org-agenda
-    :after hydra
-    :config
+   (use-package org-agenda
+     :after hydra
+     :config
 
-    ;; Todo part
-    (when (file-exists-p "~/Dropbox/org/todo/todo.org")
-      (setq org-agenda-files
-            (append org-agenda-files '("~/Dropbox/org/todo/todo.org"))))
+     ;; Todo part
+     (when (file-exists-p "~/Dropbox/org/todo/todo.org")
+       (setq org-agenda-files
+             (append org-agenda-files '("~/Dropbox/org/todo/todo.org"))))
 
-    (when (file-exists-p "~/Dropbox/org/organisation/bookmarks.org")
-      (setq org-agenda-files
-            (append org-agenda-files '("~/Dropbox/org/organisation/bookmarks.org"))))
+     (when (file-exists-p "~/Dropbox/org/organisation/bookmarks.org")
+       (setq org-agenda-files
+             (append org-agenda-files '("~/Dropbox/org/organisation/bookmarks.org"))))
 
-    (when (file-exists-p "~/Calendars")
-      (setq org-agenda-files
-          (append org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$"))))
-
-
-    ;; Deadline management
-    (setq org-agenda-include-diary nil)
-    (setq org-deadline-warning-days 7)
-    (setq org-timeline-show-empty-dates t)
-
-    ;;
-    (setq org-agenda-category-icon-alist `(
-                                           ;; Tools / utils
-                                           ("[Ee]macs" ,(format "%s/third_parties/icons/emacs24.png" config-basedir) nil nil :ascent center)
-                                           ("[Oo]rg" ,(format "%s/third_parties/icons/org.png" config-basedir) nil nil :ascent center)
-                                           ("^[Hh][Tt][Ss]$" ,(format "%s/third_parties/icons/hts.png" config-basedir) nil nil :ascent center)
-                                           ("^[Mm]ary[tT]\\{2\\}[sS]$" ,(format "%s/third_parties/icons/marytts.png" config-basedir) nil nil :ascent center)
-                                           ("^SFB$" ,(format "%s/third_parties/icons/sfb.png" config-basedir) nil nil :ascent center)
-                                           ("[Ss]ystem" ,(format "%s/third_parties/icons/debian.png" config-basedir) nil nil :ascent center)
-                                           ("[Tt]ools?" ,(format "%s/third_parties/icons/wrench.png" config-basedir) nil nil :ascent center)
-                                           ("[Ex]pe\\(riment\\)s?" ,(format "%s/third_parties/icons/expes.png" config-basedir) nil nil :ascent center)
-
-                                           ;; Admin / meeting
-                                           ("[Aa]dmin" ,(format "%s/third_parties/icons/admin.png" config-basedir) nil nil :ascent center)
-                                           ("[Mm]eeting" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
-                                           ("[Aa]ppointments?" ,(format "%s/third_parties/icons/appointment.png" config-basedir) nil nil :ascent center)
-                                           ("[Vv]isitors" ,(format "%s/third_parties/icons/visitors.png" config-basedir) nil nil :ascent center)
-                                           ("\\([Tt]rip\\|[Dd]eplacement\\)" ,(format "%s/third_parties/icons/trip.png" config-basedir) nil nil :ascent center)
-                                           ("Train" ,(format "%s/third_parties/icons/train.png" config-basedir) nil nil :ascent center)
-
-                                           ;; Deadlines / dates
-                                           ("\\([Pp]resentations?\\)" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
-                                           ("\\([Pp]apers?\\|[Bb]lio?\\|[Aa]rticles?\\)" ,(format "%s/third_parties/icons/book.png" config-basedir) nil nil :ascent center)
-                                           ("[Mm]ails?" ,(format "%s/third_parties/icons/gnus.png" config-basedir) nil nil :ascent center)
-                                           ("[Rr]eview?" ,(format "%s/third_parties/icons/review.png" config-basedir) nil nil :ascent center)
-
-                                           ;; Personnal dates
-                                           ("Medical" ,(format "%s/third_parties/icons/medical.png" config-basedir) nil nil :ascent center)
-                                           ("\\(Party\\|Celeb\\)" ,(format "%s/third_parties/icons/party.png" config-basedir) nil nil :ascent center)
-                                           ("Anniv" ,(format "%s/third_parties/icons/anniversary.png" config-basedir) nil nil :ascent center)
-                                           ("\\([Hh]olidays\\|[Vv]acations?\\)" ,(format "%s/third_parties/icons/holidays.png" config-basedir) nil nil :ascent center)
-
-                                           ;; Personnal diverse
-                                           ("Music" ,(format "%s/third_parties/icons/music.png" config-basedir) nil nil :ascent center)
-                                           ("[Pp]rojects?" ,(format "%s/third_parties/icons/project.png" config-basedir) nil nil :ascent center)
-                                           (".*" '(space . (:width (16))))))
+     (when (file-exists-p "~/Calendars")
+       (setq org-agenda-files
+           (append org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$"))))
 
 
-    ;; Some commands
-    (setq org-agenda-custom-commands
-          '(
-            ("D" todo "DONE")
+     ;; Deadline management
+     (setq org-agenda-include-diary nil)
+     (setq org-deadline-warning-days 7)
+     (setq org-timeline-show-empty-dates t)
 
-            ("w" "Work and administrative"
-             ((agenda)
-              (tags-todo "WORK")
-              (tags-todo "OFFICE")
-              (tags-todo "ADMIN")
-              ))
+     ;;
+     (setq org-agenda-category-icon-alist `(
+                                            ;; Tools / utils
+                                            ("[Ee]macs" ,(format "%s/third_parties/icons/emacs24.png" config-basedir) nil nil :ascent center)
+                                            ("[Oo]rg" ,(format "%s/third_parties/icons/org.png" config-basedir) nil nil :ascent center)
+                                            ("^[Hh][Tt][Ss]$" ,(format "%s/third_parties/icons/hts.png" config-basedir) nil nil :ascent center)
+                                            ("^[Mm]ary[tT]\\{2\\}[sS]$" ,(format "%s/third_parties/icons/marytts.png" config-basedir) nil nil :ascent center)
+                                            ("^SFB$" ,(format "%s/third_parties/icons/sfb.png" config-basedir) nil nil :ascent center)
+                                            ("[Ss]ystem" ,(format "%s/third_parties/icons/debian.png" config-basedir) nil nil :ascent center)
+                                            ("[Tt]ools?" ,(format "%s/third_parties/icons/wrench.png" config-basedir) nil nil :ascent center)
+                                            ("[Ex]pe\\(riment\\)s?" ,(format "%s/third_parties/icons/expes.png" config-basedir) nil nil :ascent center)
 
-            ("p" "personnal"
-             ((agenda)
-              (tags-todo "PERSONNAL")))
+                                            ;; Admin / meeting
+                                            ("[Aa]dmin" ,(format "%s/third_parties/icons/admin.png" config-basedir) nil nil :ascent center)
+                                            ("[Mm]eeting" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
+                                            ("[Aa]ppointments?" ,(format "%s/third_parties/icons/appointment.png" config-basedir) nil nil :ascent center)
+                                            ("[Vv]isitors" ,(format "%s/third_parties/icons/visitors.png" config-basedir) nil nil :ascent center)
+                                            ("\\([Tt]rip\\|[Dd]eplacement\\)" ,(format "%s/third_parties/icons/trip.png" config-basedir) nil nil :ascent center)
+                                            ("Train" ,(format "%s/third_parties/icons/train.png" config-basedir) nil nil :ascent center)
 
-            ("d" "Daily Action List"
-             ((agenda "" ((org-agenda-ndays 1)
-                          (org-agenda-sorting-strategy
-                           (quote ((agenda time-up priority-down tag-up) )))
-                          (org-deadline-warning-days 0)
-                          ))))
-            )
-          )
+                                            ;; Deadlines / dates
+                                            ("\\([Pp]resentations?\\)" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
+                                            ("\\([Pp]apers?\\|[Bb]lio?\\|[Aa]rticles?\\)" ,(format "%s/third_parties/icons/book.png" config-basedir) nil nil :ascent center)
+                                            ("[Mm]ails?" ,(format "%s/third_parties/icons/gnus.png" config-basedir) nil nil :ascent center)
+                                            ("[Rr]eview?" ,(format "%s/third_parties/icons/review.png" config-basedir) nil nil :ascent center)
 
-    ;; Agenda view shortcuts
-    (define-key org-agenda-mode-map "v" 'hydra-org-agenda-view/body)
+                                            ;; Personnal dates
+                                            ("Medical" ,(format "%s/third_parties/icons/medical.png" config-basedir) nil nil :ascent center)
+                                            ("\\(Party\\|Celeb\\)" ,(format "%s/third_parties/icons/party.png" config-basedir) nil nil :ascent center)
+                                            ("Anniv" ,(format "%s/third_parties/icons/anniversary.png" config-basedir) nil nil :ascent center)
+                                            ("\\([Hh]olidays\\|[Vv]acations?\\)" ,(format "%s/third_parties/icons/holidays.png" config-basedir) nil nil :ascent center)
 
-    (defun org-agenda-cts ()
-      (let ((args (get-text-property
-                   (min (1- (point-max)) (point))
-                   'org-last-args)))
-        (nth 2 args)))
+                                            ;; Personnal diverse
+                                            ("Music" ,(format "%s/third_parties/icons/music.png" config-basedir) nil nil :ascent center)
+                                            ("[Pp]rojects?" ,(format "%s/third_parties/icons/project.png" config-basedir) nil nil :ascent center)
+                                            (".*" '(space . (:width (16))))))
 
 
-    (defhydra hydra-org-agenda-view (:color blue :hint none)
-      "
-                                                                            ╭────────────┐
-                                                                            │ Org-agenda │
-          ╭─────────────────────────────────────────────────────────────────┴────────────╯
-           _d_: ?d? day        _g_: time grid=?g? _a_: arch-trees
-           _w_: ?w? week       _[_: inactive      _A_: arch-files
-           _t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?
-           _m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?
-           _y_: ?y? year       _q_: quit          _L__l__c_: ?l?
-    "
+     ;; Some commands
+     (setq org-agenda-custom-commands
+           '(
+             ("D" todo "DONE")
 
-      ("SPC" org-agenda-reset-view)
-      ("d" org-agenda-day-view
-       (if (eq 'day (org-agenda-cts))
-           "[x]" "[ ]"))
-      ("w" org-agenda-week-view
-       (if (eq 'week (org-agenda-cts))
-           "[x]" "[ ]"))
-      ("t" org-agenda-fortnight-view
-       (if (eq 'fortnight (org-agenda-cts))
-           "[x]" "[ ]"))
-      ("m" org-agenda-month-view
-       (if (eq 'month (org-agenda-cts)) "[x]" "[ ]"))
-      ("y" org-agenda-year-view
-       (if (eq 'year (org-agenda-cts)) "[x]" "[ ]"))
-      ("l" org-agenda-log-mode
-       (format "% -3S" org-agenda-show-log))
-      ("L" (org-agenda-log-mode '(4)))
-      ("c" (org-agenda-log-mode 'clockcheck))
-      ("f" org-agenda-follow-mode
-       (format "% -3S" org-agenda-follow-mode))
-      ("a" org-agenda-archives-mode)
-      ("A" (org-agenda-archives-mode 'files))
-      ("r" org-agenda-clockreport-mode
-       (format "% -3S" org-agenda-clockreport-mode))
-      ("e" org-agenda-entry-text-mode
-       (format "% -3S" org-agenda-entry-text-mode))
-      ("g" org-agenda-toggle-time-grid
-       (format "% -3S" org-agenda-use-time-grid))
-      ("D" org-agenda-toggle-diary
-       (format "% -3S" org-agenda-include-diary))
-      ("!" org-agenda-toggle-deadlines)
-      ("["
-       (let ((org-agenda-include-inactive-timestamps t))
-         (org-agenda-check-type t 'timeline 'agenda)
-         (org-agenda-redo)))
-      ("q" (message "Abort") :exit t))
+             ("w" "Work and administrative"
+              ((agenda)
+               (tags-todo "WORK")
+               (tags-todo "OFFICE")
+               (tags-todo "ADMIN")
+               ))
 
-    ;; Global shortcut to call org agenda
-    (global-set-key (kbd "<f12>") 'org-agenda)
+             ("p" "personnal"
+              ((agenda)
+               (tags-todo "PERSONNAL")))
 
-    ;; Visualization
-    (add-hook 'org-finalize-agenda-hook
-              (lambda ()
-                (save-excursion
-                  ;; MSP calendar
-                  (goto-char (point-min))
-                  (while (re-search-forward "Calendar-MSP:" nil t)
-                    (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
-                                            '(:weight bold :background "Tomato")))
+             ("d" "Daily Action List"
+              ((agenda "" ((org-agenda-ndays 1)
+                           (org-agenda-sorting-strategy
+                            (quote ((agenda time-up priority-down tag-up) )))
+                           (org-deadline-warning-days 0)
+                           ))))
+             )
+           )
 
-                  ;; MSP hiwis
-                  (goto-char (point-min))
-                  (while (re-search-forward "Calendar-MSP-part-timers:" nil t)
-                    (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
-                                            '(:weight bold :background "DeepSkyBlue")))
+     ;; Agenda view shortcuts
+     (define-key org-agenda-mode-map "v" 'hydra-org-agenda-view/body)
 
-                  ;; MSP hiwis
-                  (goto-char (point-min))
-                  (while (re-search-forward "Calendar-studio:" nil t)
-                    (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
-                                            '(:weight bold :background "yellow")))
+     (defun org-agenda-cts ()
+       (let ((args (get-text-property
+                    (min (1- (point-max)) (point))
+                    'org-last-args)))
+         (nth 2 args)))
 
-                  ;; Aikido
-                  (goto-char (point-min))
-                  (while (re-search-forward "Calendar-Aikido:" nil t)
-                    (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
-                                            '(:weight bold :background "yellow")))
 
-                  ;; Personal
-                  (goto-char (point-min))
-                  (while (re-search-forward "Personnal:" nil t)
-                    (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
-                                            '(:weight bold :background "green")))))))
+     (defhydra hydra-org-agenda-view (:color blue :hint none)
+       "
+  _d_: ?d? day        _g_: time grid=?g? _a_: arch-trees
+  _w_: ?w? week       _[_: inactive      _A_: arch-files
+  _t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?
+  _m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?
+  _y_: ?y? year       _q_: quit          _L__l__c_: ?l?
+     "
+
+       ("SPC" org-agenda-reset-view)
+       ("d" org-agenda-day-view
+        (if (eq 'day (org-agenda-cts))
+            "[x]" "[ ]"))
+       ("w" org-agenda-week-view
+        (if (eq 'week (org-agenda-cts))
+            "[x]" "[ ]"))
+       ("t" org-agenda-fortnight-view
+        (if (eq 'fortnight (org-agenda-cts))
+            "[x]" "[ ]"))
+       ("m" org-agenda-month-view
+        (if (eq 'month (org-agenda-cts)) "[x]" "[ ]"))
+       ("y" org-agenda-year-view
+        (if (eq 'year (org-agenda-cts)) "[x]" "[ ]"))
+       ("l" org-agenda-log-mode
+        (format "% -3S" org-agenda-show-log))
+       ("L" (org-agenda-log-mode '(4)))
+       ("c" (org-agenda-log-mode 'clockcheck))
+       ("f" org-agenda-follow-mode
+        (format "% -3S" org-agenda-follow-mode))
+       ("a" org-agenda-archives-mode)
+       ("A" (org-agenda-archives-mode 'files))
+       ("r" org-agenda-clockreport-mode
+        (format "% -3S" org-agenda-clockreport-mode))
+       ("e" org-agenda-entry-text-mode
+        (format "% -3S" org-agenda-entry-text-mode))
+       ("g" org-agenda-toggle-time-grid
+        (format "% -3S" org-agenda-use-time-grid))
+       ("D" org-agenda-toggle-diary
+        (format "% -3S" org-agenda-include-diary))
+       ("!" org-agenda-toggle-deadlines)
+       ("["
+        (let ((org-agenda-include-inactive-timestamps t))
+          (org-agenda-check-type t 'timeline 'agenda)
+          (org-agenda-redo)))
+       ("q" (message "Abort") :exit t))
+
+     ;; Global shortcut to call org agenda
+     (global-set-key (kbd "<f12>") 'org-agenda)
+
+     ;; Visualization
+     (add-hook 'org-finalize-agenda-hook
+               (lambda ()
+                 (save-excursion
+                   ;; MSP calendar
+                   (goto-char (point-min))
+                   (while (re-search-forward "Calendar-MSP:" nil t)
+                     (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
+                                             '(:weight bold :background "Tomato")))
+
+                   ;; MSP hiwis
+                   (goto-char (point-min))
+                   (while (re-search-forward "Calendar-MSP-part-timers:" nil t)
+                     (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
+                                             '(:weight bold :background "DeepSkyBlue")))
+
+                   ;; MSP hiwis
+                   (goto-char (point-min))
+                   (while (re-search-forward "Calendar-studio:" nil t)
+                     (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
+                                             '(:weight bold :background "yellow")))
+
+                   ;; Aikido
+                   (goto-char (point-min))
+                   (while (re-search-forward "Calendar-Aikido:" nil t)
+                     (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
+                                             '(:weight bold :background "yellow")))
+
+                   ;; Personal
+                   (goto-char (point-min))
+                   (while (re-search-forward "Personnal:" nil t)
+                     (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
+                                             '(:weight bold :background "green")))))))
 #+end_src
 ** Capturing
 #+begin_src emacs-lisp
@@ -1681,7 +1677,7 @@ Based mainly on C just few adaptations to do here
 
   ;; Add packages
   (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
-        org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar")
+        org-plantuml-jar-path "/opt/plantuml/plantuml.jar") ;; FIXME: specific to archlinux
 
   ;; Display images directly in the buffer
   (setq org-babel-results-keyword "results")
@@ -1722,7 +1718,6 @@ Based mainly on C just few adaptations to do here
 #+begin_src emacs-lisp
   (use-package hydra :ensure t
     :config
-
     ;; Define the templates
     (setq org-structure-template-alist
           '(("s" "#+begin_src ?\n\n#+end_src" "<src lang=\"?\">\n\n</src>")
@@ -1737,7 +1732,7 @@ Based mainly on C just few adaptations to do here
             ("a" "#+begin_ascii\n?\n#+end_ascii")
             ("A" "#+ascii: ")
             ("i" "#+index: ?" "#+index: ?")
-            ("I" "#+include %file ?" "<include file=%file markup=\"?\">")))
+            ("I" "#+include: %file ?" "<include file=%file markup=\"?\">")))
 
     ;; Shortcuts
     (defun hot-expand (str &optional mod)
@@ -1753,16 +1748,17 @@ Based mainly on C just few adaptations to do here
 
     (defhydra hydra-org-template (:color blue :hint nil)
       "
-                                                                        ╭────────────┐
-        block               src block         structure                 │ Org-block  │
-      ╭─────────────────────────────────────────────────────────────────┴────────────╯
-        [_c_] center        [_s_] src         [_L_] LATEX:
-        [_q_] quote         [_e_] emacs lisp  [_i_] index:
-        [_E_] example       [_p_] python      [_I_] INCLUDE:
-        [_v_] verse         [_P_] perl        [_H_] HTML:
-        [_a_] ascii         [_u_] Plantuml    [_A_] ASCII:
-        [_l_] latex         [_d_] ditaa
-        [_h_] html          [_S_] shell
+       Org template
+
+   block               src block         structure
+  --------------------------------------------------------------------------------------
+  _c_: center        _s_: src         _L_: LATEX:
+  _q_: quote         _e_: emacs lisp  _i_: index:
+  _E_: example       _p_: python      _I_: INCLUDE:
+  _v_: verse         _P_: perl        _H_: HTML:
+  _a_: ascii         _u_: Plantuml    _A_: ASCII:
+  _l_: latex         _d_: ditaa
+  _h_: html          _S_: shell
   "
       ("s" (hot-expand "<s"))
       ("E" (hot-expand "<e"))
@@ -1893,96 +1889,100 @@ Based mainly on C just few adaptations to do here
 * Shell
 The key configuration is mainly coming from https://github.com/jcf/emacs.d the rest is coming from http://www.modernemacs.com/post/custom-eshell/ with some adaptation
 #+begin_src emacs-lisp
-  (use-package eshell
-    :after helm
-    :config
-    (defmacro with-face (STR &rest PROPS)
-      "Return STR propertized with PROPS."
-      `(propertize ,STR 'face (list ,@PROPS)))
+    (use-package eshell
+      :after helm
+      :init
+      (add-hook 'eshell-mode-hook
+                (lambda ()
+                  (eshell/export "NODE_NO_READLINE=1")))
 
-    (defmacro esh-section (NAME ICON FORM &rest PROPS)
-      "Build eshell section NAME with ICON prepended to evaled FORM with PROPS."
-      `(setq ,NAME
-             (lambda () (when ,FORM
-                          (-> ,ICON
-                              (concat esh-section-delim ,FORM)
-                              (with-face ,@PROPS))))))
+      :config
+      (defmacro with-face (STR &rest PROPS)
+        "Return STR propertized with PROPS."
+        `(propertize ,STR 'face (list ,@PROPS)))
 
-    (defun esh-acc (acc x)
-      "Accumulator for evaluating and concatenating esh-sections."
-      (--if-let (funcall x)
-          (if (s-blank? acc)
-              it
-            (concat acc esh-sep it))
-        acc))
+      (defmacro esh-section (NAME ICON FORM &rest PROPS)
+        "Build eshell section NAME with ICON prepended to evaled FORM with PROPS."
+        `(setq ,NAME
+               (lambda () (when ,FORM
+                            (-> ,ICON
+                                (concat esh-section-delim ,FORM)
+                                (with-face ,@PROPS))))))
 
-    (defun esh-prompt-func ()
-      "Build `eshell-prompt-function'"
-      (concat esh-header
-              (-reduce-from 'esh-acc "" eshell-funcs)
-              "\n"
-              eshell-prompt-string))
+      (defun esh-acc (acc x)
+        "Accumulator for evaluating and concatenating esh-sections."
+        (--if-let (funcall x)
+            (if (s-blank? acc)
+                it
+              (concat acc esh-sep it))
+          acc))
 
-    (esh-section esh-dir
-                 "\xf07c"  ;  (faicon folder)
-                 (abbreviate-file-name (eshell/pwd))
-                 '(:foreground "blue" :bold ultra-bold :underline t))
+      (defun esh-prompt-func ()
+        "Build `eshell-prompt-function'"
+        (concat esh-header
+                (-reduce-from 'esh-acc "" eshell-funcs)
+                "\n"
+                eshell-prompt-string))
 
-    (esh-section esh-git
-                 "\xe907"  ;  (git icon)
-                 (magit-get-current-branch)
-                 '(:foreground "red"))
+      (esh-section esh-dir
+                   "\xf07c"  ;  (faicon folder)
+                   (abbreviate-file-name (eshell/pwd))
+                   '(:foreground "blue" :bold ultra-bold :underline t))
 
-    (esh-section esh-python
-                 "\xe928"  ;  (python icon)
-                 pyvenv-virtual-env-name)
+      (esh-section esh-git
+                   "\xe907"  ;  (git icon)
+                   (magit-get-current-branch)
+                   '(:foreground "red"))
 
-    (esh-section esh-clock
-                 "\xf017"  ;  (clock icon)
-                 (format-time-string "%H:%M" (current-time))
-                 '(:foreground "forest green"))
+      (esh-section esh-python
+                   "\xe928"  ;  (python icon)
+                   pyvenv-virtual-env-name)
 
-    ;; Below I implement a "prompt number" section
-    (setq esh-prompt-num 0)
-    (add-hook 'eshell-exit-hook (lambda () (setq esh-prompt-num 0)))
-    (advice-add 'eshell-send-input :before
-                (lambda (&rest args) (setq esh-prompt-num (incf esh-prompt-num))))
+      (esh-section esh-clock
+                   "\xf017"  ;  (clock icon)
+                   (format-time-string "%H:%M" (current-time))
+                   '(:foreground "forest green"))
 
-    (esh-section esh-num
-                 "\xf0c9"  ;  (list icon)
-                 (number-to-string esh-prompt-num)
-                 '(:foreground "brown"))
+      ;; Below I implement a "prompt number" section
+      (setq esh-prompt-num 0)
+      (add-hook 'eshell-exit-hook (lambda () (setq esh-prompt-num 0)))
+      (advice-add 'eshell-send-input :before
+                  (lambda (&rest args) (setq esh-prompt-num (incf esh-prompt-num))))
+
+      (esh-section esh-num
+                   "\xf0c9"  ;  (list icon)
+                   (number-to-string esh-prompt-num)
+                   '(:foreground "brown"))
 
 
-    (setq esh-sep "  "  ; or " | " ;; Separator between esh-sections
-          esh-section-delim " " ;; Separator between an esh-section icon and form
-          esh-header "\n " ;; Eshell prompt header
+      (setq esh-sep "  "  ; or " | " ;; Separator between esh-sections
+            esh-section-delim " " ;; Separator between an esh-section icon and form
+            esh-header "\n " ;; Eshell prompt header
 
-          ;; Eshell prompt regexp and string. Unless you are varying the prompt by eg.
-          ;; your login, these can be the same.
-          eshell-prompt-regexp "└─> "
-          eshell-prompt-string "└─> "
+            ;; Eshell prompt regexp and string. Unless you are varying the prompt by eg.
+            ;; your login, these can be the same.
+            eshell-prompt-regexp "└─> "
+            eshell-prompt-string "└─> "
 
-          eshell-funcs (list esh-dir esh-git esh-python esh-clock esh-num) ;; Choose which eshell-funcs to enable
-          eshell-prompt-function 'esh-prompt-func ;; Enable the new eshell prompt
-          )
+            eshell-funcs (list esh-dir esh-git esh-python esh-clock esh-num) ;; Choose which eshell-funcs to enable
+            eshell-prompt-function 'esh-prompt-func ;; Enable the new eshell prompt
+            )
 
-    (defun pcomplete/sudo ()
-      (let ((prec (pcomplete-arg 'last -1)))
-        (cond ((string= "sudo" prec)
-               (while (pcomplete-here*
-                       (funcall pcomplete-command-completion-function)
-                       (pcomplete-arg 'last) t))))))
+      (defun pcomplete/sudo ()
+        (let ((prec (pcomplete-arg 'last -1)))
+          (cond ((string= "sudo" prec)
+                 (while (pcomplete-here*
+                         (funcall pcomplete-command-completion-function)
+                         (pcomplete-arg 'last) t))))))
 
-    (add-hook 'eshell-mode-hook
-              (lambda ()
-                (define-key eshell-mode-map
-                  [remap eshell-pcomplete]
-                  'helm-esh-pcomplete)
-                (define-key eshell-mode-map
-                  (kbd "M-p")
-                  'helm-eshell-history)
-                (eshell/export "NODE_NO_READLINE=1"))))
+      (defun eshell-mode-some-config ()
+         (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
+         (define-key eshell-mode-map (kbd "M-p") 'helm-eshell-history)
+         (eshell/export "NODE_NO_READLINE=1"))
+
+      (add-hook 'eshell-mode-hook
+                'eshell-mode-some-config)
+  )
 #+end_src
 * Compilation
 ** TODO some requires to check
@@ -2566,12 +2566,13 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     ;; Keys
     (defhydra hydra-ibuffer-main (:color pink :hint nil)
       "
-   ^Navigation^ | ^Mark^        | ^Actions^        | ^View^
-  -^----------^-+-^----^--------+-^-------^--------+-^----^-------
-    _k_:    ʌ   | _m_: mark     | _D_: delete      | _g_: refresh
-   _RET_: visit | _u_: unmark   | _S_: save        | _s_: sort
-    _j_:    v   | _*_: specific | _a_: all actions | _/_: filter
-  -^----------^-+-^----^--------+-^-------^--------+-^----^-------
+         Ibuffer
+
+   ^Navigation^     ^Mark^         ^Actions^          ^View^
+  ------------------------------------------------------------------------
+    _k_:    ʌ     _m_: mark       _D_: delete        _g_: refresh
+   _RET_: visit   _u_: unmark     _S_: save          _s_: sort
+    _j_:    v     _*_: specific   _a_: all actions   _/_: filter
   "
       ("j" ibuffer-forward-line)
       ("RET" ibuffer-visit-buffer :color blue)
@@ -3911,108 +3912,98 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+end_src
 
 * Keys/shortcuts
-** Information
+** Main entry
 #+begin_src emacs-lisp
-  (defhydra yt-hydra/help (:color blue :hint nil :idle 0.4 global-map "<f1>")
+  (defhydra hydra-main (:color teal :hint nil)
     "
-                                                                       ╭───────────────┐
-                                                                       │ Documentation │
-        ╭──────────────────────────────────────────────────────────────┴───────────────╯
+       Main helper
 
-          [_f_] function documentation
-          [_v_] variable documentation
-        --------------------------------------------------------------------------------
-    "
+   General keys     Help
+  ------------------------------------------------------------------------------------------
+  _c_: org-capture  _f_: function documentation
+                  ^^_v_: variable documentation
+  "
+    ("c"   org-capture)
     ("f" describe-function)
-    ("v" describe-variable))
+    ("v" describe-variable)
+    ("<ESC>" nil "quit" :color blue)
+    ("q"   nil "cancel" :color blue))
+  (global-set-key (kbd "<f1>") 'hydra-main/body)
+
 #+end_src
 ** Project/Version control
 #+begin_src emacs-lisp
-  (defhydra hydra-projectile (:color blue :hint nil :idle 0.4)
-    "
-                                                                                  ╭────────────┐
-          Files             Search          Buffer             Do                 │ Projectile │
-        ╭─────────────────────────────────────────────────────────────────┴────────────╯
-          [_f_] file          [_a_] ag          [_b_] switch         [_g_] magit
-          [_l_] file dwim     [_A_] grep        [_v_] show all       [_p_] commander
-          [_r_] recent file   [_s_] occur       [_V_] ibuffer        [_i_] info
-          [_d_] dir           [_S_] replace     [_K_] kill all       [_e_] eshell
-          [_o_] other         [_t_] find tag
-          [_u_] test file     [_T_] make tags
-          [_h_] root
+  (defhydra hydra-projectile-other-window (:color teal)
+    "projectile-other-window"
+    ("f"  projectile-find-file-other-window        "file")
+    ("g"  projectile-find-file-dwim-other-window   "file dwim")
+    ("d"  projectile-find-dir-other-window         "dir")
+    ("b"  projectile-switch-to-buffer-other-window "buffer")
+    ("q"  nil                                      "cancel" :color blue))
 
-          Other Window      Run             Cache              Do
-        ╭──────────────────────────────────────────────────────────────────────────────╯
-          [_F_] file          [_U_] test        [_kc_] clear
-          [_L_] dwim          [_m_] compile     [_kk_] add current
-          [_D_] dir           [_c_] shell       [_ks_] cleanup
-          [_O_] other         [_C_] command     [_kd_] remove
-          [_B_] buffer
-        --------------------------------------------------------------------------------
-              "
+  (defhydra hydra-projectile (:color teal :hint nil)
+    "
+       PROJECTILE: %(projectile-project-root)
+
+       Find File            Search/Tags          Buffers                Cache
+  ------------------------------------------------------------------------------------------
+  _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache clear
+   _ff_: file dwim       _g_: update gtags      _b_: switch to buffer  _x_: remove known project
+   _fd_: file curr dir   _o_: multi-occur     _s-k_: Kill all buffers  _X_: cleanup non-existing
+    _r_: recent file                                               ^^^^_z_: cache current
+    _d_: dir
+
+  "
     ("<ESC>" nil "quit")
     ("<" hydra-project/body "back")
     ("a"   projectile-ag)
-    ("A"   projectile-grep)
     ("b"   projectile-switch-to-buffer)
-    ("B"   projectile-switch-to-buffer-other-window)
-    ("c"   projectile-run-async-shell-command-in-root)
-    ("C"   projectile-run-command-in-root)
+    ("c"   projectile-invalidate-cache)
     ("d"   projectile-find-dir)
-    ("D"   projectile-find-dir-other-window)
-    ("e"   projectile-run-eshell)
-    ("f"   counsel-projectile)
-    ("F"   projectile-find-file-other-window)
-    ("g"   projectile-vc)
-    ("h"   projectile-dired)
-    ("i"   projectile-project-info)
-    ("kc"  projectile-invalidate-cache)
-    ("kd"  projectile-remove-known-project)
-    ("kk"  projectile-cache-current-file)
+    ("s-f" projectile-find-file)
+    ("ff"  projectile-find-file-dwim)
+    ("fd"  projectile-find-file-in-directory)
+    ("g"   ggtags-update-tags)
+    ("s-g" ggtags-update-tags)
+    ("i"   projectile-ibuffer)
     ("K"   projectile-kill-buffers)
-    ("ks"  projectile-cleanup-known-projects)
-    ("l"   projectile-find-file-dwim)
-    ("L"   projectile-find-file-dwim-other-window)
-    ("m"   projectile-compile-project)
-    ("o"   projectile-find-other-file)
-    ("O"   projectile-find-other-file-other-window)
-    ("p"   projectile-commander)
+    ("s-k" projectile-kill-buffers)
+    ("m"   projectile-multi-occur)
+    ("o"   projectile-multi-occur)
+    ("s-p" projectile-switch-project "switch project")
+    ("p"   projectile-switch-project)
+    ("s"   projectile-switch-project)
     ("r"   projectile-recentf)
-    ("s"   projectile-multi-occur)
-    ("S"   projectile-replace)
-    ("t"   projectile-find-tag)
-    ("T"   projectile-regenerate-tags)
-    ("u"   projectile-find-test-file)
-    ("U"   projectile-test-project)
-    ("v"   projectile-display-buffer)
-    ("V"   projectile-ibuffer)
-    )
+    ("x"   projectile-remove-known-project)
+    ("X"   projectile-cleanup-known-projects)
+    ("z"   projectile-cache-current-file)
+    ("`"   hydra-projectile-other-window/body "other window" :color blue)
+    ("q"   nil "cancel" :color blue))
 
-  (defhydra hydra-fixmee (:color blue :hint nil :idle 0.4)
+  (defhydra hydra-fixmee (:color teal :hint nil :idle 0.4)
     "
-                                                                              ╭────────┐
-          Do                                                                  │ Fixmee │
-        ╭─────────────────────────────────────────────────────────────────────┴────────╯
-          [_x_] TODO & FIXME
-          [_X_] toggle
-        --------------------------------------------------------------------------------
+       FIXMEE
+
+  ------------------------------------------------------------------------------------------
+  _x_: view listing    _X_: toggle
               "
     ("<ESC>" nil "quit")
     ("<" hydra-project/body "back")
     ("X"   fixmee-mode)
-    ("x"   fixmee-view-listing))
+    ("x"   fixmee-view-listing)
+    ("q"   nil "cancel" :color blue))
 
-  (defhydra hydra-magit (:color blue :hint nil)
+  (defhydra hydra-magit (:color teal :hint nil)
     "
-                                                                              ╭────────┐
-          Status/Info       Remote           Operations                       │ Magit  │
-        ╭─────────────────────────────────────────────────────────────────────┴────────╯
-          [_s_] Status      [_f_] Pull       [_c_] commit
-          [_l_] Log all     [_p_] Push
-          [_d_] Diff
-          [_t_] timeline
-        --------------------------------------------------------------------------------
-              "
+        Magit: %(magit-get \"remote\" \"origin\" \"url\")
+
+   Status/Info      Remote          Operations
+  ------------------------------------------------------------------------------------------
+  _s_: Status      _f_: Pull       _c_: commit
+  _l_: Log all     _p_: Push
+  _d_: Diff
+  _t_: timeline
+  "
     ("<ESC>" nil "quit")
     ("<" hydra-project/body "back")
     ("f" magit-pull)
@@ -4022,47 +4013,80 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ("l" magit-log-all)
     ("s" magit-status)
     ("t" git-timeline)
-    )
+    ("q"   nil "cancel" :color blue))
+
+  (defhydra hydra-flycheck (:pre (progn (setq hydra-lv t) (flycheck-list-errors))
+                            :post (progn (setq hydra-lv nil) (quit-windows-on "*Flycheck errors*"))
+                            :color teal
+                            :hint nil)
+    "Errors"
+    ("f"  flycheck-error-list-set-filter                            "Filter")
+    ("j"  flycheck-next-error                                       "Next")
+    ("k"  flycheck-previous-error                                   "Previous")
+    ("gg" flycheck-first-error                                      "First")
+    ("G"  (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
+    ("<" hydra-project/body "back")
+    ("q"   nil "cancel" :color blue))
 
 
-  (defhydra hydra-project (:color blue :hint nil)
+  (defhydra hydra-project (:color teal :hint nil)
     "
-                                                                              ╭────────┐
-          Selection                                                           │ Main   │
-        ╭─────────────────────────────────────────────────────────────────────┴────────╯
-          [_d_] dash projects     [_p_] projectile
-          [_f_] fixmee            [_c_] org-capture
-          [_m_] magit             [_t_] travis status
-        --------------------------------------------------------------------------------
-              "
+       Project/Source management
+
+   Projects              Version control        On-the-fly
+  ------------------------------------------------------------------------------------------
+  _d_: dash projects     _m_: magit             _f_: fixmee
+  _p_: projectile        _t_: travis status     _F_: flycheck
+
+  "
     ("<ESC>" nil "quit")
-    ("c"   org-capture)
     ("d"   org-dashboard-display)
     ("p"   hydra-projectile/body)
     ("f"   hydra-fixmee/body)
+    ("F"   hydra-flycheck/body)
     ("m"   hydra-magit/body)
     ("t"   show-my-travis-projects)
-    )
-
-
+    ("q"   nil "cancel" :color blue))
   (global-set-key (kbd "<f4>") 'hydra-project/body)
 #+end_src
-
-** Global keys
-*** Spelling
+** Shell/terminal
 #+begin_src emacs-lisp
-(defhydra hydra-flycheck
-  (:pre (progn (setq hydra-lv t) (flycheck-list-errors))
-   :post (progn (setq hydra-lv nil) (quit-windows-on "*Flycheck errors*"))
-   :hint nil)
-  "Errors"
-  ("f"  flycheck-error-list-set-filter                            "Filter")
-  ("j"  flycheck-next-error                                       "Next")
-  ("k"  flycheck-previous-error                                   "Previous")
-  ("gg" flycheck-first-error                                      "First")
-  ("G"  (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
-  ("q"  nil))
+  ;; Function coming from here: http://www.howardism.org/Technical/Emacs/eshell-fun.html
+  (defun eshell-here ()
+    "Opens up a new shell in the directory associated with the
+  current buffer's file. The eshell is renamed to match that
+  directory to make multiple eshell windows easier."
+    (interactive)
+    (let* ((parent (if (buffer-file-name)
+                       (file-name-directory (buffer-file-name))
+                     default-directory))
+           (height (/ (window-total-height) 3))
+           (name   (car (last (split-string parent "/" t)))))
+      (split-window-vertically (- height))
+      (other-window 1)
+      (eshell "new")
+      (rename-buffer (concat "*eshell: " name "*"))
+
+      (insert (concat "ls"))
+      (eshell-send-input)))
+
+  (defhydra hydra-shell (:color teal :hint nil)
+    "
+       Shell
+
+   Some XX                Help
+  ------------------------------------------------------------------------------------------
+  _p_: start (projectile)
+  "
+    ("p"      projectile-run-eshell)
+
+    ("<ESC>"  nil "quit" :color blue)
+    ("q"      nil "cancel" :color blue))
+  (global-set-key (kbd "<f6>") 'hydra-shell/body)
+
+
 #+end_src
+** Global keys
 *** Compilation
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c C-c") 'compile)
