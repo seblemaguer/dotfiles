@@ -1199,8 +1199,13 @@ Based mainly on C just few adaptations to do here
 #+begin_src emacs-lisp
   (use-package company-php
     :ensure t
+    :after php-mode
     :config
-    (add-to-list 'company-backends 'company-ac-php-backend))
+    (add-hook 'php-mode-hook
+              '(lambda ()
+                 (ac-php-core-eldoc-setup) ;; enable eldoc
+                 (make-local-variable 'company-backends)
+                 (add-to-list 'company-backends 'company-ac-php-backend))))
 #+end_src
 
 ** Praat
