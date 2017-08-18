@@ -1298,9 +1298,9 @@ Based mainly on C just few adaptations to do here
   (use-package ess
     :ensure t
     :config
+
     ;; Subpackage
     (use-package ess-R-data-view :ensure t)
-    (use-package ess-R-object-popup :ensure t)
     (use-package ess-smart-equals :ensure t)
     (use-package ess-smart-underscore :ensure t)
     (use-package ess-view :ensure t))
