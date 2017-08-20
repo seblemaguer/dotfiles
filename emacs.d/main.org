@@ -310,6 +310,10 @@ Try to add this key support
 #+begin_src emacs-lisp
 (use-package darkroom :ensure t)
 #+end_src
+*** ORG/Web tools
+#+begin_src emacs-lisp
+(use-package org-web-tools :ensure t)
+#+end_src
 *** Biblio
 #+begin_src emacs-lisp
   (use-package ivy-bibtex
@@ -3918,16 +3922,21 @@ I actually use this part for minor correction. The tags are done when abcde is c
     "
        Main helper
 
-   General keys     Help
+   Org. related             Help                Zooming
   ------------------------------------------------------------------------------------------
-  _c_: org-capture  _f_: function documentation
-                  ^^_v_: variable documentation
+  _c_: org-capture        _f_: function doc.    _+_: zoom in
+  _g_: org-web-get-url    _v_: variable doc.    _-_: zoom out
+
   "
     ("c"   org-capture)
     ("f" describe-function)
+    ("g" org-web-tools-read-url-as-org)
     ("v" describe-variable)
+    ("+" text-scale-increase :color pink)
+    ("-" text-scale-decrease :color pink)
     ("<ESC>" nil "quit" :color blue)
     ("q"   nil "cancel" :color blue))
+
   (global-set-key (kbd "<f1>") 'hydra-main/body)
 
 #+end_src
