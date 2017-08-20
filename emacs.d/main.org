@@ -1338,6 +1338,15 @@ Based mainly on C just few adaptations to do here
     :config
     (add-to-list 'company-backends '(company-statistics)))
 #+end_src
+** PlantUML
+#+begin_src emacs-lisp
+  (use-package plantuml-mode
+    :ensure t
+    :config
+    (setq plantuml-jar-path "/opt/plantuml/plantuml.jar")
+    ;; Enable plantuml-mode for PlantUML files
+    (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
+#+end_src
 ** XML
 #+BEGIN_SRC emacs-lisp
   (use-package nxml-mode
@@ -1681,7 +1690,7 @@ Based mainly on C just few adaptations to do here
 
   ;; Add packages
   (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
-        org-plantuml-jar-path "/opt/plantuml/plantuml.jar") ;; FIXME: specific to archlinux
+        org-plantuml-jar-path plantuml-jar-path) ;; FIXME: specific to archlinux
 
   ;; Display images directly in the buffer
   (setq org-babel-results-keyword "results")
@@ -1712,7 +1721,7 @@ Based mainly on C just few adaptations to do here
   (setq org-confirm-babel-evaluate nil)
 
   ; Define specific modes for specific tools
-  (add-to-list 'org-src-lang-modes '("plantuml" . fundamental))
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
 
   ;; Don't enable this because it breaks access to emacs from my Android phone
