@@ -3841,9 +3841,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+end_src
 ** Fonts
 #+begin_src emacs-lisp
-  (set-fontset-font "fontset-default" 'unicode "Dejavu Sans Mono")
-  (set-face-font 'default "Inconsolata-11")
-
   (defun set-icon-fonts (CODE-FONT-ALIST)
     "Utility to associate many unicode points with specified fonts."
     (--each CODE-FONT-ALIST
@@ -3851,25 +3848,39 @@ I actually use this part for minor correction. The tags are done when abcde is c
         (--each codes
           (set-fontset-font t `(,it . ,it) font)))))
 
-  ;; The icons you see are not the correct icons until this is evaluated!
-  (set-icon-fonts
-   '(("fontawesome"
-      ;;                         
-      #xf07c #xf0c9 #xf0c4 #xf0cb #xf017 #xf101)
+  (defun load-default-fonts ()
 
-     ("all-the-icons"
-      ;;    
-      #xe907 #xe928)
+    (set-fontset-font "fontset-default" 'unicode "Dejavu Sans Mono")
+    (set-face-font 'default "Inconsolata-11")
 
-     ("github-octicons"
-      ;;                        
-      #xf091 #xf059 #xf076 #xf075 #xf016 #xf00a)
+    ;; The icons you see are not the correct icons until this is evaluated!
+    (set-icon-fonts
+     '(("fontawesome"
+        ;;                         
+        #xf07c #xf0c9 #xf0c4 #xf0cb #xf017 #xf101)
 
-     ("Symbola"
-      ;; 𝕊    ⨂      ∅      ⟻    ⟼     ⊙      𝕋       𝔽
-      #x1d54a #x2a02 #x2205 #x27fb #x27fc #x2299 #x1d54b #x1d53d
-      ;; 𝔹    𝔇       𝔗
-      #x1d539 #x1d507 #x1d517)))
+       ("all-the-icons"
+        ;;    
+        #xe907 #xe928)
+
+       ("github-octicons"
+        ;;                        
+        #xf091 #xf059 #xf076 #xf075 #xf016 #xf00a)
+
+       ("Symbola"
+        ;; 𝕊    ⨂      ∅      ⟻    ⟼     ⊙      𝕋       𝔽
+        #x1d54a #x2a02 #x2205 #x27fb #x27fc #x2299 #x1d54b #x1d53d
+        ;; 𝔹    𝔇       𝔗
+        #x1d539 #x1d507 #x1d517))))
+
+
+  (defun load-fonts (frame)
+    (select-frame frame)
+    (load-default-fonts))
+
+  (if (daemonp)
+      (add-hook 'after-make-frame-functions #'load-fonts)
+    (load-default-fonts))
 #+end_src
 ** Mode line - spaceline
 #+begin_src emacs-lisp
