@@ -2820,6 +2820,17 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   (use-package unison :ensure t)
 #+end_src
 * Internet/network
+** Globalize clickable url
+#+begin_src emacs-lisp
+  (define-globalized-minor-mode global-goto-address-mode
+    goto-address-mode goto-address-mode :group 'goto-address)
+
+  (global-goto-address-mode)
+
+  (define-globalized-minor-mode global-goto-address-prog-mode
+    goto-address-prog-mode goto-address-prog-mode :group 'goto-address)
+
+#+end_src
 ** Searching
 *** Google
 #+begin_src emacs-lisp
