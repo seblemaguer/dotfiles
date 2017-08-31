@@ -437,15 +437,21 @@ Try to add this key support
 #+end_src
 *** Completion
 #+begin_src emacs-lisp
+  (use-package company-irony
+    :ensure t
+    :init
+    (add-to-list  'company-backends '(company-irony)))
 
-  (use-package company-irony :ensure t)
-  (use-package company-irony-c-headers :ensure t)
+  (use-package company-irony-c-headers
+    :ensure t
+    :init
+    (add-to-list  'company-backends '(company-irony-c-headers)))
+
   ;; Eldoc
-  (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
-
-
-
-  (add-to-list  'company-backends '(company-irony-c-headers company-irony))
+  (use-package c-eldoc
+    :ensure t
+    :init
+    (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode))
 #+end_src
 *** Adapt compilation
 #+begin_src emacs-lisp
