@@ -340,8 +340,12 @@ Try to add this key support
     (add-hook 'org-export-before-parsing-hook 'orcp-citeproc))
 
   (use-package interleave
-    :ensure t
-    :commands (interleave interleave-pdf-mode))
+    :defer t
+    :bind ("C-x i" . interleave-mode)
+    :config
+    (setq interleave-split-direction 'horizontal
+          interleave-split-lines 20
+          interleave-disable-narrowing t))
 #+end_src
 * Completion
 ** Counsel
