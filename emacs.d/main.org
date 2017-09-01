@@ -4124,17 +4124,15 @@ I actually use this part for minor correction. The tags are done when abcde is c
     "
        Shell
 
-   Some XX                Help
   ------------------------------------------------------------------------------------------
   _p_: start (projectile)
+  _h_: start (here)
   "
     ("p"      projectile-run-eshell)
-
+    ("h"      eshell-here)
     ("<ESC>"  nil "quit" :color blue)
     ("q"      nil "cancel" :color blue))
   (global-set-key (kbd "<f6>") 'hydra-shell/body)
-
-
 #+end_src
 ** Global keys
 *** Compilation
