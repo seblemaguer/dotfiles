@@ -3967,11 +3967,12 @@ I actually use this part for minor correction. The tags are done when abcde is c
   ------------------------------------------------------------------------------------------
   _c_: org-capture        _f_: function doc.    _+_: zoom in
   _g_: org-web-get-url    _v_: variable doc.    _-_: zoom out
-
+  _m_: new mail
   "
     ("c"   org-capture)
     ("f" describe-function)
     ("g" org-web-tools-read-url-as-org)
+    ("m" mu4e-compose-new)
     ("v" describe-variable)
     ("+" text-scale-increase :color pink)
     ("-" text-scale-decrease :color pink)
