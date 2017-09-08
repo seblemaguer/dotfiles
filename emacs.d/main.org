@@ -1,14 +1,14 @@
 #+TITLE: Emacs configuration file
 #+AUTHOR: Sébastien Le Maguer
 #+EMAIL: slemaguer@coli.uni-saarland.de
-#+DATE:  9 June 2017
 #+DESCRIPTION:
 #+KEYWORDS:
-#+LANGUAGE:  en
-#+OPTIONS:   num:t toc:t  \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+LANGUAGE:  fr
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
-#+SETUPFILE: ~/environment/src/non-install-utils/org-html-themes/setup/theme-readtheorg.setup
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.coli.uni-saarland.de/~slemaguer/default.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
 
 * Preliminary
 ** Define helpers
@@ -1623,40 +1623,6 @@ Based mainly on C just few adaptations to do here
 
      ;; Global shortcut to call org agenda
      (global-set-key (kbd "<f12>") 'org-agenda)
-
-     ;; Visualization
-     (add-hook 'org-finalize-agenda-hook
-               (lambda ()
-                 (save-excursion
-                   ;; MSP calendar
-                   (goto-char (point-min))
-                   (while (re-search-forward "Calendar-MSP:" nil t)
-                     (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
-                                             '(:weight bold :background "Tomato")))
-
-                   ;; MSP hiwis
-                   (goto-char (point-min))
-                   (while (re-search-forward "Calendar-MSP-part-timers:" nil t)
-                     (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
-                                             '(:weight bold :background "DeepSkyBlue")))
-
-                   ;; MSP hiwis
-                   (goto-char (point-min))
-                   (while (re-search-forward "Calendar-studio:" nil t)
-                     (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
-                                             '(:weight bold :background "yellow")))
-
-                   ;; Aikido
-                   (goto-char (point-min))
-                   (while (re-search-forward "Calendar-Aikido:" nil t)
-                     (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
-                                             '(:weight bold :background "yellow")))
-
-                   ;; Personal
-                   (goto-char (point-min))
-                   (while (re-search-forward "Personnal:" nil t)
-                     (add-face-text-property (line-beginning-position) (+ 1 (point-at-eol))
-                                             '(:weight bold :background "green")))))))
 #+end_src
 ** Capturing
 #+begin_src emacs-lisp
