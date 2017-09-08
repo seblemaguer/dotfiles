@@ -910,8 +910,7 @@ Based mainly on C just few adaptations to do here
   (use-package auctex-latexmk
     :ensure t
     :after auctex
-    :config
-    (auctex-latexmk-setup))
+    :init (add-hook 'LaTeX-mode-hook 'auctex-latexmk-setup))
 
 
   ;; Completion
