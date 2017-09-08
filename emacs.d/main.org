@@ -1520,6 +1520,7 @@ Based mainly on C just few adaptations to do here
                                            ("[Mm]eeting" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
                                            ("[Aa]ppointments?" ,(format "%s/third_parties/icons/appointment.png" config-basedir) nil nil :ascent center)
                                            ("[Vv]isitors" ,(format "%s/third_parties/icons/visitors.png" config-basedir) nil nil :ascent center)
+                                           ("synsig" ,(format "%s/third_parties/icons/isca.png" config-basedir) nil nil :ascent center)
                                            ("\\([Tt]rip\\|[Dd]eplacement\\)" ,(format "%s/third_parties/icons/trip.png" config-basedir) nil nil :ascent center)
                                            ("Train" ,(format "%s/third_parties/icons/train.png" config-basedir) nil nil :ascent center)
 
@@ -1628,13 +1629,8 @@ Based mainly on C just few adaptations to do here
     (setq org-super-agenda-groups
 
           '((:name "Important tasks ":priority "A")
-
-           ;; Groups supply their own section names when none are given
-           (:todo "WAITING" :order 8)  ; Set order of this section
-
-           (:todo ("SOMEDAY" "TO-READ" "CHECK" "TO-WATCH" "WATCHING") :order 9)
-
-           (:auto-category t)
+            (:name "SynSIG" :tag "SynSIG")
+            (:auto-category t)
            )))
 #+end_src
 ** Capturing
