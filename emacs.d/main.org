@@ -1668,21 +1668,15 @@ Based mainly on C just few adaptations to do here
 #+end_src
 ** Editing
 #+begin_src emacs-lisp
+  (setq org-list-allow-alphabetical t ;; FIXME quoi qu'est ce?
+        org-highlight-latex-and-related '(latex)
+        org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
+        org-plantuml-jar-path plantuml-jar-path ;; FIXME: specific to archlinux
+        org-babel-results-keyword "results" ;; Display images directly in the buffer
+        org-confirm-babel-evaluate nil
+        org-startup-with-inline-images t)
+
   (use-package org-notebook :ensure t)
-
-  (setq org-list-allow-alphabetical t) ;; FIXME quoi qu'est ce?
-
-  ;; Add packages
-  (setq org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
-        org-plantuml-jar-path plantuml-jar-path) ;; FIXME: specific to archlinux
-
-  ;; Display images directly in the buffer
-  (setq org-babel-results-keyword "results")
-  (add-hook 'org-babel-after-execute-hook 'bh/display-inline-images 'append)
-  (defun bh/display-inline-images ()
-    (condition-case nil
-        (org-display-inline-images)
-      (error nil)))
 
   ;; Add languages
   (use-package ob-ipython :ensure t)
@@ -1701,15 +1695,10 @@ Based mainly on C just few adaptations to do here
                                  (plantuml . t)
                                  (latex . t)))
 
-  ; Do not prompt to confirm evaluation [DANGEROUS BE CAREFULL]
-  (setq org-confirm-babel-evaluate nil)
-
   ; Define specific modes for specific tools
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
 
-  ;; Don't enable this because it breaks access to emacs from my Android phone
-  (setq org-startup-with-inline-images nil)
 #+end_src
 *** Block template
 #+begin_src emacs-lisp
