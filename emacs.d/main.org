@@ -2851,6 +2851,12 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   (use-package ssh :ensure t)
   (use-package ssh-deploy :ensure t)
 #+end_src
+** Monitoring
+#+begin_src emacs-lisp
+  (use-package symon
+    :ensure t
+    :defer t)
+#+end_src
 ** COMMENT unison interaction
 #+begin_src emacs-lisp
   (use-package unison :ensure t)
