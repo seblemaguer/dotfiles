@@ -2071,13 +2071,18 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 * Version control
 ** Git
 *** Magit
+- Externally opening has been copied from https://gist.github.com/dotemacs/9a0433341e75e01461c9
+- Pretty configuration is adapted from https://ekaschalk.github.io/post/pretty-magit/
+
 #+begin_src emacs-lisp
-  ;; Main
   (use-package magit
     :ensure t
     :config
 
     ;; Update visualization
+    (setq pretty-magit-alist nil
+          pretty-magit-prompt nil)
+
     (defmacro pretty-magit (WORD ICON PROPS &optional NO-PROMPT?)
       "Replace sanitized WORD with ICON, PROPS and by default add to prompts."
       `(prog1
@@ -2087,8 +2092,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
          (unless ,NO-PROMPT?
            (add-to-list 'pretty-magit-prompt (concat ,WORD ": ")))))
 
-    (setq pretty-magit-alist nil)
-    (setq pretty-magit-prompt nil)
     (pretty-magit "Feature" ? (:foreground "slate gray" :height 1.2) pretty-magit-prompt)
     (pretty-magit "Add"     ? (:foreground "#375E97" :height 1.2) pretty-magit-prompt)
     (pretty-magit "Fix"     ? (:foreground "#FB6542" :height 1.2) pretty-magit-prompt)
@@ -2113,7 +2116,30 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                    (match-beginning 1) (match-end 1) props))))))))
 
     (advice-add 'magit-status :after 'add-magit-faces)
-    (advice-add 'magit-refresh-buffer :after 'add-magit-faces))
+    (advice-add 'magit-refresh-buffer :after 'add-magit-faces)
+
+
+    ;; Opening repo externally
+    (defun parse-url (url)
+      "convert a git remote location as a HTTP URL"
+      (if (string-match "^http" url)
+          url
+        (replace-regexp-in-string "\\(.*\\)@\\(.*\\):\\(.*\\)\\(\\.git?\\)"
+                                  "https://\\2/\\3"
+                                  url)))
+    (defun magit-open-repo ()
+      "open remote repo URL"
+      (interactive)
+      (let ((url (magit-get "remote" "origin" "url")))
+        (progn
+          (browse-url (parse-url url))
+          (message "opening repo %s" url))))
+
+
+    (add-hook 'magit-mode-hook
+              (lambda ()
+                (local-set-key (kbd "o") 'magit-open-repo))))
+
 
   ;; Some plugins
   (use-package magit-tbdiff :ensure t :after magit)
