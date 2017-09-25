@@ -1063,6 +1063,7 @@ Based mainly on C just few adaptations to do here
           mlint-programs '("mlint" "glnxa64/mlint")))
 #+end_src
 ** Markdown
+*** Global
 #+begin_src emacs-lisp
   (use-package markdown-mode
     :ensure t
@@ -1073,6 +1074,13 @@ Based mainly on C just few adaptations to do here
 
     ;; Subpackage
     (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode)))
+#+end_src
+*** Syntax highlight in block
+#+begin_src emacs-lisp
+  (use-package polymode
+    :ensure t
+    :config
+    (require 'poly-markdown))
 #+end_src
 ** PDF
 *** Global
