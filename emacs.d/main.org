@@ -4258,16 +4258,9 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (set (make-local-variable 'org-startup-folded) t))
 #+end_src
 ** Starting processes
-*** Mail
 #+begin_src emacs-lisp
 (mu4e t)
-#+end_src
-*** Elfeed
-#+begin_src emacs-lisp
 (elfeed-update-background-start)
-#+end_src
-*** Notification
-#+begin_src emacs-lisp
 (sauron-start-hidden)
 #+end_src
 ** Daemon mode
