@@ -3595,6 +3595,32 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
              ("a" . sx-ask)
              ("s" . sx-search)))
 #+end_src
+** github
+#+begin_src emacs-lisp
+  (defun gh-issue-new-url (project title body)
+    "Generate the github url based on the PROJECT for the base and as the parameters TITLE and BODY"
+    (concat "https://github.com/"
+            project
+            "/issues/new?title="
+            (url-hexify-string title)
+            "&body="
+            (url-hexify-string body)))
+
+  (defun gh-issue-new-browse (project title body)
+    "Open the browser at the issue page"
+    (browse-url (gh-issue-new-url project title body)))
+
+  (defun gh-issue-get-project ()
+    "Get the project name based on the GH-PROJECT property"
+    (org-entry-get (point) "GH-PROJECT" t))
+
+  (defun gh-issue-create ()
+    "Create an issue based on the current entry of the org tree"
+    (interactive)
+    (gh-issue-new-browse (gh-issue-get-project)
+                         (org-get-heading t t)
+                         (org-export-as 'gfm t)))
+#+end_src
 * Music
 ** Global
 #+begin_src emacs-lisp
