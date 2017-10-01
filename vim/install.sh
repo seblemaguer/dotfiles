@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # Linking !
-rm -rf ~/.vimrc; ln -s $PWD/vimrc  ~/.vimrc
+# rm -rf ~/.vimrc; ln -s $PWD/vimrc  ~/.vimrc
 
 if [ ! -e $HOME/.vim ]
 then
