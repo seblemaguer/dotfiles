@@ -155,11 +155,19 @@ Try to add this key support
   (use-package fold-dwim :ensure t)
 #+end_src
 ** Edition
+*** Edit simultanously multiple region
 #+begin_src emacs-lisp
   (use-package iedit
     :ensure t
     :config
     (delete-selection-mode t))
+#+end_src
+*** Alignment
+#+begin_src emacs-lisp
+(defun align-to-equals (begin end)
+  "Align region to equal signs"
+   (interactive "r")
+   (align-regexp begin end "\\(\\s-*\\)=" 1 1 ))
 #+end_src
 ** Recent file
 #+begin_src emacs-lisp
