@@ -116,7 +116,7 @@ Inbox ~/maildir/Saarland/INBOX
 Channel Saarland
 Master :Saarland-remote:
 Slave :Saarland-local:
-Patterns "INBOX" *
+# Patterns "INBOX" *
 Create Slave
 Sync All
 Expunge Both
