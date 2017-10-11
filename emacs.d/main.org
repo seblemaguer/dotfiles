@@ -1500,6 +1500,7 @@ Based mainly on C just few adaptations to do here
     :config
 
     ;; Todo part
+    (setq org-agenda-files '())
     (when (file-exists-p "~/Dropbox/org/todo/todo.org")
       (setq org-agenda-files
             (append org-agenda-files '("~/Dropbox/org/todo/todo.org"))))
