@@ -11,6 +11,7 @@ ignore = [
     'latex-packages',
     'mail',
     'python',
+    'README.md',
     'system',
     'texmf'
     'vcs',
