@@ -20,72 +20,72 @@ else
         export EDITOR=emacs
     fi
 
-    ZSH=$HOME/.oh-my-zsh
-    COMPLETION_WAITING_DOTS="true"
-
-
-    #############################################################################################################
-    #### Plugins
-    #############################################################################################################
-    fpath=($HOME/.zsh/gradle-completion $fpath)
-    plugins=(mercurial svn # Versioning
-             git github git-remote-branch gitfast git-extras # Git helpers
-             perl python ruby json-tools # Languages
-             history-substring-search # helpers
-             mvn gradle-completion # Building tools
-             cp docker virtualenv gpg-utils adb # some remapping of the system commands
-             gnu-utils colored-man rsync sudo # Diverse helpers
-             zgen load
-            )
-
-    case `uname` in
-        Darwin)
-            plugins=($plugins brew brew-cask osx) # Mac specific
-            ;;
-        Linux)
-            plugins=($plugins debian ubuntu) # Linux specific
-            ;;
-    esac
-
-    plugins=($plugins zsh-syntax-highlighting) # Highlighting
-
-
-
-    #############################################################################################################
-    #### Themes
-    #############################################################################################################
-    # = FIXME: what is that ?
-    if [ "$INSIDE_EMACS" ]
+    # Load Antigen
+    if [ ! -e ~/.antigen.zsh ]
     then
-        chpwd() { print -P "\033AnSiTc %d" }
-        print -P "\033AnSiTu %n"
-        print -P "\033AnSiTc %d"
-        ZSH_THEME="rawsyntax"
-    else
-        ZSH_THEME="bullet-train/bullet-train"
-        BULLETTRAIN_PROMPT_ORDER=(
-                time
-                status
-                custom
-                context
-                dir
-                perl
-                ruby
-                virtualenv
-                # nvm
-                # go
-                git
-                hg
-                cmd_exec_time
-        )
+        curl -L git.io/antigen > ~/.antigen.zsh
     fi
+    source ~/.antigen.zsh
+
+    # Load various lib files
+    antigen use oh-my-zsh
+    # antigen bundle robbyrussell/oh-my-zsh lib/
+
+    # VCS bundle
+    antigen bundle git
+    antigen bundle github
 
 
+    antigen bundle djui/alias-tips
 
-    #############################################################################################################
-    #### Apply oh-my-zsh as the configuration is done
-    #############################################################################################################
-    source $ZSH/oh-my-zsh.sh
+    antigen bundle HeroCC/LS_COLORS
+    antigen bundle trapd00r/zsh-syntax-highlighting-filetypes
+    antigen bundle zsh-users/zsh-syntax-highlighting
+
+    #
+    # Antigen Bundles
+    #
+    antigen bundle tmuxinator
+    antigen bundle zsh-users/zsh-completions
+    antigen bundle zsh-users/zsh-autosuggestions
+    antigen bundle rupa/z
+    antigen bundle command-not-found
+
+    antigen bundle docker
+    antigen bundle rsync
+    antigen bundle sudo
+
+    antigen bundle colored-man-pages
+    antigen bundle kennethreitz/autoenv
+
+    # For SSH, starting ssh-agent is annoying
+    antigen bundle ssh-agent
+
+    # Node Plugins
+    antigen bundle coffee
+    antigen bundle node
+    antigen bundle npm
+
+    # Python Plugins
+    antigen bundle pip
+    antigen bundle python
+    antigen bundle virtualenv
+
+    # Java & gradle
+    antigen bundle gradle/gradle-completion
+
+
+    # Theme
+    antigen theme bhilburn/powerlevel9k powerlevel9k
+    # antigen theme caiogondim/bullet-train-oh-my-zsh-theme bullet-train
+
+
+    # Distro specific
+    antigen bundle archlinux
+
+    # Tell Antigen that you're done.
+    antigen apply
+
 
 
     #############################################################################################################
@@ -146,9 +146,6 @@ else
     APPEND_HISTORY=true
     HIST_EXPIRE_DUPS_FIRST=true
     HIST_ALLOW_CLOBBER=true
-
-    bindkey '\eOA' history-substring-search-up
-    bindkey '\eOB' history-substring-search-down
 
     # = Diverse
     AUTO_CD=true
