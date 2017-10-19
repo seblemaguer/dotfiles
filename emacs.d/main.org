@@ -499,8 +499,8 @@ Based mainly on C just few adaptations to do here
   (use-package config-general-mode
     :ensure t
     :config
-     (add-to-list 'auto-mode-alist '("\\.conf$" . config-general-mode))
-     (add-to-list 'auto-mode-alist '("\\.*rc$"  . config-general-mode)))
+    (add-to-list 'auto-mode-alist '("\\.conf$" . config-general-mode))
+    (add-to-list 'auto-mode-alist '("\\.*rc$"  . config-general-mode)))
 #+end_src
 *** Authinfo
 #+begin_src emacs-lisp
@@ -1360,8 +1360,8 @@ Based mainly on C just few adaptations to do here
   (use-package company-statistics
     :ensure t
     :after company
-    :config
-    (add-to-list 'company-backends '(company-statistics)))
+    :init
+    (add-hook 'after-init-hook 'company-statistics-mode))
 #+end_src
 ** PlantUML
 #+begin_src emacs-lisp
@@ -2391,6 +2391,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package treemacs
     :ensure t
+    :after hl-line-mode
     :config
     (setq treemacs-follow-after-init          t
           treemacs-width                      35
@@ -3085,7 +3086,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   #+end_src
 *** Mu4e part
  #+begin_src emacs-lisp
-   (add-to-list 'load-path "/usr/share/emacs/site-lisp/mu4e/")
    (use-package mu4e
      :config
      ;; Subpackages
