@@ -21,8 +21,8 @@ def decrypt(filename):
     # homedir = os.getenv("HOME") + "/.gnupg/"
     # with open(os.path.expanduser(authinfo), "rb") as f:
     #     decrypted_data = gnupg.GPG(binary=binary, homedir=homedir).decrypt(f.read())
-
-    return check_output("%s -dq %s" % (GPG_PROG, filename), shell=True).decode("utf-8")
+    with open(os.devnull, 'w') as devnull:
+        return check_output("%s -dq %s" % (GPG_PROG, filename), shell=True, stderr=devnull).decode("utf-8")
 
 def contains(d, m):
     '''Return True if d contains all items of m.'''
