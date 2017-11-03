@@ -638,6 +638,14 @@ Based mainly on C just few adaptations to do here
      ;; Define separators
      (setq csv-separators '("," ";" ":" " ")))
  #+end_src
+** Cue
+#+begin_src emacs-lisp
+  (use-package cue-mode
+    :ensure t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.cue$" . cue-mode)))
+
+#+end_src
 ** Graphviz
 #+begin_src emacs-lisp
 
