@@ -986,12 +986,36 @@ Based mainly on C just few adaptations to do here
 #+end_src
 *** Bibtex
 #+begin_src emacs-lisp
-  (setq bibtex-align-at-equal-sign t
-        bibtex-autokey-name-year-separator ""
-        bibtex-autokey-year-title-separator ""
-        bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an")
-        bibtex-autokey-titleword-length 100
-        bibtex-autokey-titlewords 1)
+  (use-package bibtex
+    :config
+    (defun bibtex-generate-autokey ()
+      (let* ((bibtex-autokey-names nil)
+             (bibtex-autokey-year-length 2)
+             (bibtex-autokey-name-separator "\0")
+             (names (split-string (bibtex-autokey-get-names) "\0"))
+             (year (bibtex-autokey-get-year))
+             (name-char (cond ((= (length names) 1) 4)
+                              ((= (length names) 2) 2)
+                              (t 1)))
+             (existing-keys (bibtex-parse-keys))
+             key)
+        (setq names (mapconcat (lambda (x)
+                                 (substring x 0 name-char))
+                               names
+                               ""))
+        (setq key (format "%s%s" names year))
+        (let ((ret key))
+          (loop for c from ?a to ?z
+                while (assoc ret existing-keys)
+                do (setq ret (format "%s%c" key c)))
+          ret)))
+
+    (setq bibtex-align-at-equal-sign t
+          bibtex-autokey-name-year-separator ""
+          bibtex-autokey-year-title-separator ""
+          bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an")
+          bibtex-autokey-titleword-length 100
+          bibtex-autokey-titlewords 1))
 #+end_src
 *** Completion
 #+begin_src emacs-lisp
