@@ -1162,6 +1162,16 @@ Based mainly on C just few adaptations to do here
   ;; Pretty print for lisp
   (use-package ipretty :ensure t)
 #+end_src
+** Lua
+#+begin_src emacs-lisp
+  (use-package lua-mode
+    :ensure t)
+
+  (use-package company-lua
+    :after lua-mode
+    :after company
+    :ensure t)
+#+end_src
 ** Matlab
 *** Global
 #+begin_src emacs-lisp
