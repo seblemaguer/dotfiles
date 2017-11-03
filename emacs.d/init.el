@@ -33,7 +33,7 @@
 (require 'package)
 
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives '("local-melpa" . "http://localhost/packages/"))
+(add-to-list 'package-archives '("local-melpa" . "http://localhost/melpa/packages/"))
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("orgmode" . "http://orgmode.org/elpa/"))
 (package-initialize)
