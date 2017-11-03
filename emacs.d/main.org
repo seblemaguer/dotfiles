@@ -3870,6 +3870,14 @@ I actually use this part for minor correction. The tags are done when abcde is c
           emms-browser-playlist-info-album-format "%cS %a - %A : "
           emms-browser-playlist-info-title-format "%T. %t [%d]"))
 #+end_src
+* Weather
+#+begin_src emacs-lisp
+(use-package wttrin
+  :ensure t
+  :commands (wttrin)
+  :init
+  (setq wttrin-default-cities '("Saarbrücken" "Lannion" "Sofia")))
+#+end_src
 * Visual
 ** Global theme
 #+begin_src emacs-lisp
