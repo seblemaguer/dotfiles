@@ -388,6 +388,45 @@ Try to add this key support
           interleave-split-lines 20
           interleave-disable-narrowing t))
 #+end_src
+** Service management
+#+begin_src emacs-lisp
+  (use-package prodigy
+    :ensure t
+    :config
+
+    (prodigy-define-service
+      :name "Saarland imap notify"
+      :command "imapnotify"
+      :args '("-c" "~/configuration/imapnotify/saarland.js")
+      :tags '(work)
+      :stop-signal 'sigterm
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "sebgmail imap notify"
+      :command "imapnotify"
+      :args '("-c" "~/configuration/imapnotify/sebgmail.js")
+      :tags '(work)
+      :stop-signal 'sigterm
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "DFKI imap notify"
+      :command "imapnotify"
+      :args '("-c" "~/configuration/imapnotify/dfki.js")
+      :tags '(work)
+      :stop-signal 'sigterm
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "MMCI imap notify"
+      :command "imapnotify"
+      :args '("-c" "~/configuration/imapnotify/mmci.js")
+      :tags '(work)
+      :stop-signal 'sigterm
+      :kill-process-buffer-on-stop t)
+    )
+#+end_src
 * Completion
 ** Counsel
 #+BEGIN_SRC emacs-lisp
