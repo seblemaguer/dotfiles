@@ -626,7 +626,7 @@ Based mainly on C just few adaptations to do here
 (setq scss-compile-at-save 'nil)
 (add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
 #+END_SRC
-** CSV part
+** CSV
  #+begin_src emacs-lisp
    (use-package csv-mode
      :ensure t
