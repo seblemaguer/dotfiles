@@ -1936,7 +1936,7 @@ Based mainly on C just few adaptations to do here
         (html (format "<video controls src=\"%s\"></video>" path (or desc "")))))
     (org-add-link-type "video" #'ignore #'endless/export-video-link)
 
-    (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/firefox %s")))
+    (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/vivaldi-stable %s")))
 #+end_src
 *** LaTeX
 #+begin_src emacs-lisp
