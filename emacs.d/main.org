@@ -2202,6 +2202,26 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :ensure t
     :config
 
+    ;; Ignore recent commit
+    (setq magit-status-sections-hook
+          '(magit-insert-status-headers
+            magit-insert-merge-log
+            magit-insert-rebase-sequence
+            magit-insert-am-sequence
+            magit-insert-sequencer-sequence
+            magit-insert-bisect-output
+            magit-insert-bisect-rest
+            magit-insert-bisect-log
+            magit-insert-untracked-files
+            magit-insert-unstaged-changes
+            magit-insert-staged-changes
+            magit-insert-stashes
+            magit-insert-unpulled-from-upstream
+            magit-insert-unpulled-from-pushremote
+            magit-insert-unpushed-to-upstream
+            magit-insert-unpushed-to-pushremote))
+
+
     ;; Update visualization
     (setq pretty-magit-alist nil
           pretty-magit-prompt nil)
@@ -2216,10 +2236,10 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
            (add-to-list 'pretty-magit-prompt (concat ,WORD ": ")))))
 
     (pretty-magit "Feature" ? (:foreground "slate gray" :height 1.2) pretty-magit-prompt)
-    (pretty-magit "Add"     ? (:foreground "#375E97" :height 1.2) pretty-magit-prompt)
-    (pretty-magit "Fix"     ? (:foreground "#FB6542" :height 1.2) pretty-magit-prompt)
-    (pretty-magit "Clean"   ? (:foreground "#FFBB00" :height 1.2) pretty-magit-prompt)
-    (pretty-magit "Docs"    ? (:foreground "#3F681C" :height 1.2) pretty-magit-prompt)
+    (pretty-magit ": add"   ? (:foreground "#375E97" :height 1.2) pretty-magit-prompt)
+    (pretty-magit ": fix"   ? (:foreground "#FB6542" :height 1.2) pretty-magit-prompt)
+    (pretty-magit ": clean" ? (:foreground "#FFBB00" :height 1.2) pretty-magit-prompt)
+    (pretty-magit ": docs"  ? (:foreground "#3F681C" :height 1.2) pretty-magit-prompt)
     (pretty-magit "master"  ? (:box t :height 1.2) t)
     (pretty-magit "origin"  ? (:box t :height 1.2) t)
 
