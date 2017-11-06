@@ -20,11 +20,10 @@ SSLType IMAPS
 IMAPStore HikoGmail-remote
 Account HikoGmail
 
-
 MaildirStore HikoGmail-local
 Path ~/maildir/HikoGmail/
 Inbox ~/maildir/HikoGmail/INBOX
-
+SubFolders Legacy
 
 Channel HikoGmail
 Master :HikoGmail-remote:
@@ -50,11 +49,10 @@ SSLType IMAPS
 IMAPStore SebGmail-remote
 Account SebGmail
 
-
 MaildirStore SebGmail-local
 Path ~/maildir/SebGmail/
 Inbox ~/maildir/SebGmail/INBOX
-
+SubFolders Legacy
 
 Channel SebGmail
 Master :SebGmail-remote:
@@ -112,11 +110,12 @@ Account Saarland
 MaildirStore Saarland-local
 Path ~/maildir/Saarland/
 Inbox ~/maildir/Saarland/INBOX
+SubFolders Legacy
 
 Channel Saarland
 Master :Saarland-remote:
 Slave :Saarland-local:
-# Patterns "INBOX" *
+Patterns "INBOX" *
 Create Slave
 Sync All
 Expunge Both
@@ -172,6 +171,7 @@ UseNamespace yes
 MaildirStore MMCI-local
 Path ~/maildir/MMCI/
 Inbox ~/maildir/MMCI/INBOX
+SubFolders Legacy
 
 Channel MMCI
 Master :MMCI-remote:
