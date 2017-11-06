@@ -82,10 +82,6 @@ the third argument is not nil."
       'make-local-hook
     'ignore))
 #+end_src
-** Adding subpart
-#+begin_src emacs-lisp
-  (my-add-to-load-path (format "%s/subpart" config-basedir) t t)
-#+end_src
 * Packages
 ** Paradox
 #+begin_src emacs-lisp
