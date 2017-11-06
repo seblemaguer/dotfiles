@@ -10,78 +10,6 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.coli.uni-saarland.de/~slemaguer/default.css" />
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
 
-* Preliminary
-** Define helpers
-*** Recursive adding path
-#+begin_src emacs-lisp
-(defun my-add-to-load-path (this-directory &optional with-subdirs recursive)
-  "Add THIS-DIRECTORY at the beginning of the load-path, if it exists.
-Add all its subdirectories not starting with a '.' if the
-optional argument WITH-SUBDIRS is not nil. Do it recursively if
-the third argument is not nil."
-  (when this-directory
-    (when (file-directory-p this-directory)
-      (let* ((this-directory (expand-file-name this-directory))
-             (files (directory-files this-directory t "^[^\\.]")))
-
-        ;; completely canonicalize the directory name (*may not* begin with `~')
-        (while (not (string= this-directory (expand-file-name this-directory)))
-          (setq this-directory (expand-file-name this-directory)))
-
-        (message "Adding `%s' to load-path..." this-directory)
-        (add-to-list 'load-path this-directory)
-
-        (if with-subdirs
-            (progn
-              (while files
-                (setq dir-or-file (car files))
-                (when (file-directory-p dir-or-file)
-                  (if recursive
-                      (my-add-to-load-path dir-or-file 'with-subdirs 'recursive)
-                    (my-add-to-load-path dir-or-file)))
-                (setq files (cdr files)))))
-        )
-      )
-    )
-  )
-#+end_src
-*** Authentification
-#+begin_src emacs-lisp
-(defun* my:auth-source-get-passwd (&rest spec &allow-other-keys)
-  (let ((founds (apply 'auth-source-search spec)))
-    (when founds
-      (funcall (plist-get (nth 0 founds) :secret)))))
-
-(defun* my:auth-source-get-user (&rest spec &allow-other-keys)
-  (let ((founds (apply 'auth-source-search spec)))
-    (when founds
-      (plist-get (nth 0 founds) :user))))
-#+end_src
-*** Editing as root
-#+begin_src emacs-lisp
-(defun edit-current-file-as-root ()
-  "Edit the file that is associated with the current buffer as root"
-  (interactive)
-  (if (buffer-file-name)
-      (progn
-        (setq file (concat "/sudo:localhost:" (buffer-file-name)))
-        (find-file file))
-    (message "Current buffer does not have an associated file.")))
-#+end_src
-** Mac define options
-#+BEGIN_SRC emacs-lisp
-(setq mac-option-modifier nil
-      mac-command-modifier 'meta
-      x-select-enable-clipboard t)
-#+END_SRC
-** Adding make-local-hook patch
-#+begin_src emacs-lisp
-;; Even if it is obsolete, make-local-hook is still used => ignore the call of thic function
-(defalias 'make-local-hook
-  (if (featurep 'xemacs)
-      'make-local-hook
-    'ignore))
-#+end_src
 * Packages
 ** Paradox
 #+begin_src emacs-lisp
@@ -123,7 +51,31 @@ the third argument is not nil."
         (message "All packages are up to date"))))
 #+end_src
 * Global
-** accent problem:
+** Helpers
+*** Authentification
+#+begin_src emacs-lisp
+(defun* my:auth-source-get-passwd (&rest spec &allow-other-keys)
+  (let ((founds (apply 'auth-source-search spec)))
+    (when founds
+      (funcall (plist-get (nth 0 founds) :secret)))))
+
+(defun* my:auth-source-get-user (&rest spec &allow-other-keys)
+  (let ((founds (apply 'auth-source-search spec)))
+    (when founds
+      (plist-get (nth 0 founds) :user))))
+#+end_src
+*** Editing as root
+#+begin_src emacs-lisp
+(defun edit-current-file-as-root ()
+  "Edit the file that is associated with the current buffer as root"
+  (interactive)
+  (if (buffer-file-name)
+      (progn
+        (setq file (concat "/sudo:localhost:" (buffer-file-name)))
+        (find-file file))
+    (message "Current buffer does not have an associated file.")))
+#+end_src
+** accent problem
 #+begin_src emacs-lisp
 (load-library "iso-transl")
 #+end_src
@@ -4179,6 +4131,11 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+end_src
 
 * Keys/shortcuts
+** Mac adaptation
+#+begin_src emacs-lisp
+(setq mac-option-modifier nil
+      mac-command-modifier 'meta)
+#+end_src
 ** Main entry
 #+begin_src emacs-lisp
   (defhydra hydra-main (:color teal :hint nil)
