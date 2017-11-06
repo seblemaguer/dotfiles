@@ -1,0 +1,126 @@
+% v4.6
+\ProvidesFile{italian-apa.lbx}
+\InheritBibliographyExtras{italian}
+
+% (APA 6.22) The example abbreviations
+
+\NewBibliographyString{revisededition}
+\NewBibliographyString{typechair}
+\NewBibliographyString{typechairs}
+\NewBibliographyString{typevolume}
+\NewBibliographyString{typevolumes}
+\NewBibliographyString{typeseries}
+\NewBibliographyString{typeseriess}
+\NewBibliographyString{typevolseries}
+\NewBibliographyString{typevolseriess}
+\NewBibliographyString{on}
+\NewBibliographyString{retrieved}
+\NewBibliographyString{available}
+\NewBibliographyString{from}
+\NewBibliographyString{nodate}
+\NewBibliographyString{archivedat}
+\NewBibliographyString{origyear}
+\NewBibliographyString{reviewof}
+
+\DeclareBibliographyStrings{%
+  inherit          = {italian},
+  revisededition   = {{Edizione\space Revisionata}{Ed\adddot\space Rev\adddot}},
+  page             = {{Pagina}{{}p\adddot}},
+  pages            = {{Pagine}{{}pp\adddot}},
+  on               = {{il}{il}},
+  retrieved        = {{recuperato}{recuperato}},
+  available        = {{disponibile}{disponibile}},
+  from             = {{da}{da}},
+  archivedat       = {{archiviato\space il}{archiviato\space il}},
+  nodate           = {{senza\space data}{{}n\adddot d\adddot}},
+  reviewof         = {{Revisione\space di}{revisione\space di}},
+  paragraph        = {{\P}{\P}},
+  paragraphs       = {{\P\P}{\P\P}},
+  january          = {{Gennaio}{Gennaio}},
+  february         = {{Febbraio}{Febbraio}},
+  march            = {{Marzo}{Marzo}},
+  april            = {{Aprile}{Aprile}},
+  may              = {{Maggio}{Maggio}},
+  june             = {{Giugno}{Giugno}},
+  july             = {{Luglio}{Luglio}},
+  august           = {{Agosto}{Agosto}},
+  september        = {{Settembre}{Settembre}},
+  october          = {{Ottobre}{Ottobre}},
+  november         = {{Novembre}{Novembre}},
+  december         = {{Deicembre}{Dicembre}},
+  mathesis         = {{Tesi\space di\space laurea}{Tesi\space di\space laurea}},
+  phdthesis        = {{Tesi\space di\space dottorato}{Tesi\space di\space dottorato}},
+  origyear         = {{Data\space di\space prima\space pubblicazione}{Data\space di\space prima\space pubblicazione}},
+  typechair        = {{Moderatore}{Moderatore}},
+  typechairs       = {{Moderatori}{Moderatori}},
+  typevolume       = {{Redattore\space del\space Volume}{Red\adddot\space Vol\adddot}},
+  typevolumes      = {{Redattori\space del\space Volume}{Red\adddot\space Vol\adddot}},
+  typeseries       = {{Curatore\space della\space Collana}{Cur\addot\space Coll\adddot}},
+  typeseriess      = {{Curatori\space della\space Collana}{Cur\addot\space Coll\adddot}},
+  typevolseries    = {{Curatore\space della\space Collana\space e\space del\space Volume}{Cur\addot\space Coll\addot\& Vol\adddot}},
+  typevolseriess   = {{Curatori\space della\space Collana\space e\space del\space Volume}{Cur\addot\space Coll\addot\& Vol\adddot}},
+}
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% (APA 7.10 Example 68) Drop end* when they are the same as *
+
+% You must use \printdate to get here otherwise it will be ignored
+
+\DefineBibliographyExtras{italian}{%
+  \protected\def\mkbibdateapalong#1#2#3{%
+    \iffieldundef{#1}%
+      {}%
+      {\thefield{#1}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#1}%
+        {}%
+        {\addcomma\addspace}%
+       \mkbibmonth{\thefield{#2}}}%
+    \iffieldundef{#3}%
+      {}%
+      {\ifthenelse{\iffieldundef{#2}\OR\iffieldundef{#1}}%
+        {}%
+        {\addspace}%
+       \stripzeros{\thefield{#3}}}}%
+  \protected\def\mkbibdateapalongextra#1#2#3{%
+    \iffieldundef{#1}%
+      {}%
+      {\thefield{#1}\printfield{extrayear}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#1}%
+        {}%
+        {\addcomma\addspace}%
+       \mkbibmonth{\thefield{#2}}}%
+    \iffieldundef{#3}%
+      {}%
+      {\ifthenelse{\iffieldundef{#2}\OR\iffieldundef{#1}}%
+        {}%
+        {\addspace}%
+       \stripzeros{\thefield{#3}}}}%
+  \protected\def\mkbibdateapalongmdy#1#2#3{%
+    \iffieldundef{#2}%
+      {}%
+      {\mkbibmonth{\thefield{#2}}}%
+    \iffieldundef{#3}%
+      {}%
+      {\addspace}%
+       \stripzeros{\thefield{#3}}%
+    \iffieldundef{#1}%
+      {}%
+      {\ifthenelse{\iffieldundef{#3}}%
+        {\ifthenelse{\iffieldundef{#2}}%
+          {}%
+          {\addspace}}%
+        {\addcomma\addspace}%
+       \thefield{#1}}}}
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\endinput

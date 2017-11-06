@@ -1,0 +1,18 @@
+[dotfiles]
+repository = ~/configuration
+ignore = [
+    '.git',
+    '.gitignore',
+    '*.swp',
+    'abcde',
+    'dotfilesrc',
+    'install.sh',
+    'latexmk',
+    'latex-packages',
+    'mail',
+    'python',
+    'system',
+    'vcs',
+    'vim']
+
+externals = {}

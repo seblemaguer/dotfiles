@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=SebgmailImapNotify
+GenericName=Sebgmail mail Synchronizer
+Comment=start imapnotify on the Sebgmail Account
+Exec=imapnotify -c /home/slemaguer/.imapnotify/sebgmail.js
+Terminal=false
+Type=Application
+Categories=Network;FileTransfer;
+StartupNotify=false

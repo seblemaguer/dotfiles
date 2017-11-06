@@ -1,0 +1,7 @@
+** REVIEW %?%:description
+:LOGBOOK:
+- Added: %U
+:END:
+%:link
+
+%i

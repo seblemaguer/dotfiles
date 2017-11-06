@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=MmciImapNotify
+GenericName=Mmci mail Synchronizer
+Comment=start imapnotify on the Mmci Account
+Exec=imapnotify -c /home/slemaguer/.imapnotify/mmci.js
+Terminal=false
+Type=Application
+Categories=Network;FileTransfer;
+StartupNotify=false

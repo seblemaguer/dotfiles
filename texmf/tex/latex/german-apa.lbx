@@ -1,0 +1,124 @@
+% v4.6
+\ProvidesFile{german-apa.lbx}
+\InheritBibliographyExtras{german}
+
+% (APA 6.22) The example abbreviations
+
+\NewBibliographyString{revisededition}
+\NewBibliographyString{typechair}
+\NewBibliographyString{typechairs}
+\NewBibliographyString{typevolume}
+\NewBibliographyString{typevolumes}
+\NewBibliographyString{typeseries}
+\NewBibliographyString{typeseriess}
+\NewBibliographyString{typevolseries}
+\NewBibliographyString{typevolseriess}
+\NewBibliographyString{on}
+\NewBibliographyString{retrieved}
+\NewBibliographyString{available}
+\NewBibliographyString{from}
+\NewBibliographyString{nodate}
+\NewBibliographyString{archivedat}
+\NewBibliographyString{origyear}
+\NewBibliographyString{reviewof}
+
+\DeclareBibliographyStrings{%
+  inherit          = {german},
+  january          = {{Januar}{Januar}},
+  february         = {{Februar}{Februar}},
+  march            = {{M\"arz}{M\"arz}},
+  april            = {{April}{April}},
+  may              = {{Mai}{Mai}},
+  june             = {{Juni}{Juni}},
+  july             = {{Juli}{Juli}},
+  august           = {{August}{August}},
+  september        = {{September}{September}},
+  october          = {{Oktober}{Oktober}},
+  november         = {{November}{November}},
+  december         = {{Dezember}{Dezember}},
+  revisededition   = {{\"Uberarbeitete\space Auflage}{\"Uberarb\adddot\space Aufl\adddot}},
+  page             = {{Seite}{{}S\adddot}},
+  pages            = {{Seiten}{{}S\adddot}},
+  on               = {{am}{am}},
+  retrieved        = {{Zugriff\space am}{Zugriff\space am}},
+  available        = {{Erh\"altlich}{Erh\"altlich}},
+  from             = {{unter}{unter}},
+  archivedat       = {{archiviert\space unter}{archiviert\space unter}},
+  nodate           = {{ohne\space Datum}{{}o\adddot D\adddot}},
+  reviewof         = {{Rezension\space des}{Rezension\space des}},
+  paragraph        = {{\P}{\P}},
+  paragraphs       = {{\P\P}{\P\P}},
+  origyear         = {{Original\space ver\"offentlicht}{Original\space ver\"offentlicht}},
+  typechair        = {{Konferenzstuhl}{Konferenzstuhl}},
+  typechairs       = {{Konferenzst\"uhle}{Konferenzst\"uhle}},
+  typevolume       = {{Band\space Herausgeber}{Bd\adddot\space Hrsg\adddot}},
+  typevolumes      = {{Band\space Herausgeber}{Bd\adddot\space Hrsg\adddot}},
+  typeseries       = {{Reihe\space Herausgeber}{Reihe\space Hrsg\adddot}},
+  typeseriess      = {{Reihe\space Herausgeber}{Reihe\space Hrsg\adddot}},
+  typevolseries    = {{Reihe\space und\space Band\space Herausgeber}{Reihe\space\& Bd\adddot\space Hrsg\adddot}},
+  typevolseriess   = {{Reihe\space und\space Band\space Herausgeber}{Reihe\space\& Bd\adddot\space Hrsg\adddot}},
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% (APA 7.10 Example 68) Drop end* when they are the same as *
+
+% You must use \printdate to get here otherwise it will be ignored
+\DefineBibliographyExtras{german}{%
+  \protected\def\mkbibdateapalong#1#2#3{%
+    \iffieldundef{#1}%
+      {}%
+      {\thefield{#1}}%
+    \iffieldundef{#3}%
+      {}%
+      {\iffieldundef{#1}%
+        {}
+        {\addcomma\addspace}%
+       \stripzeros{\thefield{#3}}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#3}
+        {\iffieldundef{#1}
+          {}
+          {\addspace}}%
+        {\adddot\addspace}%
+       \mkbibmonth{\thefield{#2}}}}%
+  \protected\def\mkbibdateapalongextra#1#2#3{%
+    \iffieldundef{#1}%
+      {}%
+      {\thefield{#1}\printfield{extrayear}}%
+    \iffieldundef{#3}%
+      {}%
+      {\iffieldundef{#1}%
+        {}
+        {\addcomma\addspace}%
+       \stripzeros{\thefield{#3}}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#3}
+        {\iffieldundef{#1}
+          {}
+          {\addspace}}%
+        {\adddot\addspace}%
+       \mkbibmonth{\thefield{#2}}}}%
+  \protected\def\mkbibdateapalongmdy#1#2#3{%
+    \iffieldundef{#3}%
+      {}%
+      {\stripzeros{\thefield{#3}}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#3}%
+        {}%
+        {\adddot\addspace}%
+       \mkbibmonth{\thefield{#2}}}%
+    \iffieldundef{#1}%
+      {}%
+      {\iffieldundef{#2}%
+        {}%
+        {\addspace}%
+       \thefield{#1}}}}
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\endinput

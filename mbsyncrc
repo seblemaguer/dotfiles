@@ -1,0 +1,183 @@
+##########################################################################
+####
+#### To archive a maildir with mu4 => just comment the corresponding conf.
+####   on this file
+####
+##########################################################################
+
+
+##########################################################################
+# Gmail bulk
+##########################################################################
+IMAPAccount HikoGmail
+Host imap.gmail.com
+User hikoseb@gmail.com
+PassCmd "python3 ~/.get_passwd.py 'imap.gmail.com' 'hikoseb@gmail.com'"
+Port 993
+SSLType IMAPS
+# CertificateFile /etc/ssl/certs/ca-bundle.crt
+
+IMAPStore HikoGmail-remote
+Account HikoGmail
+
+
+MaildirStore HikoGmail-local
+Path ~/maildir/HikoGmail/
+Inbox ~/maildir/HikoGmail/INBOX
+
+
+Channel HikoGmail
+Master :HikoGmail-remote:
+Slave :HikoGmail-local:
+Patterns "Sent Items" "INBOX" "Deleted Items"
+Create Slave
+Sync All
+Expunge Both
+SyncState *
+
+
+##########################################################################
+# Gmail normal
+##########################################################################
+IMAPAccount SebGmail
+Host imap.gmail.com
+User seb.lemaguer@gmail.com
+PassCmd "python3 ~/.get_passwd.py 'imap.gmail.com' 'seb.lemaguer@gmail.com'"
+Port 993
+SSLType IMAPS
+# CertificateFile /etc/ssl/certs/ca-bundle.crt
+
+IMAPStore SebGmail-remote
+Account SebGmail
+
+
+MaildirStore SebGmail-local
+Path ~/maildir/SebGmail/
+Inbox ~/maildir/SebGmail/INBOX
+
+
+Channel SebGmail
+Master :SebGmail-remote:
+Slave :SebGmail-local:
+Patterns "Sent Items" "INBOX" "Deleted Items"
+Create Slave
+Sync All
+Expunge Both
+SyncState *
+
+# ##########################################################################
+# # Irisa
+# ##########################################################################
+# IMAPAccount Irisa
+# Host zimbra.inria.fr
+# User slemague
+# PassCmd "python3 ~/.get_passwd.py 'zimbra.inria.fr' 'slemague'"
+# Port 993
+# SSLType IMAPS
+# # CertificateFile /etc/ssl/certs/ca-bundle.crt
+
+
+# IMAPStore Irisa-remote
+# Account Irisa
+
+# MaildirStore Irisa-local
+# Path ~/maildir/Irisa/
+# Inbox ~/maildir/Irisa/INBOX
+
+# Channel Irisa
+# Master :Irisa-remote:
+# Slave :Irisa-local:
+# Patterns "Sent" "INBOX" "Deleted Items"
+# Create Slave
+# Sync All
+# Expunge Both
+# SyncState *
+
+
+##########################################################################
+# Coli Saarland
+##########################################################################
+IMAPAccount Saarland
+Host mail.coli.uni-saarland.de
+User slemaguer
+PassCmd "python3 ~/.get_passwd.py 'mail.coli.uni-saarland.de' 'slemaguer'"
+Port 993
+SSLType IMAPS
+# CertificateFile /etc/ssl/certs/ca-bundle.crt
+
+
+IMAPStore Saarland-remote
+Account Saarland
+
+MaildirStore Saarland-local
+Path ~/maildir/Saarland/
+Inbox ~/maildir/Saarland/INBOX
+
+Channel Saarland
+Master :Saarland-remote:
+Slave :Saarland-local:
+Patterns "INBOX" *
+Create Slave
+Sync All
+Expunge Both
+SyncState *
+
+# ##########################################################################
+# # Dfki
+# ##########################################################################
+# IMAPAccount Dfki
+# Host imap.dfki.de
+# User sele01
+# PassCmd "python3 ~/.get_passwd.py 'imap.dfki.de' 'sele01'"
+# Port 993
+# SSLType IMAPS
+# # CertificateFile /etc/ssl/certs/ca-bundle.crt
+
+
+# IMAPStore Dfki-remote
+# Account Dfki
+# UseNamespace no
+
+# MaildirStore Dfki-local
+# Path ~/maildir/Dfki/
+# Inbox ~/maildir/Dfki/INBOX
+
+# Channel Dfki
+# Master :Dfki-remote:
+# Slave :Dfki-local:
+# Patterns "*"
+# Create Slave
+# Sync All
+# Expunge Both
+# SyncState *
+
+
+
+##########################################################################
+# MMCI
+##########################################################################
+IMAPAccount MMCI
+Host mail.mmci.uni-saarland.de
+User lemaguer
+PassCmd "python3 ~/.get_passwd.py 'mail.mmci.uni-saarland.de' 'lemaguer'"
+Port 993
+SSLType IMAPS
+# CertificateFile /etc/ssl/certs/ca-bundle.crt
+
+
+IMAPStore MMCI-remote
+Account MMCI
+UseNamespace yes
+
+MaildirStore MMCI-local
+Path ~/maildir/MMCI/
+Inbox ~/maildir/MMCI/INBOX
+
+Channel MMCI
+Master :MMCI-remote:
+Slave :MMCI-local:
+Patterns "INBOX" *
+Create Slave
+Sync All
+Expunge Both
+SyncState *

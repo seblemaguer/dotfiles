@@ -1,0 +1,121 @@
+% v4.6
+\ProvidesFile{french-apa.lbx}
+\InheritBibliographyExtras{french}
+
+% (APA 6.22) The example abbreviations
+
+\NewBibliographyString{revisededition}
+\NewBibliographyString{typechair}
+\NewBibliographyString{typechairs}
+\NewBibliographyString{typevolume}
+\NewBibliographyString{typevolumes}
+\NewBibliographyString{typeseries}
+\NewBibliographyString{typeseriess}
+\NewBibliographyString{typevolseries}
+\NewBibliographyString{typevolseriess}
+\NewBibliographyString{on}
+\NewBibliographyString{retrieved}
+\NewBibliographyString{available}
+\NewBibliographyString{from}
+\NewBibliographyString{nodate}
+\NewBibliographyString{archivedat}
+\NewBibliographyString{origyear}
+\NewBibliographyString{reviewof}
+
+\DeclareBibliographyStrings{%
+  inherit          = {french},
+  inpress          = {{sous presse}{sous presse}},% remove when biblatex has it
+  january          = {{janvier}{janvier}},
+  february         = {{f\'evrier}{f\'evrier}},
+  march            = {{mars}{mars}},
+  april            = {{avril}{avril}},
+  may              = {{mai}{mai}},
+  june             = {{juin}{juin}},
+  july             = {{juillet}{juillet}},
+  august           = {{ao\^ut}{ao\^ut}},
+  september        = {{septembre}{septembre}},
+  october          = {{octobre}{octobre}},
+  november         = {{novembre}{novembre}},
+  december         = {{d\'ecembre}{d\'ecembre}},
+  revisededition   = {{\'Edition\space R\'evis\'e}{\'Ed\adddot\space R\'ev\adddot}},
+  page             = {{Page}{{}p\adddot}},
+  pages            = {{Pages}{{}pp\adddot}},
+  on               = {{le}{le}},
+  retrieved        = {{R\'ecup\'er\'ee}{R\'ecup\'er\'ee}},
+  available        = {{disponible}{disponible}},
+  from             = {{\`a\space partir\space de}{\`a\space partir\space de}},
+  archivedat       = {{archiv\'es\space \`a}{archiv\'es\space \`a}},
+  nodate           = {{pas\space de\space date}{{}p\adddot d\adddot}},
+  reviewof         = {{critique\space de}{critique\space de}},
+  paragraph        = {{\P}{\P}},
+  paragraphs       = {{\P\P}{\P\P}},
+  origyear         = {{Date\space de\space premi\`ere publication}{Date\space de\space premi\`ere publication}},
+  typechair        = {{Ma\^itre\space de\space Conf\'erence}{Ma\^itre\space de\space Conf\'erence}},
+  typechairs       = {{Ma\^itres\space de\space Conf\'erence}{Ma\^itres\space de\space Conf\'erence}},
+  typevolume       = {{R\'edacteur\space du\space volume}{R\'ed\adddot\space vol\adddot}},
+  typevolumes      = {{R\'edacteur\space du\space volume}{R\'eds\adddot\space vol\adddot}},
+  typeseries       = {{R\'edacteur\space de\space la\space s\'erie}{R\'ed\adddot\space ser\adddot}},
+  typeseriess      = {{R\'edacteurs\space de\space la\space s\'erie}{R\'eds\adddot\space ser\adddot}},
+  typevolseries    = {{R\'edacteur\space de\space la\space s\'erie\space et\space du volume}{Red\adddot\space vol\space\&\space ser\adddot}},
+  typevolseriess   = {{Directeurs\space de\space Publication\space et\space R\'edacteurs\space en\space chef}{Reds\adddot\space vol\space\&\space ser\adddot}},
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% (APA 7.10 Example 68) Drop end* when they are the same as *
+
+% You must use \printdate to get here otherwise it will be ignored
+\DefineBibliographyExtras{french}{%
+  \protected\def\mkbibdateapalong#1#2#3{%
+    \iffieldundef{#1}%
+      {}%
+      {\thefield{#1}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#1}%
+        {}%
+        {\addcomma\addspace}%
+       \mkbibmonth{\thefield{#2}}}%
+    \iffieldundef{#3}%
+      {}%
+      {\ifthenelse{\iffieldundef{#2}\OR\iffieldundef{#1}}%
+        {}%
+        {\addspace}%
+       \stripzeros{\thefield{#3}}}}%
+  \protected\def\mkbibdateapalongextra#1#2#3{%
+    \iffieldundef{#1}%
+      {}%
+      {\thefield{#1}\printfield{extrayear}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#1}%
+        {}%
+        {\addcomma\addspace}%
+       \mkbibmonth{\thefield{#2}}}%
+    \iffieldundef{#3}%
+      {}%
+      {\ifthenelse{\iffieldundef{#2}\OR\iffieldundef{#1}}%
+        {}%
+        {\addspace}%
+       \stripzeros{\thefield{#3}}}}%
+  \protected\def\mkbibdateapalongmdy#1#2#3{%
+    \iffieldundef{#3}%
+      {}%
+      {\stripzeros{\thefield{#3}}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#3}%
+        {}%
+        {\addspace}%
+       \mkbibmonth{\thefield{#2}}}%
+    \iffieldundef{#1}%
+      {}%
+      {\ifthenelse{\iffieldundef{#2}\OR\iffieldundef{#3}}%
+        {}%
+        {\addspace}%
+       \thefield{#1}}}}
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\endinput

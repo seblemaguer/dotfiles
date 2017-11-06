@@ -1,0 +1,13 @@
+#+TITLE:
+#+AUTHOR: `user-full-name`
+#+EMAIL: `user-mail-address`
+#+DATE: `(format-time-string "%e %B %Y")`
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  fr
+#+OPTIONS:   H:1 num:t toc:nil  \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+SETUPFILE: ~/environment/src/non-install-utils/org-html-themes/setup/theme-readtheorg.setup
+
+* COMMENT some extra configuration

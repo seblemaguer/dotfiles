@@ -1,0 +1,22 @@
+[user]
+	name = Sebastien Le Maguer
+	email = slemaguer@coli.uni-saarland.de
+
+[push]
+	default = simple
+
+[diff "md"]
+    textconv = markdown
+
+[core]
+	excludesfile = /home/slemaguer/.gitignore
+	editor = vim
+
+# [gpg]
+# 	program = gpgv2
+
+# [commit]
+# 	gpgsign = true
+
+[include]
+	path = /home/slemaguer/.private_git

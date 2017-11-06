@@ -1,0 +1,184 @@
+
+\mode<presentation>
+{
+\useinnertheme[shadow=true]{rounded}
+\usecolortheme{orchid}
+\usecolortheme{whale}
+
+\setbeamerfont{block title}{size={}}
+
+
+%\pgfdeclareimage[height=0.081438\paperheight]{logoIrisa}{logo_Irisa_normal}
+%\pgfdeclareimage[height=0.1\paperheight]{logo_e3i2}{logo_e3i2}
+%\pgfdeclareimage[height=4cm]{logo-title}{title}
+%%\setbeamertemplate{background canvas}{\includegraphics[width=\paperwidth]{fondecran.png}}
+%\usecolortheme{Irisa}
+%\useoutertheme[hooks]{Irisa}
+\setbeamertemplate{navigation symbols}{}
+
+
+\pgfdeclareimage[height=0.09\paperheight,width=1\paperwidth]{background}{irisaBeamerPictures/background}
+\pgfdeclareimage[width=\paperwidth,height=\paperheight]{fondTitreIrisa}{irisaBeamerPictures/fondTitreIrisa}
+
+
+\definecolor{IrisaBlue}{rgb}{0,0.365,0.474}%{0,0,0.4}
+\definecolor{IrisaLightBlue}{rgb}{0.815,0.854,0.998}
+\definecolor{IrisaLightGrey}{rgb}{0.733,0.686,0.568}
+\definecolor{IrisaGreen}{rgb}{0.721,0.760,0.282}
+\definecolor{IrisaPurple}{rgb}{0.450,0.094,0.549}
+\definecolor{IrisaDeepPurple}{rgb}{0.310,0.082,0.364}
+\definecolor{Orange}{rgb}{1,0.4,0}
+
+
+\setbeamercolor{itemize item}{fg=Orange}
+\setbeamercolor{enumerate item}{fg=Orange}
+\setbeamercolor{frametitle}{fg=IrisaBlue}
+\setbeamercolor{subsection in head/foot}{bg=IrisaBlue}
+\setbeamercolor{section in head/foot}{bg=IrisaBlue}
+% \setbeamercolor{lower separation line head}{bg=IrisaBlue}
+\setbeamerfont{frametitle}{series=\bfseries}
+%\setbeamercolor{normal text}{fg=IrisaBlue }
+\def\Tiny{\fontsize{0.1pt}{0.1pt}\selectfont}
+\DeclareOptionBeamer{hooks}[true]{\csname beamer@tree@showhooks#1\endcsname}
+\ProcessOptionsBeamer
+
+\setbeamerfont{date}{size=\scriptsize}
+\setbeamerfont{subtitle}{size=\normalsize}
+%\setbeamerfont{author}{size=\normalsize}
+
+%\setbeamerfont{foot}{size=\tiny}
+
+\defbeamertemplate*{title page}{AM theme}[1][]
+{
+  \vbox{}
+  \vfill
+    
+  \begin{centering}
+ % \begin{beamercolorbox}
+%\pgfuseimage{logo_univ} \quad \quad \quad \quad \quad  \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad
+%\pgfuseimage{logo_ueb}
+%
+%    \end{beamercolorbox}
+
+    \begin{beamercolorbox}[sep=6pt,ht=2.25ex,dp=1ex,center,#1]{title}
+      
+      %\pgfuseimage{logo_univ} \quad \quad \quad \quad \quad  \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \pgfuseimage{logo_ueb}\\
+      %\vspace{3ex}
+        \color{IrisaBlue}{\LARGE \inserttitle}\par%
+      \ifx{\Tiny \insertsubtitle}\@empty%
+      \else%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%
+    \end{beamercolorbox}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=6pt,center,#1]{author}
+      \usebeamerfont{author}\textcolor{white}{\insertauthor}
+  \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=4pt,center,#1]{institute}
+      \usebeamerfont{institute}\textcolor{white}{\insertinstitute}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=4pt,center,#1]{date}
+      \usebeamerfont{date}\textcolor{white}{\insertdate}
+    \end{beamercolorbox}\vskip0.5em
+    {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+  \end{centering}
+  \vfill
+
+}
+
+%\setbeamertemplate{title page canvas}{
+%\includegraphics[width=\paperwidth,height=\paperheight]{fondTitreIrisa}}
+
+
+
+
+
+\defbeamertemplate*{footline}{irisa theme}
+{
+  \leavevmode%
+  \hbox{
+ \begin{beamercolorbox}[wd=.666666\paperwidth,ht=2.25ex,dp=1ex,left]{}%{author in head/foot}%
+    \hspace*{2ex}\usebeamerfont{foot}
+	%\color{IrisaGrey}
+	\textcolor{white}{\Tiny{\insertshorttitle,~\insertshortauthor}}
+  \end{beamercolorbox}%
+
+
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,right]{}%{author in head/foot}%
+	%\color{IrisaBlue}%
+    \hspace*{10ex}\textcolor{white}{\Tiny{\insertshortdate{}}}
+    %\textcolor{white}{\Tiny{\insertframenumber{}/\inserttotalframenumber} \vspace*{2ex}}
+  \end{beamercolorbox}%
+
+  \begin{beamercolorbox}[wd=.1\paperwidth,ht=5ex,dp=1ex,right]{}%{author in head/foot}%
+	%\color{IrisaBlue}%
+    \hspace*{2ex}\textcolor{white}{\Tiny{\insertframenumber{}/\inserttotalframenumber}}\vspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\setbeamertemplate{background canvas}{
+% Dessins de fonds de transparents
+\begin{pgfpicture}{0cm}{0cm}{\the\paperwidth}{\the\paperheight}
+  \pgfputat{\pgfxy(0,0)}{\pgfbox[left,bottom]{\pgfuseimage{background}}}
+\end{pgfpicture}
+}
+
+\defbeamertemplate*{frametitle}{irisa}[1][left]
+{
+
+  \nointerlineskip%
+  \usebeamerfont{headline}%
+  \vskip -1ex%
+  \nointerlineskip%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=4ex,dp=1.125ex,%
+    leftskip=9.5cm,rightskip=.3cm plus1fil]{section in head/foot}
+    \usebeamerfont{section in head/foot}%
+    \vskip2mm
+    \insertsectionnavigationhorizontal{\paperwidth}{}{}
+  \end{beamercolorbox}
+  \vskip-.6ex%
+  \nointerlineskip%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=8ex,dp=3ex,%
+      leftskip=.3cm,rightskip=.3cm plus1fil]{section in head/foot}
+      \vskip2mm
+      \fontsize{10}{10}\textbf{\insertframetitle}
+  \end{beamercolorbox}
+}
+
+
+
+%\setbeamerfont{foot}{size=0.3\tiny}
+
+% same as Irisa logo
+%\definecolor{beamer@armee}{rgb}{0.623,0.717,0.106} % use structure theme to change
+\definecolor{beamer@armee}{rgb}{0.2,0.4,0.6} % use structure theme to change
+
+\setbeamercolor{structure}{fg=beamer@armee}
+
+%right thingy color, ie page numbers and subsections
+\setbeamercolor{palette primary}{use=structure,fg=black,bg=white}
+%title color in the botom
+\setbeamercolor{palette secondary}{use=structure,fg=black,bg=structure.fg!100!white}
+%section and author with institution color
+\setbeamercolor{palette tertiary}{use=structure,fg=white,bg=structure.fg!100!white}
+%undefined?
+\setbeamercolor{palette quaternary}{use=structure,fg=black,bg=structure.fg!100!white}
+
+%sidebar color
+\setbeamercolor{sidebar}{use=structure,bg=structure.fg!100!white}
+
+\setbeamercolor{palette sidebar primary}{use=normal text,fg=normal text.fg!20!white}
+\setbeamercolor{palette sidebar secondary}{use=structure,fg=structure.fg!25!white}
+\setbeamercolor{palette sidebar tertiary}{use=normal text,fg=normal text.fg!30!white}
+\setbeamercolor{palette sidebar quaternary}{use=structure,fg=structure.fg!35!white}
+
+%\setbeamercolor*{titlelike}{parent=palette primary}
+
+\setbeamercolor*{separation line}{}
+\setbeamercolor*{fine separation line}{}
+}  
+\mode
+<all>
+
+%\setbeamertemplate{sections/subsections in toc}[square]{}
