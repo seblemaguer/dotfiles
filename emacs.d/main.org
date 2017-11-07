@@ -3017,14 +3017,24 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
              :nickserv-identify-confirmation "Password accepted, settings and accounts loaded"
              :channels ("&bitlbee")
              :host "localhost"
-             :service "6667"
-             )
+             :service "6667")
+
             ("Freenode"
+             :tls t
              :nick "slemaguer"
              :channels (:after-auth "#limsi")
              :nickserv-password my-irc-password
-             :server-buffer-name "⇄ freenode"
-             )))
+             :server-buffer-name "⇄ freenode")
+
+            ("gitter"
+             :tls t
+             :nick "seblemaguer"
+             :sasl-username "seblemaguer"
+             :sasl-password my-irc-password
+             :server-buffer-name "⇄ gitter"
+             :host"irc.gitter.im"
+             :service "6667")
+            ))
 
     ;; Completion
     (setq circe-use-cycle-completion t)
@@ -3094,6 +3104,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
       ;; Shortcut
     (global-set-key (kbd "<S-f2>") 'irc))
 #+end_src
+
 *** Logging
 #+begin_src emacs-lisp
   (use-package lui-logging
