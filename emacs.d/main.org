@@ -346,7 +346,15 @@ Try to add this key support
       :name "Saarland imap notify"
       :command "imapnotify"
       :args '("-c" "~/configuration/imapnotify/saarland.js")
-      :tags '(work)
+      :tags '(work mail)
+      :stop-signal 'sigterm
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
+      :name "hikoseb imap notify"
+      :command "imapnotify"
+      :args '("-c" "~/configuration/imapnotify/hikoseb.js")
+      :tags '(perso mail)
       :stop-signal 'sigterm
       :kill-process-buffer-on-stop t)
 
@@ -354,7 +362,7 @@ Try to add this key support
       :name "sebgmail imap notify"
       :command "imapnotify"
       :args '("-c" "~/configuration/imapnotify/sebgmail.js")
-      :tags '(work)
+      :tags '(perso mail)
       :stop-signal 'sigterm
       :kill-process-buffer-on-stop t)
 
@@ -362,7 +370,7 @@ Try to add this key support
       :name "DFKI imap notify"
       :command "imapnotify"
       :args '("-c" "~/configuration/imapnotify/dfki.js")
-      :tags '(work)
+      :tags '(work mail)
       :stop-signal 'sigterm
       :kill-process-buffer-on-stop t)
 
@@ -370,7 +378,7 @@ Try to add this key support
       :name "MMCI imap notify"
       :command "imapnotify"
       :args '("-c" "~/configuration/imapnotify/mmci.js")
-      :tags '(work)
+      :tags '(work mail)
       :stop-signal 'sigterm
       :kill-process-buffer-on-stop t)
     )
