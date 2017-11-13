@@ -2954,9 +2954,9 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
             (setq alert-highlight-current-level 0)))))
 
 
-      ;; Shortcuts
-      (global-set-key (kbd "<f7>") 'sauron-alert-toggle-hide-show)
-      (global-set-key (kbd "C-<f7>") 'sauron-alert-clear))
+    ;; Shortcuts
+    (global-set-key (kbd "<f7>") 'sauron-alert-toggle-hide-show)
+    (global-set-key (kbd "C-<f7>") 'sauron-alert-clear))
 #+end_src
 * System
 ** Docker
