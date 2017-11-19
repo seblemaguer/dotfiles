@@ -3075,6 +3075,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   (use-package circe
     :ensure t
     :defer t
+    :init
+    (add-hook 'circe-chat-mode-hook 'disable-global-facilities)
     :config
 
     ;; Defining the networks
@@ -3176,7 +3178,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
       ;; Shortcut
     (global-set-key (kbd "<S-f2>") 'irc))
 #+end_src
-
 *** Logging
 #+begin_src emacs-lisp
   (use-package lui-logging
@@ -4033,15 +4034,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
 
     ;; Do not pair simple quotes
-    (sp-pair "'" nil :actions :rem)
-
-    ;; Disable smartparents for circe
-    (defun smartparens-temp-disable ()
-      (interactive)
-      (when smartparens-mode
-        (smartparens-mode nil)))
-
-    (add-hook 'circe-channel-mode-hook #'smartparens-temp-disable))
+    (sp-pair "'" nil :actions :rem))
 #+end_src
 **** Rainbow delimiter
 #+begin_src emacs-lisp
@@ -4110,7 +4103,14 @@ I actually use this part for minor correction. The tags are done when abcde is c
       (emojify-set-emoji-data)))
 
 #+end_src
-
+*** Specific mode cleaning helper
+#+begin_src emacs-lisp
+  (defun disable-global-facilities ()
+    "Function to disable some utilities globally activated for current buffer"
+    (interactive)
+    (smartparens-mode 0)
+    (nlinum-mode 0))
+#+end_src
 ** Icons
 #+begin_src emacs-lisp
   (use-package all-the-icons :ensure t)
