@@ -340,7 +340,8 @@ Try to add this key support
           interleave-split-lines 20
           interleave-disable-narrowing t))
 #+end_src
-** Service management
+** Process management
+*** Services
 #+begin_src emacs-lisp
   (use-package prodigy
     :ensure t
@@ -386,6 +387,23 @@ Try to add this key support
       :stop-signal 'sigterm
       :kill-process-buffer-on-stop t)
     )
+#+end_src
+*** Background process configuration
+#+begin_src emacs-lisp
+  (defun my-bpr-on-start (process)
+    "Routine to allow colors in commint buffer"
+    (set-process-filter process 'comint-output-filter))
+
+  (use-package bpr
+    :ensure t
+    :after projectile
+    :config
+    (setq bpr-colorize-output t
+          bpr-close-after-success t
+          bpr-use-projectile t
+          bpr-process-mode #'comint-mode
+          bpr-window-creator #'split-window-vertically
+          bpr-on-start 'my-bpr-on-start))
 #+end_src
 * Completion
 ** Counsel
@@ -711,6 +729,7 @@ Based mainly on C just few adaptations to do here
 
 #+end_src
 ** Javascript
+*** Global
 #+BEGIN_SRC emacs-lisp
   (use-package js2-mode
     :ensure t
@@ -836,6 +855,18 @@ Based mainly on C just few adaptations to do here
     (add-to-list 'auto-mode-alist '("\\.json$" . json-mode)))
 
 #+END_SRC
+*** Some helpers
+#+begin_src emacs-lisp
+(defun grunt-serve ()
+  "Spawns 'grunt serve' process"
+  (interactive)
+  ;; Set dynamic config for process.
+  ;; Variables below are applied only to particular process
+  (let* ((bpr-scroll-direction 1) (bpr-show-progress nil))
+    (bpr-spawn "$(npm bin)/grunt serve --color")
+    (bpr-open-last-buffer)
+    ))
+#+end_src
 ** Latex
 *** Global
 #+begin_src emacs-lisp
