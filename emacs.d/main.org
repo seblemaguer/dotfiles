@@ -2567,6 +2567,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
   (use-package treemacs-projectile
     :ensure t
+    :after treemacs
     :config
     (setq treemacs-header-function #'treemacs-projectile-create-header))
 #+end_src
