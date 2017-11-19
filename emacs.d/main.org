@@ -2008,6 +2008,7 @@ Based mainly on C just few adaptations to do here
 #+end_src
 
 * Shell
+** Global
 The key configuration is mainly coming from https://github.com/jcf/emacs.d the rest is coming from http://www.modernemacs.com/post/custom-eshell/ with some adaptation
 #+begin_src emacs-lisp
     (use-package eshell
@@ -2104,6 +2105,20 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
       (add-hook 'eshell-mode-hook
                 'eshell-mode-some-config)
   )
+#+end_src
+** Completion
+#+begin_src emacs-lisp
+  (use-package company-eshell-autosuggest
+    :ensure t
+    :after company
+    :after eshell
+    :config
+    (defun setup-company-eshell-autosuggest ()
+      (with-eval-after-load 'company
+        (setq-local company-backends '(company-eshell-autosuggest))
+        (setq-local company-frontends '(company-preview-frontend))))
+
+    (add-hook 'eshell-mode-hook 'setup-company-eshell-autosuggest))
 #+end_src
 * Compilation
 ** TODO some requires to check
