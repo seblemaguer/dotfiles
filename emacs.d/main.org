@@ -10,6 +10,10 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.coli.uni-saarland.de/~slemaguer/default.css" />
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
 
+* COMMENT Activate debugging
+#+begin_src emacs-lisp
+  (toggle-debug-on-error)
+#+end_src
 * Packages
 ** Paradox
 #+begin_src emacs-lisp
