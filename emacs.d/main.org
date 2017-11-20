@@ -4165,6 +4165,10 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (use-package spaceline-all-the-icons
     :ensure t
     :after spaceline
+    :after projectile
+    :after info+
+    :after fancy-battery
+    :after circe
     :init
 
     ;; Separator configuration
@@ -4178,38 +4182,30 @@ I actually use this part for minor correction. The tags are done when abcde is c
 
     ;; Some  configurations
     (require 'spaceline-config)
-    (use-package info+
-      :ensure t
-      :init
-      (spaceline-info-mode))
 
-    (use-package fancy-battery
-      :ensure t
-      :init
-      (add-hook 'after-init-hook #'fancy-battery-mode)
-      (display-battery-mode -1))
+    ;; Info
+    (spaceline-info-mode)
+
+    ;; Battery
+    (add-hook 'after-init-hook #'fancy-battery-mode)
+    (display-battery-mode -1)
 
     ;; Reduce projectile account
-    (use-package projectile
-      :ensure t
-      :config
-      (setq projectile-mode-line " P"))
+    (setq projectile-mode-line " P")
+
+    ;; Circe specific part
+    (spaceline-define-segment circe-track
+      "Show the circe buffers with new messages. Requires `circe-track-mode' to be enabled."
+      (if tracking-buffers
+          (s-join " " (tracking-shorten tracking-buffers))))
+    (spaceline-all-the-icons-theme 'circe-track)
+
 
     ;; (spaceline-all-the-icons--setup-package-updates) ;; Enable package update indicator
     ;; (spaceline-all-the-icons--setup-git-ahead)       ;; Enable # of commits ahead of upstream
     (spaceline-all-the-icons--setup-paradox)         ;; Enable Paradox mode line
     ;; (spaceline-all-the-icons--setup-neotree)         ;; Enable Neotree mode line
 
-    ;; Circe specific part
-    (use-package circe
-      :config
-      (spaceline-define-segment circe-track
-        "Show the circe buffers with new messages. Requires
-    `circe-track-mode' to be enabled."
-        (if tracking-buffers
-            (s-join " " (tracking-shorten tracking-buffers))))
-
-      (spaceline-all-the-icons-theme 'circe-track))
     )
 #+end_src
 
