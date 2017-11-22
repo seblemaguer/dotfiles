@@ -21,8 +21,8 @@ IMAPStore HikoGmail-remote
 Account HikoGmail
 
 MaildirStore HikoGmail-local
-Path ~/maildir/HikoGmail/
-Inbox ~/maildir/HikoGmail/INBOX
+Path ~/mail/HikoGmail/
+Inbox ~/mail/HikoGmail/INBOX
 SubFolders Legacy
 
 Channel HikoGmail
@@ -50,8 +50,8 @@ IMAPStore SebGmail-remote
 Account SebGmail
 
 MaildirStore SebGmail-local
-Path ~/maildir/SebGmail/
-Inbox ~/maildir/SebGmail/INBOX
+Path ~/mail/SebGmail/
+Inbox ~/mail/SebGmail/INBOX
 SubFolders Legacy
 
 Channel SebGmail
@@ -79,8 +79,8 @@ SyncState *
 # Account Irisa
 
 # MaildirStore Irisa-local
-# Path ~/maildir/Irisa/
-# Inbox ~/maildir/Irisa/INBOX
+# Path ~/mail/Irisa/
+# Inbox ~/mail/Irisa/INBOX
 
 # Channel Irisa
 # Master :Irisa-remote:
@@ -108,8 +108,8 @@ IMAPStore Saarland-remote
 Account Saarland
 
 MaildirStore Saarland-local
-Path ~/maildir/Saarland/
-Inbox ~/maildir/Saarland/INBOX
+Path ~/mail/Saarland/
+Inbox ~/mail/Saarland/INBOX
 SubFolders Legacy
 
 Channel Saarland
@@ -138,8 +138,8 @@ SyncState *
 # UseNamespace no
 
 # MaildirStore Dfki-local
-# Path ~/maildir/Dfki/
-# Inbox ~/maildir/Dfki/INBOX
+# Path ~/mail/Dfki/
+# Inbox ~/mail/Dfki/INBOX
 
 # Channel Dfki
 # Master :Dfki-remote:
@@ -169,8 +169,8 @@ Account MMCI
 UseNamespace yes
 
 MaildirStore MMCI-local
-Path ~/maildir/MMCI/
-Inbox ~/maildir/MMCI/INBOX
+Path ~/mail/MMCI/
+Inbox ~/mail/MMCI/INBOX
 SubFolders Legacy
 
 Channel MMCI
