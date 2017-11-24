@@ -124,31 +124,31 @@ SyncState *
 # ##########################################################################
 # # Dfki
 # ##########################################################################
-# IMAPAccount Dfki
-# Host imap.dfki.de
-# User sele01
-# PassCmd "python3 ~/.get_passwd.py 'imap.dfki.de' 'sele01'"
-# Port 993
-# SSLType IMAPS
-# # CertificateFile /etc/ssl/certs/ca-bundle.crt
+IMAPAccount Dfki
+Host imap.dfki.de
+User sele01
+PassCmd "python3 ~/.get_passwd.py 'imap.dfki.de' 'sele01'"
+Port 993
+SSLType IMAPS
+# CertificateFile /etc/ssl/certs/ca-bundle.crt
 
 
-# IMAPStore Dfki-remote
-# Account Dfki
-# UseNamespace no
+IMAPStore Dfki-remote
+Account Dfki
+UseNamespace no
 
-# MaildirStore Dfki-local
-# Path ~/mail/Dfki/
-# Inbox ~/mail/Dfki/INBOX
+MaildirStore Dfki-local
+Path ~/mail/Dfki/
+Inbox ~/mail/Dfki/INBOX
 
-# Channel Dfki
-# Master :Dfki-remote:
-# Slave :Dfki-local:
-# Patterns "*"
-# Create Slave
-# Sync All
-# Expunge Both
-# SyncState *
+Channel Dfki
+Master :Dfki-remote:
+Slave :Dfki-local:
+Patterns "*"
+Create Slave
+Sync All
+Expunge Both
+SyncState *
 
 
 
