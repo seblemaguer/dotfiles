@@ -2631,134 +2631,134 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 * Ibuffer
 ** Filter
 #+begin_src emacs-lisp
-(defun my-own-ibuffer-hook ()
-  ""
-  (interactive)
-  (setq ibuffer-saved-filter-groups
-        (list
-         (cons "default"
-               (append
-                (quote
-                 (("Emacs"
-                   (or
-                    (name . "^[*]scratch[*]$")
-                    (name . "^[*]Messages[*]$")))
+  (defun my-own-ibuffer-hook ()
+    ""
+    (interactive)
+    (setq ibuffer-saved-filter-groups
+          (list
+           (cons "default"
+                 (append
+                  (quote
+                   (("Emacs"
+                     (or
+                      (name . "^[*]scratch[*]$")
+                      (name . "^[*]Messages[*]$")))
 
-                  ("Term"
-                   (or
-                    (mode . comint-mode)
-                    (mode . term-mode)))
+                    ("Term"
+                     (or
+                      (mode . comint-mode)
+                      (mode . term-mode)))
 
-                  ("Calendar"
-                   (or
-                    (name . "^[*]?[Cc]alendar.*$")
-                    (name . "^diary$")
-                    (mode . cfw:calendar-mode)
-                    (mode . muse-mode)))
+                    ("Calendar"
+                     (or
+                      (name . "^[*]?[Cc]alendar.*$")
+                      (name . "^diary$")
+                      (mode . cfw:calendar-mode)
+                      (mode . muse-mode)))
 
-                  ("Todos"
-                   (filename . "/todo.org"))
+                    ("Todos"
+                     (filename . "/todo.org"))
 
-                  ("Emms"
-                   (or
-                    (mode . emms-mode)
-                    (mode . emms-browser-mode)
-                    (mode . emms-playlist-mode)))
+                    ("Emms"
+                     (or
+                      (mode . emms-mode)
+                      (mode . emms-browser-mode)
+                      (mode . emms-playlist-mode)))
 
-                  ("RSS/Podcast"
-                   (or
-                    (name . "rss.org")
-                    (name . "^[*]?[Ee]lfeed.*$")
-                    (derived-mode . elfeed-search-mode)
-                    (derived-mode . elfeed-show-mode)))
+                    ("RSS/Podcast"
+                     (or
+                      (name . "rss.org")
+                      (name . "^[*]?[Ee]lfeed.*$")
+                      (derived-mode . elfeed-search-mode)
+                      (derived-mode . elfeed-show-mode)))
 
-                  ("Help"
-                   (or
-                    (derived-mode . apropos-mode)
-                    (derived-mode . help-mode)
-                    (derived-mode . Info-mode)))
+                    ("Help"
+                     (or
+                      (derived-mode . apropos-mode)
+                      (derived-mode . help-mode)
+                      (derived-mode . Info-mode)))
 
-                  ("Mail"
-                   (or
-                    (mode . message-mode)
-                    (mode . bbdb-mode)
-                    (mode . mail-mode)
-                    (mode . mu4e-view-mode)
-                    (mode . mu4e-headers-mode)
-                    (mode . mu4e-compose-mode)
-                    (name . "^\.bbdb$")
-                    (name . "^\.newsrc-dribble")))))
+                    ("Mail"
+                     (or
+                      (mode . message-mode)
+                      (mode . bbdb-mode)
+                      (mode . mail-mode)
+                      (mode . notmuch-show-mode)
+                      (mode . notmuch-search-mode)
+                      (mode . notmuch-hello-mode)
+                      (name . "^\.bbdb$")
+                      (name . "^\.newsrc-dribble")))))
 
-                (ibuffer-circe-generate-filter-groups-by-server)
-                (ibuffer-tramp-generate-filter-groups-by-tramp-connection)
-                (ibuffer-vc-generate-filter-groups-by-vc-root)
+                  (ibuffer-circe-generate-filter-groups-by-server)
+                  (ibuffer-tramp-generate-filter-groups-by-tramp-connection)
+                  (ibuffer-vc-generate-filter-groups-by-vc-root)
 
-                (quote
-                 (("Dired" (mode . dired-mode))
+                  (quote
+                   (("Dired" (mode . dired-mode))
 
-                  ("Shell"
-                   (or
-                    (mode . sh-mode)))
+                    ("Shell"
+                     (or
+                      (mode . sh-mode)))
 
-                  ("Editing"
-                   (or
-                    (mode . tex-mode)
-                    (mode . latex-mode)
-                    (mode . bibtex-mode)
-                    (mode . text-mode)))
+                    ("Editing"
+                     (or
+                      (mode . tex-mode)
+                      (mode . latex-mode)
+                      (mode . bibtex-mode)
+                      (mode . text-mode)))
 
-                  ("Mathematics/Statistics"
-                   (or
-                    (mode . matlab-mode)
-                    (name . "^[*]MATLAB[*]$")
-                    (mode . ess-mode)
-                    (mode . iESS)))
+                    ("Mathematics/Statistics"
+                     (or
+                      (mode . matlab-mode)
+                      (name . "^[*]MATLAB[*]$")
+                      (mode . ess-mode)
+                      (mode . iESS)))
 
 
-                  ("Configuration"
-                   (or
-                    (derived-mode . conf-mode)))
+                    ("Configuration"
+                     (or
+                      (derived-mode . conf-mode)))
 
-                  ("Web"
-                   (or
-                    (mode . php-mode)
-                    (mode . css-mode)
-                    (mode . html-mode)
-                    (mode . js2-mode)
-                    (mode . scss-mode)
-                    (mode . web-mode)))
+                    ("Web"
+                     (or
+                      (mode . php-mode)
+                      (mode . css-mode)
+                      (mode . html-mode)
+                      (mode . js2-mode)
+                      (mode . scss-mode)
+                      (mode . web-mode)))
 
-                  ("Programming"
-                   (or
-                    (mode . emacs-lisp-mode)
-                    (mode . c-mode)
-                    (mode . cperl-mode)
-                    (mode . python-mode)
-                    (mode . c++-mode)
-                    (mode . java-mode)
-                    (mode . jde-mode)))
+                    ("Programming"
+                     (or
+                      (mode . emacs-lisp-mode)
+                      (mode . c-mode)
+                      (mode . cperl-mode)
+                      (mode . python-mode)
+                      (mode . c++-mode)
+                      (mode . java-mode)
+                      (mode . jde-mode)))
 
-                  ("Compiling"
-                   (or
-                    (mode . groovy-mode)
-                    (derived-mode . makefile-mode)))
+                    ("Compiling"
+                     (or
+                      (mode . groovy-mode)
+                      (derived-mode . makefile-mode)))
 
-                  ("Data"
-                   (or
-                    (mode . csv-mode)
-                    (mode . json-mode)
-                    (mode . nxml-mode)
-                    (mode . ledger-mode)
-                    ))
+                    ("Data"
+                     (or
+                      (mode . csv-mode)
+                      (mode . json-mode)
+                      (mode . nxml-mode)
+                      (mode . ledger-mode)
+                      ))
 
-                  ("Org"
-                   (or
-                    (mode . org-mode)))
+                    ("Org"
+                     (or
+                      (mode . org-mode)))
 
-                  ("Temp"
-                   (or
-                    (name ."^[*].*[*]$")))
-                  )))))))
+                    ("Temp"
+                     (or
+                      (name ."^[*].*[*]$")))
+                    )))))))
 #+end_src
 ** Global
 #+begin_src emacs-lisp
@@ -3307,350 +3307,112 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 	    auth-sources '("~/.authinfo.gpg")))
 
   #+end_src
-*** Mu4e part
- #+begin_src emacs-lisp
-   (use-package mu4e
-     :config
-     ;; Subpackages
-     (use-package mu4e-actions)
-     (use-package mu4e-contrib)
-     (use-package org-mu4e)
-
-     ;; ???
-     (setq org-mu4e-link-query-in-headers-mode nil
-           mu4e-get-mail-command "mbsync -a"
-           mu4e-html2text-command 'mu4e-shr2text
-           message-kill-buffer-on-exit t
-           org-mu4e-convert-to-html t
-           mu4e-update-interval nil)
-
-
-     ;; Define directories
-     (setq mu4e-maildir "~/maildir" ;; root dir
-           mu4e-sent-folder "/Saarland/INBOX/.Sent" ;; makes emacs happy
-           mu4e-drafts-folder "/Saarland/INBOX/.Drafts" ;; makes emacs happy
-           mu4e-trash-folder "/Saarland/INBOX/.Trash" ;; makes emacs happy
-
-
-           mu4e-attachment-dir "~/Downloads/mail" ; put attachements in download dir
-           mu4e-confirm-quit nil ; don't ask me to quit
-           mu4e-headers-skip-duplicates t ; skip duplicate email, great for gmail
-           mu4e-headers-leave-behavior 'apply ; apply all marks at quit
-           mu4e-use-fancy-chars t ; use fancy characters
-           message-kill-buffer-on-exit t ; don't keep message buffers around
-           mu4e-headers-results-limit 500
-           mu4e-headers-include-related nil
-           mu4e-hide-index-messages t
-           mu4e-change-filenames-when-moving t)
-
-     ;; org-export-string is obsolete now
-     (defalias 'org-export-string 'org-export-string-as)
-
-     ;; Patch for macos....
-     (when (eq system-type 'darwin)
-       (setq mu4e-headers-include-related nil))
-
-     ;; Defining accounts
-     (setq mu4e-reply-to-address "slemaguer@coli.uni-saarland.de"
-           user-mail-address "slemaguer@coli.uni-saarland.de"
-           user-full-name "Sébastien Le Maguer"
-           smtpmail-default-smtp-server "smtp.coli.uni-saarland.de"
-           smtpmail-smtp-server "smtp.coli.uni-saarland.de"
-           smtpmail-smtp-user "slemaguer"
-           mu4e-root-maildir-prefix "Saarland"
-           mu4e-compose-signature (with-temp-buffer
-                                    (insert-file-contents
-                                     (format "%s/third_parties/mail/signature" config-basedir)) ;; FIXME: see how to say "this directory"
-                                    (buffer-string)))
-
-     (defvar my-mu4e-account-alist
-       '(("Irisa"
-          (mu4e-sent-folder "/Irisa/Sent")
-          (mu4e-drafts-folder "/Irisa/Drafts")
-          (mu4e-trash-folder "/Irisa/Trash")
-          ;; (mu4e-reply-to-address "Sebastien.Le_maguer@irisa.fr")
-          ;; (user-mail-address "Sebastien.Le_maguer@irisa.fr")
-          ;; (user-full-name  "Sébastien Le Maguer")
-          ;; (mu4e-compose-signature-auto-include t)
-          ;; (smtpmail-default-smtp-server "smtp.inria.fr")
-          ;; (smtpmail-smtp-server "smtp.inria.fr")
-          ;; (smtpmail-smtp-user "slemague")
-          ;; (smtpmail-stream-type starttls)
-          ;; (smtpmail-smtp-service 587)
-          )
-
-         ("Saarland"
-          (mu4e-sent-folder "/Saarland/INBOX/.Sent")
-          (mu4e-drafts-folder "/Saarland/INBOX/.Drafts")
-          (mu4e-trash-folder "/Saarland/INBOX/.Trash")
-          (mu4e-reply-to-address "slemaguer@coli.uni-saarland.de" )
-          (user-mail-address "slemaguer@coli.uni-saarland.de" )
-          (user-full-name "Sébastien Le Maguer")
-          (mu4e-compose-signature-auto-include t))
-
-         ("Mmci"
-          (mu4e-sent-folder "/MMCI/INBOX/.Sent")
-          (mu4e-drafts-folder "/MMCI/INBOX/.Drafts")
-          (mu4e-trash-folder "/MMCI/INBOX/.Trash")
-          (mu4e-reply-to-address "lemaguer@mmci.uni-saarland.de" )
-          (user-mail-address "lemaguer@mmci.uni-saarland.de" )
-          (user-full-name "Sébastien Le Maguer")
-          (mu4e-compose-signature-auto-include t))
-
-         ("Dfki"
-          (mu4e-sent-folder "/Dfki/INBOX/.Sent")
-          (mu4e-drafts-folder "/Dfki/INBOX/.Drafts")
-          (mu4e-trash-folder "/Dfki/INBOX/.Trash")
-          (mu4e-reply-to-address "sebastien.le_maguer@dfki.de")
-          (user-mail-address "sebastien.le_maguer@dfki.de")
-          (user-full-name "Sébastien Le Maguer")
-          (mu4e-compose-signature-auto-include t))
-
-         ("SebGmail"
-          (mu4e-drafts-folder "/SebGmail/draft")
-          (mu4e-sent-folder   "/SebGmail/sent")
-          (mu4e-trash-folder  "/SebGmail/trash")
-          (mu4e-reply-to-address "seb.lemaguer@gmail.com")
-          (user-mail-address "seb.lemaguer@gmail.com")
-          (user-full-name  "Sébastien Le Maguer"))
-
-         ("HikoGmail"
-          (mu4e-drafts-folder "/HikoGmail/draft")
-          (mu4e-sent-folder   "/HikoGmail/sent")
-          (mu4e-trash-folder  "/HikoGmail/trash")
-          (mu4e-reply-to-address "hikoseb@gmail.com")
-          (user-mail-address "hikoseb@gmail.com")
-          (user-full-name  "Hiko Seijuro"))
-         ))
-
-     (defun my-mu4e-set-account ()
-       "Set the account for composing a message."
-       (let* ((account
-               (if mu4e-compose-parent-message
-                   (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
-                     (string-match "/\\(.*?\\)/" maildir)
-                     (match-string 1 maildir))
-                 (completing-read
-                  (format "Compose with account: (%s) "
-                          (mapconcat #'(lambda (var) (car var)) my-mu4e-account-alist "/"))
-                  (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
-                  nil t nil nil (caar my-mu4e-account-alist))))
-              (account-vars (cdr (assoc account my-mu4e-account-alist))))
-         (if account-vars
-             ;; Default variables
-             (mapc #'(lambda (var)
-                       (set (car var) (cadr var)))
-                   account-vars)
-
-           (error "No email account found"))))
-
-     (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
-
-     ;; For GMAIL account do not copy the message to sent. It is automatically done
-     (setq mu4e-sent-messages-behavior
-           (lambda ()
-             (if (or (string= (message-sendmail-envelope-from) "seb.lemaguer@gmail.com")
-                     (string= (message-sendmail-envelope-from) "hikoseb@gmail.com"))
-                 'delete 'sent)))
-
-
-     ;; Shortcuts
-     (setq mu4e-maildir-shortcuts  '(("/Irisa/INBOX"               . ?i)
-                                     ("/Saarland/INBOX/.Drafts"    . ?d)
-                                     ("/SebGmail/INBOX"            . ?g)
-                                     ("/HikoGmail/INBOX"           . ?h)
-                                     ("/Saarland/INBOX"            . ?s))
-
-             mu4e-bookmarks `( ,(make-mu4e-bookmark
-                                 :name  "Unread messages"
-                                 :query "flag:unread AND NOT flag:trashed"
-                                 :key ?u)
-                               ,(make-mu4e-bookmark
-                                 :name "Today's messages"
-                                 :query "date:today..now"
-                                 :key ?t)
-                               ,(make-mu4e-bookmark
-                                 :name "Last 7 days"
-                                 :query "date:7d..now"
-                                 :key ?w)
-                               ,(make-mu4e-bookmark
-                                 :name "Flagged in INBOX"
-                                 :query "flag:flagged"
-                                 :key ?f)))
-
-     ;; Header format
-     (setq mu4e-headers-fields '((:human-date . 25)
-                                 (:flags . 6)
-                                 (:from . 30)
-                                 (:to . 30)
-                                 (:maildir . 30)
-                                 (:thread-subject))
-
-           mu4e-headers-date-format "%d %b %Y (%H:%M)" ; date format
-           mu4e-headers-time-format "%H:%M")
-
-     ;; View format
-     (setq mu4e-view-show-images t ;; show images
-           mu4e-view-show-addresses t
-           mu4e-date-format-long "%A %Y-%m-%d %T %z (%Z)"
-           mu4e-compose-format-flowed t
-           message-citation-line-format "On %a, %b %d %Y (%H:%M), %f wrote:\n"
-           message-citation-line-function 'message-insert-formatted-citation-line)
-
-     ;; use imagemagick, if available
-     (when (fboundp 'imagemagick-register-types)
-       (imagemagick-register-types))
-
-
-     ;; Rendering message
-     (defun mu4e-view-in-browser (msg)
-       "View the body of the message in a web browser."
-       (interactive)
-       (let ((html (mu4e-msg-field (mu4e-message-at-point t) :body-html))
-             (tmpfile (format "%s/%d.html" temporary-file-directory (random))))
-         (unless html (error "No html part for this message"))
-         (with-temp-file tmpfile
-           (insert
-            "<html>"
-            "<head><meta http-equiv=\"content-type\""
-            "content=\"text/html;charset=UTF-8\">"
-            html))
-         (browse-url (concat "file://" tmpfile))))
-
-     (defun mu4e-view-with-xwidget (msg)
-       "View the body of the message inside xwidget-webkit."
-       (unless (fboundp 'xwidget-webkit-browse-url)
-         (mu4e-error "No xwidget support available"))
-       (let* ((html (mu4e-message-field msg :body-html))
-              (txt (mu4e-message-field msg :body-txt))
-              (tmpfile (format "%s%x.html" temporary-file-directory (random t))))
-         (unless (or html txt)
-           (mu4e-error "No body part for this message"))
-         (with-temp-buffer
-           ;; simplistic -- but note that it's only an example...
-           (insert (or html (concat "<pre>" txt "</pre>")))
-           (write-file tmpfile)
-           (xwidget-webkit-browse-url (concat "file://" tmpfile) t))))
-
-     (add-to-list 'mu4e-view-actions
-                  '("View in browser" . mu4e-view-in-browser) t)
-     (add-to-list 'mu4e-view-actions
-                  '("xViewXWidget" . mu4e-view-with-xwidget) t)
-
-
-     ;; Replying
-     (setq mu4e-user-mail-address-list  '("lemaguer@enssat.fr" "sebastien.le-maguer@univ-rennes1.fr"       ;; Teaching
-                                          "Sebastien.Le_maguer@irisa.fr" "Sebastien.Le_maguer@inria.fr"    ;; Research (phd + rennes postdoc)
-                                          "slemaguer@coli.uni-saarland.de"                                 ;; Research (postdoc germany)
-                                          "seb.lemaguer@gmail.com" "hikoseb@gmail.com")                    ;; Personnal
-           mu4e-compose-dont-reply-to-self t)
-
-     ;; Adapt the composition
-     (add-hook 'mu4e-compose-mode-hook
-               (defun my-do-compose-stuff ()
-                 "My settings for message composition."
-                 (turn-off-auto-fill)
-                 (flyspell-mode)))
-
-     ;; Fontify citation
-     (defun mu4e~fontify-cited ()
-       "Colorize message content based on the citation level. This is
-     used in the view and compose modes."
-       (save-excursion
-         (goto-char (point-min))
-         (when (search-forward-regexp "^\n" nil t) ;; search the first empty line
-           (while (re-search-forward mu4e-cited-regexp nil t)
-             (let* ((level (string-width (replace-regexp-in-string
-                                          "[^>]" "" (match-string 0))))
-                    (face  (unless (zerop level)
-                             (intern-soft (format "mu4e-cited-%d-face" level)))))
-               (when face
-                 (add-text-properties (line-beginning-position 1)
-                                      (+ 1 (point-at-eol)) `(face ,face))))))))
-
-     (custom-set-faces
-      '(mu4e-cited-1-face ((t :foreground "#708090" :background "grey")))
-      '(mu4e-cited-7-face ((t :foreground "#828189"))))
-
-     ;; Shortcut
-     (global-set-key (kbd "<f2>") 'mu4e))
- #+end_src
-*** Sending
+*** Composing/Sending
   #+begin_src emacs-lisp
     (use-package smtpmail
+      :after flyspell
       :config
 
       ;; Subpackages
       (use-package smtpmail-async)
 
-      ;; Defin behaviour
+      ;; Define behaviour
       (setq smtpmail-queue-mail nil ; start in non queue mode
-	    message-send-mail-function 'message-send-mail-with-sendmail
-	    send-mail-function 'message-send-mail-with-sendmail
-	    sendmail-program "sendmail"))
+            message-send-mail-function 'message-send-mail-with-sendmail
+            send-mail-function 'message-send-mail-with-sendmail
+            ;; mime-edit-pgp-signers '("C84EF897")
+            ;; mime-edit-pgp-encrypt-to-self t
+            ;; mml2015-encrypt-to-self t
+            ;; mml2015-sign-with-sender t
+            message-sendmail-f-is-evil nil
+            message-signature-file (format "%s/third_parties/mail/signature" config-basedir)
+            sendmail-program "sendmail")
+
+      (add-hook 'message-mode-hook 'flyspell-mode)
+      (add-hook 'message-mode-hook (lambda () (auto-fill-mode 0)))
+      )
   #+end_src
+*** notmuch
+#+begin_src emacs-lisp
+(use-package notmuch
+  :ensure t
+  :after company
+  :config
+  (setq notmuch-search-oldest-first nil
+        message-sendmail-envelope-from 'header
+        mail-specify-envelope-from 'header
+        mail-envelope-from 'header
+        notmuch-show-all-multipart/alternative-parts nil
+        notmuch-crypto-process-mime t
+        gnus-inhibit-images nil
+        mail-interactive t
+        message-kill-buffer-on-exit t
+        mail-user-agent 'message-user-agent
+        notmuch-always-prompt-for-sender t
+        notmuch-show-indent-messages-width 2
+        notmuch-fcc-dirs '(("slemaguer@coli.uni-saarland.de" . "Saarland/INBOX/.Sent")))
 
-*** Notification
- #+begin_src emacs-lisp
-   (defun check-unread-messages ()
-     "Check our mail dir for 'new' messages and return the count."
-     (let ((cmd (format "%s find flag:unread AND NOT flag:trashed | wc -l" mu4e-mu-binary)))
-       (string-to-number (replace-regexp-in-string "![0-9]" "" (shell-command-to-string cmd)))))
+
+  ;; FIXME: and gmail
+  (defun notmuch-message-mark-sent()
+    ""
+    (notmuch-tag "folder:Saarland/INBOX/.Sent"
+                 (notmuch-tag-change-list '("-inbox" "-unread" "+sent"))))
+
+  (add-hook 'message-send-hook 'notmuch-message-mark-sent)
+
+  ;; Research
+  (setq notmuch-saved-searches '(
+                                 ;; Quick helpers
+                                 (:name "unread" :query "tag:unread" :key "u")
+                                 (:name "today" :query "date:today" :key "t")
+                                 (:name "flagged" :query "tag:flagged" :key "f")
+
+                                 ;; Classic box
+                                 (:name "inbox" :query "tag:inbox" :key "i")
+                                 (:name "sent" :query "tag:sent" :key "e")
+                                 (:name "drafts" :query "tag:draft" :key "d")))
+
+  ;; Hello shortcuts
+  (define-key notmuch-hello-mode-map "U"
+    (lambda ()
+      (interactive)
+      (call-process "mbsync" nil t nil "-a")
+      (notmuch-poll-and-refresh-this-buffer)))
+
+  ;; Search shortcuts
+  (define-key notmuch-search-mode-map "g" 'notmuch-poll-and-refresh-this-buffer)
+
+  (define-key notmuch-search-mode-map "d"
+    (lambda ()
+      "toggle deleted tag for thread"
+      (interactive)
+      (if (member "deleted" (notmuch-search-get-tags))
+          (notmuch-search-tag '("-deleted"))
+        (notmuch-search-tag '("+deleted" "-inbox" "-unread")))))
+
+  (define-key notmuch-search-mode-map "!"
+    (lambda ()
+      "toggle unread tag for thread"
+      (interactive)
+      (if (member "unread" (notmuch-search-get-tags))
+          (notmuch-search-tag '("-unread"))
+        (notmuch-search-tag '("+unread")))))
+
+  ;; Show shortcuts
+  (define-key notmuch-show-mode-map "\C-c\C-o" 'browse-url-at-point)
+
+  (define-key notmuch-show-mode-map "d"
+    (lambda ()
+      "toggle deleted tag for message"
+      (interactive)
+      (if (member "deleted" (notmuch-show-get-tags))
+          (notmuch-show-tag '("-deleted"))
+        (notmuch-show-tag '("+deleted" "-inbox" "-unread")))))
 
 
-   (use-package sauron-mu4e
-     :ensure t
-     :after mu4e
-     :after sauron
-     :config
-     (setq sr-mu4e-important-filter "from:steiner AND flag:unread AND NOT flag:trashed")
-     (add-to-list 'sauron-modules 'sauron-mu4e))
- #+end_src
-
-*** TODO Check attachment
- Coming from http://mbork.pl/2016-02-06_An_attachment_reminder_in_mu4e
- #+begin_src emacs-lisp
-   (defun mbork/message-attachment-present-p ()
-     "Return t if an attachment is found in the current message."
-     (save-excursion
-       (save-restriction
-         (widen)
-         (goto-char (point-min))
-         (when (search-forward "<#part" nil t) t))))
-
-   (defcustom mbork/message-attachment-intent-re
-     (regexp-opt '("I attach"
-                   "I have attached"
-                   "I've attached"
-                   "I have included"
-                   "I've included"
-                   "see the attached"
-                   "see the attachment"
-                   "attached file"))
-     "A regex which - if found in the message, and if there is no
-   attachment - should launch the no-attachment warning.")
-
-   (defcustom mbork/message-attachment-reminder
-     "Are you sure you want to send this message without any attachment? "
-     "The default question asked when trying to send a message
-   containing `mbork/message-attachment-intent-re' without an
-   actual attachment.")
-
-   (defun mbork/message-warn-if-no-attachments ()
-     "Ask the user if s?he wants to send the message even though
-   there are no attachments."
-     (when (and (save-excursion
-                  (save-restriction
-                    (widen)
-                    (goto-char (point-min))
-                    (re-search-forward mbork/message-attachment-intent-re nil t)))
-		(not (mbork/message-attachment-present-p)))
-       (unless (y-or-n-p mbork/message-attachment-reminder)
-         (keyboard-quit))))
-
-   (add-hook 'message-send-hook #'mbork/message-warn-if-no-attachments)
- #+end_src
-
+  (global-set-key (kbd "<f2>") 'notmuch))
+#+end_src
 ** RSS
 *** Global
 #+begin_src emacs-lisp
@@ -4287,7 +4049,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ("c"   org-capture)
     ("f" describe-function)
     ("g" org-web-tools-read-url-as-org)
-    ("m" mu4e-compose-new)
+    ("m" notmuch-mua-new-mai)
     ("v" describe-variable)
     ("+" text-scale-increase :color pink)
     ("-" text-scale-decrease :color pink)
@@ -4548,7 +4310,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+end_src
 ** Starting processes
 #+begin_src emacs-lisp
-(mu4e t)
 (elfeed-update-background-start)
 (sauron-start-hidden)
 #+end_src
