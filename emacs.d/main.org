@@ -267,46 +267,43 @@ Try to add this key support
       "A textual flyspell popup menu."
       (require 'popup)
       (let* ((corrects (if flyspell-sort-corrections
-                           (sort (car (cdr (cdr poss))) 'string<)
-                         (car (cdr (cdr poss)))))
-             (cor-menu (if (consp corrects)
-                           (mapcar (lambda (correct)
-                                     (list correct correct))
-                                   corrects)
-                         '()))
-             (affix (car (cdr (cdr (cdr poss)))))
-             show-affix-info
-             (base-menu  (let ((save (if (and (consp affix) show-affix-info)
-                                         (list
-                                          (list (concat "Save affix: " (car affix))
-                                                'save)
-                                          '("Accept (session)" session)
-                                          '("Accept (buffer)" buffer))
-                                       '(("Save word" save)
-                                         ("Accept (session)" session)
-                                         ("Accept (buffer)" buffer)))))
-                           (if (consp cor-menu)
-                               (append cor-menu (cons "" save))
-                             save)))
-             (menu (mapcar
-                    (lambda (arg) (if (consp arg) (car arg) arg))
-                    base-menu)))
-        (cadr (assoc (popup-menu* menu :scroll-bar t) base-menu))))
+			   (sort (car (cdr (cdr poss))) 'string<)
+			 (car (cdr (cdr poss)))))
+	     (cor-menu (if (consp corrects)
+			   (mapcar (lambda (correct)
+				     (list correct correct))
+				   corrects)
+			 '()))
+	     (affix (car (cdr (cdr (cdr poss)))))
+	     show-affix-info
+	     (base-menu  (let ((save (if (and (consp affix) show-affix-info)
+					 (list
+					  (list (concat "Save affix: " (car affix))
+						'save)
+					  '("Accept (session)" session)
+					  '("Accept (buffer)" buffer))
+				       '(("Save word" save)
+					 ("Accept (session)" session)
+					 ("Accept (buffer)" buffer)))))
+			   (if (consp cor-menu)
+			       (append cor-menu (cons "" save))
+			     save)))
+	     (menu (mapcar
+		    (lambda (arg) (if (consp arg) (car arg) arg))
+		    base-menu)))
+	(cadr (assoc (popup-menu* menu :scroll-bar t) base-menu))))
 
 
     (defun flyspell-emacs-popup-choose (org-fun event poss word)
       (if (window-system)
-          (funcall org-fun event poss word)
-        (flyspell-emacs-popup-textual event poss word)))
+	  (funcall org-fun event poss word)
+	(flyspell-emacs-popup-textual event poss word)))
 
     (eval-after-load "flyspell"
       '(progn
-         (advice-add 'flyspell-emacs-popup :around #'flyspell-emacs-popup-choose)))
+	 (advice-add 'flyspell-emacs-popup :around #'flyspell-emacs-popup-choose)))
     )
 #+end_src
-#+begin_src emacs-lisp
-#+end_src
-
 ** Fixme
 #+begin_src emacs-lisp
   (use-package fixmee
@@ -933,40 +930,40 @@ Based mainly on C just few adaptations to do here
 
     ;; Spelling
     (setq ispell-tex-skip-alists
-          '((
-             ;;("%\\[" . "%\\]") ; AMStex block comment...
-             ;; All the standard LaTeX keywords from L. Lamport's guide:
-             ;; \cite, \hspace, \hspace*, \hyphenation, \include, \includeonly
-             ;; \input, \label, \nocite, \rule (in ispell - rest included here)
-             ("\\\\addcontentsline"              ispell-tex-arg-end 2)
-             ("\\\\add\\(tocontents\\|vspace\\)" ispell-tex-arg-end)
-             ("\\\\\\([aA]lph\\|arabic\\)"   ispell-tex-arg-end)
-             ("\\\\author"                         ispell-tex-arg-end)
-             ;; New regexps here --- kjh
-             ("\\\\\\(text\\|paren\\)cite" ispell-tex-arg-end)
-             ("\\\\cite\\(t\\|p\\|year\\|yearpar\\)" ispell-tex-arg-end)
-             ("\\\\bibliographystyle"                ispell-tex-arg-end)
-             ("\\\\makebox"                  ispell-tex-arg-end 0)
-             ("\\\\e?psfig"                  ispell-tex-arg-end)
-             ("\\\\document\\(class\\|style\\)" .
-              "\\\\begin[ \t\n]*{[ \t\n]*document[ \t\n]*}"))
-            (
-             ;; delimited with \begin.  In ispell: displaymath, eqnarray,
-             ;; eqnarray*, equation, minipage, picture, tabular,
-             ;; tabular* (ispell)
-             ("\\(figure\\|table\\)\\*?"     ispell-tex-arg-end 0)
-             ("\\(equation\\|eqnarray\\)\\*?"     ispell-tex-arg-end 0)
-             ("list"                                 ispell-tex-arg-end 2)
-             ("program" . "\\\\end[ \t\n]*{[ \t\n]*program[ \t\n]*}")
-             ("verbatim\\*?"."\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}")
-             ("lstlisting\\*?"."\\\\end[ \t\n]*{[ \t\n]*lstlisting\\*?[ \t\n]*}"))))
+	  '((
+	     ;;("%\\[" . "%\\]") ; AMStex block comment...
+	     ;; All the standard LaTeX keywords from L. Lamport's guide:
+	     ;; \cite, \hspace, \hspace*, \hyphenation, \include, \includeonly
+	     ;; \input, \label, \nocite, \rule (in ispell - rest included here)
+	     ("\\\\addcontentsline"              ispell-tex-arg-end 2)
+	     ("\\\\add\\(tocontents\\|vspace\\)" ispell-tex-arg-end)
+	     ("\\\\\\([aA]lph\\|arabic\\)"   ispell-tex-arg-end)
+	     ("\\\\author"                         ispell-tex-arg-end)
+	     ;; New regexps here --- kjh
+	     ("\\\\\\(text\\|paren\\)cite" ispell-tex-arg-end)
+	     ("\\\\cite\\(t\\|p\\|year\\|yearpar\\)" ispell-tex-arg-end)
+	     ("\\\\bibliographystyle"                ispell-tex-arg-end)
+	     ("\\\\makebox"                  ispell-tex-arg-end 0)
+	     ("\\\\e?psfig"                  ispell-tex-arg-end)
+	     ("\\\\document\\(class\\|style\\)" .
+	      "\\\\begin[ \t\n]*{[ \t\n]*document[ \t\n]*}"))
+	    (
+	     ;; delimited with \begin.  In ispell: displaymath, eqnarray,
+	     ;; eqnarray*, equation, minipage, picture, tabular,
+	     ;; tabular* (ispell)
+	     ("\\(figure\\|table\\)\\*?"     ispell-tex-arg-end 0)
+	     ("\\(equation\\|eqnarray\\)\\*?"     ispell-tex-arg-end 0)
+	     ("list"                                 ispell-tex-arg-end 2)
+	     ("program" . "\\\\end[ \t\n]*{[ \t\n]*program[ \t\n]*}")
+	     ("verbatim\\*?"."\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}")
+	     ("lstlisting\\*?"."\\\\end[ \t\n]*{[ \t\n]*lstlisting\\*?[ \t\n]*}"))))
 
     ;; Subpackages
     (let ((byte-compile-warnings '(not free-vars)))
       (use-package latex-extra
-        :ensure t
-        :config
-        (add-hook 'LaTeX-mode-hook #'latex-extra-mode)))
+	:ensure t
+	:config
+	(add-hook 'LaTeX-mode-hook #'latex-extra-mode)))
 
     ;; Pdf activated by default
     (TeX-global-PDF-mode 1)
@@ -974,48 +971,48 @@ Based mainly on C just few adaptations to do here
     ;; Diverse
     (setq-default TeX-master nil)
     (setq TeX-parse-self t
-          TeX-auto-save t)
+	  TeX-auto-save t)
 
     ;; Filling
     (add-hook 'LaTeX-mode-hook 'turn-off-auto-fill)
     (add-hook 'LaTeX-mode-hook
-              (lambda ()
-                (TeX-fold-mode t)
-                (setq fill-column 100)))
+	      (lambda ()
+		(TeX-fold-mode t)
+		(setq fill-column 100)))
 
     ;; Minor helpers for comment and quotes
     (add-to-list 'LaTeX-verbatim-environments "comment")
     (setq TeX-open-quote "\enquote{"
-          TeX-close-quote "}")
+	  TeX-close-quote "}")
 
     ;; Indentation
     (setq LaTeX-indent-level 4
-          LaTeX-item-indent 0
-          TeX-brace-indent-level 4
-          TeX-newline-function 'newline-and-indent)
+	  LaTeX-item-indent 0
+	  TeX-brace-indent-level 4
+	  TeX-newline-function 'newline-and-indent)
 
 
     ;; Some usefull hooks
-    (add-hook 'LaTeX-mode-hook 'flyspell-mode))
+    (add-hook 'LaTeX-mode-hook 'flyspell-mode)
     (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
     (add-hook 'LaTeX-mode-hook 'outline-minor-mode)
 
     (defadvice LaTeX-fill-region-as-paragraph (around LaTeX-sentence-filling)
       "Start each sentence on a new line."
       (let ((from (ad-get-arg 0))
-            (to-marker (set-marker (make-marker) (ad-get-arg 1)))
-            tmp-end)
-        (while (< from (marker-position to-marker))
-          (forward-sentence)
-          ;; might have gone beyond to-marker --- use whichever is smaller:
-          (ad-set-arg 1 (setq tmp-end (min (point) (marker-position to-marker))))
-          ad-do-it
-          (ad-set-arg 0 (setq from (point)))
-          (unless (or
-                   (bolp)
-                   (looking-at "\\s *$"))
-            (LaTeX-newline)))
-        (set-marker to-marker nil)))
+	    (to-marker (set-marker (make-marker) (ad-get-arg 1)))
+	    tmp-end)
+	(while (< from (marker-position to-marker))
+	  (forward-sentence)
+	  ;; might have gone beyond to-marker --- use whichever is smaller:
+	  (ad-set-arg 1 (setq tmp-end (min (point) (marker-position to-marker))))
+	  ad-do-it
+	  (ad-set-arg 0 (setq from (point)))
+	  (unless (or
+		   (bolp)
+		   (looking-at "\\s *$"))
+	    (LaTeX-newline)))
+	(set-marker to-marker nil)))
     (ad-activate 'LaTeX-fill-region-as-paragraph)
 
 
@@ -3334,84 +3331,84 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   #+end_src
 *** notmuch
 #+begin_src emacs-lisp
-(use-package notmuch
-  :ensure t
-  :after company
-  :config
-  (setq notmuch-search-oldest-first nil
-        message-sendmail-envelope-from 'header
-        mail-specify-envelope-from 'header
-        mail-envelope-from 'header
-        notmuch-show-all-multipart/alternative-parts nil
-        notmuch-crypto-process-mime t
-        gnus-inhibit-images nil
-        mail-interactive t
-        message-kill-buffer-on-exit t
-        mail-user-agent 'message-user-agent
-        notmuch-always-prompt-for-sender t
-        notmuch-show-indent-messages-width 2
-        notmuch-fcc-dirs '(("slemaguer@coli.uni-saarland.de" . "Saarland/INBOX/.Sent")))
+  (use-package notmuch
+    :ensure t
+    :after company
+    :config
+    (setq notmuch-search-oldest-first nil
+          message-sendmail-envelope-from 'header
+          mail-specify-envelope-from 'header
+          mail-envelope-from 'header
+          notmuch-show-all-multipart/alternative-parts nil
+          notmuch-crypto-process-mime t
+          gnus-inhibit-images nil
+          mail-interactive t
+          message-kill-buffer-on-exit t
+          mail-user-agent 'message-user-agent
+          notmuch-always-prompt-for-sender t
+          notmuch-show-indent-messages-width 2
+          notmuch-fcc-dirs '(("slemaguer@coli.uni-saarland.de" . "Saarland/INBOX/.Sent")))
 
 
-  ;; FIXME: and gmail
-  (defun notmuch-message-mark-sent()
-    ""
-    (notmuch-tag "folder:Saarland/INBOX/.Sent"
-                 (notmuch-tag-change-list '("-inbox" "-unread" "+sent"))))
+    ;; FIXME: and gmail
+    (defun notmuch-message-mark-sent()
+      ""
+      (notmuch-tag "folder:Saarland/INBOX/.Sent"
+                   (notmuch-tag-change-list '("-inbox" "-unread" "+sent"))))
 
-  (add-hook 'message-send-hook 'notmuch-message-mark-sent)
+    (add-hook 'message-send-hook 'notmuch-message-mark-sent)
 
-  ;; Research
-  (setq notmuch-saved-searches '(
-                                 ;; Quick helpers
-                                 (:name "unread" :query "tag:unread" :key "u")
-                                 (:name "today" :query "date:today" :key "t")
-                                 (:name "flagged" :query "tag:flagged" :key "f")
+    ;; Research
+    (setq notmuch-saved-searches '(
+                                   ;; Quick helpers
+                                   (:name "unread" :query "tag:unread" :key "u")
+                                   (:name "today" :query "date:today" :key "t")
+                                   (:name "flagged" :query "tag:flagged" :key "f")
 
-                                 ;; Classic box
-                                 (:name "inbox" :query "tag:inbox" :key "i")
-                                 (:name "sent" :query "tag:sent" :key "e")
-                                 (:name "drafts" :query "tag:draft" :key "d")))
+                                   ;; Classic box
+                                   (:name "inbox" :query "tag:inbox" :key "i")
+                                   (:name "sent" :query "tag:sent" :key "e")
+                                   (:name "drafts" :query "tag:draft" :key "d")))
 
-  ;; Hello shortcuts
-  (define-key notmuch-hello-mode-map "U"
-    (lambda ()
-      (interactive)
-      (call-process "mbsync" nil t nil "-a")
-      (notmuch-poll-and-refresh-this-buffer)))
+    ;; Hello shortcuts
+    (define-key notmuch-hello-mode-map "U"
+      (lambda ()
+        (interactive)
+        (call-process "mbsync" nil t nil "-a")
+        (notmuch-poll-and-refresh-this-buffer)))
 
-  ;; Search shortcuts
-  (define-key notmuch-search-mode-map "g" 'notmuch-poll-and-refresh-this-buffer)
+    ;; Search shortcuts
+    (define-key notmuch-search-mode-map "g" 'notmuch-poll-and-refresh-this-buffer)
 
-  (define-key notmuch-search-mode-map "d"
-    (lambda ()
-      "toggle deleted tag for thread"
-      (interactive)
-      (if (member "deleted" (notmuch-search-get-tags))
-          (notmuch-search-tag '("-deleted"))
-        (notmuch-search-tag '("+deleted" "-inbox" "-unread")))))
+    (define-key notmuch-search-mode-map "d"
+      (lambda ()
+        "toggle deleted tag for thread"
+        (interactive)
+        (if (member "deleted" (notmuch-search-get-tags))
+            (notmuch-search-tag '("-deleted"))
+          (notmuch-search-tag '("+deleted" "-inbox" "-unread")))))
 
-  (define-key notmuch-search-mode-map "!"
-    (lambda ()
-      "toggle unread tag for thread"
-      (interactive)
-      (if (member "unread" (notmuch-search-get-tags))
-          (notmuch-search-tag '("-unread"))
-        (notmuch-search-tag '("+unread")))))
+    (define-key notmuch-search-mode-map "!"
+      (lambda ()
+        "toggle unread tag for thread"
+        (interactive)
+        (if (member "unread" (notmuch-search-get-tags))
+            (notmuch-search-tag '("-unread"))
+          (notmuch-search-tag '("+unread")))))
 
-  ;; Show shortcuts
-  (define-key notmuch-show-mode-map "\C-c\C-o" 'browse-url-at-point)
+    ;; Show shortcuts
+    (define-key notmuch-show-mode-map "\C-c\C-o" 'browse-url-at-point)
 
-  (define-key notmuch-show-mode-map "d"
-    (lambda ()
-      "toggle deleted tag for message"
-      (interactive)
-      (if (member "deleted" (notmuch-show-get-tags))
-          (notmuch-show-tag '("-deleted"))
-        (notmuch-show-tag '("+deleted" "-inbox" "-unread")))))
+    (define-key notmuch-show-mode-map "d"
+      (lambda ()
+        "toggle deleted tag for message"
+        (interactive)
+        (if (member "deleted" (notmuch-show-get-tags))
+            (notmuch-show-tag '("-deleted"))
+          (notmuch-show-tag '("+deleted" "-inbox" "-unread")))))
 
 
-  (global-set-key (kbd "<f2>") 'notmuch))
+    (global-set-key (kbd "<f2>") 'notmuch))
 #+end_src
 ** RSS
 *** Global
@@ -4049,7 +4046,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ("c"   org-capture)
     ("f" describe-function)
     ("g" org-web-tools-read-url-as-org)
-    ("m" notmuch-mua-new-mai)
+    ("m" notmuch-mua-new-mail)
     ("v" describe-variable)
     ("+" text-scale-increase :color pink)
     ("-" text-scale-decrease :color pink)
