@@ -140,6 +140,7 @@ UseNamespace no
 MaildirStore Dfki-local
 Path ~/mail/Dfki/
 Inbox ~/mail/Dfki/INBOX
+SubFolders Legacy
 
 Channel Dfki
 Master :Dfki-remote:
