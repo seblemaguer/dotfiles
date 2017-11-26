@@ -3363,15 +3363,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
           notmuch-show-indent-messages-width 2
           notmuch-fcc-dirs '(("slemaguer@coli.uni-saarland.de" . "Saarland/INBOX/.Sent")))
 
-
-    ;; FIXME: and gmail
-    (defun notmuch-message-mark-sent()
-      ""
-      (notmuch-tag "folder:Saarland/INBOX/.Sent"
-                   (notmuch-tag-change-list '("-inbox" "-unread" "+sent"))))
-
-    (add-hook 'message-send-hook 'notmuch-message-mark-sent)
-
     ;; Research
     (setq notmuch-saved-searches '(
                                    ;; Quick helpers
@@ -3384,16 +3375,37 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                                    (:name "sent" :query "tag:sent" :key "e")
                                    (:name "drafts" :query "tag:draft" :key "d")))
 
-    ;; Hello shortcuts
-    (define-key notmuch-hello-mode-map "U"
-      (lambda ()
+    ;; Hook for notmuch
+    (defun notmuch-message-mark-sent ()
+      "Mark all the message from any interesting sent folders as sent."
+      (interactive)
+      (notmuch-tag "folder:Saarland/INBOX/.Sent"
+                   (notmuch-tag-change-list '("-inbox" "-unread" "+sent"))))
+
+    (defun notmuch-update-index ()
+      "Update the index (without sync.) and mark sent messages as sent"
+      (interactive)
+      (notmuch-poll)
+      (notmuch-message-mark-sent))
+
+    (defun notmuch-update-index-and-refresh-buffer ()
+      "Update the index and then refresh the current buffer"
         (interactive)
-        (call-process "mbsync" nil t nil "-a")
-        (notmuch-poll-and-refresh-this-buffer)))
+        (notmuch-update-index)
+        (notmuch-refresh-this-buffer))
+
+    (defun notmuch-sync-and-update-index ()
+      "Update the index after sync."
+      (interactive)
+      (call-process "mbsync" nil t nil "-a")
+      (notmuch-update-index))
+
+    ;; Hello shortcuts
+    (define-key notmuch-hello-mode-map "U" 'notmuch-sync-and-update-index)
+    (define-key notmuch-hello-mode-map "g" 'notmuch-update-index-and-refresh-buffer)
 
     ;; Search shortcuts
-    (define-key notmuch-search-mode-map "g" 'notmuch-poll-and-refresh-this-buffer)
-
+    (define-key notmuch-search-mode-map "g" 'notmuch-update-index-and-refresh-buffer)
     (define-key notmuch-search-mode-map "d"
       (lambda ()
         "toggle deleted tag for thread"
