@@ -2646,11 +2646,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                       (name . "^[*]scratch[*]$")
                       (name . "^[*]Messages[*]$")))
 
-                    ("Term"
-                     (or
-                      (mode . comint-mode)
-                      (mode . term-mode)))
-
                     ("Calendar"
                      (or
                       (name . "^[*]?[Cc]alendar.*$")
@@ -2756,6 +2751,17 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                     ("Org"
                      (or
                       (mode . org-mode)))
+
+
+                    ("Term"
+                     (or
+                      (mode . comint-mode)
+                      (mode . eshell-mode)
+                      (mode . term-mode)))
+
+                    ("Prodigy"
+                     (or
+                      (name . "^[*]prodigy.*[*]$")))
 
                     ("Temp"
                      (or
