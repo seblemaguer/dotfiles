@@ -15,6 +15,11 @@
   (toggle-debug-on-error)
 #+end_src
 * Packages
+** System/package dependency
+#+begin_src emacs-lisp
+  (use-package use-package-ensure-system-package
+    :ensure t)
+#+end_src
 ** Paradox
 #+begin_src emacs-lisp
   (use-package paradox
