@@ -3319,6 +3319,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   #+begin_src emacs-lisp
     (use-package smtpmail
       :after flyspell
+      :ensure-system-package msmtp
       :config
 
       ;; Subpackages
@@ -3344,6 +3345,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package notmuch
     :ensure t
+    :ensure-system-package notmuch
+    :ensure-system-package isync
     :after company
     :config
     (setq notmuch-search-oldest-first nil
