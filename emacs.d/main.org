@@ -4063,9 +4063,9 @@ I actually use this part for minor correction. The tags are done when abcde is c
     "
        Main helper
 
-   Org. related             Help                Zooming
+   Org. related             Help                Zooming          processes
   ------------------------------------------------------------------------------------------
-  _c_: org-capture        _f_: function doc.    _+_: zoom in
+  _c_: org-capture        _f_: function doc.    _+_: zoom in     _p_: prodigy
   _g_: org-web-get-url    _v_: variable doc.    _-_: zoom out
   _m_: new mail
   "
@@ -4073,6 +4073,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ("f" describe-function)
     ("g" org-web-tools-read-url-as-org)
     ("m" notmuch-mua-new-mail)
+    ("p" prodigy)
     ("v" describe-variable)
     ("+" text-scale-increase :color pink)
     ("-" text-scale-decrease :color pink)
