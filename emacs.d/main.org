@@ -3110,14 +3110,90 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 * Internet/network
 ** Globalize clickable url
 #+begin_src emacs-lisp
-  (define-globalized-minor-mode global-goto-address-mode
-    goto-address-mode goto-address-mode :group 'goto-address)
+  ;; Redefine the browser to add vivaldi
+  (use-package browse-url
+    :config
+    (defcustom browse-url-vivaldi-program
+      (let ((candidates '("vivaldi" "vivaldi-stable")))
+        (while (and candidates (not (executable-find (car candidates))))
+          (setq candidates (cdr candidates)))
+        (or (car candidates) "vivaldi"))
+      "The name by which to invoke Vivaldi."
+      :type 'string
+      :version "25.3"
+      :group 'browse-url)
 
-  (global-goto-address-mode)
 
-  (define-globalized-minor-mode global-goto-address-prog-mode
-    goto-address-prog-mode goto-address-prog-mode :group 'goto-address)
+    (defcustom browse-url-vivaldi-arguments nil
+      "A list of strings to pass to Vivaldi as arguments."
+      :type '(repeat (string :tag "Argument"))
+      :version "25.3"
+      :group 'browse-url)
 
+    (defun browse-url-vivaldi (url &optional _new-window)
+      "Ask the Vivaldi WWW browser to load URL.
+  Default to the URL around or before point.  The strings in
+  variable `browse-url-vivaldi-arguments' are also passed to
+  Vivaldi.
+  The optional argument NEW-WINDOW is not used."
+      (interactive (browse-url-interactive-arg "URL: "))
+      (setq url (browse-url-encode-url url))
+      (let* ((process-environment (browse-url-process-environment)))
+        (apply 'start-process
+               (concat "vivaldi " url) nil
+               browse-url-vivaldi-program
+               (append
+                browse-url-vivaldi-arguments
+                (list url)))))
+
+
+
+
+    (defun browse-url-default-browser (url &rest args)
+      "Find a suitable browser and ask it to load URL.
+  Default to the URL around or before point.
+
+  When called interactively, if variable `browse-url-new-window-flag' is
+  non-nil, load the document in a new window, if possible, otherwise use
+  a random existing one.  A non-nil interactive prefix argument reverses
+  the effect of `browse-url-new-window-flag'.
+
+  When called non-interactively, optional second argument ARGS is used
+  instead of `browse-url-new-window-flag'."
+      (apply
+       (cond
+        ((memq system-type '(windows-nt ms-dos cygwin))
+         'browse-url-default-windows-browser)
+        ((memq system-type '(darwin))
+         'browse-url-default-macosx-browser)
+        ((browse-url-can-use-xdg-open) 'browse-url-xdg-open)
+  ;;;    ((executable-find browse-url-gnome-moz-program) 'browse-url-gnome-moz)
+        ((executable-find browse-url-mozilla-program) 'browse-url-mozilla)
+        ((executable-find browse-url-firefox-program) 'browse-url-firefox)
+        ((executable-find browse-url-chromium-program) 'browse-url-chromium)
+        ((executable-find browse-url-vivaldi-program) 'browse-url-vivaldi)
+  ;;;    ((executable-find browse-url-galeon-program) 'browse-url-galeon)
+        ((executable-find browse-url-kde-program) 'browse-url-kde)
+  ;;;    ((executable-find browse-url-netscape-program) 'browse-url-netscape)
+  ;;;    ((executable-find browse-url-mosaic-program) 'browse-url-mosaic)
+        ((executable-find browse-url-conkeror-program) 'browse-url-conkeror)
+        ((executable-find browse-url-chrome-program) 'browse-url-chrome)
+        ((executable-find browse-url-xterm-program) 'browse-url-text-xterm)
+        ((locate-library "w3") 'browse-url-w3)
+        (t
+         (lambda (&rest _ignore) (error "No usable browser found"))))
+       url args)))
+
+  ;; Activate clickage everywhere
+  (use-package goto-addr
+    :config
+    (define-globalized-minor-mode global-goto-address-mode
+      goto-address-mode goto-address-mode :group 'goto-address)
+
+    (global-goto-address-mode)
+
+    (define-globalized-minor-mode global-goto-address-prog-mode
+      goto-address-prog-mode goto-address-prog-mode :group 'goto-address))
 #+end_src
 ** Searching
 *** Google
