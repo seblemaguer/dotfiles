@@ -3011,32 +3011,31 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (defvar alert-highlight-current-level 0)
     (defvar alert-highlight-threshold 1)
 
+    (defun alert-adapt-mode-line (info)
+      (message (princ info))
+      (message (format "%d <= %d, %d?"
+                       ;; (cdr (assq (plist-get info :severity) alert-highlight-priorities))
+                            alert-highlight-threshold alert-highlight-current-level 3))
 
-    (alert-define-style
-     'mode-line-alert
-     :title "Mode-line alert"
-     :notifier
-     (lambda (info)
-       ;; First time => copy the current mode line face
-       (when (<= alert-highlight-current-level alert-highlight-threshold)
-         (copy-face 'mode-line 'backup-mode-line-face))
+      ;; First time => copy the current mode line face
+      (when (<= alert-highlight-current-level alert-highlight-threshold)
+        (copy-face 'mode-line 'backup-mode-line-face))
+      ;; Change the policy
+      (when (and (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
+                    alert-highlight-threshold)
+                 (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
+                    alert-highlight-current-level))
+        (progn
+          (set-face-attribute 'mode-line nil
+                              :background (cdr (assq (plist-get info :severity)
+                                                     alert-severity-colors)))
+          ))
 
-       ;; Change the policy
-       (when (and (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
-                     alert-highlight-threshold)
-                  (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
-                     alert-highlight-current-level))
-         (progn
-           (set-face-attribute 'mode-line nil
-                               :background (cdr (assq (plist-get info :severity)
-                                                      alert-severity-colors)))
-           ))
-
-       ;; Change current level if this one is upper
-       (when (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
-                alert-highlight-current-level)
-         (setq alert-highlight-current-level (cdr (assq (plist-get info :severity)
-                                                        alert-highlight-priorities))))
+      ;; Change current level if this one is upper
+      (when (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
+               alert-highlight-current-level)
+        (setq alert-highlight-current-level (cdr (assq (plist-get info :severity)
+                                                       alert-highlight-priorities))))
 
 
        ;; Print the message everytime !
@@ -3044,8 +3043,14 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
        ;; Removers are optional.  Their job is to remove
        ;; the visual or auditory effect of the alert.
-       :remover  #'alert-message-remove))
-    (setq alert-default-style 'mode-line-alert)
+       :remover  #'alert-message-remove)
+
+    (alert-define-style
+     'mode-line-alert2
+     :title "Mode-line alert"
+     :notifier 'alert-adapt-mode-line)
+
+    (setq alert-default-style 'mode-line-alert2)
 
     ;; Link with sauron
     (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)
@@ -3403,18 +3408,23 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
       ;; Define behaviour
       (setq smtpmail-queue-mail nil ; start in non queue mode
+            message-auto-save-directory nil
             message-send-mail-function 'message-send-mail-with-sendmail
             send-mail-function 'message-send-mail-with-sendmail
             ;; mime-edit-pgp-signers '("C84EF897")
             ;; mime-edit-pgp-encrypt-to-self t
             ;; mml2015-encrypt-to-self t
             ;; mml2015-sign-with-sender t
+
+            message-citation-line-function 'message-insert-formatted-citation-line
+            message-citation-line-format "Le %e %B %Y à %-H:%M %Z, %N a écrit :"
             message-sendmail-f-is-evil nil
             message-signature-file (format "%s/third_parties/mail/signature" config-basedir)
             sendmail-program "sendmail")
 
       (add-hook 'message-mode-hook 'flyspell-mode)
-      (add-hook 'message-mode-hook (lambda () (auto-fill-mode 0)))
+      (add-hook 'message-setup-hook '(lambda () (footnote-mode t)))
+      (add-hook 'message-mode-hook 'disable-global-facilities)
       )
   #+end_src
 *** notmuch
@@ -3426,15 +3436,10 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :after company
     :config
     (setq notmuch-search-oldest-first nil
-          message-sendmail-envelope-from 'header
-          mail-specify-envelope-from 'header
-          mail-envelope-from 'header
+          notmuch-print-mechanism 'notmuch-print-muttprint/evince
           notmuch-show-all-multipart/alternative-parts nil
           notmuch-crypto-process-mime t
           gnus-inhibit-images nil
-          mail-interactive t
-          message-kill-buffer-on-exit t
-          mail-user-agent 'message-user-agent
           notmuch-always-prompt-for-sender t
           notmuch-show-indent-messages-width 2
           notmuch-fcc-dirs '(("slemaguer@coli.uni-saarland.de" . "Saarland/INBOX/.Sent")))
