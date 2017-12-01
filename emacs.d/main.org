@@ -3012,14 +3012,18 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (defvar alert-highlight-threshold 1)
 
     (defun alert-adapt-mode-line (info)
-      (message (princ info))
-      (message (format "%d <= %d, %d?"
-                       ;; (cdr (assq (plist-get info :severity) alert-highlight-priorities))
-                            alert-highlight-threshold alert-highlight-current-level 3))
 
       ;; First time => copy the current mode line face
       (when (<= alert-highlight-current-level alert-highlight-threshold)
         (copy-face 'mode-line 'backup-mode-line-face))
+
+      ;; (message (format "%d >= (%d, %d, %s)"
+      ;; 		     (cdr (assq (plist-get info :severity) alert-highlight-priorities))
+      ;; 		     alert-highlight-current-level
+      ;; 		     alert-highlight-threshold
+      ;; 		     (cdr (assq (plist-get info :severity)
+      ;; 				alert-severity-colors))))
+
       ;; Change the policy
       (when (and (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
                     alert-highlight-threshold)
@@ -3037,20 +3041,19 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
         (setq alert-highlight-current-level (cdr (assq (plist-get info :severity)
                                                        alert-highlight-priorities))))
 
+      ;; Print the message everytime !
+      (alert-message-notify info)
 
-       ;; Print the message everytime !
-       (alert-message-notify info)
-
-       ;; Removers are optional.  Their job is to remove
-       ;; the visual or auditory effect of the alert.
-       :remover  #'alert-message-remove)
+      ;; Removers are optional.  Their job is to remove
+      ;; the visual or auditory effect of the alert.
+      :remover  #'alert-message-remove)
 
     (alert-define-style
-     'mode-line-alert2
+     'mode-line-alert
      :title "Mode-line alert"
      :notifier 'alert-adapt-mode-line)
 
-    (setq alert-default-style 'mode-line-alert2)
+    (setq alert-default-style 'mode-line-alert)
 
     ;; Link with sauron
     (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)
