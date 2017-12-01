@@ -35,26 +35,26 @@ else
     # VCS bundle
     antigen bundle git
     antigen bundle github
+    antigen bundle unixorn/bitbucket-git-helpers.plugin.zsh
+    antigen bundle denolfe/zsh-travis
 
-
+    # Aliases
     antigen bundle djui/alias-tips
 
-    antigen bundle HeroCC/LS_COLORS
-    antigen bundle trapd00r/zsh-syntax-highlighting-filetypes
-    antigen bundle zsh-users/zsh-syntax-highlighting
+    # Completion/helpers
+    antigen bundle zsh-users/zsh-completions
+    antigen bundle zsh-users/zsh-autosuggestions
+    antigen bundle sudo
+    antigen bundle command-not-found
 
     #
     # Antigen Bundles
     #
     antigen bundle tmuxinator
-    antigen bundle zsh-users/zsh-completions
-    antigen bundle zsh-users/zsh-autosuggestions
     antigen bundle rupa/z
-    antigen bundle command-not-found
 
     antigen bundle docker
     antigen bundle rsync
-    antigen bundle sudo
 
     antigen bundle colored-man-pages
     antigen bundle kennethreitz/autoenv
@@ -66,6 +66,7 @@ else
     antigen bundle coffee
     antigen bundle node
     antigen bundle npm
+    antigen bundle grunt
 
     # Python Plugins
     antigen bundle pip
@@ -74,20 +75,21 @@ else
 
     # Java & gradle
     antigen bundle gradle/gradle-completion
-
+    antigen bundle gvm
 
     # Theme
     antigen theme bhilburn/powerlevel9k powerlevel9k
     # antigen theme caiogondim/bullet-train-oh-my-zsh-theme bullet-train
 
-
     # Distro specific
     antigen bundle archlinux
 
+    # Highlighting
+    antigen bundle HeroCC/LS_COLORS
+    antigen bundle zsh-users/zsh-syntax-highlighting
+
     # Tell Antigen that you're done.
     antigen apply
-
-
 
     #############################################################################################################
     #### Use .ssh/config for completion
