@@ -39,12 +39,11 @@
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
-   (package-refresh-contents)
-   (package-install 'use-package))
+  (package-refresh-contents)
+  (package-install 'use-package))
 
- (eval-when-compile
-   (require 'use-package))
- (require 'diminish)
+(eval-when-compile
+  (require 'use-package))
 
 ;; Silence!!!
 (setq save-abbrevs 'silently)
