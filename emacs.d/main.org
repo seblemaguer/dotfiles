@@ -410,6 +410,7 @@ Try to add this key support
       :args '("-c" "~/configuration/imapnotify/saarland.js")
       :tags '(work mail)
       :stop-signal 'sigterm
+      :auto-start t
       :kill-process-buffer-on-stop t)
 
     (prodigy-define-service
@@ -418,6 +419,7 @@ Try to add this key support
       :args '("-c" "~/configuration/imapnotify/hikoseb.js")
       :tags '(perso mail)
       :stop-signal 'sigterm
+      :auto-start t
       :kill-process-buffer-on-stop t)
 
     (prodigy-define-service
@@ -426,6 +428,7 @@ Try to add this key support
       :args '("-c" "~/configuration/imapnotify/sebgmail.js")
       :tags '(perso mail)
       :stop-signal 'sigterm
+      :auto-start t
       :kill-process-buffer-on-stop t)
 
     (prodigy-define-service
@@ -434,6 +437,7 @@ Try to add this key support
       :args '("-c" "~/configuration/imapnotify/dfki.js")
       :tags '(work mail)
       :stop-signal 'sigterm
+      :auto-start t
       :kill-process-buffer-on-stop t)
 
     (prodigy-define-service
@@ -442,6 +446,7 @@ Try to add this key support
       :args '("-c" "~/configuration/imapnotify/mmci.js")
       :tags '(work mail)
       :stop-signal 'sigterm
+      :auto-start t
       :kill-process-buffer-on-stop t)
     )
 #+end_src
