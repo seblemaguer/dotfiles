@@ -390,7 +390,7 @@ Try to add this key support
     (add-hook 'org-export-before-parsing-hook 'orcp-citeproc))
 
   (use-package interleave
-    :defer t
+    :ensure t
     :bind ("C-x i" . interleave-mode)
     :config
     (setq interleave-split-direction 'horizontal
