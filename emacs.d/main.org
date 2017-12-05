@@ -940,40 +940,40 @@ Based mainly on C just few adaptations to do here
 
     ;; Spelling
     (setq ispell-tex-skip-alists
-	  '((
-	     ;;("%\\[" . "%\\]") ; AMStex block comment...
-	     ;; All the standard LaTeX keywords from L. Lamport's guide:
-	     ;; \cite, \hspace, \hspace*, \hyphenation, \include, \includeonly
-	     ;; \input, \label, \nocite, \rule (in ispell - rest included here)
-	     ("\\\\addcontentsline"              ispell-tex-arg-end 2)
-	     ("\\\\add\\(tocontents\\|vspace\\)" ispell-tex-arg-end)
-	     ("\\\\\\([aA]lph\\|arabic\\)"   ispell-tex-arg-end)
-	     ("\\\\author"                         ispell-tex-arg-end)
-	     ;; New regexps here --- kjh
-	     ("\\\\\\(text\\|paren\\)cite" ispell-tex-arg-end)
-	     ("\\\\cite\\(t\\|p\\|year\\|yearpar\\)" ispell-tex-arg-end)
-	     ("\\\\bibliographystyle"                ispell-tex-arg-end)
-	     ("\\\\makebox"                  ispell-tex-arg-end 0)
-	     ("\\\\e?psfig"                  ispell-tex-arg-end)
-	     ("\\\\document\\(class\\|style\\)" .
-	      "\\\\begin[ \t\n]*{[ \t\n]*document[ \t\n]*}"))
-	    (
-	     ;; delimited with \begin.  In ispell: displaymath, eqnarray,
-	     ;; eqnarray*, equation, minipage, picture, tabular,
-	     ;; tabular* (ispell)
-	     ("\\(figure\\|table\\)\\*?"     ispell-tex-arg-end 0)
-	     ("\\(equation\\|eqnarray\\)\\*?"     ispell-tex-arg-end 0)
-	     ("list"                                 ispell-tex-arg-end 2)
-	     ("program" . "\\\\end[ \t\n]*{[ \t\n]*program[ \t\n]*}")
-	     ("verbatim\\*?"."\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}")
-	     ("lstlisting\\*?"."\\\\end[ \t\n]*{[ \t\n]*lstlisting\\*?[ \t\n]*}"))))
+          '((
+             ;;("%\\[" . "%\\]") ; AMStex block comment...
+             ;; All the standard LaTeX keywords from L. Lamport's guide:
+             ;; \cite, \hspace, \hspace*, \hyphenation, \include, \includeonly
+             ;; \input, \label, \nocite, \rule (in ispell - rest included here)
+             ("\\\\addcontentsline"              ispell-tex-arg-end 2)
+             ("\\\\add\\(tocontents\\|vspace\\)" ispell-tex-arg-end)
+             ("\\\\\\([aA]lph\\|arabic\\)"   ispell-tex-arg-end)
+             ("\\\\author"                         ispell-tex-arg-end)
+             ;; New regexps here --- kjh
+             ("\\\\\\(text\\|paren\\)cite" ispell-tex-arg-end)
+             ("\\\\cite\\(t\\|p\\|year\\|yearpar\\)" ispell-tex-arg-end)
+             ("\\\\bibliographystyle"                ispell-tex-arg-end)
+             ("\\\\makebox"                  ispell-tex-arg-end 0)
+             ("\\\\e?psfig"                  ispell-tex-arg-end)
+             ("\\\\document\\(class\\|style\\)" .
+              "\\\\begin[ \t\n]*{[ \t\n]*document[ \t\n]*}"))
+            (
+             ;; delimited with \begin.  In ispell: displaymath, eqnarray,
+             ;; eqnarray*, equation, minipage, picture, tabular,
+             ;; tabular* (ispell)
+             ("\\(figure\\|table\\)\\*?"     ispell-tex-arg-end 0)
+             ("\\(equation\\|eqnarray\\)\\*?"     ispell-tex-arg-end 0)
+             ("list"                                 ispell-tex-arg-end 2)
+             ("program" . "\\\\end[ \t\n]*{[ \t\n]*program[ \t\n]*}")
+             ("verbatim\\*?"."\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}")
+             ("lstlisting\\*?"."\\\\end[ \t\n]*{[ \t\n]*lstlisting\\*?[ \t\n]*}"))))
 
     ;; Subpackages
     (let ((byte-compile-warnings '(not free-vars)))
       (use-package latex-extra
-	:ensure t
-	:config
-	(add-hook 'LaTeX-mode-hook #'latex-extra-mode)))
+        :ensure t
+        :config
+        (add-hook 'LaTeX-mode-hook #'latex-extra-mode)))
 
     ;; Pdf activated by default
     (TeX-global-PDF-mode 1)
@@ -981,25 +981,25 @@ Based mainly on C just few adaptations to do here
     ;; Diverse
     (setq-default TeX-master nil)
     (setq TeX-parse-self t
-	  TeX-auto-save t)
+          TeX-auto-save t)
 
     ;; Filling
     (add-hook 'LaTeX-mode-hook 'turn-off-auto-fill)
     (add-hook 'LaTeX-mode-hook
-	      (lambda ()
-		(TeX-fold-mode t)
-		(setq fill-column 100)))
+              (lambda ()
+                (TeX-fold-mode t)
+                (setq fill-column 100)))
 
     ;; Minor helpers for comment and quotes
     (add-to-list 'LaTeX-verbatim-environments "comment")
     (setq TeX-open-quote "\enquote{"
-	  TeX-close-quote "}")
+          TeX-close-quote "}")
 
     ;; Indentation
     (setq LaTeX-indent-level 4
-	  LaTeX-item-indent 0
-	  TeX-brace-indent-level 4
-	  TeX-newline-function 'newline-and-indent)
+          LaTeX-item-indent 0
+          TeX-brace-indent-level 4
+          TeX-newline-function 'newline-and-indent)
 
 
     ;; Some usefull hooks
@@ -1010,19 +1010,19 @@ Based mainly on C just few adaptations to do here
     (defadvice LaTeX-fill-region-as-paragraph (around LaTeX-sentence-filling)
       "Start each sentence on a new line."
       (let ((from (ad-get-arg 0))
-	    (to-marker (set-marker (make-marker) (ad-get-arg 1)))
-	    tmp-end)
-	(while (< from (marker-position to-marker))
-	  (forward-sentence)
-	  ;; might have gone beyond to-marker --- use whichever is smaller:
-	  (ad-set-arg 1 (setq tmp-end (min (point) (marker-position to-marker))))
-	  ad-do-it
-	  (ad-set-arg 0 (setq from (point)))
-	  (unless (or
-		   (bolp)
-		   (looking-at "\\s *$"))
-	    (LaTeX-newline)))
-	(set-marker to-marker nil)))
+            (to-marker (set-marker (make-marker) (ad-get-arg 1)))
+            tmp-end)
+        (while (< from (marker-position to-marker))
+          (forward-sentence)
+          ;; might have gone beyond to-marker --- use whichever is smaller:
+          (ad-set-arg 1 (setq tmp-end (min (point) (marker-position to-marker))))
+          ad-do-it
+          (ad-set-arg 0 (setq from (point)))
+          (unless (or
+                   (bolp)
+                   (looking-at "\\s *$"))
+            (LaTeX-newline)))
+        (set-marker to-marker nil)))
     (ad-activate 'LaTeX-fill-region-as-paragraph)
 
 
@@ -1069,12 +1069,6 @@ Based mainly on C just few adaptations to do here
 #+end_src
 *** Completion
 #+begin_src emacs-lisp
-  (use-package auctex-latexmk
-    :ensure t
-    :after auctex
-    :init (add-hook 'LaTeX-mode-hook 'auctex-latexmk-setup))
-
-
   ;; Completion
   (setq TeX-auto-global (format "%s/auctex/style" generated-basedir))
   ;; (add-to-list 'TeX-style-path TeX-auto-global) ;; FIXME: what is this variable
@@ -1106,7 +1100,6 @@ Based mainly on C just few adaptations to do here
 #+end_src
 *** Compilation
 #+begin_src emacs-lisp
-
   ;; Escape mode
   (defun TeX-toggle-escape nil
     (interactive)
@@ -1120,9 +1113,22 @@ Based mainly on C just few adaptations to do here
                        "disabled"))
              )
     )
+
+  ;; Adding some compiling commands
   (add-to-list 'TeX-command-list
                '("Make" "make" TeX-run-command nil t))
+
+  (use-package auctex-latexmk
+    :ensure t
+    :after auctex
+    :config
+    (auctex-latexmk-setup))
+
+
   (setq TeX-show-compilation nil)
+
+
+
 
   ;; Redine TeX-output-mode to get the color !
   (define-derived-mode TeX-output-mode TeX-special-mode "LaTeX Output"
