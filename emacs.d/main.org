@@ -3442,6 +3442,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
       )
   #+end_src
 *** notmuch
+**** Global configuration
 #+begin_src emacs-lisp
   (use-package notmuch
     :ensure t
@@ -3471,6 +3472,11 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                                    (:name "drafts" :query "tag:draft" :key "d")))
 
     ;; Hook for notmuch
+    (defcustom notmuch-index-updated-hook nil
+      "Normal hook run when notmuch index has been updated."
+      :type 'hook
+      :group 'notmuch)
+
     (defun notmuch-message-mark-sent ()
       "Mark all the message from any interesting sent folders as sent."
       (interactive)
@@ -3481,13 +3487,14 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
       "Update the index (without sync.) and mark sent messages as sent"
       (interactive)
       (notmuch-poll)
-      (notmuch-message-mark-sent))
+      (notmuch-message-mark-sent)
+      (run-hooks 'notmuch-index-updated-hook))
 
     (defun notmuch-update-index-and-refresh-buffer ()
       "Update the index and then refresh the current buffer"
-        (interactive)
-        (notmuch-update-index)
-        (notmuch-refresh-this-buffer))
+      (interactive)
+      (notmuch-update-index)
+      (notmuch-refresh-this-buffer))
 
     (defun notmuch-sync-and-update-index ()
       "Update the index after sync."
@@ -3530,6 +3537,20 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
 
     (global-set-key (kbd "<f2>") 'notmuch))
+#+end_src
+**** Notification
+#+begin_src emacs-lisp
+  (use-package sauron-notmuch
+    :ensure t
+    :after sauron
+    :after notmuch
+    :config
+
+    ;; Define an important filter
+    ;; (setq sauron-notmuch-important-filter "....")
+
+    ;; Start
+    (add-to-list 'sauron-modules 'sauron-notmuch))
 #+end_src
 ** RSS
 *** Global
