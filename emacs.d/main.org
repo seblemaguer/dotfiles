@@ -4120,14 +4120,16 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+end_src
 ** Mode line - spaceline
 #+begin_src emacs-lisp
+  (use-package fancy-battery :ensure t)
+  (use-package spaceline :ensure t)
   (use-package spaceline-all-the-icons
     :ensure t
     :after spaceline
     :after projectile
     :after info+
     :after fancy-battery
-    :after circe
-    :init
+    ;; :after circe
+    :config
 
     ;; Separator configuration
     (setq spaceline-all-the-icons-separator-type 'wave
@@ -4135,8 +4137,12 @@ I actually use this part for minor correction. The tags are done when abcde is c
           spaceline-separator-dir-right '(right . right)
           spaceline-minor-modes-separator " ")
 
-    ;; Spaceline loading
-    (spaceline-all-the-icons-theme)
+    ;;Other configuration
+    (setq spaceline-all-the-icons-icon-set-flycheck-slim 'dots
+          spaceline-all-the-icons-icon-set-git-ahead 'commit
+          ;; spaceline-all-the-icons-icon-set-window-numbering (quote square))
+          spaceline-all-the-icons-flycheck-alternate t
+          spaceline-all-the-icons-highlight-file-name t)
 
     ;; Some  configurations
     (require 'spaceline-config)
@@ -4158,13 +4164,24 @@ I actually use this part for minor correction. The tags are done when abcde is c
           (s-join " " (tracking-shorten tracking-buffers))))
     (spaceline-all-the-icons-theme 'circe-track)
 
+    (spaceline-all-the-icons--setup-anzu)
+    (spaceline-all-the-icons--setup-package-updates)
+    (spaceline-all-the-icons--setup-paradox)
+    (spaceline-all-the-icons--setup-neotree)
 
-    ;; (spaceline-all-the-icons--setup-package-updates) ;; Enable package update indicator
-    ;; (spaceline-all-the-icons--setup-git-ahead)       ;; Enable # of commits ahead of upstream
-    (spaceline-all-the-icons--setup-paradox)         ;; Enable Paradox mode line
-    ;; (spaceline-all-the-icons--setup-neotree)         ;; Enable Neotree mode line
+    (spaceline-toggle-all-the-icons-vc-icon-on)
+    (spaceline-toggle-all-the-icons-fullscreen-on)
+    (spaceline-toggle-all-the-icons-flycheck-status-on)
+    (spaceline-toggle-all-the-icons-git-status-on)
+    (spaceline-toggle-all-the-icons-vc-icon-on)
+    (spaceline-toggle-all-the-icons-mode-icon-on)
+    (spaceline-toggle-all-the-icons-package-updates-on)
+    (spaceline-toggle-all-the-icons-text-scale-on)
+    (spaceline-toggle-all-the-icons-region-info-on)
 
-    )
+
+    ;; Loading
+    (spaceline-all-the-icons-theme))
 #+end_src
 
 * Keys/shortcuts
