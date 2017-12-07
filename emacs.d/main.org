@@ -4200,13 +4200,14 @@ I actually use this part for minor correction. The tags are done when abcde is c
     "
        Main helper
 
-   Org. related             Help                Zooming          processes
-  ------------------------------------------------------------------------------------------
-  _c_: org-capture        _f_: function doc.    _+_: zoom in     _p_: prodigy
-  _g_: org-web-get-url    _v_: variable doc.    _-_: zoom out
-  _m_: new mail
+   Org. related           Help                  Zooming          bookmarks            other helpers
+  -----------------------------------------------------------------------------------------------------
+  _c_: org-capture        _f_: function doc.    _+_: zoom in     _B_: list bookmarks  _p_: prodigy
+  _g_: org-web-get-url    _v_: variable doc.    _-_: zoom out    _b_: bookmark file   _m_: new mail
   "
-    ("c"   org-capture)
+    ("b" bookmark-set)
+    ("B" list-bookmarks)
+    ("c" org-capture)
     ("f" describe-function)
     ("g" org-web-tools-read-url-as-org)
     ("m" notmuch-mua-new-mail)
@@ -4218,7 +4219,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ("q"   nil "cancel" :color blue))
 
   (global-set-key (kbd "<f1>") 'hydra-main/body)
-
 #+end_src
 ** Project/Version control
 #+begin_src emacs-lisp
