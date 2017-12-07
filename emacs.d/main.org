@@ -3425,6 +3425,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
       (setq smtpmail-queue-mail nil ; start in non queue mode
             message-auto-save-directory nil
             message-send-mail-function 'message-send-mail-with-sendmail
+            mail-host-address "coli.uni-saarland.de"
             send-mail-function 'message-send-mail-with-sendmail
             ;; mime-edit-pgp-signers '("C84EF897")
             ;; mime-edit-pgp-encrypt-to-self t
