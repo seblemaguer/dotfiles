@@ -2063,6 +2063,7 @@ Based mainly on C just few adaptations to do here
 ** Info
 #+begin_src emacs-lisp
   (use-package info-buffer :ensure t)
+  (use-package info+ :ensure t)
 #+end_src
 ** Man
 #+begin_src emacs-lisp
