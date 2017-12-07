@@ -4131,6 +4131,9 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ;; :after circe
     :config
 
+    ;; Some  configurations
+    (require 'spaceline-config)
+
     ;; Separator configuration
     (setq spaceline-all-the-icons-separator-type 'wave
           spaceline-separator-dir-left '(left . left)
@@ -4142,10 +4145,11 @@ I actually use this part for minor correction. The tags are done when abcde is c
           spaceline-all-the-icons-icon-set-git-ahead 'commit
           ;; spaceline-all-the-icons-icon-set-window-numbering (quote square))
           spaceline-all-the-icons-flycheck-alternate t
-          spaceline-all-the-icons-highlight-file-name t)
+          spaceline-all-the-icons-highlight-file-name t
+          spaceline-highlight-face-func 'spaceline-highlight-face-modified)
 
-    ;; Some  configurations
-    (require 'spaceline-config)
+    ;; Change this ugly orange color
+    (set-face-attribute 'spaceline-unmodified nil :background "LightSkyBlue")
 
     ;; Info
     (spaceline-info-mode)
