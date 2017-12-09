@@ -3233,9 +3233,10 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package circe
     :ensure t
-    :defer t
+    :bind ("<S-f2>" . circe-init)
     :init
     (add-hook 'circe-chat-mode-hook 'disable-global-facilities)
+
     :config
 
     ;; Defining the networks
@@ -3324,8 +3325,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
        "Return the password for the `SERVER'."
        (my:auth-source-get-passwd :host server))
 
-
-     (defun irc ()
+     ;; Shortcut
+     (defun circe-init ()
        "Connect to IRC"
        (interactive)
        (if (circe-network-connected-p "bitlbee")
@@ -3333,9 +3334,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
          (progn
            (circe-maybe-connect "Freenode")
            (circe-maybe-connect "bitlbee"))))
-
-      ;; Shortcut
-    (global-set-key (kbd "<S-f2>") 'irc))
+    )
 #+end_src
 *** Logging
 #+begin_src emacs-lisp
