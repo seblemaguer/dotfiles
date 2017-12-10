@@ -2165,6 +2165,29 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 
       (add-hook 'eshell-mode-hook
                 'eshell-mode-some-config)
+
+      ;; Some helpers
+      (defun eshell/clear ()
+        "clear the eshell buffer."
+        (interactive)
+        (let ((inhibit-read-only t))
+          (erase-buffer)))
+
+      (defun clipboard/set (astring)
+        "Copy a string to clipboard"
+        (with-temp-buffer
+          (insert astring)
+          (clipboard-kill-region (point-min) (point-max))))
+
+      (defun eshell/copy-pwd ()
+        "Copy current directory to clipboard "
+        (clipboard/set (eshell/pwd)))
+
+      (defun eshell/copy-fpath (fname)
+        "Copy file name with full path to clipboard "
+        (let ((fpath (concat (eshell/pwd) "/" fname)))
+          (clipboard/set fpath)
+          (concat "Copied path: " fpath)))
   )
 #+end_src
 ** Completion
