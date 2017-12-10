@@ -60,6 +60,11 @@
         (message "All packages are up to date"))))
 #+end_src
 * Global
+** Minor-mode activation
+#+begin_src emacs-lisp
+  (use-package auto-minor-mode
+    :ensure t)
+#+end_src
 ** Helpers
 *** Authentification
 #+begin_src emacs-lisp
@@ -198,10 +203,12 @@ Try to add this key support
 ** Backup files
 #+begin_src emacs-lisp
   (defvar --backup-directory (concat user-emacs-directory "backups"))
-  (if (not (file-exists-p --backup-directory))
-          (make-directory --backup-directory t))
-  (setq backup-directory-alist `(("." . ,--backup-directory)))
-  (setq make-backup-files t               ; backup of a file the first time it is saved.
+
+  (when (not (file-exists-p --backup-directory))
+      (make-directory --backup-directory t))
+
+  (setq backup-directory-alist `(("." . ,--backup-directory))
+        make-backup-files t               ; backup of a file the first time it is saved.
         backup-by-copying t               ; don't clobber symlinks
         version-control t                 ; version numbers for backup files
         delete-old-versions t             ; delete excess backup files silently
@@ -238,19 +245,19 @@ Try to add this key support
                                           ;resort to default auto save setting
       (if auto-save-default
           (auto-save-mode 1))))
-  (setq auto-mode-alist
-        (append '(("\\.gpg$" . sensitive-mode))
-                auto-mode-alist))
+
+
+  (add-to-list 'auto-minor-mode-alist '("\\.gpg\\'" . sensitive-mode))
 
   ;; Starting backup
   ;; (backups-mode-start)
 #+end_src
 ** Copy/Pasted
 #+begin_src emacs-lisp
-(setq mouse-drag-copy-region nil)
-(setq x-select-enable-primary nil)
-(setq x-select-enable-clipboard t)
-(setq select-active-regions t)
+  (setq mouse-drag-copy-region nil
+        x-select-enable-primary nil
+        x-select-enable-clipboard t
+        select-active-regions t)
 #+end_src
 ** Spell
 #+begin_src emacs-lisp
