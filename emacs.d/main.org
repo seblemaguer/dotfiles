@@ -3413,12 +3413,9 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 *** Notification
 #+begin_src emacs-lisp
   (use-package sauron-circe
-    :after circe
     :after sauron
-    :ensure t
     :config
-    (require 'sauron-circe) ;; FIXME: why do I need that ?
-    (add-to-list 'sauron-modules 'sauron-circe))
+    (sauron-circe-start))
 #+end_src
 ** Mail
 *** TTLS
@@ -3572,7 +3569,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     ;; (setq sauron-notmuch-important-filter "....")
 
     ;; Start
-    (add-to-list 'sauron-modules 'sauron-notmuch))
+    (sauron-notmuch-start))
 #+end_src
 ** RSS
 *** Global
