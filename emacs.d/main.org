@@ -1543,6 +1543,14 @@ Based mainly on C just few adaptations to do here
     :init
     (add-hook 'after-init-hook 'company-statistics-mode))
 #+end_src
+** Shell
+#+begin_src emacs-lisp
+  (use-package company-shell
+    :ensure t
+    :after company
+    :config
+    (add-to-list 'company-backends '(company-shell company-shell-env company-fish-shell)))
+#+end_src
 ** PlantUML
 #+begin_src emacs-lisp
   (use-package plantuml-mode
