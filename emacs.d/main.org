@@ -172,12 +172,12 @@ Try to add this key support
 
     :config
 
-    ;;
+    ;; Increase limit
     (setq recentf-max-menu-items 100)
 
     ;; Emacs
     (add-to-list 'recentf-exclude (format "%s/.orhc-bibtex-cache" (getenv "HOME")))
-    (add-to-list 'recentf-exclude (format "%s/configuration/emacs\\.d/\\(?!\\(main.org\\)\\)" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/configuration/emacs\\.d/\\(?!\\(main.*\\)\\)" (getenv "HOME")))
     (add-to-list 'recentf-exclude (format "%s/\\.emacs\\.d/.*" (getenv "HOME")))
 
     ;; Some caches
@@ -189,6 +189,8 @@ Try to add this key support
     (add-to-list 'recentf-exclude (format "%s/\\.elfeed/.*" (getenv "HOME")))
     (add-to-list 'recentf-exclude (format "%s/Dropbox/emacs/elfeed/.*" (getenv "HOME")))
 
+    ;; Org-mode organisation
+    (add-to-list 'recentf-exclude (format "%s/Dropbox/org/organisation/.*" (getenv "HOME")))
 
     ;; Org/todo/calendars
     (add-to-list 'recentf-exclude ".*todo.org")
