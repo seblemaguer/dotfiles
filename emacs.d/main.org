@@ -1989,11 +1989,13 @@ Based mainly on C just few adaptations to do here
 ** Exporting
 *** HTML
 #+begin_src emacs-lisp
-  (use-package ox-html
-    :config
-    (use-package htmlize :ensure t)
-    (use-package ox-reveal :ensure t)
 
+  (use-package htmlize :ensure t)
+
+  (use-package ox-html
+    :after ox
+    :requires (:all htmlize)
+    :config
     (setq org-html-xml-declaration '(("html" . "")
                                    ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
                                    ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))
@@ -2018,10 +2020,17 @@ Based mainly on C just few adaptations to do here
     (org-add-link-type "video" #'ignore #'endless/export-video-link)
 
     (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/vivaldi-stable %s")))
+
+
+
+  (use-package ox-reveal
+    :ensure t
+    :requires (:all ox-html htmlize))
 #+end_src
 *** LaTeX
 #+begin_src emacs-lisp
   (use-package ox-latex
+    :after ox
     :config
     (setq org-latex-listings t
           org-export-with-LaTeX-fragments t
@@ -2029,12 +2038,13 @@ Based mainly on C just few adaptations to do here
 #+end_src
 *** Beamer
 #+begin_src emacs-lisp
-(use-package ox-beamer
-  :config
-  (defun my-beamer-bold (contents backend info)
-    (when (eq backend 'beamer)
-      (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\textbf" contents)))
-  (add-to-list 'org-export-filter-bold-functions 'my-beamer-bold))
+  (use-package ox-beamer
+    :after ox
+    :config
+    (defun my-beamer-bold (contents backend info)
+      (when (eq backend 'beamer)
+        (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\textbf" contents)))
+    (add-to-list 'org-export-filter-bold-functions 'my-beamer-bold))
 #+end_src
 *** Docbook
 #+begin_src emacs-lisp
@@ -2043,9 +2053,24 @@ Based mainly on C just few adaptations to do here
 #+end_src
 *** Markdown
 #+begin_src emacs-lisp
-(use-package ox-md
-  :config
-  (use-package ox-gfm :ensure t :config (require 'ox-gfm)))
+  (use-package ox-gfm
+      :ensure t
+      :after ox
+      :config (require 'ox-gfm))
+#+end_src
+*** Pandoc
+#+begin_src emacs-lisp
+  (use-package ox-pandoc
+    :ensure t
+    :after ox
+    :config
+    ;; default options for all output formats
+    (setq org-pandoc-options '((standalone . t))
+          ;; cancel above settings only for 'docx' format
+          org-pandoc-options-for-docx '((standalone . nil))
+          ;; special settings for beamer-pdf and latex-pdf exporters
+          org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex"))
+          org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex"))))
 #+end_src
 ** COMMENT Async
 #+begin_src emacs-lisp
