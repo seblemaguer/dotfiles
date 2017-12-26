@@ -2469,13 +2469,14 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   ;; Search on github
   (use-package github-search :ensure t)
 
-  ;; ;; Mapping github with magit
-  ;; (use-package ghub :ensure t)
+  ;; Mapping github with magit
+  (use-package ghub :ensure t)
+  (use-package ghub+ :ensure t)
 
-  ;; (use-package magithub
-  ;;   :ensure t
-  ;;   :after (:all magit ghub)
-  ;;   :config (magithub-feature-autoinject t))
+  (use-package magithub
+    :ensure t
+    :after (:all magit ghub ghub+)
+    :config (magithub-feature-autoinject t))
 #+end_src
 *** Gist
 #+begin_src emacs-lisp
