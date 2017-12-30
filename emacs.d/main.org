@@ -249,6 +249,12 @@ Try to add this key support
           (auto-save-mode 1))))
 
 
+  (add-to-list 'auto-minor-mode-alist '("\\.git/.*\\'" . sensitive-mode))
+  (add-to-list 'auto-minor-mode-alist '("\\.emacs\\.d/custom\\.el\\'" . sensitive-mode))
+  (add-to-list 'auto-minor-mode-alist '("\\.emacs\\.d/magithub/.*\\'" . sensitive-mode))
+  (add-to-list 'auto-minor-mode-alist '("\\.emacs\\.d/emms/.*\\'" . sensitive-mode))
+  (add-to-list 'auto-minor-mode-alist '("\\.emacs\\.d/recentf\\'" . sensitive-mode))
+  (add-to-list 'auto-minor-mode-alist '("Calendars/.*.org\\'" . sensitive-mode))
   (add-to-list 'auto-minor-mode-alist '("\\.gpg\\'" . sensitive-mode))
 
   ;; Starting backup
