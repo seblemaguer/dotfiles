@@ -2311,16 +2311,11 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 
 ** Compilation
 #+begin_src emacs-lisp
-;; (setq compilation-scroll-output t)
-;; (setq compilation-window-height (* 2 5))
-;; (add-to-list 'compilation-finish-functions 'cc-goto-first-error)
-
-(if (boundp 'compile-auto-highlight)
-	(progn
-	  (setq compile-auto-highlight t)
-	  (setq compilation-finish-functions 'highlight-error-lines)
-	  )
-  )
+  (use-package winnow
+    :ensure t
+    :init
+    (add-hook 'compilation-mode-hook 'winnow-mode)
+    (add-hook 'ag-mode-hook 'winnow-mode))
 #+end_src
 
 * Project management
