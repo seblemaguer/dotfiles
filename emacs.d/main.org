@@ -2489,6 +2489,13 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
 (use-package git-timemachine :ensure t)
 #+end_src
+*** Send patch by email
+#+begin_src emacs-lisp
+  (use-package gitpatch
+    :ensure t
+    :config
+    (setq gitpatch-mail-attach-patch-key "C-c i"))
+#+end_src
 ** Mercurial
 *** Monky
 #+begin_src emacs-lisp
@@ -2500,7 +2507,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 (use-package hgrc-mode :ensure t)
 #+end_src
 ** Providers
-*** TODO Github
+*** Github
 #+begin_src emacs-lisp
   ;; Github api
   (use-package gh :ensure t)
@@ -2527,6 +2534,10 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 (use-package gitlab :ensure t)
 (use-package glab :ensure t)
 (use-package ivy-gitlab :ensure t)
+#+end_src
+*** Browsing at remote
+#+begin_src emacs-lisp
+(use-package browse-at-remote :ensure t)
 #+end_src
 ** Continuous building
 #+begin_src emacs-lisp
