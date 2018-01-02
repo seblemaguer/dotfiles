@@ -4260,18 +4260,13 @@ I actually use this part for minor correction. The tags are done when abcde is c
 ** Mode line - spaceline
 #+begin_src emacs-lisp
   (use-package fancy-battery :ensure t)
-  (use-package spaceline :ensure t)
+  (use-package spaceline-config :ensure spaceline)
+
   (use-package spaceline-all-the-icons
     :ensure t
-    :after spaceline
-    :after projectile
-    :after info+
-    :after fancy-battery
-    ;; :after circe
+    :after (:all spaceline projectile info+ fancy-battery)
     :config
 
-    ;; Some  configurations
-    (require 'spaceline-config)
 
     ;; Separator configuration
     (setq spaceline-all-the-icons-separator-type 'wave
@@ -4300,12 +4295,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ;; Reduce projectile account
     (setq projectile-mode-line " P")
 
-    ;; Circe specific part
-    (spaceline-define-segment circe-track
-      "Show the circe buffers with new messages. Requires `circe-track-mode' to be enabled."
-      (if tracking-buffers
-          (s-join " " (tracking-shorten tracking-buffers))))
-    (spaceline-all-the-icons-theme 'circe-track)
 
     (spaceline-all-the-icons--setup-anzu)
     (spaceline-all-the-icons--setup-package-updates)
@@ -4323,8 +4312,131 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (spaceline-toggle-all-the-icons-region-info-on)
 
 
+
+    ;; Circe specific part
+    (spaceline-define-segment circe-track
+      "Show the circe buffers with new messages. Requires `circe-track-mode' to be enabled."
+      (if tracking-buffers
+          (s-join " " (tracking-shorten tracking-buffers))))
+
+    ;; Redfine linenum for pdf-view mode compatibility
+    (spaceline-define-segment line-column
+      "The current line and column numbers."
+      (if (eq major-mode 'pdf-view-mode)
+          (concat (number-to-string (pdf-view-current-page))
+                  "/"
+                  (number-to-string (pdf-cache-number-of-pages)))
+        mode-line-position
+        "%l:%2c"))
+
+    ;; Redine the mode-line theme
+    (defun spaceline-all-the-icons-theme (&rest additional-segments)
+      "Install the `spaceline-ml-all-the-icons'.
+  Add ADDITIONAL-SEGMENTS to the end of the theme."
+      (interactive)
+      (spaceline-compile
+        "all-the-icons"
+        '(
+          ;; Azu
+          (all-the-icons-anzu
+           :face mode-line
+           :skip-alternate t)
+
+          ;; Buffer information
+          ((all-the-icons-modified
+            buffer-encoding
+            all-the-icons-buffer-size)
+           :face highlight-face
+           :skip-alternate t
+
+           :separator (spaceline-all-the-icons--separator spaceline-all-the-icons-secondary-separator " "))
+
+          all-the-icons-separator-left-active-1
+
+          ;; Projectile / major mode
+          ((all-the-icons-projectile
+            all-the-icons-mode-icon
+            ((all-the-icons-buffer-path
+              all-the-icons-buffer-id) :separator ""))
+           :face default-face)
+
+          all-the-icons-separator-left-active-2
+
+          ;; ???
+          ((all-the-icons-process
+            line-column
+            all-the-icons-region-info
+            all-the-icons-fullscreen
+            all-the-icons-text-scale
+            all-the-icons-narrowed
+            all-the-icons-multiple-cursors)
+           :face highlight-face
+           :separator (spaceline-all-the-icons--separator spaceline-all-the-icons-primary-separator " "))
+
+          all-the-icons-separator-left-active-3
+          all-the-icons-separator-left-inactive
+
+          ;; VC/check/update informations
+          ((all-the-icons-vc-icon
+            all-the-icons-vc-status
+            ((all-the-icons-git-ahead
+              all-the-icons-git-status) :separator " ")
+            ((all-the-icons-flycheck-status
+              all-the-icons-flycheck-status-info) :separator " ")
+            all-the-icons-package-updates)
+           :face other-face
+           :separator (spaceline-all-the-icons--separator spaceline-all-the-icons-secondary-separator " "))
+
+          ;; Minor modes
+          ((all-the-icons-separator-minor-mode-left
+            all-the-icons-minor-modes
+            all-the-icons-separator-minor-mode-right)
+           :tight t
+           :face highlight-face
+           :when spaceline-all-the-icons-minor-modes-p)
+
+          ;; Which function
+          ((all-the-icons-which-function)
+           :face powerline-active2
+           :separator ""))
+
+        `(((,@additional-segments) :when active :face powerline-active2)
+          ((,@additional-segments) :when (not active) :face powerline-inactive2)
+
+          ;; Wweather
+          ((all-the-icons-weather
+            all-the-icons-temperature
+            all-the-icons-sunrise
+            all-the-icons-sunset)
+           :face powerline-active2
+           :separator (spaceline-all-the-icons--separator spaceline-all-the-icons-secondary-separator " "))
+
+          ;; Music info
+          ((all-the-icons-player-volume
+            all-the-icons-player-controls
+            all-the-icons-track
+            all-the-icons-player-controls-shuffle)
+           :face powerline-active2)
+
+          all-the-icons-separator-right-active-1
+          ((all-the-icons-hud
+            all-the-icons-buffer-position)
+           :separator " " :when active)
+
+          all-the-icons-separator-right-active-2
+          all-the-icons-separator-right-inactive
+
+          ;; Time info
+          ((all-the-icons-org-clock-current-task
+            all-the-icons-battery-status
+            all-the-icons-time)
+           :separator (spaceline-all-the-icons--separator spaceline-all-the-icons-primary-separator " ")
+           :face default-face)))
+
+      (setq-default mode-line-format spaceline-all-the-icons-theme))
+
     ;; Loading
-    (spaceline-all-the-icons-theme))
+    (spaceline-all-the-icons-theme 'circe-track))
 #+end_src
 
 * Keys/shortcuts
