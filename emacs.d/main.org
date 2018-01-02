@@ -2682,15 +2682,48 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 (setq auto-compression-mode t)
 #+end_src
 ** Diff
+*** Global
 #+begin_src emacs-lisp
-(setq diff-switches "-u")
-(autoload 'diff-mode "diff-mode" "Diff major mode" t)
-(setq ediff-auto-refine-limit (* 2 14000))
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
-(setq ediff-split-window-function (lambda (&optional arg)
-                    (if (> (frame-width) 160)
-                    (split-window-horizontally arg)
-                      (split-window-vertically arg))))
+  (use-package ediff
+    :config
+    (autoload 'diff-mode "diff-mode" "Diff major mode" t)
+    (setq diff-switches "-u"
+          ediff-auto-refine-limit (* 2 14000)
+          ediff-window-setup-function 'ediff-setup-windows-plain
+          ediff-split-window-function
+          (lambda (&optional arg)
+            (if (> (frame-width) 160)
+                (split-window-horizontally arg)
+              (split-window-vertically arg)))))
+#+end_src
+*** Helpers for region diff
+#+begin_src emacs-lisp
+  (defun diff-region ()
+    "Select a region to compare"
+    (interactive)
+    (when (use-region-p) ; there is a region
+      (let (buf)
+        (setq buf (get-buffer-create "*Diff-regionA*"))
+        (save-current-buffer
+          (set-buffer buf)
+          (erase-buffer))
+        (append-to-buffer buf (region-beginning) (region-end)))
+      )
+    (message "Now select other region to compare and run `diff-region-now`"))
+
+  (defun diff-region-now ()
+    "Compare current region with region already selected by `diff-region`"
+    (interactive)
+    (when (use-region-p)
+      (let (bufa bufb)
+        (setq bufa (get-buffer-create "*Diff-regionA*"))
+        (setq bufb (get-buffer-create "*Diff-regionB*"))
+        (save-current-buffer
+          (set-buffer bufb)
+          (erase-buffer))
+        (append-to-buffer bufb (region-beginning) (region-end))
+        (ediff-buffers bufa bufb))
+      ))
 #+end_src
 ** Tramp
 #+begin_src emacs-lisp
