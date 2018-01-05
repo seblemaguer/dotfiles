@@ -3724,6 +3724,18 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     ;; Start
     (sauron-notmuch-start))
 #+end_src
+**** Integration with org-mode
+#+begin_src emacs-lisp
+(use-package org-notmuch)
+#+end_src
+**** Reply/citation
+#+begin_src emacs-lisp
+(use-package notmuch-mua
+  :defer t
+  :config
+  (setq notmuch-mua-cite-function #'message-cite-original-without-signature)
+)
+#+end_src
 ** RSS
 *** Global
 #+begin_src emacs-lisp
