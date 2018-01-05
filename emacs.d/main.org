@@ -4676,12 +4676,9 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (global-set-key (kbd "<end>") 'move-end-of-line)
   (global-set-key (kbd "<home>") 'move-beginning-of-line)
 #+END_SRC
-
-** TODO To sort
+** Shortcut helper
 #+begin_src emacs-lisp
-;; Protection
-(fset 'protect-dash  "\C-q ")
-(global-set-key (kbd " ") 'protect-underscore)
+(use-package key-chord)
 #+end_src
 * Finalization
 ** Startup
