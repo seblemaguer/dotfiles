@@ -353,6 +353,9 @@ Try to add this key support
   (eval-after-load "uniquify"
     '(progn
        (setq uniquify-buffer-name-style 'forward)))
+
+  ;;
+  (setq-default fill-column 100)
 #+end_src
 ** Ivy/swipper
 #+begin_src emacs-lisp
@@ -995,8 +998,7 @@ Based mainly on C just few adaptations to do here
       (add-hook 'LaTeX-mode-hook 'turn-off-auto-fill)
       (add-hook 'LaTeX-mode-hook
                 (lambda ()
-                  (TeX-fold-mode t)
-                  (setq fill-column 100)))
+                  (TeX-fold-mode t)))
 
       ;; Minor helpers for comment and quotes
       (add-to-list 'LaTeX-verbatim-environments "comment")
