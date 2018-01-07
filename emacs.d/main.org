@@ -2028,6 +2028,11 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
             (hydra-org-template/body)
           (self-insert-command 1)))))
 #+end_src
+*** Id generations
+#+begin_src emacs-lisp
+  (use-package org-id+
+    :ensure t)
+#+end_src
 ** Exporting
 *** HTML
 #+begin_src emacs-lisp
