@@ -3588,6 +3588,23 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 	    auth-sources '("~/.authinfo.gpg")))
 
   #+end_src
+*** Message composition
+#+begin_src emacs-lisp
+  (use-package message
+    :init
+    (add-hook 'message-mode-hook 'flyspell-mode)
+    (add-hook 'message-setup-hook '(lambda () (footnote-mode t)))
+    (add-hook 'message-mode-hook 'disable-global-facilities)
+
+    :config
+    (setq message-auto-save-directory nil
+          message-citation-line-function 'message-insert-formatted-citation-line
+          message-citation-line-format "Le %e %B %Y à %-H:%M %Z, %N a écrit :"
+          message-sendmail-f-is-evil nil
+          message-signature-file (format "%s/third_parties/mail/signature" config-basedir)
+          message-fill-column 100)
+    )
+#+end_src
 *** Composing/Sending
   #+begin_src emacs-lisp
     (use-package smtpmail
@@ -3600,7 +3617,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
       ;; Define behaviour
       (setq smtpmail-queue-mail nil ; start in non queue mode
-            message-auto-save-directory nil
             message-send-mail-function 'message-send-mail-with-sendmail
             mail-host-address "coli.uni-saarland.de"
             send-mail-function 'message-send-mail-with-sendmail
@@ -3608,16 +3624,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
             ;; mime-edit-pgp-encrypt-to-self t
             ;; mml2015-encrypt-to-self t
             ;; mml2015-sign-with-sender t
-
-            message-citation-line-function 'message-insert-formatted-citation-line
-            message-citation-line-format "Le %e %B %Y à %-H:%M %Z, %N a écrit :"
-            message-sendmail-f-is-evil nil
-            message-signature-file (format "%s/third_parties/mail/signature" config-basedir)
             sendmail-program "sendmail")
 
-      (add-hook 'message-mode-hook 'flyspell-mode)
-      (add-hook 'message-setup-hook '(lambda () (footnote-mode t)))
-      (add-hook 'message-mode-hook 'disable-global-facilities)
       )
   #+end_src
 *** notmuch
@@ -3834,9 +3842,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 ***** Header
 #+begin_src emacs-lisp
-    ;; This is GPLv2. If you still don't know the details, read
-    ;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
-
     (defface my-notmuch-hello-header-face
       '((t :foreground "white"
            :background "#0088FC"
