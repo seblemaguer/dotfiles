@@ -7,27 +7,34 @@
 #+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.coli.uni-saarland.de/~slemaguer/default.css" />
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.coli.uni-saarland.de/~slemaguer/css/default.css" />
+
+This is my emacs configuration file. It is under version control and available, among other
+configurations, at this repository: https://github.com/seblemaguer/dotfiles
 
 * COMMENT Activate debugging
 #+begin_src emacs-lisp
   (toggle-debug-on-error)
 #+end_src
 * Packages
-** System/package dependency
+This section focuses on the package management configuration.
+
+We want to be able to have 3 things:
+- Support system package dependencies
 #+begin_src emacs-lisp
   (use-package use-package-ensure-system-package
     :ensure t)
 #+end_src
-** Paradox
+
+- Use an enhanced package list visualizer (paradox)
 #+begin_src emacs-lisp
   (use-package paradox
     :ensure t
     :config
     (setq paradox-spinner-type 'progress-bar))
 #+end_src
-** Helpers
+
+- Update all packages on one shot. This part is copied from https://emacs.stackexchange.com/questions/16398/noninteractively-upgrade-all-packages
 #+begin_src emacs-lisp
   (defun package-upgrade-all ()
     "Upgrade all packages automatically without showing *Packages* buffer."
@@ -66,7 +73,9 @@
     :ensure t)
 #+end_src
 ** Helpers
+I define here some global helpers used either in the rest of the file, either available to use at runtime
 *** Authentification
+Easy use wrapper around auth-* authentification emacs utils
 #+begin_src emacs-lisp
 (defun* my:auth-source-get-passwd (&rest spec &allow-other-keys)
   (let ((founds (apply 'auth-source-search spec)))
@@ -79,6 +88,7 @@
       (plist-get (nth 0 founds) :user))))
 #+end_src
 *** Editing as root
+Defining a simple helper to edit file as root using tramp
 #+begin_src emacs-lisp
 (defun edit-current-file-as-root ()
   "Edit the file that is associated with the current buffer as root"
@@ -115,15 +125,16 @@
             (ad-set-args 1 (cons trace (ad-get-args 1)))))))
 #+end_src
 ** Encoding
+Define the global encoding as utf-8 english US related. Of course, it is possible de locally change
+this information per buffer
 #+begin_src emacs-lisp
-(setq system-time-locale "en_US.utf8")  ; "C"?
-(add-to-list 'file-coding-system-alist
-             '("\\.owl\\'" utf-8 . utf-8))
+(setq system-time-locale "en_US.utf8")
 (prefer-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 #+end_src
 
 ** Undo
+In order to have a better and more visual control of undoing, I use undo-tree.
 #+begin_src emacs-lisp
   (use-package undo-tree
     :ensure t
@@ -131,23 +142,8 @@
     (global-undo-tree-mode))
 #+end_src
 ** Folding
-Try to add this key support
-- (global-set-key (kbd "<f7>")      'fold-dwim-toggle)
-- (global-set-key (kbd "<M-f7>")    'fold-dwim-hide-all)
-- (global-set-key (kbd "<S-M-f7>")  'fold-dwim-show-all)
-
+Use origami as the default
 #+begin_src emacs-lisp
-  (use-package hideshow
-    :ensure t
-    :config
-    (add-hook 'c-mode-common-hook   'hs-minor-mode)
-    (add-hook 'emacs-lisp-mode-hook 'hs-minor-mode)
-    (add-hook 'java-mode-hook       'hs-minor-mode)
-    (add-hook 'lisp-mode-hook       'hs-minor-mode)
-    (add-hook 'perl-mode-hook       'hs-minor-mode)
-    (add-hook 'sh-mode-hook         'hs-minor-mode)
-    (add-hook 'js-mode-hook         'hs-minor-mode))
-  (use-package fold-dwim :ensure t)
 #+end_src
 ** Edition
 *** Edit simultanously multiple region
