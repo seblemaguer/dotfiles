@@ -1512,12 +1512,15 @@ Based mainly on C just few adaptations to do here
   (use-package elpy
     :ensure t
     :after flycheck
+    :init
+    (add-hook 'elpy-mode-hook 'flycheck-mode)
+
     :config
     (elpy-enable)
-    (elpy-use-ipython)
-
-    (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
-    (add-hook 'elpy-mode-hook 'flycheck-mode))
+    (setq python-shell-interpreter "ipython"
+	  python-shell-interpreter-args "-i --simple-prompt"
+	  elpy-modules (delq 'elpy-module-flymake elpy-modules))
+    )
 
 #+end_src
 
