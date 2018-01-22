@@ -144,6 +144,85 @@ In order to have a better and more visual control of undoing, I use undo-tree.
 ** Folding
 Use origami as the default
 #+begin_src emacs-lisp
+  ;; Code folding
+  (use-package origami
+    :ensure t
+    :commands origami-mode
+    :bind (:map origami-mode-map ("C-:" . origami/hydra))
+
+    :config
+    (setq origami-show-fold-header t)
+    (let ((tbp (assoc 'triple-braces origami-parser-alist)))
+      (setf (cdr tbp) #'schnouki/origami-triple-braces-parser))
+
+    :init
+    (setq schnouki/triple-braces-regex
+          (rx line-start (0+ blank)
+              (or "//" "/*" "#" "--" ";;")
+              (0+ blank) (or (seq "{{{" (0+ any))
+                             "}}}")))
+
+
+    (defhydra origami/hydra (:color blue :hint none)
+        "
+        _:_: recursively toggle node       _a_: toggle all nodes    _t_: toggle node
+        _o_: show only current node        _u_: undo                _r_: redo
+        _R_: reset
+        "
+      (":" origami-recursively-toggle-node)
+      ("a" origami-toggle-all-nodes)
+      ("t" origami-toggle-node)
+      ("o" origami-show-only-node)
+      ("u" origami-undo)
+      ("r" origami-redo)
+      ("R" origami-reset))
+
+    (defun schnouki/origami-triple-braces-parser (create)
+      (lambda (content)
+        (let ((positions (origami-get-positions content schnouki/triple-braces-regex))
+              nodes)
+          ;; Make it more readble: conver to a list of plists, each having :start,
+          ;; :end, :offset and :children (which is a list with the same
+          ;; structure).
+          (cl-labels ((make-node ()
+                                 (let* ((start (car positions))
+                                        (start-offset (s-index-of "{{{" (car start)))
+                                        (start-pos (+ (cdr start) start-offset))
+                                        (offset (- (length (car start)) start-offset))
+                                        (next (cadr positions))
+                                        (node `(:start ,start-pos :offset ,offset))
+                                        children)
+                                   (!cdr positions)
+                                   (while (s-contains? "{{{" (car next))
+                                     (setq children (cons (make-node) children)
+                                           next (car positions)))
+                                   (plist-put node :end (+ (cdr next) (s-index-of "}}}" (car next))))
+                                   (when children
+                                     (plist-put node :children (reverse children)))
+                                   (!cdr positions)
+                                   node))
+                      (build (nodes)
+                             (--map (funcall create
+                                             (plist-get it :start)
+                                             (plist-get it :end)
+                                             (plist-get it :offset)
+                                             (build (plist-get it :children)))
+                                    nodes)))
+            (while positions
+              (setq nodes (cons (make-node) nodes)))
+            (build (reverse nodes))))))
+
+    (defun schnouki/enable-origami-mode ()
+      "Enable origami-mode, and set the fold-style to 'triple-braces' if it makes sense."
+      (when (and (not (local-variable-p 'origami-fold-style))
+                 (save-mark-and-excursion
+                  (goto-char (point-min))
+                  (search-forward "{{{" nil t)))
+        (message "Enabling triple braces folding with Origami")
+        (setq-local origami-fold-style 'triple-braces))
+      (origami-mode 1))
+
+    (add-hook 'prog-mode-hook 'schnouki/enable-origami-mode))
 #+end_src
 ** Edition
 *** Edit simultanously multiple region
@@ -489,9 +568,6 @@ Use origami as the default
     :config
     (global-set-key (kbd "M-x") 'counsel-M-x))
 #+END_SRC
-** Abbrev
-#+begin_src emacs-lisp
-#+end_src
 ** Company
 #+BEGIN_SRC emacs-lisp
   (use-package company
