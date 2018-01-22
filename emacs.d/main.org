@@ -787,7 +787,7 @@ Based mainly on C just few adaptations to do here
 #+begin_src emacs-lisp
   (use-package java-snippets
     :ensure t
-    :after yasnippets)
+    :after yasnippet)
 #+end_src
 *** Javadoc
 #+begin_src emacs-lisp
