@@ -284,25 +284,42 @@ leads to this configuration
 #+end_src
 
 ** Backup files
+*** TODO Global backup configuration
+This the global backup configuration. At one point we should add the backup navigation (something
+coming from: https://github.com/chadbraunduin/backups-mode )
 #+begin_src emacs-lisp
-  (defvar --backup-directory (concat user-emacs-directory "backups"))
+  (use-package backup-walker
+    :ensure t)
 
-  (when (not (file-exists-p --backup-directory))
-      (make-directory --backup-directory t))
+  (use-package backups-mode
+    :ensure t
+    :after backup-walker
+    :init
+    (defvar backup-directory "~/.emacs.d/backups/")
 
-  (setq backup-directory-alist `(("." . ,--backup-directory))
-        make-backup-files t               ; backup of a file the first time it is saved.
-        backup-by-copying t               ; don't clobber symlinks
-        version-control t                 ; version numbers for backup files
-        delete-old-versions t             ; delete excess backup files silently
-        delete-by-moving-to-trash t
-        kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
-        kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
-        auto-save-default t               ; auto-save every buffer that visits a file
-        auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
-        auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
-        )
+    (when (not (file-exists-p backup-directory))
+      (make-directory backup-directory t))
 
+    (defvar tramp-backup-directory "~/.emacs./tramp-backups/")
+
+    (setq make-backup-files t               ; backup of a file the first time it is saved.
+          backup-by-copying t               ; don't clobber symlinks
+          version-control t                 ; version numbers for backup files
+          delete-old-versions t             ; delete excess backup files silently
+          delete-by-moving-to-trash t
+          kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
+          kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+          auto-save-default t               ; auto-save every buffer that visits a file
+          auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
+          auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
+          )
+    :config
+    (backups-minor-mode))
+#+end_src
+*** Sensitive mode
+There are some files which are not desired to be backed up. This part goal is to setup this
+"avoiding saving" spécificities.
+#+begin_src emacs-lisp
   (define-minor-mode sensitive-mode
     "For sensitive files like password lists.
   It disables backup creation and auto saving.
@@ -331,17 +348,13 @@ leads to this configuration
 
 
   (add-to-list 'auto-minor-mode-alist '("\\.git/.*\\'" . sensitive-mode))
-  (add-to-list 'auto-minor-mode-alist '("\\.emacs\\.d/custom\\.el\\'" . sensitive-mode))
-  (add-to-list 'auto-minor-mode-alist '("\\.emacs\\.d/magithub/.*\\'" . sensitive-mode))
-  (add-to-list 'auto-minor-mode-alist '("\\.emacs\\.d/emms/.*\\'" . sensitive-mode))
-  (add-to-list 'auto-minor-mode-alist '("\\.emacs\\.d/recentf\\'" . sensitive-mode))
+  (add-to-list 'auto-minor-mode-alist '("emacs\\.d/.*\\'" . sensitive-mode))
+  (add-to-list 'auto-minor-mode-alist '("emacs\\.d/emms/.*\\'" . sensitive-mode))
   (add-to-list 'auto-minor-mode-alist '("Calendars/.*.org\\'" . sensitive-mode))
   (add-to-list 'auto-minor-mode-alist '("\\.gpg\\'" . sensitive-mode))
-
-  ;; Starting backup
-  ;; (backups-mode-start)
 #+end_src
 ** Copy/Pasted
+Baseline configuration for copy/pasting
 #+begin_src emacs-lisp
   (setq mouse-drag-copy-region nil
         x-select-enable-primary nil
