@@ -144,13 +144,15 @@ In order to have a better and more visual control of undoing, I use undo-tree.
     (global-undo-tree-mode))
 #+end_src
 ** Folding
-Use origami as the default
+In order to have a unify folding support, I use origami in couple with hydra. The advantage of hydra
+is to see all the alternatives more easily. Also inspire from
+https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
 #+begin_src emacs-lisp
-  ;; Code folding
   (use-package origami
     :ensure t
+    :after hydra
     :commands origami-mode
-    :bind (:map origami-mode-map ("C-:" . origami/hydra))
+    :bind (:map origami-mode-map ("C-:" . origami/hydra/body))
 
     :config
     (setq origami-show-fold-header t)
