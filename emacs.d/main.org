@@ -1200,24 +1200,20 @@ Based mainly on C just few adaptations to do here
     (interactive)
     "Toggle Shell Escape"
     (setq LaTeX-command
-	  (if (string= LaTeX-command "latex") "latex -shell-escape"
-	    "latex"))
+          (if (string= LaTeX-command "latex")
+              "latex -shell-escape"
+            "latex"))
     (message (concat "shell escape "
-		     (if (string= LaTeX-command "latex -shell-escape")
-			 "enabled"
-		       "disabled"))
-	     )
+                     (if (string= LaTeX-command "latex -shell-escape")
+                         "enabled"
+                       "disabled"))
+             )
     )
-
-  ;; Adding some compiling commands
-  ;; (add-to-list 'TeX-command-list
-  ;;              '("Make" "make" TeX-run-command nil t))
-
 
   (use-package auctex-latexmk
     :ensure t
-    :after auctex
     :config
+    (setq auctex-latexmk-inherit-TeX-PDF-mode t)
     (auctex-latexmk-setup))
 
   (setq TeX-show-compilation nil)
