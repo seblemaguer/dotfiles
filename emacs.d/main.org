@@ -3732,7 +3732,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
           gnus-inhibit-images nil
           notmuch-always-prompt-for-sender t
           notmuch-show-indent-messages-width 2
-          notmuch-fcc-dirs '(("slemaguer@coli.uni-saarland.de" . "Saarland/INBOX/.Sent")))
+          notmuch-fcc-dirs '(("slemaguer@coli.uni-saarland.de" . "Saarland/INBOX/.Sent")
+                             ("seb.lemaguer@gmail.com" . "SebGmail/[Gmail].Sent Mail")))
 
     ;; Hook for notmuch
     (defcustom notmuch-index-updated-hook nil
