@@ -460,33 +460,23 @@ fill-column for example.
   ;;
   (setq-default fill-column 100)
 #+end_src
-** Ivy/swipper
-#+begin_src emacs-lisp
-  (use-package ivy
-    :ensure t
-    :config
-    (ivy-mode)
-    (setq ivy-display-style 'fancy
-          ivy-use-virtual-buffers t
-          enable-recursive-minibuffers t
-          ivy-use-selectable-prompt t)
-
-    (global-set-key "\C-s" 'swiper)
-    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
-    )
-#+end_src
 ** Productivity behavior
 This part is dedicated to ensure productivity configuration. This involves mainly isolating,
 capturing and bibliography.
 *** Dark room
+Sometimes I just want to ignore everything except the current document. Darkroom is exactly designed for that
 #+begin_src emacs-lisp
 (use-package darkroom :ensure t)
 #+end_src
 *** ORG/Web tools
+Org-web-tools is a nice package which allows to sniff a webpage and convert it into org-mode
+format. This is really useful to homogeneise documentation.
 #+begin_src emacs-lisp
 (use-package org-web-tools :ensure t)
 #+end_src
 *** Biblio
+This part focus on bibliography/library configuration. The goal is to have a global configuration to
+organize read papers or "to read" papers. This is mainly based on https://codearsonist.com/reading-for-programmers
 #+begin_src emacs-lisp
   (use-package ivy-bibtex
     :ensure t
@@ -520,7 +510,12 @@ capturing and bibliography.
           interleave-disable-narrowing t))
 #+end_src
 ** Process management
+I want to have some services and processes managed directly in emacs. This services/processes are
+closely related to my emacs use and there have to be shutdown when emacs is stopping.
 *** Services
+The main use case (actually the only for now) is the imap notification system. To do so I use the
+couple prodigy (to start the process in emacs) and imapnotify to actually activate the push
+service. Internally, imapnotify is going to call emacsclient to notify the user about a new mail.
 #+begin_src emacs-lisp
   (use-package prodigy
     :ensure t
@@ -573,6 +568,7 @@ capturing and bibliography.
     )
 #+end_src
 *** Background process configuration
+Starting process in background is really nice to avoid being spammed. So let's make it available
 #+begin_src emacs-lisp
   (defun my-bpr-on-start (process)
     "Routine to allow colors in commint buffer"
@@ -590,13 +586,29 @@ capturing and bibliography.
           bpr-on-start 'my-bpr-on-start))
 #+end_src
 * Completion
-** Counsel
-#+BEGIN_SRC emacs-lisp
+This part focuses on completion configuration. Language specific configurations are not done here
+but in the dedicate language configuration part. This section is just for global configuration.
+** Ivy/swipper/counsel
+I do prefer vertical completion, which is why I use extensively Ivy and extensions.
+#+begin_src emacs-lisp
+  (use-package ivy
+    :ensure t
+    :config
+    (ivy-mode)
+    (setq ivy-display-style 'fancy
+          ivy-use-virtual-buffers t
+          enable-recursive-minibuffers t
+          ivy-use-selectable-prompt t)
+
+    (global-set-key "\C-s" 'swiper))
+
+
   (use-package counsel
     :ensure t
     :config
-    (global-set-key (kbd "M-x") 'counsel-M-x))
-#+END_SRC
+    (global-set-key (kbd "M-x") 'counsel-M-x)
+    (global-set-key (kbd "C-x C-f") 'counsel-find-file))
+#+end_src
 ** Company
 #+BEGIN_SRC emacs-lisp
   (use-package company
@@ -631,8 +643,10 @@ capturing and bibliography.
     :config
     (company-quickhelp-mode 1))
 #+end_src
-** Yasnippet
-*** Normal
+** Templating
+I use templates for 2 use cases: the buffer edition and the file specific templates. Both are relying on *yasnippet*.
+*** Edition templates
+The default configuration of yasnippet consists of activating it and plugging it with company.
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
@@ -645,7 +659,9 @@ capturing and bibliography.
     ;; Activate global
     (yas-global-mode))
 #+end_src
-*** Template
+*** Filetype templates
+This part is using yatemplate (an over-layer of yasnippet) coupled with auto-insert to have a set of
+file type dedicated templates. The templates are available in =third_parties/templates= directory.
 #+begin_src emacs-lisp
   (use-package yatemplate
     :ensure t
@@ -656,7 +672,6 @@ capturing and bibliography.
     (setq yatemplate-dir (concat config-basedir "/third_parties/templates"))
 
     ;; Coupling with auto-insert
-
     (setq auto-insert-alist nil)
     (yatemplate-fill-alist)
     ;; (add-hook 'find-file-hook 'auto-insert)
