@@ -806,11 +806,12 @@ Based mainly on C just few adaptations to do here
      :ensure t
      :config
 
-     ;; Subpackages
-     (use-package csv-nav :ensure t)
-
      ;; Define separators
      (setq csv-separators '("," ";" ":" " ")))
+
+
+     ;; Subpackages
+   (use-package csv-nav :ensure t :disabled)
  #+end_src
 ** Cue
 #+begin_src emacs-lisp
@@ -2254,13 +2255,14 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package apropos-fn+var
     :ensure t
+    :disabled
     :config
     (setq apropos-do-all t))
 #+end_src
 ** Info
 #+begin_src emacs-lisp
   (use-package info-buffer :ensure t)
-  (use-package info+ :ensure t)
+  (use-package info+ :ensure t :disabled)
 #+end_src
 ** Man
 #+begin_src emacs-lisp
@@ -2406,14 +2408,16 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 #+begin_src emacs-lisp
   (use-package company-eshell-autosuggest
     :ensure t
+    :disabled
     :after company
     :after eshell
+    :init (add-hook 'eshell-mode-hook 'setup-company-eshell-autosuggest)
     :config
     (defun setup-company-eshell-autosuggest ()
       (with-eval-after-load 'company
         (setq-local company-backends '(company-eshell-autosuggest))))
 
-    (add-hook 'eshell-mode-hook 'setup-company-eshell-autosuggest))
+    )
 #+end_src
 ** Status in the fringe
 #+begin_src emacs-lisp
@@ -2723,7 +2727,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (use-package dired-toggle-sudo :ensure t)
     (use-package diredful :ensure t)
     (use-package dired-single :ensure t)
-    (use-package dired+ :ensure t)
+    (use-package dired+ :ensure t :disabled)
     (use-package image+ :ensure t)
     (use-package image-dired+ :ensure t)
     (use-package peep-dired :ensure t)
@@ -3688,6 +3692,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 *** Notification
 #+begin_src emacs-lisp
   (use-package sauron-circe
+    :ensure t
     :after sauron
     :config
     (sauron-circe-start))
@@ -4418,10 +4423,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (scroll-bar-mode -1)
 #+end_src
 ** Buffer
-*** Hide show part
-#+begin_src emacs-lisp
-  (use-package hideshowvis :ensure t)
-#+end_src
 *** Highlight
 #+begin_src emacs-lisp
   (use-package volatile-highlights
@@ -4431,6 +4432,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
 
   (use-package hl-line+
     :ensure t
+    :disabled
     :config
     (global-hl-line-mode)
     (setq font-lock-maximum-decoration t)
@@ -4532,7 +4534,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (set-face-foreground 'term-color-cyan "#93e0e3")
   (set-face-foreground 'term-color-white "#dcdccc")
 #+end_src
-**** Dired
+**** COMMENT Dired
 #+begin_src emacs-lisp
 ;; Dired
 (set-face-attribute 'diredp-dir-priv nil :foreground "#4169e1" :bold t)
