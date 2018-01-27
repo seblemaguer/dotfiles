@@ -3299,16 +3299,16 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 * Notification
 ** Sauron
 #+begin_src emacs-lisp
-    (use-package sauron
-      :ensure t
-      :config
+  (use-package sauron
+    :ensure t
+    :config
 
-      ;;
-      (setq sauron-separate-frame nil ;; The notification is on the same window ?
-            sauron-sticky-frame t
-            sauron-max-line-length nil ;; No max. length for the line
-            sauron-modules '(sauron-org sauron-elfeed) ;; default modules
-            ))
+    ;;
+    (setq sauron-separate-frame nil ;; The notification is on the same window ?
+          sauron-sticky-frame t
+          sauron-max-line-length nil ;; No max. length for the line
+          sauron-modules '(sauron-org sauron-elfeed)) ;; reduced the default modules
+    (sauron-start-hidden))
 #+end_src
 ** Alert
 #+begin_src emacs-lisp
@@ -4126,7 +4126,10 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
       (progn
         (elfeed-org)
         (setq rmh-elfeed-org-files (list "~/Dropbox/org/organisation/rss.org"))
-        (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id))))
+        (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
+
+
+    (elfeed-update-background-start))
 #+end_src
 *** Notification part
 #+begin_src emacs-lisp
@@ -5083,11 +5086,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (setq initial-major-mode 'org-mode)
     (set-buffer (get-buffer-create "*scratch*"))
     (set (make-local-variable 'org-startup-folded) t))
-#+end_src
-** Starting processes
-#+begin_src emacs-lisp
-(elfeed-update-background-start)
-(sauron-start-hidden)
 #+end_src
 ** Daemon mode
 #+begin_src emacs-lisp
