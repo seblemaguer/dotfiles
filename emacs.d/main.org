@@ -4624,7 +4624,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
 
   (use-package spaceline-all-the-icons
     :ensure t
-    :after (:all spaceline projectile info+ fancy-battery)
+    :after (:all spaceline)
     :config
 
 
