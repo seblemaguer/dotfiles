@@ -834,6 +834,7 @@ Based mainly on C just few adaptations to do here
 #+end_src
 
 ** Groovy
+*** Global groovy
 #+begin_src emacs-lisp
   (use-package groovy-mode
     :ensure t
@@ -858,6 +859,12 @@ Based mainly on C just few adaptations to do here
 
     ;; Define groovy mode for interpreter
     (add-to-list 'interpreter-mode-alist '("groovy" . groovy-mode)))
+#+end_src
+*** Gradle specificities
+#+begin_src emacs-lisp
+  (use-package flycheck-gradle
+    :ensure t
+    )
 #+end_src
 ** HTML
 *** Global web configuration
