@@ -2651,6 +2651,15 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (add-to-list 'auto-mode-alist
 		 '("/vcs/gitconfig\'"    . gitconfig-mode)))
 #+end_src
+*** Git prefix
+#+begin_src emacs-lisp
+  (use-package git-msg-prefix
+    :ensure t
+    :config
+    (setq git-msg-prefix-log-flags " --since='1 week ago' "
+          git-msg-prefix-input-method 'ivy-read)
+    (add-hook 'git-commit-mode-hook 'git-msg-prefix))
+#+end_src
 *** Commit navigation
 #+begin_src emacs-lisp
 (use-package git-timemachine :ensure t)
