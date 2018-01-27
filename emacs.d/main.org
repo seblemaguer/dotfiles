@@ -3860,8 +3860,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                                      (:key "d" :name "drafts" :query "tag:draft")
 
                                      ;; Folder
-                                     (:key "p" :name "Saarland inbox" :query "folder:SebGmail/INBOX")
-                                     (:key "s" :name "SebGmail inbox" :query "folder:Saarland/INBOX")
+                                     (:key "p" :name "Saarland inbox" :query "folder:Saarland/INBOX")
+                                     (:key "s" :name "SebGmail inbox" :query "folder:SebGmail/INBOX")
                                      ))
 
     (defun my-count-query (query)
