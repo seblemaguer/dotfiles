@@ -303,7 +303,7 @@ coming from: https://github.com/chadbraunduin/backups-mode )
     (when (not (file-exists-p backup-directory))
       (make-directory backup-directory t))
 
-    (defvar tramp-backup-directory "~/.emacs./tramp-backups/")
+    (defvar tramp-backup-directory "~/.emacs.d/tramp-backups/")
 
     (setq make-backup-files t               ; backup of a file the first time it is saved.
           backup-by-copying t               ; don't clobber symlinks
