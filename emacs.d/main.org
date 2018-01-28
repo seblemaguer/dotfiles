@@ -102,7 +102,7 @@ Defining a simple helper to edit file as root using tramp
         (find-file file))
     (message "Current buffer does not have an associated file.")))
 #+end_src
-** accent problem
+** TODO accent problem
 #+begin_src emacs-lisp
 (load-library "iso-transl")
 #+end_src
@@ -231,7 +231,7 @@ https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
 
     (add-hook 'prog-mode-hook 'schnouki/enable-origami-mode))
 #+end_src
-** COMMENT edition
+** TODO edition
 *** Edit simultanously multiple region
 #+begin_src emacs-lisp
   (use-package iedit
@@ -610,6 +610,9 @@ I do prefer vertical completion, which is why I use extensively Ivy and extensio
     (global-set-key (kbd "C-x C-f") 'counsel-find-file))
 #+end_src
 ** Company
+In order to have inline completion, really important for coding, I use company. However I adapted
+some facing attributes. Each language is also adding its backend when needed. Therefore, only global
+configuration here.
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :ensure t
@@ -678,8 +681,12 @@ file type dedicated templates. The templates are available in =third_parties/tem
     )
 #+end_src
 * Filetype
-** C
-*** Global engine
+Now that we have achieved the global configuration, we are going to focus on the language specific
+configuration.
+** C/C++
+C and C++ configuration is mainly relying on irony. Some minor
+*** Irony main configuration
+We just load irony add support for c derivative mode.
 #+begin_src emacs-lisp
   (use-package irony
     :ensure t
@@ -691,9 +698,12 @@ file type dedicated templates. The templates are available in =third_parties/tem
 
     ;; Adding irony support so some specific modes
     (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'objc-mode-hook 'irony-mode))
+    (add-hook 'objc-mode-hook 'irony-mode)
+    (add-hook 'c++-mode-hook 'irony-mode))
 #+end_src
 *** Completion
+For the completion, we are relying on company and irony. The configuration consists of add irony
+into company backend.
 #+begin_src emacs-lisp
   (use-package company-irony
     :ensure t
@@ -704,40 +714,30 @@ file type dedicated templates. The templates are available in =third_parties/tem
     :ensure t
     :init
     (add-to-list  'company-backends '(company-irony-c-headers)))
-
-  ;; Eldoc
-  (use-package c-eldoc
-    :ensure t
-    :init
-    (add-hook 'c-mode-hook 'c-turn-on-eldoc-mode))
 #+end_src
 *** Adapt compilation
+Sometimes, I don't want to have a makefile or any complicated project compilation. So I just use
+gcc/g++. Therefore, here, either there is a makefile and use it, either there is none and I use
+gcc/++ directly.
 #+begin_src emacs-lisp
-(add-hook 'c-mode-hook
-          (lambda ()
-            (unless (or (file-exists-p "Makefile") (boundp 'buffer-file-name))
-              (set (make-local-variable 'compile-command)
-                   (let ((file (file-name-nondirectory buffer-file-name)))
-                     (concat "gcc -g -Wall -Wextra -o " (file-name-sans-extension file) " " file))))))
+  (add-hook 'c-mode-hook
+            (lambda ()
+              (unless (or (file-exists-p "Makefile") (boundp 'buffer-file-name))
+                (set (make-local-variable 'compile-command)
+                     (let ((file (file-name-nondirectory buffer-file-name)))
+                       (concat "gcc -g -Wall -Wextra -o " (file-name-sans-extension file) " " file))))))
+
+
+  (add-hook 'c++-mode-hook
+            (lambda ()
+              (unless (file-exists-p "Makefile")
+                (set (make-local-variable 'compile-command)
+                     (let ((file (file-name-nondirectory buffer-file-name)))
+                       (concat "g++ -g -Wall -Wextra -o " (file-name-sans-extension file) " " file))))))
 #+END_SRC
-** C++
-Based mainly on C just few adaptations to do here
+*** C++ specificities
 #+begin_src emacs-lisp
-  (use-package modern-cpp-font-lock :ensure t)
-
-  (use-package irony
-    :ensure t
-    :config
-    (add-hook 'c++-mode-hook 'irony-mode))
-#+end_src
-*** Adapt compilation
-#+begin_src emacs-lisp
-(add-hook 'c++-mode-hook
-          (lambda ()
-            (unless (file-exists-p "Makefile")
-              (set (make-local-variable 'compile-command)
-                   (let ((file (file-name-nondirectory buffer-file-name)))
-                     (concat "g++ -g -Wall -Wextra -o " (file-name-sans-extension file) " " file))))))
+(use-package modern-cpp-font-lock :ensure t)
 #+end_src
 ** Configuration and log files
 *** Default unix configuration
@@ -755,7 +755,6 @@ Based mainly on C just few adaptations to do here
     :config
     (add-to-list 'auto-mode-alist '("\\.authinfo\\(?:\\.gpg\\)\\'" . authinfo-mode)))
 #+end_src
-
 *** Apache
 #+begin_src emacs-lisp
   (use-package apache-mode
