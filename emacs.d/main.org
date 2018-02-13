@@ -2031,20 +2031,17 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                                    (file ,(format "%s/third_parties/org-capture-templates/default.org" config-basedir))
                                    :empty-lines-before 1)
 
-                                  ("m" "mail" entry (file+headline "~/Dropbox/org/todo/todo.org" "Mailing")
+                                  ("m" "mail" entry
+                                   (file+headline "~/Dropbox/org/todo/todo.org" "Mailing")
                                    (file ,(format "%s/third_parties/org-capture-templates/mail.org" config-basedir)))
 
-                                  ("L" "Bookmark" entry
-                                   (file+headline "~/Dropbox/org/organisation/bookmarks.org" "To review")
+                                  ("l" "Bookmark" entry
+                                   (file+olp "~/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
                                    (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" config-basedir)))
 
-                                  ("l" "RSS" entry
-                                   (file+headline "~/Dropbox/org/organisation/rss.org" "To review")
+                                  ("r" "RSS" entry
+                                   (file+olp "~/Dropbox/org/todo/todo.org" "To review" "RSS")
                                    (file ,(format "%s/third_parties/org-capture-templates/rss.org" config-basedir)))
-
-                                  ("H" "Hiwi calendar" entry
-                                   (file "~/Calendars/Calendar-MSP-part-timers.org")
-                                   (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir)))
 
                                   ("M" "MSP calendar" entry
                                    (file "~/Calendars/Calendar-MSP.org")
