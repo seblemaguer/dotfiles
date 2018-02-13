@@ -52,16 +52,30 @@ Account SebGmail
 MaildirStore SebGmail-local
 Path ~/mail/SebGmail/
 Inbox ~/mail/SebGmail/INBOX
-SubFolders Legacy
 
-Channel SebGmail
+Channel SebGmail-inbox
 Master :SebGmail-remote:
 Slave :SebGmail-local:
-Patterns "Sent Items" "INBOX" "Deleted Items"
+Patterns "INBOX"
 Create Slave
 Sync All
 Expunge Both
 SyncState *
+
+Channel SebGmail-sent
+Master :SebGmail-remote:"[Gmail]/Sent Mail"
+Slave :SebGmail-local:"[Gmail].Sent Mail"
+Create Slave
+Sync All
+Expunge Both
+SyncState *
+# Slave :SebGmail-local:sent
+
+
+Group SebGmail
+Channel SebGmail-inbox
+Channel SebGmail-sent
+
 
 # ##########################################################################
 # # Irisa
