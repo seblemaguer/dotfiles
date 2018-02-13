@@ -1577,6 +1577,17 @@ gcc/++ directly.
     :config
     (add-to-list 'company-backends '(company-anaconda :with company-capf)))
 #+end_src
+*** Pipenv
+#+begin_src emacs-lisp
+  (use-package pipenv
+    :ensure t
+    :init
+    (setq pipenv-projectile-after-switch-function
+          #'pipenv-projectile-after-switch-extended)
+
+    :config
+    (add-hook 'python-mode-hook #'pipenv-mode))
+#+end_src
 *** COMMENT JEDI configuration
 **** Global part
 #+begin_src emacs-lisp
@@ -1609,7 +1620,6 @@ gcc/++ directly.
 
     (setq ein:complete-on-dot -1)
 
-
     (cond
      ((eq system-type 'darwin) (setq ein:console-args '("--gui=osx" "--matplotlib=osx" "--colors=Linux")))
      ((eq system-type 'gnu/linux) (setq ein:console-args '("--gui=gtk3" "--matplotlib=gtk3" "--colors=Linux"))))
@@ -1641,8 +1651,8 @@ gcc/++ directly.
     :config
     (elpy-enable)
     (setq python-shell-interpreter "ipython"
-	  python-shell-interpreter-args "-i --simple-prompt"
-	  elpy-modules (delq 'elpy-module-flymake elpy-modules))
+          python-shell-interpreter-args "-i --simple-prompt"
+          elpy-modules (delq 'elpy-module-flymake elpy-modules))
     )
 
 #+end_src
