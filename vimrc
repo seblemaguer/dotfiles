@@ -4,11 +4,11 @@
 "
 " Version: 3.6 - 25/08/10 14:40:30
 "
-" Blog_post: 
+" Blog_post:
 "       http://amix.dk/blog/post/19486#The-ultimate-vim-configuration-vimrc
 " Syntax_highlighted:
 "       http://amix.dk/vim/vimrc.html
-" Raw_version: 
+" Raw_version:
 "       http://amix.dk/vim/vimrc.txt
 "
 " How_to_Install_on_Unix:
@@ -77,7 +77,7 @@
 "     > 3.6: Added lots of stuff (colors, Command-T, Vim 7.3 persistent undo etc.)
 "     > 3.5: Paste mode is now shown in status line  if you are in paste mode
 "     > 3.4: Added mru.vim
-"     > 3.3: Added syntax highlighting for Mako mako.vim 
+"     > 3.3: Added syntax highlighting for Mako mako.vim
 "     > 3.2: Turned on python_highlight_all for better syntax
 "            highlighting for Python
 "     > 3.1: Added revisions ;) and bufexplorer.vim
@@ -149,7 +149,7 @@ set smartcase
 set hlsearch "Highlight search things
 
 set incsearch "Make search act like search in modern browsers
-set nolazyredraw "Don't redraw while executing macros 
+set nolazyredraw "Don't redraw while executing macros
 
 set magic "Set magic on, for regular expressions
 
@@ -291,7 +291,7 @@ cmap ½ $
 
 func! Cwd()
   let cwd = getcwd()
-  return "e " . cwd 
+  return "e " . cwd
 endfunc
 
 func! DeleteTillSlash()
@@ -368,7 +368,7 @@ function! <SID>BufcloseCloseIt()
    endif
 endfunction
 
-" Specify the behavior when switching between buffers 
+" Specify the behavior when switching between buffers
 try
   set switchbuf=usetab
   set stal=2
@@ -624,5 +624,3 @@ au BufRead,BufNewFile ~/buffer iab <buffer> xh1 ================================
 map <leader>pp :setlocal paste!<cr>
 
 map <leader>bb :cd ..<cr>
-
-
