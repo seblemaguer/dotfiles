@@ -4697,7 +4697,10 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (spaceline-toggle-all-the-icons-text-scale-on)
     (spaceline-toggle-all-the-icons-region-info-on)
 
-
+    ;; EMMS part
+    (spaceline-define-segment all-the-icons-track
+      "Show the current played track."
+      (emms-mode-line-icon-function))
 
     ;; Circe specific part
     (spaceline-define-segment circe-track
