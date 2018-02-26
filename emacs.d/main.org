@@ -2665,7 +2665,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (setq git-msg-prefix-log-flags " --since='1 week ago' "
           git-msg-prefix-regex "^\\([^:]*: \\)"
           git-msg-prefix-input-method 'ivy-read)
-    (add-hook 'git-commit-mode-hook 'git-msg-prefix))
+    ;; (add-hook 'git-commit-mode-hook 'git-msg-prefix)
+    )
 #+end_src
 *** Commit navigation
 #+begin_src emacs-lisp
