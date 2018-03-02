@@ -25,14 +25,26 @@ Path ~/mail/HikoGmail/
 Inbox ~/mail/HikoGmail/INBOX
 SubFolders Legacy
 
-Channel HikoGmail
+Channel HikoGmail-inbox
 Master :HikoGmail-remote:
 Slave :HikoGmail-local:
-Patterns "Sent Items" "INBOX" "Deleted Items"
+Patterns "INBOX" "Deleted Items"
 Create Slave
 Sync All
 Expunge Both
 SyncState *
+
+Channel HikoGmail-sent
+Master :HikoGmail-remote:"[Gmail]/Messages envoy&AOk-s"
+Slave :HikoGmail-local:"Sent"
+Create Both
+Expunge Both
+SyncState *
+
+
+Group HikoGmail
+Channel HikoGmail-inbox
+Channel HikoGmail-sent
 
 
 ##########################################################################
@@ -58,17 +70,22 @@ Master :SebGmail-remote:
 Slave :SebGmail-local:
 Patterns "INBOX"
 Create Slave
-Sync All
 Expunge Both
 SyncState *
 
 Channel SebGmail-sent
-Master :SebGmail-remote:"[Gmail]/Sent Mail"
-Slave :SebGmail-local:"[Gmail].Sent Mail"
-Create Slave
-Sync All
+Master :SebGmail-remote:"[Gmail]/Messages envoy&AOk-s"
+Slave :SebGmail-local:"Sent"
+Create Both
 Expunge Both
 SyncState *
+
+# Master :SebGmail-remote:"[Gmail]/Sent Mail"
+# Slave :SebGmail-local:"[Gmail].Sent Mail"
+# Create Slave
+# # Sync All
+# Expunge Both
+# SyncState *
 # Slave :SebGmail-local:sent
 
 
