@@ -38,6 +38,7 @@ Channel HikoGmail-sent
 Master :HikoGmail-remote:"[Gmail]/Messages envoy&AOk-s"
 Slave :HikoGmail-local:"Sent"
 Create Both
+Sync All
 Expunge Both
 SyncState *
 
@@ -77,6 +78,7 @@ Channel SebGmail-sent
 Master :SebGmail-remote:"[Gmail]/Messages envoy&AOk-s"
 Slave :SebGmail-local:"Sent"
 Create Both
+Sync All
 Expunge Both
 SyncState *
 
