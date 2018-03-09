@@ -684,7 +684,8 @@ file type dedicated templates. The templates are available in =third_parties/tem
 Now that we have achieved the global configuration, we are going to focus on the language specific
 configuration.
 ** C/C++
-C and C++ configuration is mainly relying on irony. Some minor
+C and C++ configuration is mainly relying on irony. Some minor adaptations, like the compilation
+part, are also integrated.
 *** Irony main configuration
 We just load irony add support for c derivative mode.
 #+begin_src emacs-lisp
@@ -736,11 +737,14 @@ gcc/++ directly.
                        (concat "g++ -g -Wall -Wextra -o " (file-name-sans-extension file) " " file))))))
 #+END_SRC
 *** C++ specificities
+For C++, I use a dedicated font lock.
 #+begin_src emacs-lisp
 (use-package modern-cpp-font-lock :ensure t)
 #+end_src
 ** Configuration and log files
+This part is dedicated to unix and more general configuration files as well as logs.
 *** Default unix configuration
+Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package config-general-mode
     :ensure t
