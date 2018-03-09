@@ -1772,11 +1772,8 @@ Config-general-mode is applied for all unix configuration files.
 
     ;; Activate spelling
     (add-hook 'org-mode 'flyspell-mode)
-    (add-to-list 'ispell-skip-region-alist '("^#+BEGIN_SRC" . "^#+END_SRC"))
+    (add-to-list 'ispell-skip-region-alist '("^#+begin_src" . "^#+end_src"))
 
-    (use-package org-bullets :ensure t
-      :config
-      (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
     ;; TODO to sort
     (use-package ob-async :ensure t)
@@ -1799,27 +1796,12 @@ Config-general-mode is applied for all unix configuration files.
                                          ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
                                          ("IN PROGRESS" ("NEXT") ("WAITING") ("CANCELLED") ("HOLD"))
                                          ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-                                         ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))
-          org-todo-keyword-faces '(("TODO" :background "red1" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-                                   ("REVIEW" :background "orange" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-                                   ("NEXT" :background "red1" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-                                   ("STARTED" :background "orange" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-                                   ("WAITING" :background "yellow" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-                                   ("DEFERRED" :background "gold" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-                                   ("DELEGATED" :background "gold" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-                                   ("MAYBE" :background "gray" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-                                   ("DONE" :background "forest green" :weight bold :box (:line-width 2 :style released-button))
-                                   ("CANCELLED" :background "lime green" :foreground "black" :weight bold :box (:line-width 2 :style released-button))))
+                                         ("DONE" ("WAITING") ("CANCELLED") ("HOLD"))))
 
     ;; Priority definition
     (setq org-highest-priority ?A
           org-lowest-priority ?E
-          org-default-priority ?C
-          org-priority-faces '((?A . (:foreground "red" :weight bold))
-                               (?B . (:foreground "orange"  :weight bold))
-                               (?C . (:foreground "orange"))
-                               (?D . (:foreground "forest green"))
-                               (?E . (:foreground "forest green"))))
+          org-default-priority ?C)
 
     ;; Archiving
     (setq org-archive-mark-done t
@@ -1828,14 +1810,12 @@ Config-general-mode is applied for all unix configuration files.
 
     ;; Refiling
     (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3)))
-        org-completion-use-ido nil
-        org-refile-use-outline-path 'file
-        org-outline-path-complete-in-steps nil
-        org-refile-allow-creating-parent-nodes 'confirm)
-    )
+          org-completion-use-ido nil
+          org-refile-use-outline-path 'file
+          org-outline-path-complete-in-steps nil
+          org-refile-allow-creating-parent-nodes 'confirm))
 #+end_src
-** Todo management
-*** Some helpers
+** Todo management - some helpers
 Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (defun org-archive-all-done-item ()
@@ -4454,6 +4434,52 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (scroll-bar-mode -1)
 #+end_src
 ** Buffer
+*** Org-mode
+**** Faces
+#+begin_src emacs-lisp
+  (use-package org
+    :ensure t
+    :config
+
+    (setq org-todo-keyword-faces
+          '(("TODO" :background "red1" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("REVIEW" :background "orange" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("NEXT" :background "red1" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("STARTED" :background "orange" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("WAITING" :background "yellow" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("DEFERRED" :background "gold" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("DELEGATED" :background "gold" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("MAYBE" :background "gray" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("DONE" :background "forest green" :weight bold :box (:line-width 2 :style released-button))
+            ("CANCELLED" :background "lime green" :foreground "black" :weight bold :box (:line-width 2 :style released-button)))
+
+
+            org-priority-faces '((?A . (:foreground "red" :weight bold))
+                                 (?B . (:foreground "orange"  :weight bold))
+                                 (?C . (:foreground "orange"))
+                                 (?D . (:foreground "forest green"))
+                                 (?E . (:foreground "forest green")))))
+#+end_src
+**** Org-bullets
+#+begin_src emacs-lisp
+  (use-package org-bullets
+    :ensure t
+    :init
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+#+end_src
+**** Fancy priority
+#+begin_src emacs-lisp
+  (use-package org-fancy-priorities
+    :ensure t
+    :init
+    (add-hook 'org-agenda-mode-hook 'org-fancy-priorities-mode)
+    (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
+    :config
+    (setq org-fancy-priorities-list
+          '((?A . "❗") (?B . "⬆") (?C . "⬇") (?D . "☕")
+            (?1 . "⚡") (?2 . "⮬") (?3 . "⮮") (?4 . "☕")
+            (?I . "Imaportant"))))
+#+end_src
 *** Highlight
 #+begin_src emacs-lisp
   (use-package volatile-highlights
