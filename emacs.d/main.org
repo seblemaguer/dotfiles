@@ -4602,10 +4602,8 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :ensure t
     :config
 
-    (use-package company-emoji :ensure t :defer t)
-    (use-package flycheck-status-emoji :ensure t)
-
-    (add-hook 'after-init-hook #'global-emojify-mode)
+    (use-package company-emoji
+      :ensure t)
 
     (setq emojify-user-emojis
           '(("(heart)" . (("name" . "Heart")
@@ -4616,6 +4614,11 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (when (featurep 'emojify)
       (emojify-set-emoji-data)))
 
+
+
+  (use-package flycheck-status-emoji
+    :ensure t
+    :after emojify)
 #+end_src
 *** Specific mode cleaning helper
 #+begin_src emacs-lisp
