@@ -2822,7 +2822,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :config
     (setq dired-filter-group-saved-groups
           '(("default"
-             ;; ("Directory" dired-filter-by-dot-files)
+             ("Directories" (directory))
              ("PDF"
               (extension . "pdf"))
              ("LaTeX"
