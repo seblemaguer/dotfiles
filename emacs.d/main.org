@@ -2010,30 +2010,36 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :config
 
     ;; Capture
-    (setq org-capture-templates `(("t" "ToDo Entry" entry
-                                   (file+headline "~/Dropbox/org/todo/todo.org" "To sort")
-                                   (file ,(format "%s/third_parties/org-capture-templates/default.org" config-basedir))
-                                   :empty-lines-before 1)
+    (setq org-capture-templates
+          `(("b" "Adding book" entry
+             (file+headline "~/Dropbox/org/todo/todo.org" "To read")
+             (file ,(format "%s/third_parties/org-capture-templates/book.org" config-basedir)))
 
-                                  ("m" "mail" entry
-                                   (file+headline "~/Dropbox/org/todo/todo.org" "Mailing")
-                                   (file ,(format "%s/third_parties/org-capture-templates/mail.org" config-basedir)))
+            ("L" "Bookmark" entry
+             (file+olp "~/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
+             (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" config-basedir)))
 
-                                  ("l" "Bookmark" entry
-                                   (file+olp "~/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
-                                   (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" config-basedir)))
+            ("m" "mail" entry
+             (file+headline "~/Dropbox/org/todo/todo.org" "Mailing")
+             (file ,(format "%s/third_parties/org-capture-templates/mail.org" config-basedir)))
 
-                                  ("r" "RSS" entry
-                                   (file+olp "~/Dropbox/org/todo/todo.org" "To review" "RSS")
-                                   (file ,(format "%s/third_parties/org-capture-templates/rss.org" config-basedir)))
+            ("M" "MSP calendar" entry
+             (file "~/Calendars/Calendar-MSP.org")
+             (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir)))
 
-                                  ("M" "MSP calendar" entry
-                                   (file "~/Calendars/Calendar-MSP.org")
-                                   (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir)))
+            ("P" "Personnal calendar" entry
+             (file "~/Calendars/Calendar-Personal.org")
+             (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir)))
 
-                                  ("P" "Personnal calendar" entry
-                                   (file "~/Calendars/Calendar-Personal.org")
-                                   (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir))))))
+            ("r" "RSS" entry
+             (file+olp "~/Dropbox/org/todo/todo.org" "To review" "RSS")
+             (file ,(format "%s/third_parties/org-capture-templates/rss.org" config-basedir)))
+
+            ("t" "ToDo Entry" entry
+             (file+headline "~/Dropbox/org/todo/todo.org" "To sort")
+             (file ,(format "%s/third_parties/org-capture-templates/default.org" config-basedir))
+             :empty-lines-before 1)))
+    )
 #+end_src
 ** Editing
 #+begin_src emacs-lisp
