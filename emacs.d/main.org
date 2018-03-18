@@ -2736,24 +2736,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   (use-package dired
     :config
 
-    ;; Subpackage
-    (use-package dired-dups :ensure t)
-    (use-package dired-efap :ensure t)
-    (use-package dired-explorer :ensure t)
-    (use-package dired-hacks-utils :ensure t)
-    (use-package dired-narrow :ensure t)
-    (use-package dired-rainbow :ensure t)
-    (use-package dired-ranger :ensure t)
-    (use-package dired-subtree :ensure t)
-    (use-package dired-toggle-sudo :ensure t)
-    (use-package diredful :ensure t)
-    (use-package dired-single :ensure t)
-    (use-package dired+ :ensure t :disabled)
-    (use-package image+ :ensure t)
-    (use-package image-dired+ :ensure t)
-    (use-package peep-dired :ensure t)
-    (use-package dired-x)
-
     ;; Adapt ls for mac
     (when (eq system-type 'darwin)
       (require 'ls-lisp)
@@ -2821,6 +2803,92 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
           (error "no more than 2 files should be marked"))))
     (define-key dired-mode-map "E" 'ora-ediff-files)
     )
+#+end_src
+*** dired-collapse
+#+begin_src emacs-lisp
+  (use-package dired-collapse
+    :ensure t
+    :defer
+    :init
+    (add-hook 'dired-mode-hook 'dired-collapse-mode))
+#+end_src
+*** dired-filter
+#+begin_src emacs-lisp
+  (use-package dired-filter
+    :ensure t
+    :init
+    (add-hook 'dired-mode-hook 'dired-filter-group-mode)
+
+    :config
+    (setq dired-filter-group-saved-groups
+          '(("default"
+             ;; ("Directory" dired-filter-by-dot-files)
+             ("PDF"
+              (extension . "pdf"))
+             ("LaTeX"
+              (extension "tex" "bib"))
+             ("Org"
+              (extension . "org"))
+             ("Archives"
+              (extension "zip" "rar" "gz" "bz2" "tar"))
+             ("Multimedia"
+              (extension "ogg" "flv" "mpg" "avi" "mp4" "mp3"))
+             )))
+    )
+#+end_src
+*** dired-rainbow
+#+begin_src emacs-lisp
+  (use-package dired-rainbow
+    :defer t
+    :ensure dired-hacks-utils
+    :init
+    (with-eval-after-load 'dired (require 'dired-rainbow))
+
+    :config
+
+    (defconst my-dired-media-files-extensions
+      '("mp3" "mp4" "MP3" "MP4" "avi" "mpg" "flv" "ogg")
+      "Media files.")
+
+    (dired-rainbow-define js "orange2" ("js"))
+    (dired-rainbow-define dot "gray36" ("."))
+
+
+    (dired-rainbow-define html "#4e9a06" ("htm" "html" "xhtml"))
+    (dired-rainbow-define media "#ce5c00" my-dired-media-files-extensions)
+
+    ; boring regexp due to lack of imagination
+    (dired-rainbow-define log (:inherit default :italic t) ".*\\.log")
+
+    ; highlight executable files, but not directories
+    (dired-rainbow-define-chmod executable-unix "Green" "-[rw-]+x.*")
+    )
+#+end_src
+*** dired-subtree
+#+begin_src emacs-lisp
+  (use-package dired-subtree :ensure t)
+#+end_src
+*** Dired / images
+#+begin_src emacs-lisp
+  (use-package image+
+    :ensure t
+    :after hydra
+    :config
+    (eval-after-load 'image+
+      (defhydra imagex-sticky-binding (global-map "C-x C-l")
+        "Manipulating Image"
+        ("+" imagex-sticky-zoom-in "zoom in")
+        ("-" imagex-sticky-zoom-out "zoom out")
+        ("M" imagex-sticky-maximize "maximize")
+        ("O" imagex-sticky-restore-original "restore original")
+        ("S" imagex-sticky-save-image "save file")
+        ("r" imagex-sticky-rotate-right "rotate right")
+        ("l" imagex-sticky-rotate-left "rotate left"))))
+
+  (use-package image-dired+
+    :ensure t
+    :config
+    (eval-after-load 'image-dired+ '(image-diredx-async-mode 1)))
 #+end_src
 *** Async
 #+begin_src emacs-lisp
