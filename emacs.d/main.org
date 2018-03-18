@@ -1909,6 +1909,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 
                                            ;; Personnal diverse
                                            ("Music" ,(format "%s/third_parties/icons/music.png" config-basedir) nil nil :ascent center)
+                                           ("Book" ,(format "%s/third_parties/icons/book.png" config-basedir) nil nil :ascent center)
                                            ("[Pp]rojects?" ,(format "%s/third_parties/icons/project.png" config-basedir) nil nil :ascent center)
                                            (".*" '(space . (:width (16)))))
 
