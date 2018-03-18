@@ -2544,7 +2544,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 *** Magit
 - Externally opening has been copied from https://gist.github.com/dotemacs/9a0433341e75e01461c9
 - Pretty configuration is adapted from https://ekaschalk.github.io/post/pretty-magit/
-
+**** Global
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t
@@ -2626,14 +2626,20 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
           (browse-url (parse-url url))
           (message "opening repo %s" url))))
 
-
     (add-hook 'magit-mode-hook
               (lambda ()
                 (local-set-key (kbd "o") 'magit-open-repo))))
-
-
-  ;; Some plugins
+#+end_src
+**** Diff
+#+begin_src emacs-lisp
   (use-package magit-tbdiff :ensure t :after magit)
+#+end_src
+**** Todo
+#+begin_src emacs-lisp
+(use-package magit-org-todos
+  :ensure t
+  :config
+  (magit-org-todos-autoinsert))
 #+end_src
 *** Edition mode
 #+begin_src emacs-lisp
