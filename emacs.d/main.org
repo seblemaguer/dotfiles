@@ -2731,6 +2731,28 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 * File/Directory management
 ** Dired
+*** Run associated application - define helpers
+#+begin_src emacs-lisp
+  (defun dired-open-native ()
+    "Open marked files (or the file the cursor is on) from dired."
+    (interactive)
+    (let* ((files (dired-get-marked-files t current-prefix-arg))
+           (n (length files)))
+      (when (or (<= n 3)
+                (y-or-n-p (format "Open %d files?" n)))
+        (dolist (file files)
+          (call-process "xdg-open" nil 0 nil file)))))
+
+                                          ; The use of "gnome-open" here should probably be parameterized.
+  (defun dired-open-current-directory-in-GUI-file-manager ()
+    "Open the current directory in native GUI file namanger
+  For those times when dired just wont do.
+  "
+    (interactive)
+    (save-window-excursion
+      (dired-do-async-shell-command
+       "xdg-open .")))
+#+end_src
 *** Main configuration
 #+begin_src emacs-lisp
   (use-package dired
@@ -2747,17 +2769,21 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                   dired-omit-mode t)
 
     ;; Adapt ls lisp format
-    (if (boundp 'ls-lisp-ignore-case) (setq ls-lisp-ignore-case t))
-    (if (boundp 'ls-lisp-dirs-first) (setq ls-lisp-dirs-first t))
-    (if (boundp 'ls-lisp-use-localized-time-format) (setq ls-lisp-use-localized-time-format t))
+    (if (boundp 'ls-lisp-ignore-case)
+        (setq ls-lisp-ignore-case t))
+    (if (boundp 'ls-lisp-dirs-first)
+        (setq ls-lisp-dirs-first t))
+    (if (boundp 'ls-lisp-use-localized-time-format)
+        (setq ls-lisp-use-localized-time-format t))
     (if (boundp 'ls-lisp-format-time-list)
-        (setq ls-lisp-format-time-list
-              '("%Y-%m-%d %H:%M"
-                "%Y-%m-%d %H:%M")))
+        (setq ls-lisp-format-time-list '("%Y-%m-%d %H:%M" "%Y-%m-%d %H:%M")))
 
     (put 'dired-find-alternate-file 'disabled nil)
 
     (setq dired-dwim-target t
+
+          ;; Compression
+          auto-compression-mode t
 
           ;; Recursive
           dired-recursive-deletes 'top
@@ -2769,16 +2795,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
     ;; Keys
     (define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
-    (define-key dired-mode-map [return] 'dired-single-buffer)
-    (define-key dired-mode-map [mouse-1] 'dired-single-buffer-mouse)
     (define-key dired-mode-map (kbd "<C-return>") 'dired-open-native)
-    (define-key dired-mode-map "^" (function (lambda nil (interactive) (joc-dired-single-buffer ".."))))
-    (define-key dired-mode-map (kbd "C-x C-j") (function (lambda nil (interactive) (joc-dired-single-buffer ".."))))
     (define-key dired-mode-map (kbd "e") 'dired-open-externally)
-    (define-key dired-mode-map (kbd "/") 'dired-narrow)
-    (define-key dired-mode-map (kbd "P") 'peep-dired)
-    (define-key dired-mode-map "i" 'dired-subtree-insert)
-    (define-key dired-mode-map ";" 'dired-subtree-remove)
 
 
     ;; Diff
@@ -2802,6 +2820,31 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                           (set-window-configuration wnd))))
           (error "no more than 2 files should be marked"))))
     (define-key dired-mode-map "E" 'ora-ediff-files)
+    )
+#+end_src
+*** peep-dired
+#+begin_src emacs-lisp
+  (use-package peep-dired
+    :ensure t
+    :config
+    (define-key dired-mode-map (kbd "P") 'peep-dired)
+  )
+#+end_src
+*** dired-narrow
+#+begin_src emacs-lisp
+  (use-package dired-narrow
+    :ensure t
+    :config
+    (define-key dired-mode-map (kbd "/") 'dired-narrow)
+  )
+#+end_src
+*** dired-single
+#+begin_src emacs-lisp
+  (use-package dired-single
+    :ensure t
+    :config
+    (define-key dired-mode-map [return] 'dired-single-buffer)
+    (define-key dired-mode-map [mouse-1] 'dired-single-buffer-mouse)
     )
 #+end_src
 *** dired-collapse
@@ -2866,7 +2909,12 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 *** dired-subtree
 #+begin_src emacs-lisp
-  (use-package dired-subtree :ensure t)
+  (use-package dired-subtree
+    :ensure t
+    :config
+    (define-key dired-mode-map "i" 'dired-subtree-insert)
+    (define-key dired-mode-map ";" 'dired-subtree-remove)
+    )
 #+end_src
 *** Dired / images
 #+begin_src emacs-lisp
@@ -2888,6 +2936,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   (use-package image-dired+
     :ensure t
     :config
+    (setq auto-image-file-mode t)
     (eval-after-load 'image-dired+ '(image-diredx-async-mode 1)))
 #+end_src
 *** Async
@@ -2902,32 +2951,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
         (require 'dired-async))
       (dired-async-mode 1)))
 #+end_src
-** Run associated application
-#+begin_src emacs-lisp
-  (defun dired-open-native ()
-    "Open marked files (or the file the cursor is on) from dired."
-    (interactive)
-    (let* ((files (dired-get-marked-files t current-prefix-arg))
-           (n (length files)))
-      (when (or (<= n 3)
-                (y-or-n-p (format "Open %d files?" n)))
-        (dolist (file files)
-          (call-process "xdg-open" nil 0 nil file)))))
-
-                                          ; The use of "gnome-open" here should probably be parameterized.
-  (defun dired-open-current-directory-in-GUI-file-manager ()
-    "Open the current directory in native GUI file namanger
-  For those times when dired just wont do.
-  "
-    (interactive)
-    (save-window-excursion
-      (dired-do-async-shell-command
-       "xdg-open .")))
-#+end_src
 ** Image/Compressed files
 #+begin_src emacs-lisp
-(setq auto-image-file-mode t)
-(setq auto-compression-mode t)
 #+end_src
 ** Diff
 *** Global
