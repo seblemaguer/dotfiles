@@ -572,6 +572,11 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
       :kill-process-buffer-on-stop t)
     )
 #+end_src
+*** System daemons
+With this package I can also manage my system services (tried on archlinux).
+#+begin_src emacs-lisp
+  (use-package daemons :ensure t)
+#+end_src
 *** Background process configuration
 Starting process in background is really nice to avoid being spammed. So let's make it available
 #+begin_src emacs-lisp
