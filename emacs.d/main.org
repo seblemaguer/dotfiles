@@ -848,72 +848,7 @@ Config-general-mode is applied for all unix configuration files.
     (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode)))
 #+end_src
 
-** Groovy
-*** Global groovy
-#+begin_src emacs-lisp
-  (use-package groovy-mode
-    :ensure t
-    :config
-
-    ;; Subpackages
-    (use-package groovy-imports :ensure t)
-
-    (autoload 'run-groovy "inf-groovy" "Run an inferior Groovy process")
-    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode")
-
-    ;; Some keys for
-    (add-hook 'groovy-mode-hook
-              '(lambda ()
-                 (inf-groovy-keys)))
-
-
-    ;; Association
-    (add-to-list 'auto-mode-alist '("\.groovy$" . groovy-mode))
-    (add-to-list 'auto-mode-alist '("\.gradle$" . groovy-mode))
-    (add-to-list 'interpreter-mode-alist '("gradle" . groovy-mode))
-
-    ;; Define groovy mode for interpreter
-    (add-to-list 'interpreter-mode-alist '("groovy" . groovy-mode)))
-#+end_src
-*** Gradle specificities
-#+begin_src emacs-lisp
-  (use-package flycheck-gradle
-    :ensure t
-    )
-#+end_src
-** HTML
-*** Global web configuration
-#+begin_src emacs-lisp
-  (use-package web-mode
-    :ensure t
-    :config
-
-    ;; Subpackage
-    (use-package web-beautify :ensure t)
-    (use-package web-completion-data :ensure t)
-    (use-package web-mode-edit-element :ensure t)
-
-    ;; Association
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
-#+end_src
-*** EMMET
-#+begin_src emacs-lisp
-  (use-package emmet-mode
-    :ensure t
-    :config
-    (add-hook 'sgml-mode-hook 'emmet-mode)
-    (add-hook 'html-mode-hook 'emmet-mode)
-    (add-hook 'web-mode-hook 'emmet-mode))
-#+end_src
-*** Completion
-#+begin_src emacs-lisp
-  (use-package company-web
-    :ensure t
-    :after company
-    :config
-    (add-to-list 'company-backends '(company-web-html)))
-#+end_src
-** Java
+** Java based
 *** Global
 #+begin_src emacs-lisp
   (use-package meghanada
@@ -947,144 +882,38 @@ Config-general-mode is applied for all unix configuration files.
                            ))
 
 #+end_src
-** Javascript
-*** Global
-#+BEGIN_SRC emacs-lisp
-  (use-package js2-mode
-    :ensure t
-    :config
-
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
-
-    ;; Better imenu
-    (add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
-
-  (use-package js2-refactor
-    :ensure t
-    :after js2-mode
-    :after hydra
-    :config
-
-    (add-hook 'js2-mode-hook #'js2-refactor-mode)
-    (js2r-add-keybindings-with-prefix "C-c C-r")
-    (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-
-    ;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
-    ;; unbind it.
-    (define-key js-mode-map (kbd "M-.") nil)
-
-
-    ;; Hydra / js2
-    (defhydra js2-refactor-hydra (:color blue :hint nil)
-      "
-        Javascript
-
-    ^Functions^                    ^Variables^               ^Buffer^                      ^sexp^               ^Debugging^
-    ------------------------------------------------------------------------------------------------------------------------------
-    _lp_: Localize Parameter      _ev_: Extract variable   _wi_: Wrap buffer in IIFE    _k_:  js2 kill      _lt_: log this
-    _ef_: Extract function        _iv_: Inline variable    _ig_: Inject global in IIFE  _ss_: split string  _dt_: debug this
-    _ip_: Introduce parameter     _rv_: Rename variable    _ee_: Expand node at point   _sl_: forward slurp
-    _em_: Extract method          _vt_: Var to this        _cc_: Contract node at point _ba_: forward barf
-    _ao_: Arguments to object     _sv_: Split var decl.    _uw_: unwrap
-    _tf_: Toggle fun exp and decl _ag_: Add var to globals
-    _ta_: Toggle fun expr and =>  _ti_: Ternary to if
-  "
-      ("ee" js2r-expand-node-at-point)
-      ("cc" js2r-contract-node-at-point)
-      ("ef" js2r-extract-function)
-      ("em" js2r-extract-method)
-      ("tf" js2r-toggle-function-expression-and-declaration)
-      ("ta" js2r-toggle-arrow-function-and-expression)
-      ("ip" js2r-introduce-parameter)
-      ("lp" js2r-localize-parameter)
-      ("wi" js2r-wrap-buffer-in-iife)
-      ("ig" js2r-inject-global-in-iife)
-      ("ag" js2r-add-to-globals-annotation)
-      ("ev" js2r-extract-var)
-      ("iv" js2r-inline-var)
-      ("rv" js2r-rename-var)
-      ("vt" js2r-var-to-this)
-      ("ao" js2r-arguments-to-object)
-      ("ti" js2r-ternary-to-if)
-      ("sv" js2r-split-var-declaration)
-      ("ss" js2r-split-string)
-      ("uw" js2r-unwrap)
-      ("lt" js2r-log-this)
-      ("dt" js2r-debug-this)
-      ("sl" js2r-forward-slurp)
-      ("ba" js2r-forward-barf)
-      ("k" js2r-kill)
-      ("q" nil)))
-
-  (use-package xref-js2
-    :ensure t
-    :after js2-mode
-    :config
-
-    (add-hook 'js2-mode-hook
-              (lambda ()
-                (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
-
-  (use-package indium
-    :ensure t
-    :diminish indium-interaction-mode
-    :init
-    (setq indium-update-script-on-save t))
-  ;; (setq indium-workspace-file (no-littering-expand-var-file-name "indium-workspaces.el"))))
-
-
-  (use-package gulp-task-runner
-    :commands (gulp))
-
-  (use-package js-auto-beautify
-    :ensure t)
-
-  (use-package js-import
-    :ensure t)
-
-  (use-package company-tern
-    :ensure t
-    :after company
-    :after tern
-    :after xref-js2
-    :config
-
-    (add-to-list 'company-backends 'company-tern)
-    (add-hook 'js2-mode-hook (lambda ()
-                               (tern-mode)
-                               (company-mode)))
-
-    ;; Disable completion keybindings, as we use xref-js2 instead
-    (define-key tern-mode-keymap (kbd "M-.") nil)
-    (define-key tern-mode-keymap (kbd "M-,") nil)
-
-    (setq company-tern-property-marker " <p>"
-          company-tern-property-marker nil
-          company-tern-meta-as-single-line t
-          company-tooltip-align-annotations t))
-
-  (use-package json-mode
-    :ensure t
-    :config
-
-    ;; Subpackage
-    (use-package json-reformat :ensure t)
-
-    ;; (autoload #'espresso-mode "espresso" "Start espresso-mode" t)
-    (add-to-list 'auto-mode-alist '("\\.json$" . json-mode)))
-
-#+END_SRC
-*** Some helpers
+*** Groovy
+**** Global groovy
 #+begin_src emacs-lisp
-(defun grunt-serve ()
-  "Spawns 'grunt serve' process"
-  (interactive)
-  ;; Set dynamic config for process.
-  ;; Variables below are applied only to particular process
-  (let* ((bpr-scroll-direction 1) (bpr-show-progress nil))
-    (bpr-spawn "$(npm bin)/grunt serve --color")
-    (bpr-open-last-buffer)
-    ))
+  (use-package groovy-mode
+    :ensure t
+    :config
+
+    ;; Subpackages
+    (use-package groovy-imports :ensure t)
+
+    (autoload 'run-groovy "inf-groovy" "Run an inferior Groovy process")
+    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode")
+
+    ;; Some keys for
+    (add-hook 'groovy-mode-hook
+              '(lambda ()
+                 (inf-groovy-keys)))
+
+
+    ;; Association
+    (add-to-list 'auto-mode-alist '("\.groovy$" . groovy-mode))
+    (add-to-list 'auto-mode-alist '("\.gradle$" . groovy-mode))
+    (add-to-list 'interpreter-mode-alist '("gradle" . groovy-mode))
+
+    ;; Define groovy mode for interpreter
+    (add-to-list 'interpreter-mode-alist '("groovy" . groovy-mode)))
+#+end_src
+**** Gradle specificities
+#+begin_src emacs-lisp
+  (use-package flycheck-gradle
+    :ensure t
+    )
 #+end_src
 ** Latex
 *** Global
@@ -1718,15 +1547,205 @@ Config-general-mode is applied for all unix configuration files.
     ;; Enable plantuml-mode for PlantUML files
     (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
 #+end_src
+** Web configuration
+*** Global web configuration
+#+begin_src emacs-lisp
+  (use-package web-mode
+    :ensure t
+    :config
+
+    ;; Association
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+
+  ;; Subpackage
+  (use-package web-beautify :ensure t)
+  (use-package web-completion-data :ensure t)
+  (use-package web-mode-edit-element :ensure t)
+#+end_src
+*** EMMET
+#+begin_src emacs-lisp
+  (use-package emmet-mode
+    :ensure t
+    :config
+    (add-hook 'sgml-mode-hook 'emmet-mode)
+    (add-hook 'html-mode-hook 'emmet-mode)
+    (add-hook 'web-mode-hook 'emmet-mode))
+#+end_src
+*** Completion
+#+begin_src emacs-lisp
+  (use-package company-web
+    :ensure t
+    :after company
+    :config
+    (add-to-list 'company-backends '(company-web-html)))
+#+end_src
+*** Javascript
+**** Global
+#+BEGIN_SRC emacs-lisp
+  (use-package js2-mode
+    :ensure t
+    :config
+
+    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+    ;; Better imenu
+    (add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
+
+  (use-package js2-refactor
+    :ensure t
+    :after js2-mode
+    :after hydra
+    :config
+
+    (add-hook 'js2-mode-hook #'js2-refactor-mode)
+    (js2r-add-keybindings-with-prefix "C-c C-r")
+    (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+
+    ;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
+    ;; unbind it.
+    (define-key js-mode-map (kbd "M-.") nil)
+
+
+    ;; Hydra / js2
+    (defhydra js2-refactor-hydra (:color blue :hint nil)
+      "
+        Javascript
+
+    ^Functions^                    ^Variables^               ^Buffer^                      ^sexp^               ^Debugging^
+    ------------------------------------------------------------------------------------------------------------------------------
+    _lp_: Localize Parameter      _ev_: Extract variable   _wi_: Wrap buffer in IIFE    _k_:  js2 kill      _lt_: log this
+    _ef_: Extract function        _iv_: Inline variable    _ig_: Inject global in IIFE  _ss_: split string  _dt_: debug this
+    _ip_: Introduce parameter     _rv_: Rename variable    _ee_: Expand node at point   _sl_: forward slurp
+    _em_: Extract method          _vt_: Var to this        _cc_: Contract node at point _ba_: forward barf
+    _ao_: Arguments to object     _sv_: Split var decl.    _uw_: unwrap
+    _tf_: Toggle fun exp and decl _ag_: Add var to globals
+    _ta_: Toggle fun expr and =>  _ti_: Ternary to if
+  "
+      ("ee" js2r-expand-node-at-point)
+      ("cc" js2r-contract-node-at-point)
+      ("ef" js2r-extract-function)
+      ("em" js2r-extract-method)
+      ("tf" js2r-toggle-function-expression-and-declaration)
+      ("ta" js2r-toggle-arrow-function-and-expression)
+      ("ip" js2r-introduce-parameter)
+      ("lp" js2r-localize-parameter)
+      ("wi" js2r-wrap-buffer-in-iife)
+      ("ig" js2r-inject-global-in-iife)
+      ("ag" js2r-add-to-globals-annotation)
+      ("ev" js2r-extract-var)
+      ("iv" js2r-inline-var)
+      ("rv" js2r-rename-var)
+      ("vt" js2r-var-to-this)
+      ("ao" js2r-arguments-to-object)
+      ("ti" js2r-ternary-to-if)
+      ("sv" js2r-split-var-declaration)
+      ("ss" js2r-split-string)
+      ("uw" js2r-unwrap)
+      ("lt" js2r-log-this)
+      ("dt" js2r-debug-this)
+      ("sl" js2r-forward-slurp)
+      ("ba" js2r-forward-barf)
+      ("k" js2r-kill)
+      ("q" nil)))
+
+  (use-package xref-js2
+    :ensure t
+    :after js2-mode
+    :config
+
+    (add-hook 'js2-mode-hook
+              (lambda ()
+                (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
+
+  (use-package indium
+    :ensure t
+    :diminish indium-interaction-mode
+    :init
+    (setq indium-update-script-on-save t))
+  ;; (setq indium-workspace-file (no-littering-expand-var-file-name "indium-workspaces.el"))))
+
+
+  (use-package gulp-task-runner
+    :commands (gulp))
+
+  (use-package js-auto-beautify
+    :ensure t)
+
+  (use-package js-import
+    :ensure t)
+
+  (use-package company-tern
+    :ensure t
+    :after company
+    :after tern
+    :after xref-js2
+    :config
+
+    (add-to-list 'company-backends 'company-tern)
+    (add-hook 'js2-mode-hook (lambda ()
+                               (tern-mode)
+                               (company-mode)))
+
+    ;; Disable completion keybindings, as we use xref-js2 instead
+    (define-key tern-mode-keymap (kbd "M-.") nil)
+    (define-key tern-mode-keymap (kbd "M-,") nil)
+
+    (setq company-tern-property-marker " <p>"
+          company-tern-property-marker nil
+          company-tern-meta-as-single-line t
+          company-tooltip-align-annotations t))
+#+END_SRC
+**** JSON
+#+begin_src emacs-lisp
+  (use-package json-mode
+    :ensure t
+    :config
+
+    ;; (autoload #'espresso-mode "espresso" "Start espresso-mode" t)
+    (add-to-list 'auto-mode-alist '("\\.json$" . json-mode)))
+
+
+  ;; Subpackage
+  (use-package json-reformat :ensure t)
+#+end_src
+**** AngularJS
+Extracted from https://github.com/zakame/emacs-for-javascript
+#+begin_src emacs-lisp
+  (use-package react-snippets
+    :ensure t)
+
+  (use-package angular-mode
+    :ensure t
+    )
+
+  (use-package angular-snippets
+    :ensure t
+    :config
+    (eval-after-load "web-mode"
+      '(bind-key "C-c C-d" 'ng-snip-show-docs-at-point web-mode-map)))
+#+end_src
+**** Some helpers
+#+begin_src emacs-lisp
+  (defun grunt-serve ()
+    "Spawns 'grunt serve' process"
+    (interactive)
+    ;; Set dynamic config for process.
+    ;; Variables below are applied only to particular process
+    (let* ((bpr-scroll-direction 1) (bpr-show-progress nil))
+      (bpr-spawn "$(npm bin)/grunt serve --color")
+      (bpr-open-last-buffer)))
+#+end_src
 ** XML
 #+BEGIN_SRC emacs-lisp
   (use-package nxml-mode
     :mode ("\\.xml$" . nxml-mode)
     :commands (pretty-print-xml-region)
     :defer t
-    :config
+    :init
     ;; Mapping xml to nxml
     (fset 'xml-mode 'nxml-mode)
+
+    :config
 
     ;; Global configuration
     (setq nxml-child-indent 2
