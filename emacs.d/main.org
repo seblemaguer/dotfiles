@@ -509,6 +509,11 @@ organize read papers or "to read" papers. This is mainly based on https://codear
           interleave-split-lines 20
           interleave-disable-narrowing t))
 #+end_src
+*** Paper
+As I write papers, it is useful to have some helper to start to have the inspiration.
+#+begin_src emacs-lisp
+(use-package academic-phrases :ensure t)
+#+end_src
 ** Process management
 I want to have some services and processes managed directly in emacs. This services/processes are
 closely related to my emacs use and there have to be shutdown when emacs is stopping.
