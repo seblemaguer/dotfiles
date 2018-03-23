@@ -4131,6 +4131,10 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   (setq notmuch-mua-cite-function #'message-cite-original-without-signature)
 )
 #+end_src
+**** Interactive search
+#+begin_src emacs-lisp
+(use-package counsel-notmuch :ensure t)
+#+end_src
 ** RSS
 *** Global
 #+begin_src emacs-lisp
