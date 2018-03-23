@@ -2879,34 +2879,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
              )))
     )
 #+end_src
-*** dired-rainbow
-#+begin_src emacs-lisp
-  (use-package dired-rainbow
-    :defer t
-    :ensure dired-hacks-utils
-    :init
-    (with-eval-after-load 'dired (require 'dired-rainbow))
-
-    :config
-
-    (defconst my-dired-media-files-extensions
-      '("mp3" "mp4" "MP3" "MP4" "avi" "mpg" "flv" "ogg")
-      "Media files.")
-
-    (dired-rainbow-define js "orange2" ("js"))
-    (dired-rainbow-define dot "gray36" ("."))
-
-
-    (dired-rainbow-define html "#4e9a06" ("htm" "html" "xhtml"))
-    (dired-rainbow-define media "#ce5c00" my-dired-media-files-extensions)
-
-    ; boring regexp due to lack of imagination
-    (dired-rainbow-define log (:inherit default :italic t) ".*\\.log")
-
-    ; highlight executable files, but not directories
-    (dired-rainbow-define-chmod executable-unix "Green" "-[rw-]+x.*")
-    )
-#+end_src
 *** dired-subtree
 #+begin_src emacs-lisp
   (use-package dired-subtree
@@ -4696,6 +4668,47 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (set-face-foreground 'term-color-magenta "#dc8cc3")
   (set-face-foreground 'term-color-cyan "#93e0e3")
   (set-face-foreground 'term-color-white "#dcdccc")
+#+end_src
+**** Dired (using dired-rainbow)
+#+begin_src emacs-lisp
+  (use-package dired-rainbow
+    :ensure t
+    :defer t
+    :init
+    (eval-after-load 'dired '(require 'dired-rainbow))
+
+    :config
+
+    (defconst dired-audio-files-extensions
+      '("mp3" "MP3" "ogg" "OGG" "flac" "FLAC" "wav" "WAV")
+      "Dired Audio files extensions")
+    (dired-rainbow-define audio "#329EE8" dired-audio-files-extensions)
+
+    (defconst dired-video-files-extensions
+      '("vob" "VOB" "mkv" "MKV" "mpe" "mpg" "MPG" "mp4" "MP4" "ts" "TS" "m2ts"
+        "M2TS" "avi" "AVI" "mov" "MOV" "wmv" "asf" "m2v" "m4v" "mpeg" "MPEG" "tp")
+      "Dired Video files extensions")
+    (dired-rainbow-define video "#B3CCFF" dired-video-files-extensions)
+
+    (dired-rainbow-define html "#4e9a06" ("htm" "html" "xhtml"))
+    (dired-rainbow-define xml "DarkGreen" ("xml" "xsd" "xsl" "xslt" "wsdl"))
+
+    (dired-rainbow-define document "#ce5c00" ("doc" "docx" "odt" "pdb" "pdf" "ps" "rtf" "djvu"))
+    (dired-rainbow-define image "#ff4b4b" ("jpg" "png" "jpeg" "gif"))
+
+    (dired-rainbow-define log "#c17d11" ("log"))
+    (dired-rainbow-define sourcefile "#fcaf3e" ("py" "c" "cc" "h" "java" "pl" "rb"))
+
+    (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
+    (dired-rainbow-define compressed "#ad7fa8" ("zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
+    (dired-rainbow-define packaged "#e6a8df" ("deb" "rpm"))
+    (dired-rainbow-define encrypted "LightBlue" ("gpg" "pgp"))
+
+    (dired-rainbow-define-chmod executable-unix "Green" "-.*x.*")
+
+                                          ; boring regexp due to lack of imagination
+    (dired-rainbow-define log (:inherit default :italic t) ".*\\.log")
+    )
 #+end_src
 **** COMMENT Dired
 #+begin_src emacs-lisp
