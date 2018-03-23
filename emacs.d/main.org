@@ -2410,18 +2410,9 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 #+end_src
 ** Completion
 #+begin_src emacs-lisp
-  (use-package company-eshell-autosuggest
-    :ensure t
-    :disabled
-    :after company
-    :after eshell
-    :init (add-hook 'eshell-mode-hook 'setup-company-eshell-autosuggest)
-    :config
-    (defun setup-company-eshell-autosuggest ()
-      (with-eval-after-load 'company
-        (setq-local company-backends '(company-eshell-autosuggest))))
-
-    )
+  (use-package esh-autosuggest
+    :hook (eshell-mode . esh-autosuggest-mode)
+    :ensure t)
 #+end_src
 ** Status in the fringe
 #+begin_src emacs-lisp
