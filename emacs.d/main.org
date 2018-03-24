@@ -1122,9 +1122,10 @@ Config-general-mode is applied for all unix configuration files.
 *** Reftex
 #+begin_src emacs-lisp
   (use-package reftex
-    :after auctex
-    :config
+    :defer t
+    :init
     (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
+    :config
     (setq reftex-save-parse-info t
           reftex-enable-partial-scans t
           reftex-use-multiple-selection-buffers t
