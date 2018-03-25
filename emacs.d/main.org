@@ -4191,30 +4191,10 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     ;; Formatting dates
     (setq elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left))
 
-    ;; Adapt the faces
-    (defface elfeed-must-read-face
-      '((((class color) (background light)) (:foreground "#f00"))
-        (((class color) (background dark))  (:foreground "#f00")))
-      "Face used in search mode for titles."
-      :group 'elfeed)
-
-    (defface elfeed-emacs-face
-      '((((class color) (background light)) (:foreground "#090"))
-        (((class color) (background dark))  (:foreground "#090")))
-      "Face used in search mode for titles."
-      :group 'elfeed)
-
-    (defface elfeed-news-face
-      '((((class color) (background light)) (:foreground "#AAA"))
-        (((class color) (background dark))  (:foreground "#AAA")))
-      "Face used in search mode for titles."
-      :group 'elfeed)
-
-    (setq elfeed-search-face-alist
-          '((unread elfeed-search-unread-title-face)
-            (mustread elfeed-must-read-face)
-            (news elfeed-news-face)
-            (emacs elfeed-emacs-face)))
+    ;; Hook
+    (add-hook 'elfeed-new-entry-hook
+              (elfeed-make-tagger :before "7 days ago"
+                                  :remove 'unread))
 
     ;; Shortcuts
     (global-set-key (kbd "<f9>")
@@ -4248,6 +4228,42 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
     (elfeed-update-background-start))
 #+end_src
+*** Youtube specificities
+#+begin_src emacs-lisp
+  (use-package youtube-dl
+    :ensure t
+    :defer t
+    :bind ("C-x y" . youtube-dl-list)
+    :config
+    (setq youtube-dl-directory "~/netshare")
+
+    (defun elfeed-show-youtube-dl ()
+      "Download the current entry with youtube-dl."
+      (interactive)
+      (pop-to-buffer (youtube-dl (elfeed-entry-link elfeed-show-entry))))
+
+    (cl-defun elfeed-search-youtube-dl (&key slow)
+      "Download the current entry with youtube-dl."
+      (interactive)
+      (let ((entries (elfeed-search-selected)))
+        (dolist (entry entries)
+          (if (null (youtube-dl (elfeed-entry-link entry)
+                                :title (elfeed-entry-title entry)
+                                :slow slow))
+              (message "Entry is not a YouTube link!")
+            (message "Downloading %s" (elfeed-entry-title entry)))
+          (elfeed-untag entry 'unread)
+          (elfeed-search-update-entry entry)
+          (unless (use-region-p) (forward-line)))))
+
+    (defalias 'elfeed-search-youtube-dl-slow
+      (expose #'elfeed-search-youtube-dl :slow t))
+
+    (define-key elfeed-show-mode-map "d" 'elfeed-show-youtube-dl)
+    (define-key elfeed-search-mode-map "d" 'elfeed-search-youtube-dl)
+    (define-key elfeed-search-mode-map "D" 'elfeed-search-youtube-dl-slow)
+    (define-key elfeed-search-mode-map "L" 'youtube-dl-list))
+#+end_src
 *** Notification part
 #+begin_src emacs-lisp
   (use-package sauron
@@ -4259,81 +4275,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 		  (puthash (car feed) 3 sauron-elfeed-prio-hash))))
 
 #+end_src
-*** COMMENT elfeed-goodies
-#+begin_src emacs-lisp
-  (use-package elfeed-goodies
-    :ensure t
-    :config
-    (elfeed-goodies/setup)
-    (setq elfeed-goodies/entry-pane-position 'bottom))
-#+end_src
-*** COMMENT To redefine
-#+begin_src emacs-lisp
-
-  (defun search-header/draw-wide (separator-left separator-right search-filter stats db-time)
-    (let* ((update (format-time-string "%Y-%m-%d %H:%M:%S %z" db-time))
-           (lhs (list
-                 (powerline-raw (-pad-string-to "Date" (- elfeed-goodies/feed-source-column-width 4)) 'powerline-active1 'l)
-                 (funcall separator-left 'powerline-active1 'powerline-active2)
-                 (powerline-raw (-pad-string-to "Feed" (- elfeed-goodies/feed-source-column-width 4)) 'powerline-active2 'l)
-                 (funcall separator-left 'powerline-active2 'powerline-active1)
-                 (powerline-raw (-pad-string-to "Tags" (- elfeed-goodies/tag-column-width 6)) 'powerline-active1 'l)
-                 (funcall separator-left 'powerline-active1 'mode-line)
-                 (powerline-raw "Subject" 'mode-line 'l)))
-           (rhs (search-header/rhs separator-left separator-right search-filter stats update)))
-
-      (concat (powerline-render lhs)
-              (powerline-fill 'mode-line (powerline-width rhs))
-              (powerline-render rhs))))
-
-
-  (defun elfeed-goodies/entry-line-draw (entry)
-    "Print ENTRY to the buffer."
-
-    (let* ((title (or (elfeed-meta entry :title) (elfeed-entry-title entry) ""))
-           (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
-           (feed (elfeed-entry-feed entry))
-           (feed-date
-            (when feed
-               (format-time-string "%Y-%m-%d %H:%M:%S %z " (seconds-to-time (elfeed-entry-date entry)))))
-           (feed-title
-            (when feed
-              (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
-           (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
-           (tags-str (concat "[" (mapconcat 'identity tags ",") "]"))
-           (title-width (- (window-width) elfeed-goodies/feed-source-column-width
-                           elfeed-goodies/tag-column-width 4))
-           (title-column (elfeed-format-column
-                          title (elfeed-clamp
-                                 elfeed-search-title-min-width
-                                 title-width
-                                 title-width)
-                          :left))
-           (tag-column (elfeed-format-column
-                        tags-str (elfeed-clamp (length tags-str)
-                                               elfeed-goodies/tag-column-width
-                                               elfeed-goodies/tag-column-width)
-                        :left))
-           (feed-column (elfeed-format-column
-                         feed-title (elfeed-clamp elfeed-goodies/feed-source-column-width
-                                                  elfeed-goodies/feed-source-column-width
-                                                  elfeed-goodies/feed-source-column-width)
-                         :left))
-           (date-column (elfeed-format-column
-                         feed-date (elfeed-clamp (* 2 elfeed-goodies/feed-source-column-width)
-                                                  elfeed-goodies/feed-source-column-width
-                                                  elfeed-goodies/feed-source-column-width)
-                         :left)))
-
-      (if (>= (window-width) (* (frame-width) elfeed-goodies/wide-threshold))
-          (progn
-            (insert (propertize date-column 'face 'elfeed-search-date-face) " ")
-            (insert (propertize feed-column 'face 'elfeed-search-feed-face) " ")
-            (insert (propertize tag-column 'face 'elfeed-search-tag-face) " ")
-            (insert (propertize title 'face title-faces 'kbd-help title)))
-        (insert (propertize title 'face title-faces 'kbd-help title)))))
-#+end_src
-
 *** Helpers
 #+begin_src emacs-lisp
 (defun elfeed-mark-all-as-read ()
@@ -4748,10 +4689,44 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (dired-rainbow-define log (:inherit default :italic t) ".*\\.log")
     )
 #+end_src
-**** COMMENT Dired
+**** Elfeed
 #+begin_src emacs-lisp
-;; Dired
-(set-face-attribute 'diredp-dir-priv nil :foreground "#4169e1" :bold t)
+  (use-package elfeed
+    :config
+    ;; Adapt the faces
+    (defface elfeed-must-read-face
+      '((((class color) (background light)) (:foreground "#f00"))
+        (((class color) (background dark))  (:foreground "#f00")))
+      "Face used in search mode for titles."
+      :group 'elfeed)
+
+    (defface elfeed-emacs-face
+      '((((class color) (background light)) (:foreground "#090"))
+        (((class color) (background dark))  (:foreground "#090")))
+      "Face used in search mode for titles."
+      :group 'elfeed)
+
+    (defface elfeed-news-face
+      '((((class color) (background light)) (:foreground "#AAA"))
+        (((class color) (background dark))  (:foreground "#AAA")))
+      "Face used in search mode for titles."
+      :group 'elfeed)
+
+    (setq elfeed-search-face-alist
+          '((unread elfeed-search-unread-title-face)
+            (mustread elfeed-must-read-face)
+            (news elfeed-news-face)
+            (emacs elfeed-emacs-face)))
+    )
+
+  (use-package youtube-dl
+    :config
+    (defface elfeed-youtube
+      '((t :foreground "#f9f"))
+      "Marks YouTube videos in Elfeed."
+      :group 'elfeed)
+
+    (push '(youtube elfeed-youtube) elfeed-search-face-alist))
 #+end_src
 *** Emoji
 #+begin_src emacs-lisp
