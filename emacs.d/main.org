@@ -1,3 +1,4 @@
+
 #+TITLE: Emacs configuration file
 #+AUTHOR: Sébastien Le Maguer
 #+EMAIL: slemaguer@coli.uni-saarland.de
@@ -1372,25 +1373,6 @@ Config-general-mode is applied for all unix configuration files.
     (set (make-local-variable 'compile-dwim-check-tools) nil))
 #+END_SRC
 
-** PHP
-*** Global
-#+BEGIN_SRC emacs-lisp
-  (use-package php-mode :ensure t)
-  (autoload 'geben "geben" "PHP Debugger on Emacs" t)
-#+END_SRC
-*** Completion
-#+begin_src emacs-lisp
-  (use-package company-php
-    :ensure t
-    :after php-mode
-    :config
-    (add-hook 'php-mode-hook
-              '(lambda ()
-                 (ac-php-core-eldoc-setup) ;; enable eldoc
-                 (make-local-variable 'company-backends)
-                 (add-to-list 'company-backends 'company-ac-php-backend))))
-#+end_src
-
 ** Praat
 #+BEGIN_SRC emacs-lisp
   (use-package praat-mode
@@ -1553,13 +1535,46 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package web-mode
     :ensure t
+    :defer t
+
+    :init
+    (setq web-mode-markup-indent-offset 2
+          web-mode-code-indent-offset 2
+          web-mode-css-indent-offset 2
+
+          web-mode-enable-auto-pairing t
+          web-mode-enable-auto-expanding t
+          web-mode-enable-css-colorization t)
+
     :config
 
     ;; Association
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode)))
+    (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
-  ;; Subpackage
-  (use-package web-beautify :ensure t)
+    ;; Template
+    (setq web-mode-engines-alist
+          '(("php"    . "\\.phtml\\'")
+            ("blade"  . "\\.blade\\."))
+          )
+
+    )
+
+  (use-package web-beautify
+    :ensure t
+    :commands (web-beautify-css
+               web-beautify-css-buffer
+               web-beautify-html
+               web-beautify-html-buffer
+               web-beautify-js
+               web-beautify-js-buffer))
+
   (use-package web-completion-data :ensure t)
   (use-package web-mode-edit-element :ensure t)
 #+end_src
@@ -1567,7 +1582,16 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package emmet-mode
     :ensure t
-    :config
+    :defer t
+    :diminish (emmet-mode . "ε")
+    :bind* (("C-)" . emmet-next-edit-point)
+            ("C-(" . emmet-prev-edit-point))
+    :commands (emmet-mode
+               emmet-next-edit-point
+               emmet-prev-edit-point)
+    :init
+    (setq emmet-indentation 2
+          emmet-move-cursor-between-quotes t)
     (add-hook 'sgml-mode-hook 'emmet-mode)
     (add-hook 'html-mode-hook 'emmet-mode)
     (add-hook 'web-mode-hook 'emmet-mode))
