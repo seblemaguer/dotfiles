@@ -2995,6 +2995,14 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
         (require 'dired-async))
       (dired-async-mode 1)))
 #+end_src
+*** Dired / Rsync
+#+begin_src emacs-lisp
+  (use-package dired-rsync
+    :defer t
+    :ensure t
+    :config
+    (bind-key "C-c C-r" 'dired-rsync dired-mode-map))
+#+end_src
 ** Image/Compressed files
 #+begin_src emacs-lisp
 #+end_src
