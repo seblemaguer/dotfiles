@@ -1,4 +1,3 @@
-
 #+TITLE: Emacs configuration file
 #+AUTHOR: Sébastien Le Maguer
 #+EMAIL: slemaguer@coli.uni-saarland.de
@@ -21,6 +20,7 @@ repository is corresponding to the branch "personal" of my fork of melpa (see he
   (toggle-debug-on-error)
 #+end_src
 * Packages
+** Global
 This section focuses on the package management configuration.
 
 We want to be able to have 3 things:
@@ -69,6 +69,13 @@ We want to be able to have 3 things:
                   (package-install package-desc)
                   (package-delete  old-package)))))
         (message "All packages are up to date"))))
+#+end_src
+** Quelpa
+Quelpa is super useful for developer package management. Adding the adaptation for the use-package
+makes it configuration file proof.
+#+begin_src emacs-lisp
+  (use-package quelpa :ensure t)
+  (use-package quelpa-use-package :ensure t)
 #+end_src
 * Global
 ** Minor-mode activation
@@ -293,10 +300,13 @@ This the global backup configuration. At one point we should add the backup navi
 coming from: https://github.com/chadbraunduin/backups-mode )
 #+begin_src emacs-lisp
   (use-package backup-walker
-    :ensure t)
+    :ensure quelpa
+    :quelpa (backup-walker :repo "lewang/backup-walker" :fetcher github)
+    )
 
   (use-package backups-mode
-    :ensure t
+    :ensure quelpa
+    :quelpa (backups-mode :repo "chadbraunduin/backups-mode" :fetcher github)
     :after backup-walker
     :init
     (defvar backup-directory "~/.emacs.d/backups/")
@@ -766,7 +776,8 @@ Config-general-mode is applied for all unix configuration files.
 *** Authinfo
 #+begin_src emacs-lisp
   (use-package authinfo-mode
-    :ensure t
+    :ensure quelpa
+    :quelpa (authinfo-mode :repo "seblemaguer/authinfo-mode" :fetcher github)
     :config
     (add-to-list 'auto-mode-alist '("\\.authinfo\\(?:\\.gpg\\)\\'" . authinfo-mode)))
 #+end_src
@@ -832,7 +843,8 @@ Config-general-mode is applied for all unix configuration files.
 ** Cue
 #+begin_src emacs-lisp
   (use-package cue-mode
-    :ensure t
+    :ensure quelpa
+    :quelpa (cue-mode :repo "seblemaguer/cue-mode" :fetcher github)
     :config
     (add-to-list 'auto-mode-alist '("\\.cue$" . cue-mode)))
 
@@ -2220,7 +2232,8 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 *** Id generations
 #+begin_src emacs-lisp
   (use-package org-id+
-    :ensure t)
+    :ensure quelpa
+    :quelpa (org-id+ :repo "seblemaguer/org-id-plus" :fetcher github))
 #+end_src
 ** Exporting
 *** HTML
@@ -2528,7 +2541,8 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 ** Gradle global support
 #+begin_src emacs-lisp
   (use-package gradle-mode
-    :ensure t
+    :ensure quelpa
+    :quelpa (gradle-mode :repo "seblemaguer/emacs-gradle-mode" :fetcher github)
     :config
     (setq gradle-gradlew-executable "./gradlew")
     (setq gradle-use-gradlew t)
@@ -3234,7 +3248,9 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (use-package ibuffer-git :ensure t)
     (use-package ibuffer-tramp :ensure t)
     (use-package ibuffer-vc :ensure t)
-    (use-package ibuffer-circe :ensure t
+    (use-package ibuffer-circe
+      :ensure quelpa
+      :quelpa (ibuffer-circe :repo "seblemaguer/ibuffer-circe" :fetcher github)
       :after circe
       :config (require 'circe))
 
@@ -3836,7 +3852,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 *** Notification
 #+begin_src emacs-lisp
   (use-package sauron-circe
-    :ensure t
+    :ensure quelpa
+    :quelpa (sauron-circe :repo "seblemaguer/sauron-circe" :fetcher github)
     :after sauron
     :config
     (sauron-circe-start))
@@ -4175,7 +4192,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 **** Notification
 #+begin_src emacs-lisp
   (use-package sauron-notmuch
-    :ensure t
+    :ensure quelpa
+    :quelpa (sauron-notmuch :repo "seblemaguer/sauron-notmuch" :fetcher github)
     :after sauron
     :after notmuch
     :config
@@ -4486,7 +4504,8 @@ I actually use this part for minor correction. The tags are done when abcde is c
 ** Global theme
 #+begin_src emacs-lisp
   (use-package meacupla-theme
-    :ensure t
+    :ensure quelpa
+    :quelpa (meacupla-theme :repo "seblemaguer/meacupla-theme" :fetcher gitlab)
     :config
     (load-theme 'meacupla t))
 #+end_src
