@@ -15,9 +15,14 @@ configurations, at this repository: https://github.com/seblemaguer/dotfiles
 This configuration relies mainly on melpa and repository named "local-melpa". This local-melpa
 repository is corresponding to the branch "personal" of my fork of melpa (see here: https://github.com/seblemaguer/melpa/tree/personal )
 
-* COMMENT Activate debugging
+* Prerequisite
+** COMMENT Activate debugging
 #+begin_src emacs-lisp
   (toggle-debug-on-error)
+#+end_src
+** Daemon mode
+#+begin_src emacs-lisp
+  (server-start)
 #+end_src
 * Packages
 ** Global
@@ -5322,8 +5327,4 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (setq initial-major-mode 'org-mode)
     (set-buffer (get-buffer-create "*scratch*"))
     (set (make-local-variable 'org-startup-folded) t))
-#+end_src
-** Daemon mode
-#+begin_src emacs-lisp
-  (server-start)
 #+end_src
