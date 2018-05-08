@@ -1067,24 +1067,24 @@ Config-general-mode is applied for all unix configuration files.
 
   (use-package company-auctex
     :ensure t
-    :after company
-    :after auctex
     :config
     (company-auctex-init))
 
 
   (use-package company-bibtex
     :ensure t
-    :after company
-    :after auctex
     :config
     (add-to-list 'company-backends 'company-bibtex))
 
+  (use-package company-reftex
+    :ensure t
+    :config
+    (add-to-list 'company-backends 'company-reftex-labels)
+    (add-to-list 'company-backends 'company-reftex-citations)
+    )
 
   (use-package company-math
     :ensure t
-    :after company
-    :after auctex
     :config
     ;; global activation of the unicode symbol completion
     (add-to-list 'company-backends 'company-math-symbols-unicode))
