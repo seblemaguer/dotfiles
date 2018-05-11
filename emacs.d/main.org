@@ -4628,6 +4628,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+begin_src emacs-lisp
   (use-package nlinum
     :ensure t
+    :disabled t
     :config
     (line-number-mode t)
     (column-number-mode t)
@@ -4637,6 +4638,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (use-package nlinum-hl
     :ensure t
     :after nlinum
+    :disabled t
     :config
     (add-hook 'nlinum-mode-hook (lambda () (setq nlinum-highlight-current-line t))))
 
