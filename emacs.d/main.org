@@ -2718,11 +2718,13 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   :config
   (magit-org-todos-autoinsert))
 #+end_src
-*** Edition mode
+*** Git ignore
 #+begin_src emacs-lisp
-  (use-package git-commit :ensure t)
-  (use-package gitattributes-mode :ensure t)
-  (use-package gitignore-mode :ensure t)
+(use-package gitignore-mode :ensure t)
+(use-package helm-gitignore :ensure t)
+#+end_src
+*** Config edition
+#+begin_src emacs-lisp
   (use-package gitconfig-mode
     :ensure t
     :config
@@ -2730,6 +2732,11 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 		 '("/\.gitconfig\'"    . gitconfig-mode))
     (add-to-list 'auto-mode-alist
 		 '("/vcs/gitconfig\'"    . gitconfig-mode)))
+#+end_src
+*** Helpers for edition
+#+begin_src emacs-lisp
+  (use-package git-commit :ensure t)
+  (use-package gitattributes-mode :ensure t)
 #+end_src
 *** Git prefix
 #+begin_src emacs-lisp
