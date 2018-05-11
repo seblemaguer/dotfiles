@@ -4293,11 +4293,19 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 *** Youtube specificities
 #+begin_src emacs-lisp
   (use-package youtube-dl
-    :ensure t
+    :ensure quelpa
+    :quelpa (youtube-dl :repo "skeeto/youtube-dl-emacs" :fetcher github)
     :defer t
     :bind ("C-x y" . youtube-dl-list)
     :config
     (setq youtube-dl-directory "~/netshare")
+
+    ;; FIXME: should be moved !
+    (defun expose (function &rest args)
+    "Return an interactive version of FUNCTION, 'exposing' it to the user."
+    (lambda ()
+      (interactive)
+      (apply function args)))
 
     (defun elfeed-show-youtube-dl ()
       "Download the current entry with youtube-dl."
