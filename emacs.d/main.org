@@ -696,6 +696,7 @@ configuration here.
 I use templates for 2 use cases: the buffer edition and the file specific templates. Both are relying on *yasnippet*.
 *** Edition templates
 The default configuration of yasnippet consists of activating it and plugging it with company.
+Ivy-yasnippet is used for snippet discovery.
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
@@ -707,6 +708,15 @@ The default configuration of yasnippet consists of activating it and plugging it
 
     ;; Activate global
     (yas-global-mode))
+
+  (use-package yasnippet-snippets
+    :ensure t
+    :after yasnippet
+    )
+
+  (use-package ivy-yasnippet
+    :ensure t
+    :after yasnippet)
 #+end_src
 *** Filetype templates
 This part is using yatemplate (an over-layer of yasnippet) coupled with auto-insert to have a set of
@@ -5096,12 +5106,12 @@ I actually use this part for minor correction. The tags are done when abcde is c
 ** Main entry
 #+begin_src emacs-lisp
   (defhydra hydra-main (:color teal :hint nil)
-    "
-       Main helper
+"
+ Main helper
 
-   Org. related           Help                  Zooming          bookmarks            other helpers
-  -----------------------------------------------------------------------------------------------------
-  _c_: org-capture        _f_: function doc.    _+_: zoom in     _B_: list bookmarks  _p_: prodigy
+  Org. related          Help                Zooming        bookmarks          other helpers     completion
+  ------------------------------------------------------------------------------------------------------------------
+  _c_: org-capture        _f_: function doc.    _+_: zoom in     _B_: list bookmarks  _p_: prodigy        _y_: ivy-yasnippet
   _g_: org-web-get-url    _v_: variable doc.    _-_: zoom out    _b_: bookmark file   _m_: new mail
   "
     ("b" bookmark-set)
@@ -5112,6 +5122,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ("m" notmuch-mua-new-mail)
     ("p" prodigy)
     ("v" describe-variable)
+    ("y" ivy-yasnippet)
     ("+" text-scale-increase :color pink)
     ("-" text-scale-decrease :color pink)
     ("<ESC>" nil "quit" :color blue)
