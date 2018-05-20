@@ -646,9 +646,7 @@ I do prefer vertical completion, which is why I use extensively Ivy and extensio
     (setq ivy-display-style 'fancy
           ivy-use-virtual-buffers t
           enable-recursive-minibuffers t
-          ivy-use-selectable-prompt t)
-
-    (global-set-key "\C-s" 'swiper))
+          ivy-use-selectable-prompt t))
 
 
   (use-package counsel
