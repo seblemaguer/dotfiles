@@ -611,6 +611,28 @@ Starting process in background is really nice to avoid being spammed. So let's m
           bpr-window-creator #'split-window-vertically
           bpr-on-start 'my-bpr-on-start))
 #+end_src
+** Environment control helpers
+*** desktop environment
+#+begin_src emacs-lisp
+  (use-package desktop-environment
+    :ensure t
+    :config
+    (setq desktop-environment-brightness-normal-increment "-inc 10"
+          desktop-environment-brightness-normal-decrement "-dec 10"
+          desktop-environment-brightness-small-increment "-inc 5"
+          desktop-environment-brightness-small-decrement "-dec 5"
+          desktop-environment-brightness-get-command "xbacklight -get"
+          desktop-environment-brightness-set-command "xbacklight"
+          )
+    (desktop-environment-mode))
+#+end_src
+*** pulseaudio
+#+begin_src emacs-lisp
+  (use-package pulseaudio-control
+    :ensure t
+    :config
+    (setq pulseaudio-control--current-sink "@DEFAULT_SINK@"))
+#+end_src
 * Completion
 This part focuses on completion configuration. Language specific configurations are not done here
 but in the dedicate language configuration part. This section is just for global configuration.
