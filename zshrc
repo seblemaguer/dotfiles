@@ -137,7 +137,7 @@ else
     alias less="$VIMRUNTIME/macros/less.sh"
 
     #
-    alias rsync="rsync --exclude-from=$HOME/.rsyncignore"
+    alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
 
     #############################################################################################################
     #### Options
