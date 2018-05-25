@@ -5,6 +5,12 @@
 ####
 ##########################################################################
 
+Fsync no
+CopyArrivalDate yes
+Create Slave
+Sync All
+Expunge Both
+
 
 ##########################################################################
 # Gmail bulk
@@ -29,19 +35,10 @@ Channel HikoGmail-inbox
 Master :HikoGmail-remote:
 Slave :HikoGmail-local:
 Patterns "INBOX" "Deleted Items"
-Create Slave
-Sync All
-Expunge Both
-SyncState *
 
 Channel HikoGmail-sent
 Master :HikoGmail-remote:"[Gmail]/Messages envoy&AOk-s"
 Slave :HikoGmail-local:"Sent"
-Create Both
-Sync All
-Expunge Both
-SyncState *
-
 
 Group HikoGmail
 Channel HikoGmail-inbox
@@ -70,26 +67,10 @@ Channel SebGmail-inbox
 Master :SebGmail-remote:
 Slave :SebGmail-local:
 Patterns "INBOX"
-Create Slave
-Expunge Both
-SyncState *
 
 Channel SebGmail-sent
 Master :SebGmail-remote:"[Gmail]/Messages envoy&AOk-s"
 Slave :SebGmail-local:"Sent"
-Create Both
-Sync All
-Expunge Both
-SyncState *
-
-# Master :SebGmail-remote:"[Gmail]/Sent Mail"
-# Slave :SebGmail-local:"[Gmail].Sent Mail"
-# Create Slave
-# # Sync All
-# Expunge Both
-# SyncState *
-# Slave :SebGmail-local:sent
-
 
 Group SebGmail
 Channel SebGmail-inbox
@@ -119,10 +100,6 @@ Channel SebGmail-sent
 # Master :Irisa-remote:
 # Slave :Irisa-local:
 # Patterns "Sent" "INBOX" "Deleted Items"
-# Create Slave
-# Sync All
-# Expunge Both
-# SyncState *
 
 
 ##########################################################################
@@ -136,7 +113,6 @@ Port 993
 SSLType IMAPS
 # CertificateFile /etc/ssl/certs/ca-bundle.crt
 
-
 IMAPStore Saarland-remote
 Account Saarland
 
@@ -149,10 +125,7 @@ Channel Saarland
 Master :Saarland-remote:
 Slave :Saarland-local:
 Patterns "INBOX" *
-Create Slave
-Sync All
-Expunge Both
-SyncState *
+
 
 # ##########################################################################
 # # Dfki
@@ -164,7 +137,6 @@ PassCmd "python3 ~/.get_passwd.py 'imap.dfki.de' 'sele01'"
 Port 993
 SSLType IMAPS
 # CertificateFile /etc/ssl/certs/ca-bundle.crt
-
 
 IMAPStore Dfki-remote
 Account Dfki
@@ -179,11 +151,6 @@ Channel Dfki
 Master :Dfki-remote:
 Slave :Dfki-local:
 Patterns "*"
-Create Slave
-Sync All
-Expunge Both
-SyncState *
-
 
 
 ##########################################################################
@@ -196,7 +163,6 @@ PassCmd "python3 ~/.get_passwd.py 'mail.mmci.uni-saarland.de' 'lemaguer'"
 Port 993
 SSLType IMAPS
 # CertificateFile /etc/ssl/certs/ca-bundle.crt
-
 
 IMAPStore MMCI-remote
 Account MMCI
@@ -211,7 +177,3 @@ Channel MMCI
 Master :MMCI-remote:
 Slave :MMCI-local:
 Patterns "INBOX" *
-Create Slave
-Sync All
-Expunge Both
-SyncState *
