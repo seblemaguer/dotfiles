@@ -31,7 +31,7 @@ path=/home/slemaguer/mail
 [user]
 name=Sébastien Le Maguer
 primary_email=slemaguer@coli.uni-saarland.de
-other_email=seb.lemaguer@gmail.com
+other_email=seb.lemaguer@gmail.com; lemaguer@mmci.uni-saarland.de
 
 # Configuration for "notmuch new"
 #
