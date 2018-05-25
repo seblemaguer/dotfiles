@@ -49,7 +49,7 @@ other_email=seb.lemaguer@gmail.com
 #
 [new]
 tags=unread;inbox;
-ignore=
+ignore=.uidvalidity;.mbsyncstate
 
 # Search configuration
 #
