@@ -1,15 +1,15 @@
 ##########################################################################
 ####
-#### To archive a maildir with mu4 => just comment the corresponding conf.
-####   on this file
+#### To archive a maildir => just comment the corresponding conf. on this file
 ####
 ##########################################################################
 
-Fsync no
-CopyArrivalDate yes
+# Fsync no
+CopyArrivalDate yes # Force the date base on the file date when push
 Create Slave
 Sync All
 Expunge Both
+SyncState *
 
 
 ##########################################################################
