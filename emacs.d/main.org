@@ -40,7 +40,8 @@ We want to be able to have 3 things:
   (use-package paradox
     :ensure t
     :config
-    (setq paradox-spinner-type 'progress-bar))
+    (setq paradox-spinner-type 'progress-bar
+          paradox-execute-asynchronously t))
 #+end_src
 
 - Update all packages on one shot. This part is copied from https://emacs.stackexchange.com/questions/16398/noninteractively-upgrade-all-packages
