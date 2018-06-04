@@ -511,6 +511,12 @@ map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
 
+""""""""""""""""""""""""""""""
+" => org-mode
+""""""""""""""""""""""""""""""
+Bundle 'speeddating.vim'
+Bundle 'jceb/vim-orgmode.git'
+au BufNewFile,BufRead *.org set filetype=org
 
 """"""""""""""""""""""""""""""
 " => Gradle/groovy
