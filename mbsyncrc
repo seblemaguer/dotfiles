@@ -52,7 +52,6 @@ IMAPAccount SebGmail
 Host imap.gmail.com
 User seb.lemaguer@gmail.com
 PassCmd "python3 ~/.get_passwd.py 'imap.gmail.com' 'seb.lemaguer@gmail.com'"
-Port 993
 SSLType IMAPS
 # CertificateFile /etc/ssl/certs/ca-bundle.crt
 
