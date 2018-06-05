@@ -440,13 +440,19 @@ Configuration of the (fly) spelling for emacs. For spelling, we are using aspell
          (advice-add 'flyspell-emacs-popup :around #'flyspell-emacs-popup-choose)))
     )
 #+end_src
-** TODO Fixme
+** Fixme
 #+begin_src emacs-lisp
-  (use-package fixmee
+  (use-package fic-mode
+    :commands fic-mode
     :ensure t
-    :after button-lock
+    :init (add-hook 'prog-mode-hook 'fic-mode)
     :config
-    (global-fixmee-mode 1))
+
+    (defun fic-view-listing ()
+      "Use occur to list related FIXME keywords"
+      (interactive)
+      (occur "\\<\\(FIXME\\|WRITEME\\|WRITEME!\\|TODO\\|BUG\\):?"))
+    )
 #+end_src
 ** Minibuffer
 Minibuffer configuration part. Nothing really outstanding, just the classical stuff.
@@ -5156,19 +5162,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ("`"   hydra-projectile-other-window/body "other window" :color blue)
     ("q"   nil "cancel" :color blue))
 
-  (defhydra hydra-fixmee (:color teal :hint nil :idle 0.4)
-    "
-       FIXMEE
-
-  ------------------------------------------------------------------------------------------
-  _x_: view listing    _X_: toggle
-              "
-    ("<ESC>" nil "quit")
-    ("<" hydra-project/body "back")
-    ("X"   fixmee-mode)
-    ("x"   fixmee-view-listing)
-    ("q"   nil "cancel" :color blue))
-
   (defhydra hydra-magit (:color teal :hint nil)
     "
         Magit: %(magit-get \"remote\" \"origin\" \"url\")
@@ -5192,9 +5185,9 @@ I actually use this part for minor correction. The tags are done when abcde is c
     ("q"   nil "cancel" :color blue))
 
   (defhydra hydra-flycheck (:pre (progn (setq hydra-lv t) (flycheck-list-errors))
-                            :post (progn (setq hydra-lv nil) (quit-windows-on "*Flycheck errors*"))
-                            :color teal
-                            :hint nil)
+                                 :post (progn (setq hydra-lv nil) (quit-windows-on "*Flycheck errors*"))
+                                 :color teal
+                                 :hint nil)
     "Errors"
     ("f"  flycheck-error-list-set-filter                            "Filter")
     ("j"  flycheck-next-error                                       "Next")
@@ -5211,14 +5204,14 @@ I actually use this part for minor correction. The tags are done when abcde is c
 
    Projects              Version control        On-the-fly
   ------------------------------------------------------------------------------------------
-  _d_: dash projects     _m_: magit             _f_: fixmee
+  _d_: dash projects     _m_: magit             _f_: fixme listing
   _p_: projectile        _t_: travis status     _F_: flycheck
 
   "
     ("<ESC>" nil "quit")
     ("d"   org-dashboard-display)
     ("p"   hydra-projectile/body)
-    ("f"   hydra-fixmee/body)
+    ("f"   fic-view-listing)
     ("F"   hydra-flycheck/body)
     ("m"   hydra-magit/body)
     ("t"   show-my-travis-projects)
