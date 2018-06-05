@@ -3017,21 +3017,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 *** Dired / images
 #+begin_src emacs-lisp
-  (use-package image+
-    :ensure t
-    :after hydra
-    :config
-    (eval-after-load 'image+
-      (defhydra imagex-sticky-binding (global-map "C-x C-l")
-        "Manipulating Image"
-        ("+" imagex-sticky-zoom-in "zoom in")
-        ("-" imagex-sticky-zoom-out "zoom out")
-        ("M" imagex-sticky-maximize "maximize")
-        ("O" imagex-sticky-restore-original "restore original")
-        ("S" imagex-sticky-save-image "save file")
-        ("r" imagex-sticky-rotate-right "rotate right")
-        ("l" imagex-sticky-rotate-left "rotate left"))))
-
   (use-package image-dired+
     :ensure t
     :config
@@ -3058,8 +3043,37 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :config
     (bind-key "C-c C-r" 'dired-rsync dired-mode-map))
 #+end_src
-** Image/Compressed files
+** Images
 #+begin_src emacs-lisp
+  (use-package image+
+    :ensure t
+    :init
+    (add-hook 'image-mode-hook
+              '(lambda ()
+                 (require 'image+)
+                 (imagex-sticky-mode)))
+
+    :bind (:map image-mode-map
+                ("=" . imagex-sticky-zoom-in)
+                ("-" . imagex-sticky-zoom-out)
+                ("m" . imagex-sticky-maximize)
+                ("g" . imagex-sticky-restore-original)
+                ("S" . imagex-sticky-save-image)
+                ("r" . imagex-sticky-rotate-right)
+                ("l" . imagex-sticky-rotate-left)
+                ("/" . imagex-sticky-binding/body))
+
+    :config
+      (defhydra imagex-sticky-binding () ;; global-map "C-x C-l")
+      "Manipulating Image"
+      ("+" imagex-sticky-zoom-in "zoom in")
+      ("-" imagex-sticky-zoom-out "zoom out")
+      ("M" imagex-sticky-maximize "maximize")
+      ("O" imagex-sticky-restore-original "restore original")
+      ("S" imagex-sticky-save-image "save file")
+      ("r" imagex-sticky-rotate-right "rotate right")
+      ("l" imagex-sticky-rotate-left "rotate left")))
+
 #+end_src
 ** Diff
 *** Global
