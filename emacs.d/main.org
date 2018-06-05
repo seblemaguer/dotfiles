@@ -3745,7 +3745,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 *** Codesearch
 #+begin_src emacs-lisp
-
+(use-package counsel-codesearch :ensure t)
 #+end_src
 ** IRC
 *** Global
