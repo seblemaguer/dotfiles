@@ -486,7 +486,8 @@ organize read papers or "to read" papers. This is mainly based on https://codear
 *** Paper
 As I write papers, it is useful to have some helper to start to have the inspiration.
 #+begin_src emacs-lisp
-(use-package academic-phrases :ensure t)
+  (use-package academic-phrases :ensure t)
+  (use-package powerthesaurus :ensure t)
 #+end_src
 ** Process management
 I want to have some services and processes managed directly in emacs. This services/processes are
