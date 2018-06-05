@@ -4181,66 +4181,35 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 ***** Header
 #+begin_src emacs-lisp
-    (defface my-notmuch-hello-header-face
-      '((t :foreground "white"
-           :background "#0088FC"
-           :weight bold))
-      "Font for the header in `my-notmuch-hello-insert-searches`."
-      :group 'notmuch-faces)
-
-    (defun my-notmuch-hello-insert-header ()
-      "Insert the default notmuch-hello header."
-      (when notmuch-show-logo
-        (let* ((image notmuch-hello-logo)
-               (size (image-size image))
-               (width (car size))
-               (left-margin (- (floor (window-body-width) 2) (floor width 2))))
-
-          (goto-char (point-min))
-          (insert "\n")
-          (insert (make-string left-margin ?\ ))
-          (setq image (cons 'image
-                            (append (cdr image)
-                                    (list :background (face-background 'notmuch-hello-logo-background)))))
-          (insert-image image)
-          (insert "\n\n")))
-
-      ;; ;; Hack the display of the links used.
-      ;; (let ((widget-link-prefix "")
-      ;; 	  (widget-link-suffix ""))
-      ;;   (widget-insert "You have ")
-      ;;   (widget-create 'link
-      ;; 		     :notify (lambda (&rest ignore)
-      ;; 			       (notmuch-hello-update))
-      ;; 		     :help-echo "Refresh"
-      ;; 		     (notmuch-hello-nice-number
-      ;; 		      (string-to-number (car (process-lines notmuch-command "count")))))
-      ;;   (widget-insert " messages.\n"))
-      )
-
+  (defface my-notmuch-hello-header-face
+    '((t :foreground "white"
+         :background "#0088FC"
+         :weight bold))
+    "Font for the header in `my-notmuch-hello-insert-searches`."
+    :group 'notmuch-faces)
 #+end_src
 ***** Generate welcome page
 #+begin_src emacs-lisp
-    (defun my-notmuch-hello-insert-separator ()
-      (insert "\n\f\n"))
+  (defun my-notmuch-hello-insert-separator ()
+    (insert "\n\f\n"))
 
 
-    ;; We add items later in reverse order with (add-to-list ...):
-    (setq notmuch-hello-sections '())
+  ;; We add items later in reverse order with (add-to-list ...):
+  (setq notmuch-hello-sections '())
 
-    (add-to-list 'notmuch-hello-sections 'my-notmuch-hello-insert-recent-searches)
-    (add-to-list 'notmuch-hello-sections 'my-notmuch-hello-insert-searches)
-    (add-to-list 'notmuch-hello-sections 'my-notmuch-hello-insert-separator)
-    (add-to-list 'notmuch-hello-sections 'notmuch-hello-insert-search)
-    (add-to-list 'notmuch-hello-sections 'my-notmuch-hello-insert-header)
+  (add-to-list 'notmuch-hello-sections 'my-notmuch-hello-insert-recent-searches)
+  (add-to-list 'notmuch-hello-sections 'my-notmuch-hello-insert-searches)
+  ;; (add-to-list 'notmuch-hello-sections 'my-notmuch-hello-insert-separator)
+  ;; (add-to-list 'notmuch-hello-sections 'notmuch-hello-insert-search)
+  ;;(add-to-list 'notmuch-hello-sections 'my-notmuch-hello-insert-header)
 
-    ;; this is the end of use-package notmuch:
-    (add-hook 'notmuch-hello-refresh-hook
-              (lambda ()
-                (whitespace-mode -1)
-                (linum-mode -1)
-                (page-break-lines-mode 1)
-                ))
+  ;; this is the end of use-package notmuch:
+  (add-hook 'notmuch-hello-refresh-hook
+            (lambda ()
+              (whitespace-mode -1)
+              ;; (linum-mode -1)
+              (page-break-lines-mode 1)
+              ))
 #+end_src
 ***** End of use-package
 #+begin_src emacs-lisp
@@ -4868,7 +4837,8 @@ I actually use this part for minor correction. The tags are done when abcde is c
     "Function to disable some utilities globally activated for current buffer"
     (interactive)
     (smartparens-mode 0)
-    (nlinum-mode 0))
+    ;; (nlinum-mode 0)
+    )
 #+end_src
 ** Icons
 #+begin_src emacs-lisp
