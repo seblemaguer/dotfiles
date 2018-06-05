@@ -858,6 +858,11 @@ Config-general-mode is applied for all unix configuration files.
 (use-package yaml-mode :ensure t)
 (use-package yaml-tomato :ensure t)
 #+end_src
+*** vimrc
+#+begin_src emacs-lisp
+  (use-package vimrc-mode
+    :ensure t)
+#+end_src
 ** CSS
 #+BEGIN_SRC emacs-lisp
 (autoload 'scss-mode "scss-mode")
