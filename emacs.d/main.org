@@ -252,19 +252,12 @@ leads to this configuration
 #+end_src
 
 ** Backup files
-*** TODO Global backup configuration
+*** Global backup configuration
 This the global backup configuration. At one point we should add the backup navigation (something
 coming from: https://github.com/chadbraunduin/backups-mode )
 #+begin_src emacs-lisp
-  (use-package backup-walker
-    :ensure quelpa
-    :quelpa (backup-walker :repo "lewang/backup-walker" :fetcher github)
-    )
-
-  (use-package backups-mode
-    :ensure quelpa
-    :quelpa (backups-mode :repo "chadbraunduin/backups-mode" :fetcher github)
-    :after backup-walker
+  (use-package snapshot-timemachine
+    :ensure t
     :init
     (defvar backup-directory "~/.emacs.d/backups/")
 
@@ -284,8 +277,22 @@ coming from: https://github.com/chadbraunduin/backups-mode )
           auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
           auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
           )
+
     :config
-    (backups-minor-mode))
+
+    (defun snapshot-timemachine-backup-finder (file)
+      "Find snapshots of FILE in rsnapshot backups."
+      (let* ((file (expand-file-name file))
+             (file-adapted (replace-regexp-in-string "/" "!" file))
+             (backup-files(directory-files backup-directory t (format "%s.*" file-adapted))))
+        (seq-map-indexed (lambda (backup-file index)
+                           (make-snapshot :id index
+                                          :name (format "%d" index)
+                                          :file backup-file
+                                          :date (nth 5 (file-attributes backup-file))))
+                         backup-files)))
+
+    (setq snapshot-timemachine-snapshot-finder #'snapshot-timemachine-backup-finder))
 #+end_src
 *** Sensitive mode
 There are some files which are not desired to be backed up. This part goal is to setup this
