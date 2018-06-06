@@ -646,7 +646,7 @@ configuration here.
       (set-face-attribute 'company-scrollbar-fg nil :background "gray40"))
 
     ;; Default backends
-    (setq company-backends '((company-files)))
+    (setq company-backends '((company-files) (company-elisp)))
 
     ;; Activating globally
     (global-company-mode t))
