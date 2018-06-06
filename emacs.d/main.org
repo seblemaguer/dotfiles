@@ -1402,11 +1402,16 @@ Config-general-mode is applied for all unix configuration files.
 ** Python
 *** Global configuration
 #+begin_src emacs-lisp
-  ;; Indentation
-  (setq tab-width     4
-        python-indent 4
-        python-indent-offset 4)
+  (use-package python
+    :mode
+    ("\\.py\\'" . python-mode)
+    ("\\.wsgi$" . python-mode)
 
+    :init
+    (setq-default indent-tabs-mode nil)
+
+    :config
+    (setq python-indent-offset 4))
 #+end_src
 *** Anaconda configuration
 #+begin_src emacs-lisp
