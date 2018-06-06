@@ -5147,30 +5147,37 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+end_src
 ** Main entry
 #+begin_src emacs-lisp
-  (defhydra hydra-main (:color teal :hint nil)
-"
- Main helper
-
-  Org. related          Help                Zooming        bookmarks          other helpers     completion
-  ------------------------------------------------------------------------------------------------------------------
-  _c_: org-capture        _f_: function doc.    _+_: zoom in     _B_: list bookmarks  _p_: prodigy        _y_: ivy-yasnippet
-  _g_: org-web-get-url    _v_: variable doc.    _-_: zoom out    _b_: bookmark file   _m_: new mail
+    (defhydra hydra-main (:color teal :hint nil)
   "
-    ("b" bookmark-set)
-    ("B" list-bookmarks)
-    ("c" org-capture)
-    ("f" describe-function)
-    ("g" org-web-tools-read-url-as-org)
-    ("m" notmuch-mua-new-mail)
-    ("p" prodigy)
-    ("v" describe-variable)
-    ("y" ivy-yasnippet)
-    ("+" text-scale-increase :color pink)
-    ("-" text-scale-decrease :color pink)
-    ("<ESC>" nil "quit" :color blue)
-    ("q"   nil "cancel" :color blue))
+   Main helper
 
-  (global-set-key (kbd "<f1>") 'hydra-main/body)
+    Org. related          Help                Zooming        bookmarks          other helpers     completion
+    ------------------------------------------------------------------------------------------------------------------
+    _c_: org-capture        _f_: function doc.    _+_: zoom in     _B_: list bookmarks  _p_: prodigy        _y_: ivy-yasnippet
+    _g_: org-web-get-url    _v_: variable doc.    _-_: zoom out    _b_: bookmark file   _m_: new mail
+
+    Backups
+    ------------------------------------------------------------------------------------------------------------------
+    _s_: list backups
+    _S_: snapshot timemachine
+    "
+      ("b" bookmark-set)
+      ("B" list-bookmarks)
+      ("c" org-capture)
+      ("f" describe-function)
+      ("g" org-web-tools-read-url-as-org)
+      ("m" notmuch-mua-new-mail)
+      ("p" prodigy)
+      ("s" snapshot-timeline)
+      ("S" snapshot-timemachine)
+      ("v" describe-variable)
+      ("y" ivy-yasnippet)
+      ("+" text-scale-increase :color pink)
+      ("-" text-scale-decrease :color pink)
+      ("<ESC>" nil "quit" :color blue)
+      ("q"   nil "cancel" :color blue))
+
+    (global-set-key (kbd "<f1>") 'hydra-main/body)
 #+end_src
 ** Project/Version control
 #+begin_src emacs-lisp
