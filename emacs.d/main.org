@@ -116,7 +116,7 @@ Defining a simple helper to edit file as root using tramp
         (find-file file))
     (message "Current buffer does not have an associated file.")))
 #+end_src
-** TODO accent problem
+** Accent problem
 #+begin_src emacs-lisp
 (load-library "iso-transl")
 #+end_src
@@ -196,7 +196,7 @@ https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
     :config
     (face-spec-reset-face 'origami-fold-header-face))
 #+end_src
-** TODO edition
+** Edition
 *** Edit simultanously multiple region
 #+begin_src emacs-lisp
   (use-package iedit
