@@ -4393,7 +4393,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       (elfeed-search-untag-all-unread))
 
 #+end_src
-** SX
+** Stackexchange
 #+begin_src emacs-lisp
 (use-package sx
   :ensure t
@@ -4407,6 +4407,37 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
              ("u" . sx-tab-unanswered-my-tags)
              ("a" . sx-ask)
              ("s" . sx-search)))
+#+end_src
+** Reddit
+#+begin_src emacs-lisp
+  (use-package md4rd
+    :ensure t
+    :init
+    (defhydra md4rd-hydra (:color blue :hint none)
+      "
+        _o_: open   _u_: upvote       _e_: expand all     _t_: toggle line
+                  _d_: downvote     _c_: collapse all
+        "
+        ("u" md4rd-upvote)
+        ("d" md4rd-downvote)
+        ("o" md4rd-open)
+        ("t" md4rd-widget-toggle-line)
+        ("e" md4rd-widget-expand-all)
+        ("c" md4rd-widget-collapse-all))
+
+    :bind (:map md4rd-mode-map
+                ("u" . md4rd-upvote)
+                ("d" . md4rd-downvote)
+                ("o" . md4rd-open)
+                ("t" . md4rd-widget-toggle-line)
+                ("e" . md4rd-widget-expand-all)
+                ("c" . md4rd-widget-collapse-all)
+                ("TAB" . widget-forward)
+                ("<backtab>" . widget-backward)
+                ("/" . md4rd-hydra/body))
+
+    :config
+    (setq md4rd-subs-active '(lisp+Common_Lisp emacs)))
 #+end_src
 ** github
 #+begin_src emacs-lisp
