@@ -29,12 +29,37 @@ repository is corresponding to the branch "personal" of my fork of melpa (see he
 This section focuses on the package management configuration.
 
 We want to be able to have 3 things:
-- Support system package dependencies
+- Adapt the system package manager (for archlinux tool trizen)
 #+begin_src emacs-lisp
-  (use-package use-package-ensure-system-package
-    :ensure t)
-#+end_src
+  (use-package system-packages
+    :ensure t
+    :config
+    (setq system-packages-supported-package-managers
+          '(
+            (trizen .
+                    ((default-sudo . nil)
+                     (install . "trizen -S")
+                     (search . "trizen -Ss")
+                     (uninstall . "trizen -Rns")
+                     (update . "trizen -Syu")
+                     (clean-cache . "trizen -Sc")
+                     (log . "cat /var/log/trizen.log")
+                     (get-info . "trizen -Qi")
+                     (get-info-remote . "trizen -Si")
+                     (list-files-provided-by . "trizen -Ql")
+                     (verify-all-packages . "trizen -Qkk")
+                     (verify-all-dependencies . "trizen -Dk")
+                     (remove-orphaned . "trizen -Rns $(trizen -Qtdq)")
+                     (list-installed-packages . "trizen -Qe")
+                     (list-installed-packages-all . "trizen -Q")
+                     (list-dependencies-of . "trizen -Qi")
+                     (noconfirm . "--noconfirm")))
+            )
 
+          system-packages-use-sudo nil
+          system-packages-package-manager 'trizen)
+    )
+#+end_src
 - Use an enhanced package list visualizer (paradox)
 #+begin_src emacs-lisp
   (use-package paradox
@@ -3665,7 +3690,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package arch-packer
     :ensure t
     :config
-    (setq arch-packer-default-command "yaourt")
+    (setq arch-packer-default-command "trizen")
     )
 #+end_src
 ** SSH
