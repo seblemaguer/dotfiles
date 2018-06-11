@@ -28,7 +28,7 @@ repository is corresponding to the branch "personal" of my fork of melpa (see he
 ** Global
 This section focuses on the package management configuration.
 
-We want to be able to have 3 things:
+We want to be able to have 4 things:
 - Adapt the system package manager (for archlinux tool trizen) + enable use-package-ensure-system-package
 #+begin_src emacs-lisp
   (use-package system-packages
@@ -73,7 +73,12 @@ We want to be able to have 3 things:
     (setq paradox-spinner-type 'progress-bar
           paradox-execute-asynchronously t))
 #+end_src
-
+- Dealing with key-chord support
+#+begin_src emacs-lisp
+(use-package use-package-chords
+  :ensure t
+  :config (key-chord-mode 1))
+#+end_src
 - Update all packages on one shot. This part is copied from https://emacs.stackexchange.com/questions/16398/noninteractively-upgrade-all-packages
 #+begin_src emacs-lisp
   (defun package-upgrade-all ()
