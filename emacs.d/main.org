@@ -29,41 +29,46 @@ repository is corresponding to the branch "personal" of my fork of melpa (see he
 This section focuses on the package management configuration.
 
 We want to be able to have 3 things:
-- Adapt the system package manager (for archlinux tool trizen)
+- Adapt the system package manager (for archlinux tool trizen) + enable use-package-ensure-system-package
 #+begin_src emacs-lisp
   (use-package system-packages
-    :ensure t
-    :config
-    (setq system-packages-supported-package-managers
-          '(
-            (trizen .
-                    ((default-sudo . nil)
-                     (install . "trizen -S")
-                     (search . "trizen -Ss")
-                     (uninstall . "trizen -Rns")
-                     (update . "trizen -Syu")
-                     (clean-cache . "trizen -Sc")
-                     (log . "cat /var/log/trizen.log")
-                     (get-info . "trizen -Qi")
-                     (get-info-remote . "trizen -Si")
-                     (list-files-provided-by . "trizen -Ql")
-                     (verify-all-packages . "trizen -Qkk")
-                     (verify-all-dependencies . "trizen -Dk")
-                     (remove-orphaned . "trizen -Rns $(trizen -Qtdq)")
-                     (list-installed-packages . "trizen -Qe")
-                     (list-installed-packages-all . "trizen -Q")
-                     (list-dependencies-of . "trizen -Qi")
-                     (noconfirm . "--noconfirm")))
-            )
+      :ensure t
+      :config
+      (setq system-packages-supported-package-managers
+            '(
+              (trizen .
+                      ((default-sudo . nil)
+                       (install . "trizen -S")
+                       (search . "trizen -Ss")
+                       (uninstall . "trizen -Rns")
+                       (update . "trizen -Syu")
+                       (clean-cache . "trizen -Sc")
+                       (log . "cat /var/log/trizen.log")
+                       (get-info . "trizen -Qi")
+                       (get-info-remote . "trizen -Si")
+                       (list-files-provided-by . "trizen -Ql")
+                       (verify-all-packages . "trizen -Qkk")
+                       (verify-all-dependencies . "trizen -Dk")
+                       (remove-orphaned . "trizen -Rns $(trizen -Qtdq)")
+                       (list-installed-packages . "trizen -Qe")
+                       (list-installed-packages-all . "trizen -Q")
+                       (list-dependencies-of . "trizen -Qi")
+                       (noconfirm . "--noconfirm")))
+              )
 
-          system-packages-use-sudo nil
-          system-packages-package-manager 'trizen)
-    )
+            system-packages-use-sudo nil
+            system-packages-package-manager 'trizen)
+      )
+
+
+  (use-package use-package-ensure-system-package
+    :ensure t)
 #+end_src
 - Use an enhanced package list visualizer (paradox)
 #+begin_src emacs-lisp
   (use-package paradox
     :ensure t
+    :defer t
     :config
     (setq paradox-spinner-type 'progress-bar
           paradox-execute-asynchronously t))
@@ -105,14 +110,19 @@ We want to be able to have 3 things:
 Quelpa is super useful for developer package management. Adding the adaptation for the use-package
 makes it configuration file proof.
 #+begin_src emacs-lisp
-  (use-package quelpa :ensure t)
-  (use-package quelpa-use-package :ensure t)
+  (use-package quelpa
+      :ensure t)
+  (use-package quelpa-use-package
+      :ensure t
+      :init
+      (setq quelpa-update-melpa-p nil))
 #+end_src
 * Global
 ** Minor-mode activation
 #+begin_src emacs-lisp
   (use-package auto-minor-mode
-    :ensure t)
+    :ensure t
+    :defer t)
 #+end_src
 ** Helpers
 I define here some global helpers used either in the rest of the file, either available to use at runtime
