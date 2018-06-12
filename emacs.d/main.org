@@ -3698,16 +3698,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package docker-tramp :ensure t)
   (use-package dockerfile-mode :ensure t)
 #+end_src
-** System package interaction
-#+begin_src emacs-lisp
-  ;; (use-package system-packages :ensure t)
-  ;; (use-package pippel :ensure t)
-  (use-package arch-packer
-    :ensure t
-    :config
-    (setq arch-packer-default-command "trizen")
-    )
-#+end_src
 ** SSH
 #+begin_src emacs-lisp
   (use-package ssh :ensure t)
