@@ -5432,37 +5432,18 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (global-set-key (kbd "<end>") 'move-end-of-line)
   (global-set-key (kbd "<home>") 'move-beginning-of-line)
 #+END_SRC
-** Shortcut helper
-#+begin_src emacs-lisp
-(use-package key-chord)
-#+end_src
 * Finalization
 ** Startup
 #+begin_src emacs-lisp
   (setq inhibit-startup-message t)
   (setq find-file-suppress-same-file-warnings t)
-
-
-  (use-package dashboard
-    :ensure t
-    :after projectile
-    :config
-    (dashboard-setup-startup-hook)
-
-    (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard"
-          dashboard-startup-banner 'official
-          dashboard-items '((agenda . t)
-                            (bookmarks . 5)
-                            (recents  . 5)
-                            (projects . 5))))
 #+end_src
 ** Scratch
 #+begin_src emacs-lisp
   (use-package scratch-ext
     :ensure t
+    :hook (after-init . scratch-ext-restore-last-scratch)
     :config
-    (add-hook 'after-init-hook 'scratch-ext-restore-last-scratch)
-
     ;; Org-mode + start folded buffer
     (setq initial-major-mode 'org-mode)
     (set-buffer (get-buffer-create "*scratch*"))
