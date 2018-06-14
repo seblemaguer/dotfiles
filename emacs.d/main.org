@@ -4298,8 +4298,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (add-hook 'notmuch-hello-refresh-hook
             (lambda ()
               (whitespace-mode -1)
-              ;; (linum-mode -1)
-              (page-break-lines-mode 1)
               ))
 #+end_src
 ***** End of use-package
@@ -4789,6 +4787,14 @@ I actually use this part for minor correction. The tags are done when abcde is c
         (fci-mode 1))))
 #+end_src
 
+*** Paging
+#+begin_src emacs-lisp
+(use-package page-break-lines
+  :ensure t
+  :diminish page-break-lines-mode
+  :config
+  (global-page-break-lines-mode t))
+#+end_src
 *** Parenthesis
 **** Smart parents
 #+begin_src emacs-lisp
