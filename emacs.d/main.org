@@ -768,16 +768,23 @@ We just load irony add support for c derivative mode.
 #+begin_src emacs-lisp
   (use-package irony
     :ensure t
-    :config
+    :defer t
+    :hook ((c-mode . irony-mode)
+           (objc-mode . irony-mode)
+           (c++-mode .irony-mode)))
+#+end_src
+*** Checking/documentation
+#+begin_src emacs-lisp
+  (use-package flycheck-irony
+    :ensure t
+    :after (flycheck irony)
+    :defer t)
 
-    ;; Sub packages
-    (use-package flycheck-irony :ensure t)
-    (use-package irony-eldoc :ensure t)
+  (use-package irony-eldoc
+    :ensure t
+    :after (irony)
+    :defer t)
 
-    ;; Adding irony support so some specific modes
-    (add-hook 'c-mode-hook 'irony-mode)
-    (add-hook 'objc-mode-hook 'irony-mode)
-    (add-hook 'c++-mode-hook 'irony-mode))
 #+end_src
 *** Completion
 For the completion, we are relying on company and irony. The configuration consists of add irony
@@ -825,41 +832,28 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package config-general-mode
     :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.conf$" . config-general-mode))
-    (add-to-list 'auto-mode-alist '("\\.*rc$"  . config-general-mode)))
+    :mode ("\\.conf$" "\\.*rc$"))
 #+end_src
 *** Authinfo
 #+begin_src emacs-lisp
   (use-package authinfo-mode
     :ensure quelpa
     :quelpa (authinfo-mode :repo "seblemaguer/authinfo-mode" :fetcher github)
-    :config
-    (add-to-list 'auto-mode-alist '("\\.authinfo\\(?:\\.gpg\\)\\'" . authinfo-mode)))
+    :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . authinfo-mode))
 #+end_src
 *** Apache
-
 #+begin_src emacs-lisp
   (use-package apache-mode
     :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.htaccess\\'"                   . apache-mode))
-    (add-to-list 'auto-mode-alist '("httpd\\.conf\\'"                  . apache-mode))
-    (add-to-list 'auto-mode-alist '("srm\\.conf\\'"                    . apache-mode))
-    (add-to-list 'auto-mode-alist '("access\\.conf\\'"                 . apache-mode))
-    (add-to-list 'auto-mode-alist '("sites-\\(available\\|enabled\\)/" . apache-mode)))
+    :mode ("\\.htaccess\\'" "httpd\\.conf\\'" "srm\\.conf\\'"
+           "access\\.conf\\'" "sites-\\(available\\|enabled\\)/"))
 #+end_src
 *** SSH configuration
 #+begin_src emacs-lisp
   (use-package ssh-config-mode
     :ensure t
-    :init
-    (add-to-list 'auto-mode-alist '("/\\.ssh/config\\'"     . ssh-config-mode))
-    (add-to-list 'auto-mode-alist '("/system/ssh\\'"        . ssh-config-mode))
-    (add-to-list 'auto-mode-alist '("/sshd?_config\\'"      . ssh-config-mode))
-    (add-to-list 'auto-mode-alist '("/known_hosts\\'"       . ssh-known-hosts-mode))
-    (add-to-list 'auto-mode-alist '("/authorized_keys2?\\'" . ssh-authorized-keys-mode))
-    (add-hook 'ssh-config-mode-hook 'turn-on-font-lock)
+    :mode ("/\\.ssh/config\\'" "/system/ssh\\'" "/sshd?_config\\'" "/known_hosts\\'" "/authorized_keys2?\\'")
+    :hook (ssh-config-mode . turn-on-font-lock)
 
     :config
     (autoload 'ssh-config-mode "ssh-config-mode" t))
@@ -868,30 +862,37 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package logview
     :ensure t
-    :config
-    (add-to-list 'auto-mode-alist '("syslog\\(?:\\.[0-9]+\\)"     . logview-mode))
-    (add-to-list 'auto-mode-alist '("\\.log\\(?:\\.[0-9]+\\)?\\'" . logview-mode)))
+    :mode ("syslog\\(?:\\.[0-9]+\\)" "\\.log\\(?:\\.[0-9]+\\)?\\'"))
 #+end_src
 *** yaml
 #+begin_src emacs-lisp
-(use-package yaml-mode :ensure t)
-(use-package yaml-tomato :ensure t)
+  (use-package yaml-mode
+    :ensure t
+    :mode (".yaml$"))
+
+  (use-package yaml-tomato
+    :ensure t)
 #+end_src
 *** vimrc
 #+begin_src emacs-lisp
-  (use-package vimrc-mode
-    :ensure t)
+    (use-package vimrc-mode
+      :ensure t
+      :mode ("^\\.vimrc\\'"))
 #+end_src
 ** CSS
 #+BEGIN_SRC emacs-lisp
-(autoload 'scss-mode "scss-mode")
-(setq scss-compile-at-save 'nil)
-(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
+  (use-package scss
+    :defer t
+    :mode ("\\.scss\\'")
+    :config
+    (autoload 'scss-mode "scss-mode")
+    (setq scss-compile-at-save 'nil))
 #+END_SRC
 ** CSV
  #+begin_src emacs-lisp
    (use-package csv-mode
      :ensure t
+     :defer t
      :config
 
      ;; Define separators
@@ -899,27 +900,26 @@ Config-general-mode is applied for all unix configuration files.
 
 
      ;; Subpackages
-   (use-package csv-nav :ensure t :disabled)
+   (use-package csv-nav
+     :ensure t
+     :disabled t)
  #+end_src
 ** Cue
 #+begin_src emacs-lisp
   (use-package cue-mode
     :ensure quelpa
     :quelpa (cue-mode :repo "seblemaguer/cue-mode" :fetcher github)
-    :config
-    (add-to-list 'auto-mode-alist '("\\.cue$" . cue-mode)))
+    :mode ("\\.cue$"))
 
 #+end_src
 ** Graphviz
 #+begin_src emacs-lisp
-
   (use-package graphviz-dot-mode
     :ensure t
     :init
     (defvar default-tab-width nil)
 
-    :config
-    (add-to-list 'auto-mode-alist '("\\.dot\\'" . graphviz-dot-mode)))
+    :mode ("\\.dot\\'"))
 #+end_src
 
 ** Java based
@@ -961,134 +961,128 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package groovy-mode
     :ensure t
+    :mode ("\.groovy$" "\.gradle$")
+    :interpreter ("gradle" "groovy")
     :config
-
-    ;; Subpackages
-    (use-package groovy-imports :ensure t)
-
     (autoload 'run-groovy "inf-groovy" "Run an inferior Groovy process")
     (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode")
 
     ;; Some keys for
     (add-hook 'groovy-mode-hook
               '(lambda ()
-                 (inf-groovy-keys)))
+                 (inf-groovy-keys))))
 
-
-    ;; Association
-    (add-to-list 'auto-mode-alist '("\.groovy$" . groovy-mode))
-    (add-to-list 'auto-mode-alist '("\.gradle$" . groovy-mode))
-    (add-to-list 'interpreter-mode-alist '("gradle" . groovy-mode))
-
-    ;; Define groovy mode for interpreter
-    (add-to-list 'interpreter-mode-alist '("groovy" . groovy-mode)))
+  ;; Subpackages
+  (use-package groovy-imports :ensure t)
 #+end_src
 **** Gradle specificities
 #+begin_src emacs-lisp
   (use-package flycheck-gradle
     :ensure t
-    )
+    :defer t
+    :after (gradle flycheck))
 #+end_src
 ** Latex
 *** Global
 #+begin_src emacs-lisp
-    (use-package tex-site
-      :ensure auctex
-      :after tex
-      :after latex
-      :config
+  (use-package tex-site
+    :ensure auctex
+    :defer t
+    :after (tex latex)
+    :config
 
-      ;; Spelling
-      (setq ispell-tex-skip-alists
-            '((
-               ;;("%\\[" . "%\\]") ; AMStex block comment...
-               ;; All the standard LaTeX keywords from L. Lamport's guide:
-               ;; \cite, \hspace, \hspace*, \hyphenation, \include, \includeonly
-               ;; \input, \label, \nocite, \rule (in ispell - rest included here)
-               ("\\\\addcontentsline"              ispell-tex-arg-end 2)
-               ("\\\\add\\(tocontents\\|vspace\\)" ispell-tex-arg-end)
-               ("\\\\\\([aA]lph\\|arabic\\)"   ispell-tex-arg-end)
-               ("\\\\author"                         ispell-tex-arg-end)
-               ;; New regexps here --- kjh
-               ("\\\\\\(text\\|paren\\)cite" ispell-tex-arg-end)
-               ("\\\\cite\\(t\\|p\\|year\\|yearpar\\)" ispell-tex-arg-end)
-               ("\\\\bibliographystyle"                ispell-tex-arg-end)
-               ("\\\\makebox"                  ispell-tex-arg-end 0)
-               ("\\\\e?psfig"                  ispell-tex-arg-end)
-               ("\\\\document\\(class\\|style\\)" .
-                "\\\\begin[ \t\n]*{[ \t\n]*document[ \t\n]*}"))
-              (
-               ;; delimited with \begin.  In ispell: displaymath, eqnarray,
-               ;; eqnarray*, equation, minipage, picture, tabular,
-               ;; tabular* (ispell)
-               ("\\(figure\\|table\\)\\*?"     ispell-tex-arg-end 0)
-               ("\\(equation\\|eqnarray\\)\\*?"     ispell-tex-arg-end 0)
-               ("list"                                 ispell-tex-arg-end 2)
-               ("program" . "\\\\end[ \t\n]*{[ \t\n]*program[ \t\n]*}")
-               ("verbatim\\*?"."\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}")
-               ("lstlisting\\*?"."\\\\end[ \t\n]*{[ \t\n]*lstlisting\\*?[ \t\n]*}"))))
+    ;; Spelling
+    (setq ispell-tex-skip-alists
+          '((
+             ;;("%\\[" . "%\\]") ; AMStex block comment...
+             ;; All the standard LaTeX keywords from L. Lamport's guide:
+             ;; \cite, \hspace, \hspace*, \hyphenation, \include, \includeonly
+             ;; \input, \label, \nocite, \rule (in ispell - rest included here)
+             ("\\\\addcontentsline"              ispell-tex-arg-end 2)
+             ("\\\\add\\(tocontents\\|vspace\\)" ispell-tex-arg-end)
+             ("\\\\\\([aA]lph\\|arabic\\)"   ispell-tex-arg-end)
+             ("\\\\author"                         ispell-tex-arg-end)
+             ;; New regexps here --- kjh
+             ("\\\\\\(text\\|paren\\)cite" ispell-tex-arg-end)
+             ("\\\\cite\\(t\\|p\\|year\\|yearpar\\)" ispell-tex-arg-end)
+             ("\\\\bibliographystyle"                ispell-tex-arg-end)
+             ("\\\\makebox"                  ispell-tex-arg-end 0)
+             ("\\\\e?psfig"                  ispell-tex-arg-end)
+             ("\\\\document\\(class\\|style\\)" .
+              "\\\\begin[ \t\n]*{[ \t\n]*document[ \t\n]*}"))
+            (
+             ;; delimited with \begin.  In ispell: displaymath, eqnarray,
+             ;; eqnarray*, equation, minipage, picture, tabular,
+             ;; tabular* (ispell)
+             ("\\(figure\\|table\\)\\*?"     ispell-tex-arg-end 0)
+             ("\\(equation\\|eqnarray\\)\\*?"     ispell-tex-arg-end 0)
+             ("list"                                 ispell-tex-arg-end 2)
+             ("program" . "\\\\end[ \t\n]*{[ \t\n]*program[ \t\n]*}")
+             ("verbatim\\*?"."\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}")
+             ("lstlisting\\*?"."\\\\end[ \t\n]*{[ \t\n]*lstlisting\\*?[ \t\n]*}"))))
 
-      ;; Pdf activated by default
-      (TeX-global-PDF-mode 1)
+    ;; Pdf activated by default
+    (TeX-global-PDF-mode 1)
 
-      ;; Diverse
-      (setq-default TeX-master nil)
-      (setq TeX-parse-self t
-            TeX-auto-save t)
+    ;; Diverse
+    (setq-default TeX-master nil)
+    (setq TeX-parse-self t
+          TeX-auto-save t)
 
-      ;; Filling
-      (add-hook 'LaTeX-mode-hook 'turn-off-auto-fill)
-      (add-hook 'LaTeX-mode-hook
-                (lambda ()
-                  (TeX-fold-mode t)))
+    ;; Filling
+    (add-hook 'LaTeX-mode-hook 'turn-off-auto-fill)
+    (add-hook 'LaTeX-mode-hook
+              (lambda ()
+                (TeX-fold-mode t)))
 
-      ;; Minor helpers for comment and quotes
-      (add-to-list 'LaTeX-verbatim-environments "comment")
-      (setq TeX-open-quote "\enquote{"
-            TeX-close-quote "}")
+    ;; Minor helpers for comment and quotes
+    (add-to-list 'LaTeX-verbatim-environments "comment")
+    (setq TeX-open-quote "\enquote{"
+          TeX-close-quote "}")
 
-      ;; Indentation
-      (setq LaTeX-indent-level 4
-            LaTeX-item-indent 0
-            TeX-brace-indent-level 4
-            TeX-newline-function 'newline-and-indent)
-
-
-      ;; Some usefull hooks
-      (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-      (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-      (add-hook 'LaTeX-mode-hook 'outline-minor-mode)
-
-      (defadvice LaTeX-fill-region-as-paragraph (around LaTeX-sentence-filling)
-        "Start each sentence on a new line."
-        (let ((from (ad-get-arg 0))
-              (to-marker (set-marker (make-marker) (ad-get-arg 1)))
-              tmp-end)
-          (while (< from (marker-position to-marker))
-            (forward-sentence)
-            ;; might have gone beyond to-marker --- use whichever is smaller:
-            (ad-set-arg 1 (setq tmp-end (min (point) (marker-position to-marker))))
-            ad-do-it
-            (ad-set-arg 0 (setq from (point)))
-            (unless (or
-                     (bolp)
-                     (looking-at "\\s *$"))
-              (LaTeX-newline)))
-          (set-marker to-marker nil)))
-      (ad-activate 'LaTeX-fill-region-as-paragraph)
+    ;; Indentation
+    (setq LaTeX-indent-level 4
+          LaTeX-item-indent 0
+          TeX-brace-indent-level 4
+          TeX-newline-function 'newline-and-indent)
 
 
+    ;; Some usefull hooks
+    (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+    (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+    (add-hook 'LaTeX-mode-hook 'outline-minor-mode)
 
-      ;; PDF/Tex correlation
-      (setq TeX-source-correlate-method 'synctex)
-      (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+    (defadvice LaTeX-fill-region-as-paragraph (around LaTeX-sentence-filling)
+      "Start each sentence on a new line."
+      (let ((from (ad-get-arg 0))
+            (to-marker (set-marker (make-marker) (ad-get-arg 1)))
+            tmp-end)
+        (while (< from (marker-position to-marker))
+          (forward-sentence)
+          ;; might have gone beyond to-marker --- use whichever is smaller:
+          (ad-set-arg 1 (setq tmp-end (min (point) (marker-position to-marker))))
+          ad-do-it
+          (ad-set-arg 0 (setq from (point)))
+          (unless (or
+                   (bolp)
+                   (looking-at "\\s *$"))
+            (LaTeX-newline)))
+        (set-marker to-marker nil)))
+    (ad-activate 'LaTeX-fill-region-as-paragraph)
 
-      ;; Keys
-      (define-key LaTeX-mode-map (kbd "C-c C-=") 'align-current))
+
+
+    ;; PDF/Tex correlation
+    (setq TeX-source-correlate-method 'synctex)
+    (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+
+    ;; Keys
+    (define-key LaTeX-mode-map (kbd "C-c C-=") 'align-current))
 #+end_src
 *** Bibtex
 #+begin_src emacs-lisp
   (use-package bibtex
+    :defer t
     :config
     (defun bibtex-generate-autokey ()
       (let* ((bibtex-autokey-names nil)
@@ -1128,25 +1122,28 @@ Config-general-mode is applied for all unix configuration files.
 
   (use-package company-auctex
     :ensure t
-    :config
+    :after company
+    :init
     (company-auctex-init))
 
 
   (use-package company-bibtex
     :ensure t
-    :config
+    :after company
+    :init
     (add-to-list 'company-backends 'company-bibtex))
 
   (use-package company-reftex
     :ensure t
-    :config
+    :after company
+    :init
     (add-to-list 'company-backends 'company-reftex-labels)
-    (add-to-list 'company-backends 'company-reftex-citations)
-    )
+    (add-to-list 'company-backends 'company-reftex-citations))
 
   (use-package company-math
     :ensure t
-    :config
+    :after company
+    :init
     ;; global activation of the unicode symbol completion
     (add-to-list 'company-backends 'company-math-symbols-unicode))
 #+end_src
@@ -1243,15 +1240,14 @@ Config-general-mode is applied for all unix configuration files.
  #+begin_src emacs-lisp
    (use-package ledger-mode
      :ensure t
-     :config
+     :defer t
+     :mode ("\\.ledger$"))
 
-     ;; Subpackages
-     (use-package flycheck-ledger :ensure t)
-
-     ;; Associate file
-     (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode)))
+   (use-package flycheck-ledger
+     :ensure t
+     :after (flycheck ledger-mode))
  #+end_src
-** (E)Lisp
+** TODO (E)Lisp
 #+begin_src emacs-lisp
   ;; Disable checking doc
   (use-package flycheck
@@ -1275,7 +1271,6 @@ Config-general-mode is applied for all unix configuration files.
     :ensure t)
 #+end_src
 ** Matlab
-*** Global
 #+begin_src emacs-lisp
   (use-package matlab-load
     :ensure matlab-mode
@@ -1291,13 +1286,13 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package markdown-mode
     :ensure t
-    :config
+    :mode ("\\.md$"))
 
-    ;; Subpackage
-    (use-package markdown-mode+ :ensure t)
 
-    ;; Subpackage
-    (add-to-list 'auto-mode-alist '("\\.md$" . markdown-mode)))
+  (use-package markdown-mode+
+    :ensure t
+    :after markdown-mode
+    :defer t)
 #+end_src
 *** Syntax highlight in block
 #+begin_src emacs-lisp
@@ -1449,10 +1444,7 @@ Config-general-mode is applied for all unix configuration files.
 ** Praat
 #+BEGIN_SRC emacs-lisp
   (use-package praat-mode
-    :config
-    (add-to-list 'auto-mode-alist '("\\.praat" . praat-mode))
-    (add-to-list 'auto-mode-alist '("\\.[tT][Gg]" . praat-mode)))
-
+    :mode ("\\.praat" "\\.[tT][Gg]"))
 #+END_SRC
 ** Python
 *** Global configuration
@@ -1472,27 +1464,27 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package anaconda-mode
     :ensure t
-    :init
-    (add-hook 'python-mode-hook 'anaconda-mode)
-    (add-hook 'python-mode-hook 'anaconda-eldoc-mode))
+    :after python
+    :hook
+    (python-mode . anaconda-mode)
+    (python-mode . anaconda-eldoc-mode))
 
   (use-package company-anaconda
     :ensure t
-    :after company
-    :after anaconda
-    :config
+    :after (company anaconda)
+    :init
     (add-to-list 'company-backends '(company-anaconda :with company-capf)))
 #+end_src
 *** Pipenv
 #+begin_src emacs-lisp
   (use-package pipenv
     :ensure t
+    :hook
+    ((python-mode . pipenv-mode))
+
     :init
     (setq pipenv-projectile-after-switch-function
-          #'pipenv-projectile-after-switch-extended)
-
-    :config
-    (add-hook 'python-mode-hook #'pipenv-mode))
+          #'pipenv-projectile-after-switch-extended))
 #+end_src
 *** COMMENT JEDI configuration
 **** Global part
@@ -1567,14 +1559,23 @@ Config-general-mode is applied for all unix configuration files.
 *** ESS configuration
 #+begin_src emacs-lisp
   (use-package ess
-    :ensure t
-    :config
+    :ensure t)
 
-    ;; Subpackage
-    (use-package ess-R-data-view :ensure t)
-    (use-package ess-smart-equals :ensure t)
-    (use-package ess-smart-underscore :ensure t)
-    (use-package ess-view :ensure t))
+  (use-package ess-smart-equals
+    :ensure t
+    :after ess)
+
+  (use-package ess-smart-underscore
+    :ensure t
+    :after ess)
+
+  (use-package ess-view
+    :ensure t
+    :after ess)
+
+  (use-package ess-R-data-view
+    :ensure t
+    :after ess)
 #+end_src
 *** Support drag & drop
 #+begin_src emacs-lisp
@@ -1588,8 +1589,7 @@ Config-general-mode is applied for all unix configuration files.
   (use-package company-statistics
     :ensure t
     :after company
-    :init
-    (add-hook 'after-init-hook 'company-statistics-mode))
+    :hook (after-init . company-statistics-mode))
 #+end_src
 ** Shell
 #+begin_src emacs-lisp
@@ -1603,76 +1603,68 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package plantuml-mode
     :ensure t
+    :after org
+    :mode ("\\.plantuml\\'")
     :config
-    (setq plantuml-jar-path "/opt/plantuml/plantuml.jar")
-    ;; Enable plantuml-mode for PlantUML files
-    (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode)))
+    (setq plantuml-jar-path "/opt/plantuml/plantuml.jar"
+          org-plantuml-jar-path plantuml-jar-path))
 #+end_src
 ** Web configuration
 *** Global web configuration
 #+begin_src emacs-lisp
-  (use-package web-mode
-    :ensure t
-    :defer t
+    (use-package web-mode
+      :ensure t
+      :mode
+      ("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.[agj]sp\\'" "\\.as[cp]x\\'"
+      "\\.erb\\'" "\\.mustache\\'" "\\.djhtml\\'" "\\.html?\\'")
 
-    :init
-    (setq web-mode-markup-indent-offset 2
-          web-mode-code-indent-offset 2
-          web-mode-css-indent-offset 2
+      :init
+      (setq web-mode-markup-indent-offset 2
+            web-mode-code-indent-offset 2
+            web-mode-css-indent-offset 2
 
-          web-mode-enable-auto-pairing t
-          web-mode-enable-auto-expanding t
-          web-mode-enable-css-colorization t)
+            web-mode-enable-auto-pairing t
+            web-mode-enable-auto-expanding t
+            web-mode-enable-css-colorization t)
 
-    :config
+      :config
+      ;; Template
+      (setq web-mode-engines-alist
+            '(("php"    . "\\.phtml\\'")
+              ("blade"  . "\\.blade\\."))
+            )
 
-    ;; Association
-    (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+      )
 
-    ;; Template
-    (setq web-mode-engines-alist
-          '(("php"    . "\\.phtml\\'")
-            ("blade"  . "\\.blade\\."))
-          )
+    (use-package web-beautify
+      :ensure t
+      :commands (web-beautify-css
+                 web-beautify-css-buffer
+                 web-beautify-html
+                 web-beautify-html-buffer
+                 web-beautify-js
+                 web-beautify-js-buffer))
 
-    )
-
-  (use-package web-beautify
-    :ensure t
-    :commands (web-beautify-css
-               web-beautify-css-buffer
-               web-beautify-html
-               web-beautify-html-buffer
-               web-beautify-js
-               web-beautify-js-buffer))
-
-  (use-package web-completion-data :ensure t)
-  (use-package web-mode-edit-element :ensure t)
+    (use-package web-completion-data :ensure t)
+    (use-package web-mode-edit-element :ensure t)
 #+end_src
 *** EMMET
 #+begin_src emacs-lisp
   (use-package emmet-mode
     :ensure t
-    :defer t
     :diminish (emmet-mode . "ε")
     :bind* (("C-)" . emmet-next-edit-point)
             ("C-(" . emmet-prev-edit-point))
     :commands (emmet-mode
                emmet-next-edit-point
                emmet-prev-edit-point)
+    :hook
+    ((sgml-mode-hook . emmet-mode)
+     (html-mode . emmet-mode)
+     (web-mode . emmet-mode))
     :init
     (setq emmet-indentation 2
-          emmet-move-cursor-between-quotes t)
-    (add-hook 'sgml-mode-hook 'emmet-mode)
-    (add-hook 'html-mode-hook 'emmet-mode)
-    (add-hook 'web-mode-hook 'emmet-mode))
+          emmet-move-cursor-between-quotes t))
 #+end_src
 *** Completion
 #+begin_src emacs-lisp
@@ -1687,20 +1679,21 @@ Config-general-mode is applied for all unix configuration files.
 #+BEGIN_SRC emacs-lisp
   (use-package js2-mode
     :ensure t
+    :mode
+    ("\\.js\\'")
     :config
-
-    (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
     ;; Better imenu
     (add-hook 'js2-mode-hook #'js2-imenu-extras-mode))
 
   (use-package js2-refactor
     :ensure t
-    :after js2-mode
-    :after hydra
+    :after (js2-mode hydra)
+    :hook
+    (js2-mode . js2-refactor-mode)
+
     :config
 
-    (add-hook 'js2-mode-hook #'js2-refactor-mode)
     (js2r-add-keybindings-with-prefix "C-c C-r")
     (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
 
@@ -1779,15 +1772,13 @@ Config-general-mode is applied for all unix configuration files.
 
   (use-package company-tern
     :ensure t
-    :after company
-    :after tern
-    :after xref-js2
-    :config
+    :after (company tern xref-js2)
+    :hook
+    (js2-mode . tern-mode)
+    (js2-mode . company-mode)
 
+    :config
     (add-to-list 'company-backends 'company-tern)
-    (add-hook 'js2-mode-hook (lambda ()
-                               (tern-mode)
-                               (company-mode)))
 
     ;; Disable completion keybindings, as we use xref-js2 instead
     (define-key tern-mode-keymap (kbd "M-.") nil)
@@ -1802,10 +1793,8 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package json-mode
     :ensure t
-    :config
-
-    ;; (autoload #'espresso-mode "espresso" "Start espresso-mode" t)
-    (add-to-list 'auto-mode-alist '("\\.json$" . json-mode)))
+    :mode
+    ("\\.json$"))
 
 
   ;; Subpackage
@@ -2192,7 +2181,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (setq org-list-allow-alphabetical t ;; FIXME quoi qu'est ce?
         org-highlight-latex-and-related '(latex)
         org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
-        org-plantuml-jar-path plantuml-jar-path ;; FIXME: specific to archlinux
         org-babel-results-keyword "results" ;; Display images directly in the buffer
         org-confirm-babel-evaluate nil
         org-startup-with-inline-images t)
