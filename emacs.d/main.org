@@ -525,6 +525,8 @@ organize read papers or "to read" papers. This is mainly based on https://codear
   (use-package org-ref
     :after org
     :ensure t
+    :chords
+    (("uu"  . org-ref-cite-hydra/body))
     :init
     (setq org-ref-completion-library 'org-ref-ivy-cite
           org-ref-notes-directory "~/Dropbox/org/work/biblio"
@@ -533,7 +535,6 @@ organize read papers or "to read" papers. This is mainly based on https://codear
           org-ref-pdf-directory "~/Dropbox/org/work/biblio/lib/")
 
     :config
-    (key-chord-define-global "uu" 'org-ref-cite-hydra/body)
     (add-hook 'org-export-before-parsing-hook 'orcp-citeproc))
 
   (use-package interleave
