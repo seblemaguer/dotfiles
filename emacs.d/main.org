@@ -293,18 +293,32 @@ leads to this configuration
 
 ** Backup files
 *** Global backup configuration
-This the global backup configuration. At one point we should add the backup navigation (something
-coming from: https://github.com/chadbraunduin/backups-mode )
+This the global backup configuration. For that I adapted a little bit the wonderful snapshot-timemachine package.
 #+begin_src emacs-lisp
   (use-package snapshot-timemachine
     :ensure t
     :init
+
+    ;; Default Backup directory
     (defvar backup-directory "~/.emacs.d/backups/")
+    (setq backup-directory-alist `((".*" . ,backup-directory)))
 
     (when (not (file-exists-p backup-directory))
       (make-directory backup-directory t))
 
+    ;; Auto-save
+    (defvar auto-save-directory "~/.emacs.d/auto-save/")
+    (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
+
+    (when (not (file-exists-p auto-save-directory))
+      (make-directory auto-save-directory t))
+
+    ;; Tramp backup
     (defvar tramp-backup-directory "~/.emacs.d/tramp-backups/")
+    (setq tramp-backup-directory-alist `((".*" . ,tramp-backup-directory)))
+
+    (when (not (file-exists-p tramp-backup-directory))
+      (make-directory tramp-backup-directory t))
 
     (setq make-backup-files t               ; backup of a file the first time it is saved.
           backup-by-copying t               ; don't clobber symlinks
