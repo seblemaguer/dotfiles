@@ -1977,7 +1977,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 *** Global
 #+begin_src emacs-lisp
   (use-package org-agenda
-    :after hydra
+    :after (hydra org)
     :config
 
     ;; Todo part
@@ -2122,6 +2122,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package org-super-agenda
     :ensure t
+    :after (org org-agenda)
     :config
     (org-super-agenda-mode)
     (setq org-super-agenda-groups
@@ -2295,12 +2296,11 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 ** Exporting
 *** HTML
 #+begin_src emacs-lisp
-
   (use-package htmlize :ensure t)
 
   (use-package ox-html
     :after ox
-    :requires (:all htmlize)
+    :requires (htmlize)
     :config
     (setq org-html-xml-declaration '(("html" . "")
                                    ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
@@ -2327,16 +2327,15 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 
     (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/vivaldi-stable %s")))
 
-
-
   (use-package ox-reveal
     :ensure t
-    :requires (:all ox-html htmlize))
+    :requires (ox-html htmlize))
 #+end_src
 *** LaTeX
 #+begin_src emacs-lisp
   (use-package ox-latex
     :after ox
+    :defer t
     :config
     (setq org-latex-listings t
           org-export-with-LaTeX-fragments t
@@ -2381,7 +2380,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+end_src
 ** COMMENT Async
 #+begin_src emacs-lisp
-
   ;; Setup the part for asynchronous
   (setq org-export-in-background t
         org-export-async-debug t
