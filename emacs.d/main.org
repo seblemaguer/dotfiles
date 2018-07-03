@@ -4877,7 +4877,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
       '("vob" "VOB" "mkv" "MKV" "mpe" "mpg" "MPG" "mp4" "MP4" "ts" "TS" "m2ts"
         "M2TS" "avi" "AVI" "mov" "MOV" "wmv" "asf" "m2v" "m4v" "mpeg" "MPEG" "tp")
       "Dired Video files extensions")
-    (dired-rainbow-define video "#B3CCFF" dired-video-files-extensions)
+    (dired-rainbow-define video "#455AFC" dired-video-files-extensions)
 
     (dired-rainbow-define html "#4e9a06" ("htm" "html" "xhtml"))
     (dired-rainbow-define xml "DarkGreen" ("xml" "xsd" "xsl" "xslt" "wsdl"))
@@ -4885,8 +4885,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (dired-rainbow-define document "#ce5c00" ("doc" "docx" "odt" "pdb" "pdf" "ps" "rtf" "djvu"))
     (dired-rainbow-define image "#ff4b4b" ("jpg" "png" "jpeg" "gif"))
 
-    (dired-rainbow-define log "#c17d11" ("log"))
-    (dired-rainbow-define sourcefile "#fcaf3e" ("py" "c" "cc" "h" "java" "pl" "rb"))
+    (dired-rainbow-define sourcefile "#3F82FD" ("el" "groovy" "gradle" "py" "c" "cc" "h" "java" "pl" "rb"))
 
     (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
     (dired-rainbow-define compressed "#ad7fa8" ("zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
@@ -4895,7 +4894,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
 
     (dired-rainbow-define-chmod executable-unix "Green" "-.*x.*")
 
-                                          ; boring regexp due to lack of imagination
     (dired-rainbow-define log (:inherit default :italic t) ".*\\.log")
     )
 #+end_src
