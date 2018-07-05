@@ -2759,39 +2759,56 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 **** Diff
 #+begin_src emacs-lisp
-  (use-package magit-tbdiff :ensure t :after magit)
+  (use-package magit-tbdiff
+    :ensure t
+    :after magit)
 #+end_src
 **** Todo
 #+begin_src emacs-lisp
-(use-package magit-org-todos
-  :ensure t
-  :config
-  (magit-org-todos-autoinsert))
+  (use-package magit-org-todos
+    :ensure t
+    :after magit
+    :config
+    (magit-org-todos-autoinsert))
+
+  (use-package magit-todos
+    :ensure t
+    :after magit
+    :config
+    (magit-todos-mode))
 #+end_src
 *** Git ignore
 #+begin_src emacs-lisp
-(use-package gitignore-mode :ensure t)
-(use-package helm-gitignore :ensure t)
+  (use-package gitignore-mode
+    :ensure t)
+
+  (use-package helm-gitignore
+    :ensure t)
 #+end_src
 *** Config edition
 #+begin_src emacs-lisp
   (use-package gitconfig-mode
     :ensure t
-    :config
-    (add-to-list 'auto-mode-alist
-		 '("/\.gitconfig\'"    . gitconfig-mode))
-    (add-to-list 'auto-mode-alist
-		 '("/vcs/gitconfig\'"    . gitconfig-mode)))
+    :defer t
+    :mode
+    ("/\.gitconfig\'"    . gitconfig-mode)
+    ("/vcs/gitconfig\'"    . gitconfig-mode))
 #+end_src
 *** Helpers for edition
 #+begin_src emacs-lisp
-  (use-package git-commit :ensure t)
-  (use-package gitattributes-mode :ensure t)
+  (use-package git-commit
+    :ensure t
+    :defer t)
+
+  (use-package gitattributes-mode
+    :ensure t
+    :defer t)
 #+end_src
 *** Git prefix
 #+begin_src emacs-lisp
   (use-package git-msg-prefix
     :ensure t
+    :defer t
     :config
     (setq git-msg-prefix-log-flags " --since='1 week ago' "
           git-msg-prefix-regex "^\\([^:]*: \\)"
