@@ -6,3 +6,6 @@ system/htoprc
 
 # Latex
 texmf/tex/latex/auto/
+
+# Ipython
+ipython/profile_default/db/
