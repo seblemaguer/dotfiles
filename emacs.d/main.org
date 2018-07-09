@@ -1573,6 +1573,7 @@ Config-general-mode is applied for all unix configuration files.
 
   (use-package ess-smart-equals
     :ensure t
+    :disabled t %% FIXME: problem at loading: (void-variable ess-S-assign) !
     :after ess)
 
   (use-package ess-smart-underscore
