@@ -1550,6 +1550,7 @@ Config-general-mode is applied for all unix configuration files.
     :ensure t
     :after flycheck
     :init
+    (setq-default flycheck-flake8-maximum-line-length 150)
     (add-hook 'elpy-mode-hook 'flycheck-mode)
 
     :config
