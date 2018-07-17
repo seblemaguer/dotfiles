@@ -293,11 +293,8 @@ leads to this configuration
     (add-to-list 'recentf-exclude (format "%s/Calendars/.*" (getenv "HOME")))
 
     ;; Maildir
-    (add-to-list 'recentf-exclude (format "%s/maildir.*" (getenv "HOME")))
-
-    )
+    (add-to-list 'recentf-exclude (format "%s/maildir.*" (getenv "HOME"))))
 #+end_src
-
 ** Backup files
 *** Global backup configuration
 This the global backup configuration. For that I adapted a little bit the wonderful snapshot-timemachine package.
@@ -1336,10 +1333,9 @@ Config-general-mode is applied for all unix configuration files.
                   (pdf-misc-size-indication-minor-mode)
                   (pdf-links-minor-mode)
                   (pdf-isearch-minor-mode)
-                  (nlinum-mode 0)
                   (cua-mode 0)
-                  )
-                )
+                  ))
+
       (add-to-list 'auto-mode-alist (cons "\\.pdf$" 'pdf-view-mode))
 
       ;; Keys
