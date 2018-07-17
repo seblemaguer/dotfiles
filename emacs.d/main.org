@@ -127,7 +127,8 @@ makes it configuration file proof.
 In order to have a better and more visual control of undoing, I use undo-tree.
 #+begin_src emacs-lisp
   (use-package undo-tree
-    :ensure t
+    :ensure quelpa
+    :quelpa (undo-tree :fetcher git :url "http://www.dr-qubit.org/git/undo-tree.git")
     :defer t
     :init
 
@@ -136,8 +137,7 @@ In order to have a better and more visual control of undoing, I use undo-tree.
           undo-tree-visualizer-timestamps t
           undo-tree-visualizer-diff t)
 
-    (global-undo-tree-mode)
-    )
+    (global-undo-tree-mode))
 #+end_src
 ** Minor-mode activation
 #+begin_src emacs-lisp
