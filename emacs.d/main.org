@@ -2650,7 +2650,8 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (setq projectile-keymap-prefix (kbd "C-x p"))
 
     ;; Activate globally
-    (projectile-global-mode))
+    (projectile-mode)
+)
 #+end_src
 ** Todos/projectile
 #+begin_src emacs-lisp
