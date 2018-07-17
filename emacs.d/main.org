@@ -2779,9 +2779,12 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
   (use-package magit-todos
     :ensure t
-    :after magit
+    :commands (magit-todos-mode)
+    :hook (magit-mode . magit-todos-mode)
     :config
-    (magit-todos-mode))
+    (setq magit-todos-recursive t
+          magit-todos-depth 100)
+    :custom (magit-todos-keywords (list "TODO" "FIXME")))
 #+end_src
 *** Git ignore
 #+begin_src emacs-lisp
