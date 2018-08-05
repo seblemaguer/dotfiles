@@ -22,11 +22,11 @@ else
     fi
 
     # Load Antigen
-    if [ ! -e ~/.antigen.zsh ]
+    if [ ! -e ~/.cache/antigen.zsh ]
     then
-        curl -L git.io/antigen > ~/.antigen.zsh
+        curl -L git.io/antigen > ~/.cache/antigen.zsh
     fi
-    source ~/.antigen.zsh
+    source ~/.cache/antigen.zsh
 
     # Load various lib files
     antigen use oh-my-zsh
