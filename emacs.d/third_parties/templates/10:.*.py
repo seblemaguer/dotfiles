@@ -83,5 +83,3 @@ if __name__ == '__main__':
         logging.error(str(e))
         traceback.print_exc(file=sys.stderr)
         sys.exit(-1)
-
-# `(file-name-nondirectory (buffer-file-name))` ends here
