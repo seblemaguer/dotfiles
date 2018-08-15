@@ -708,7 +708,7 @@ configuration here.
       (set-face-attribute 'company-scrollbar-fg nil :background "gray40"))
 
     ;; Default backends
-    (setq company-backends '((company-files) (company-elisp)))
+    (setq company-backends '((company-files)))
 
     ;; Activating globally
     (global-company-mode t))
@@ -799,13 +799,11 @@ into company backend.
 #+begin_src emacs-lisp
   (use-package company-irony
     :ensure t
-    :init
-    (add-to-list  'company-backends '(company-irony)))
+    :hook (irony-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-irony)))))
 
   (use-package company-irony-c-headers
     :ensure t
-    :init
-    (add-to-list  'company-backends '(company-irony-c-headers)))
+    :hook (irony-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-irony-c-headers)))))
 #+end_src
 *** Adapt compilation
 Sometimes, I don't want to have a makefile or any complicated project compilation. So I just use
@@ -1129,30 +1127,27 @@ Config-general-mode is applied for all unix configuration files.
 
   (use-package company-auctex
     :ensure t
-    :after company
-    :init
-    (company-auctex-init))
+    :hook
+    (latex-mode . (company-auctex-init)))
 
 
   (use-package company-bibtex
     :ensure t
-    :after company
-    :init
-    (add-to-list 'company-backends 'company-bibtex))
+    :hook
+    (latex-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-bibtex))))
+    (org-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-bibtex)))))
 
   (use-package company-reftex
     :ensure t
-    :after company
-    :init
-    (add-to-list 'company-backends 'company-reftex-labels)
-    (add-to-list 'company-backends 'company-reftex-citations))
+    :hook
+    (latex-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-reftex-labels company-reftex-citations))))
+    (org-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-reftex-labels company-reftex-citations)))))
 
   (use-package company-math
     :ensure t
-    :after company
-    :init
-    ;; global activation of the unicode symbol completion
-    (add-to-list 'company-backends 'company-math-symbols-unicode))
+    :hook
+    (latex-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-math-symbols-unicode))))
+    (org-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-math-symbols-unicode)))))
 #+end_src
 *** Compilation
 #+begin_src emacs-lisp
@@ -1477,9 +1472,7 @@ Config-general-mode is applied for all unix configuration files.
 
   (use-package company-anaconda
     :ensure t
-    :after (company anaconda)
-    :init
-    (add-to-list 'company-backends '(company-anaconda :with company-capf)))
+    :hook (python-mode . (lambda () (add-to-list (make-local-variable 'company-backends)'(company-anaconda :with company-capf)))))
 #+end_src
 *** Pipenv
 #+begin_src emacs-lisp
@@ -1603,9 +1596,10 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package company-shell
     :ensure t
-    :after company
-    :config
-    (add-to-list 'company-backends '(company-shell company-shell-env company-fish-shell)))
+    :hook
+    (eshell-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-shell company-shell-env company-fish-shell))))
+    (sh-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-shell company-shell-env company-fish-shell))))
+    )
 #+end_src
 ** PlantUML
 #+begin_src emacs-lisp
@@ -1678,9 +1672,7 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package company-web
     :ensure t
-    :after company
-    :config
-    (add-to-list 'company-backends '(company-web-html)))
+    :hook (web-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-web-html)))))
 #+end_src
 *** Javascript
 **** Global
