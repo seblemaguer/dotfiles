@@ -2418,7 +2418,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 The key configuration is mainly coming from https://github.com/jcf/emacs.d the rest is coming from http://www.modernemacs.com/post/custom-eshell/ with some adaptation
 #+begin_src emacs-lisp
   (use-package eshell
-    :after helm
     :init
     (add-hook 'eshell-mode-hook
               (lambda ()
@@ -2462,9 +2461,9 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
                  (magit-get-current-branch)
                  '(:foreground "red"))
 
-    (esh-section esh-python
-                 "\xe928"  ;  (python icon)
-                 pyvenv-virtual-env-name)
+    ;; (esh-section esh-python
+    ;;              "\xe928"  ;  (python icon)
+    ;;              pyvenv-virtual-env-name)
 
     (esh-section esh-clock
                  "\xf017"  ;  (clock icon)
@@ -2489,10 +2488,11 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 
           ;; Eshell prompt regexp and string. Unless you are varying the prompt by eg.
           ;; your login, these can be the same.
-          eshell-prompt-regexp "└─> "
+          eshell-prompt-regexp "[^└]└─> "
           eshell-prompt-string "└─> "
 
-          eshell-funcs (list esh-dir esh-git esh-python esh-clock esh-num) ;; Choose which eshell-funcs to enable
+          ;; eshell-funcs (list esh-dir esh-git esh-python esh-clock esh-num) ;; Choose which eshell-funcs to enable
+          eshell-funcs (list esh-dir esh-git  esh-clock esh-num) ;; Choose which eshell-funcs to enable
           eshell-prompt-function 'esh-prompt-func ;; Enable the new eshell prompt
           )
 
@@ -2540,10 +2540,12 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     )
 #+end_src
 ** Completion
+For now, it seems that auto suggest blocks company
 #+begin_src emacs-lisp
   (use-package esh-autosuggest
     :hook (eshell-mode . esh-autosuggest-mode)
-    :ensure t)
+    :ensure t
+    :disabled t)
 #+end_src
 ** Status in the fringe
 #+begin_src emacs-lisp
