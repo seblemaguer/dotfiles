@@ -2512,7 +2512,6 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
               'eshell-mode-some-config)
 
 
-
     ;; If I ever want my own eshell/foo commands overwrite real commands ...
     (setq eshell-prefer-lisp-functions t)
 
@@ -2596,8 +2595,8 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     :ensure quelpa
     :quelpa (gradle-mode :repo "seblemaguer/emacs-gradle-mode" :fetcher github)
     :config
-    (setq gradle-gradlew-executable "./gradlew")
-    (setq gradle-use-gradlew t)
+    (setq gradle-gradlew-executable "./gradlew"
+          gradle-use-gradlew t)
     (gradle-mode))
 #+end_src
 
@@ -2763,12 +2762,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 **** Todo
 #+begin_src emacs-lisp
-  (use-package magit-org-todos
-    :ensure t
-    :after magit
-    :config
-    (magit-org-todos-autoinsert))
-
   (use-package magit-todos
     :ensure t
     :commands (magit-todos-mode)
