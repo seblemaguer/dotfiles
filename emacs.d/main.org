@@ -1485,30 +1485,6 @@ Config-general-mode is applied for all unix configuration files.
     (setq pipenv-projectile-after-switch-function
           #'pipenv-projectile-after-switch-extended))
 #+end_src
-*** COMMENT JEDI configuration
-**** Global part
-#+begin_src emacs-lisp
-  (use-package jedi
-    :ensure t
-    :config
-
-    ;; subpackage
-    (use-package jedi-core :ensure t)
-    (use-package jedi-direx :ensure t)
-
-    (add-hook 'python-mode-hook 'jedi:setup)
-    (setq jedi:setup-keys t))
-#+end_src
-**** Auto completion
-#+begin_src emacs-lisp
-  (use-package company-jedi
-    :ensure t
-    :after company
-    :after jedi
-    :config
-    (add-to-list 'company-backends 'company-jedi)
-    (setq jedi:complete-on-dot t))
-#+end_src
 *** Interpreter configuration
 #+begin_src emacs-lisp
   (use-package ein
@@ -1537,24 +1513,6 @@ Config-general-mode is applied for all unix configuration files.
               (lambda ()
                 (sphinx-doc-mode t))))
 #+end_src
-*** Use elpy
-#+begin_src emacs-lisp
-  (use-package elpy
-    :ensure t
-    :after flycheck
-    :init
-    (setq-default flycheck-flake8-maximum-line-length 150)
-    (add-hook 'elpy-mode-hook 'flycheck-mode)
-
-    :config
-    (elpy-enable)
-    (setq python-shell-interpreter "ipython"
-          python-shell-interpreter-args "-i --simple-prompt"
-          elpy-modules (delq 'elpy-module-flymake elpy-modules))
-    )
-
-#+end_src
-
 ** R
 *** ESS configuration
 #+begin_src emacs-lisp
