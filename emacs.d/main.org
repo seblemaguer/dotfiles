@@ -567,7 +567,8 @@ couple prodigy (to start the process in emacs) and imapnotify to actually activa
 service. Internally, imapnotify is going to call emacsclient to notify the user about a new mail.
 #+begin_src emacs-lisp
   (use-package prodigy
-    :ensure t
+    :ensure quelpa
+    :quelpa (prodigy :fetcher github :repo "seblemaguer/prodigy.el" :branch "auto-start")
     :config
 
     (prodigy-define-service
@@ -614,6 +615,8 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
       :stop-signal 'sigterm
       :auto-start t
       :kill-process-buffer-on-stop t)
+
+      (prodigy-auto-start)
     )
 #+end_src
 *** System daemons
