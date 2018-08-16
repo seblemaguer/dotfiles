@@ -1168,8 +1168,6 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   ;; Completion
   (setq TeX-auto-global (format "%s/auctex/style" generated-basedir))
-  ;; (add-to-list 'TeX-style-path TeX-auto-global) ;; FIXME: what is this variable
-
 
   (use-package company-auctex
     :ensure t
@@ -1569,11 +1567,6 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package ess
     :ensure t)
-
-  (use-package ess-smart-equals
-    :ensure t
-    :disabled t %% FIXME: problem at loading: (void-variable ess-S-assign) !
-    :after ess)
 
   (use-package ess-smart-underscore
     :ensure t
@@ -2188,7 +2181,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+end_src
 ** Editing
 #+begin_src emacs-lisp
-  (setq org-list-allow-alphabetical t ;; FIXME quoi qu'est ce?
+  (setq org-list-allow-alphabetical t
         org-highlight-latex-and-related '(latex)
         org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
         org-babel-results-keyword "results" ;; Display images directly in the buffer
