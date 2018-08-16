@@ -672,8 +672,6 @@ Starting process in background is really nice to avoid being spammed. So let's m
   (use-package company-lsp
     :after  company
     :ensure t
-    :hook
-    (java-mode . (lambda () (push 'company-lsp company-backends)))
     :config
     (setq company-lsp-enable-snippet t
           company-lsp-cache-candidates t))
@@ -960,6 +958,7 @@ Config-general-mode is applied for all unix configuration files.
     :ensure t
     :requires (lsp-ui-flycheck lsp-ui-sideline)
     :hook
+    (java-mode . (lambda () (add-to-list (make-local-variable 'company-backends) 'company-lsp)))
     (java-mode . lsp-java-enable)
     (java-mode . flycheck-mode)
     (java-mode . (lambda () (lsp-ui-flycheck-enable t)))
