@@ -4055,8 +4055,8 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
             mail-host-address "coli.uni-saarland.de"
 
             ;; Debug part
-            smtpmail-debug-info t
-            smtpmail-debug-verbose t)
+            smtpmail-debug-info nil
+            smtpmail-debug-verbose nil)
       )
   #+end_src
 *** notmuch
