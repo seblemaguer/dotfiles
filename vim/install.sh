@@ -3,7 +3,7 @@
 # Linking !
 # rm -rf ~/.vimrc; ln -s $PWD/vimrc  ~/.vimrc
 
-if [ ! -e $HOME/.vim ]
+if [ ! -e $HOME/.vim/bundle ]
 then
     mkdir -p $HOME/.vim/bundle
 
