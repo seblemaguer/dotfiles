@@ -1531,6 +1531,11 @@ Config-general-mode is applied for all unix configuration files.
     (setq pipenv-projectile-after-switch-function
           #'pipenv-projectile-after-switch-extended))
 #+end_src
+*** virtual environment
+#+begin_src emacs-lisp
+  (use-package pyvenv
+          :ensure t)
+#+end_src
 *** Interpreter configuration
 #+begin_src emacs-lisp
   (use-package ein
@@ -2465,9 +2470,9 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
                  (magit-get-current-branch)
                  '(:foreground "red"))
 
-    ;; (esh-section esh-python
-    ;;              "\xe928"  ;  (python icon)
-    ;;              pyvenv-virtual-env-name)
+    (esh-section esh-python
+                 "\xe928"  ;  (python icon)
+                 pyvenv-virtual-env-name)
 
     (esh-section esh-clock
                  "\xf017"  ;  (clock icon)
@@ -2495,17 +2500,9 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
           eshell-prompt-regexp "[^└]└─> "
           eshell-prompt-string "└─> "
 
-          ;; eshell-funcs (list esh-dir esh-git esh-python esh-clock esh-num) ;; Choose which eshell-funcs to enable
-          eshell-funcs (list esh-dir esh-git  esh-clock esh-num) ;; Choose which eshell-funcs to enable
+          eshell-funcs (list esh-dir esh-git esh-python esh-clock esh-num) ;; Choose which eshell-funcs to enable
           eshell-prompt-function 'esh-prompt-func ;; Enable the new eshell prompt
           )
-
-    (defun pcomplete/sudo ()
-      (let ((prec (pcomplete-arg 'last -1)))
-        (cond ((string= "sudo" prec)
-               (while (pcomplete-here*
-                       (funcall pcomplete-command-completion-function)
-                       (pcomplete-arg 'last) t))))))
 
     (defun eshell-mode-some-config ()
       (define-key eshell-mode-map (kbd "M-p") 'helm-eshell-history)
@@ -5372,11 +5369,10 @@ I actually use this part for minor correction. The tags are done when abcde is c
            (name   (car (last (split-string parent "/" t)))))
       (split-window-vertically (- height))
       (other-window 1)
-      (eshell "new")
-      (rename-buffer (concat "*eshell: " name "*"))
-
-      (insert (concat "ls"))
-      (eshell-send-input)))
+      (if (get-buffer (concat "*eshell: " name "*"))
+          (switch-to-buffer (concat "*eshell: " name "*"))
+        (progn (eshell "new") (rename-buffer (concat "*eshell: " name "*"))))
+      ))
 
   (defhydra hydra-shell (:color teal :hint nil)
     "
