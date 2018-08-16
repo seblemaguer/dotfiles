@@ -661,6 +661,32 @@ Starting process in background is really nice to avoid being spammed. So let's m
     :config
     (setq pulseaudio-control--current-sink "@DEFAULT_SINK@"))
 #+end_src
+** Language interaction (LSP)
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :ensure t
+    :init (setq lsp-inhibit-message t
+                lsp-eldoc-render-all nil
+                lsp-highlight-symbol-at-point nil))
+
+  (use-package company-lsp
+    :after  company
+    :ensure t
+    :hook
+    (java-mode . (lambda () (push 'company-lsp company-backends)))
+    :config
+    (setq company-lsp-enable-snippet t
+          company-lsp-cache-candidates t))
+
+  (use-package lsp-ui
+    :ensure t
+    :config
+    (setq lsp-ui-sideline-enable t
+          lsp-ui-sideline-show-symbol t
+          lsp-ui-sideline-show-hover t
+          lsp-ui-sideline-show-code-actions t
+          lsp-ui-sideline-update-mode 'point))
+#+end_src
 * Completion
 This part focuses on completion configuration. Language specific configurations are not done here
 but in the dedicate language configuration part. This section is just for global configuration.
@@ -928,17 +954,18 @@ Config-general-mode is applied for all unix configuration files.
 #+end_src
 
 ** Java based
-*** Global
+*** Global (lsp-java)
 #+begin_src emacs-lisp
-  (use-package meghanada
+  (use-package lsp-java
     :ensure t
+    :requires (lsp-ui-flycheck lsp-ui-sideline)
+    :hook
+    (java-mode . lsp-java-enable)
+    (java-mode . flycheck-mode)
+    (java-mode . (lambda () (lsp-ui-flycheck-enable t)))
+    (java-mode . lsp-ui-sideline-mode)
     :config
-    (add-hook 'java-mode-hook
-              (lambda ()
-                ;; meghanada-mode on
-                (meghanada-mode t)
-                (add-hook 'before-save-hook 'delete-trailing-whitespace))))
-
+    (setq lsp-java-save-action-organize-imports nil))
 #+end_src
 *** Snippets
 #+begin_src emacs-lisp
