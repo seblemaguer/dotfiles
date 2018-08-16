@@ -2469,7 +2469,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
                  '(:foreground "brown"))
 
 
-    (setq esh-sep "  "  ; or " | " ;; Separator between esh-sections
+    (setq esh-sep " | " ; "  "  or " | " ;; Separator between esh-sections
           esh-section-delim " " ;; Separator between an esh-section icon and form
           esh-header "\n " ;; Eshell prompt header
 
@@ -2491,7 +2491,6 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
                        (pcomplete-arg 'last) t))))))
 
     (defun eshell-mode-some-config ()
-      (define-key eshell-mode-map (kbd "<tab>") 'completion-at-point)
       (define-key eshell-mode-map (kbd "M-p") 'helm-eshell-history)
       (eshell/export "NODE_NO_READLINE=1"))
 
