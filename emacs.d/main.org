@@ -2526,14 +2526,6 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
         (concat "Copied path: " fpath)))
     )
 #+end_src
-** Completion
-For now, it seems that auto suggest blocks company
-#+begin_src emacs-lisp
-  (use-package esh-autosuggest
-    :hook (eshell-mode . esh-autosuggest-mode)
-    :ensure t
-    :disabled t)
-#+end_src
 ** Status in the fringe
 #+begin_src emacs-lisp
   (use-package eshell-fringe-status
