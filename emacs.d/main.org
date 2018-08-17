@@ -115,8 +115,6 @@ We want to be able to have 4 things:
 Quelpa is super useful for developer package management. Adding the adaptation for the use-package
 makes it configuration file proof.
 #+begin_src emacs-lisp
-  (use-package quelpa
-      :ensure t)
   (use-package quelpa-use-package
       :ensure t
       :init
