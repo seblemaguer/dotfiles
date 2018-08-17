@@ -120,6 +120,8 @@ makes it configuration file proof.
       (setq quelpa-update-melpa-p nil))
 #+end_src
 * Global
+This section is about configuring global emacs helpers which are not specific to a dedicated
+language (or filetype) but are useful for any edition use-case in emacs.
 ** Undo
 In order to have a better and more visual control of undoing, I use undo-tree.
 #+begin_src emacs-lisp
@@ -135,6 +137,8 @@ In order to have a better and more visual control of undoing, I use undo-tree.
     (global-undo-tree-mode))
 #+end_src
 ** Minor-mode activation
+I use some minor modes based on some filetypes. This package is an helper which facilitates these
+activations.
 #+begin_src emacs-lisp
   (use-package auto-minor-mode
     :ensure t
@@ -167,13 +171,13 @@ Defining a simple helper to edit file as root using tramp
         (find-file file))
     (message "Current buffer does not have an associated file.")))
 #+end_src
-** Accent problem
+** TODO Accent problem
 #+begin_src emacs-lisp
 (load-library "iso-transl")
 #+end_src
-** Message buffer
+** TODO Message buffer
 The main idea here is to add a timestamp to the messages as it helps to understand the sequence of
-problems.
+problems. For now the advice is not activated as it causes some problems.
 #+begin_src emacs-lisp
   (defvar debug-messages nil)
 
@@ -196,7 +200,7 @@ problems.
 #+end_src
 ** Encoding
 Define the global encoding as utf-8 english US related. Of course, it is possible de locally change
-this information per buffer
+this information per buffer.
 #+begin_src emacs-lisp
 (setq system-time-locale "en_US.utf8")
 (prefer-coding-system 'utf-8)
@@ -239,7 +243,9 @@ https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
     (face-spec-reset-face 'origami-fold-header-face))
 #+end_src
 ** Edition
+This section is dedicated to hacks and helpers to facilitate global edition.
 *** Edit simultanously multiple region
+Sometimes it can be useful to edit multiple region at once. To do that, I use iedit.
 #+begin_src emacs-lisp
   (use-package iedit
     :ensure t
@@ -247,6 +253,7 @@ https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
     (delete-selection-mode t))
 #+end_src
 *** Alignment
+I defined this helper to as I like to align equations based on the equal sign.
 #+begin_src emacs-lisp
 (defun align-to-equals (begin end)
   "Align region to equal signs"
@@ -291,6 +298,9 @@ leads to this configuration
     (add-to-list 'recentf-exclude (format "%s/maildir.*" (getenv "HOME"))))
 #+end_src
 ** Backup files
+This section is dedicated to deal with backups. The main logic is to exlude some specific files
+(either because of they are sensitive, either because they are just results of a process). For the
+other ones, I want to have an easy way to navigate in it.
 *** Global backup configuration
 This the global backup configuration. For that I adapted a little bit the wonderful snapshot-timemachine package.
 #+begin_src emacs-lisp
@@ -393,7 +403,7 @@ Baseline configuration for copy/pasting
         select-active-regions t)
 #+end_src
 ** Spell
-Configuration of the (fly) spelling for emacs. For spelling, we are using aspell.
+Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
 #+begin_src emacs-lisp
   (use-package flyspell
     :ensure t
@@ -451,6 +461,8 @@ Configuration of the (fly) spelling for emacs. For spelling, we are using aspell
     )
 #+end_src
 ** Fixme
+To deal with the fixme, I relie on two part: fic-mode for the highlighting and occur for the
+listing.
 #+begin_src emacs-lisp
   (use-package fic-mode
     :commands fic-mode
@@ -494,7 +506,7 @@ fill-column for example.
     '(progn
        (setq uniquify-buffer-name-style 'forward)))
 
-  ;;
+  ;; Redefine fill-column as my screen is not 80 chars :D
   (setq-default fill-column 100)
 #+end_src
 ** Productivity behavior
@@ -615,7 +627,7 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
     )
 #+end_src
 *** System daemons
-With this package I can also manage my system services (tried on archlinux).
+With this package I can also manage my system services (tested on archlinux).
 #+begin_src emacs-lisp
   (use-package daemons :ensure t)
 #+end_src
@@ -638,7 +650,9 @@ Starting process in background is really nice to avoid being spammed. So let's m
           bpr-on-start 'my-bpr-on-start))
 #+end_src
 ** Environment control helpers
+I prefer to control some hardware using emacs directly. For now the keyboard, the screen and the sound.
 *** desktop environment
+Thanks to desktop environement, I can control the keyboard and the screen brightness.
 #+begin_src emacs-lisp
   (use-package desktop-environment
     :ensure t
@@ -653,6 +667,7 @@ Starting process in background is really nice to avoid being spammed. So let's m
     (desktop-environment-mode))
 #+end_src
 *** pulseaudio
+Thanks to pulseaudio-control, I can control my soundcard.
 #+begin_src emacs-lisp
   (use-package pulseaudio-control
     :ensure t
@@ -660,6 +675,8 @@ Starting process in background is really nice to avoid being spammed. So let's m
     (setq pulseaudio-control--current-sink "@DEFAULT_SINK@"))
 #+end_src
 ** Language interaction (LSP)
+LSP is a set of helper to interact with external "ide" tools and provide their functionalities into
+emacs. This has been proven useful, especially for java editing.
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
@@ -804,7 +821,7 @@ file type dedicated templates. The templates are available in =third_parties/tem
     )
 #+end_src
 * Filetype
-Now that we have achieved the global configuration, we are going to focus on the language specific
+Now that we have achieved the global configuration, I am going to focus on the language specific
 configuration.
 ** C/C++
 C and C++ configuration is mainly relying on irony. Some minor adaptations, like the compilation
@@ -833,7 +850,7 @@ We just load irony add support for c derivative mode.
 
 #+end_src
 *** Completion
-For the completion, we are relying on company and irony. The configuration consists of add irony
+For the completion, I am relying on company and irony. The configuration consists of add irony
 into company backend.
 #+begin_src emacs-lisp
   (use-package company-irony
@@ -4786,7 +4803,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :ensure t
     :config
 
-    ;; Define a global mode but not sure we are going to use it
+    ;; Define a global mode but not sure I am going to use it
     (define-globalized-minor-mode
       global-fci-mode fci-mode
       (lambda ()
