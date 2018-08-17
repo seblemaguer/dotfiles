@@ -132,9 +132,7 @@ In order to have a better and more visual control of undoing, I use undo-tree.
     :defer t
     :init
 
-    (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/tmp/undo"))
-          undo-tree-auto-save-history t
-          undo-tree-visualizer-timestamps t
+    (setq undo-tree-visualizer-timestamps nil
           undo-tree-visualizer-diff t)
 
     (global-undo-tree-mode))
