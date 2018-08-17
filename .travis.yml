@@ -13,9 +13,9 @@ language: python
 addons:
   apt:
     sources:
-      - sourceline: "ppa:ubuntu-elisp/ppa"
+      - sourceline: "ppa:kelleyk/emacs"
     packages:
-      - emacs-snapshot
+      - emacs25
       - vim
       - zsh
       - python-setuptools
