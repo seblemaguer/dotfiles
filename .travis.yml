@@ -24,5 +24,8 @@ before_install:
   - pip install dotfiles
   - ln -s $TRAVIS_BUILD_DIR /home/travis/configuration
 
-install: zsh ./install.sh
-script: echo "ok"
+install:
+  - zsh ./install.sh
+
+script:
+  - /usr/bin/emacs -nw -Q --batch -L ~/.emacs.d --eval "(require 'init)"

@@ -71,3 +71,6 @@
 (org-babel-load-file (format "%s/main.org" config-basedir))
 (put 'upcase-region 'disabled nil)
 (put 'magit-clean 'disabled nil)
+
+;; Provide init
+(provide 'init)
