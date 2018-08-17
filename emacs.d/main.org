@@ -1305,6 +1305,11 @@ Config-general-mode is applied for all unix configuration files.
 
   ;; Pretty print for lisp
   (use-package ipretty :ensure t)
+
+  ;; Completion
+  (use-package company
+    :ensure t
+    :hook (emacs-lisp-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-elisp)))))
 #+end_src
 ** Lua
 #+begin_src emacs-lisp
