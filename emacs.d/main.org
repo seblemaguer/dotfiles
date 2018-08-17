@@ -16,16 +16,15 @@ This configuration relies mainly on melpa and repository named "local-melpa". Th
 repository is corresponding to the branch "personal" of my fork of melpa (see here: https://github.com/seblemaguer/melpa/tree/personal )
 
 * Prerequisite
-** COMMENT Activate debugging
-#+begin_src emacs-lisp
-  (toggle-debug-on-error)
-#+end_src
+This part focusing on some baseline prerequisites before the main configuration part
 ** Daemon mode
+First start a server as it is going to be the 99% of my use of emacs.
 #+begin_src emacs-lisp
   (server-start)
 #+end_src
-* Packages
-** Global
+** Packages
+This section is configuring the bootstrap packages (enhancing use-package and support quelpa)
+*** Global
 This section focuses on the package management configuration.
 
 We want to be able to have 4 things:
@@ -111,7 +110,7 @@ We want to be able to have 4 things:
                   (package-delete  old-package)))))
         (message "All packages are up to date"))))
 #+end_src
-** Quelpa
+*** Quelpa
 Quelpa is super useful for developer package management. Adding the adaptation for the use-package
 makes it configuration file proof.
 #+begin_src emacs-lisp
