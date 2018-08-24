@@ -2864,7 +2864,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 *** Gitlab
 #+begin_src emacs-lisp
 (use-package gitlab :ensure t)
-(use-package glab :ensure t)
 (use-package ivy-gitlab :ensure t)
 #+end_src
 *** Browsing at remote
