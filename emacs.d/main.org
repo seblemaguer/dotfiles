@@ -784,7 +784,6 @@ Ivy-yasnippet is used for snippet discovery.
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
-    :after company
     :config
 
     ;; Adding yasnippet support to company
@@ -795,12 +794,10 @@ Ivy-yasnippet is used for snippet discovery.
 
   (use-package yasnippet-snippets
     :ensure t
-    :after yasnippet
     )
 
   (use-package ivy-yasnippet
-    :ensure t
-    :after yasnippet)
+    :ensure t)
 #+end_src
 *** Filetype templates
 This part is using yatemplate (an over-layer of yasnippet) coupled with auto-insert to have a set of
@@ -896,6 +893,8 @@ Config-general-mode is applied for all unix configuration files.
     :mode ("\\.conf$" "\\.*rc$"))
 #+end_src
 *** Authinfo
+I developed a dedicated mode for syntax highlighting authinfo files. For now, it is not stable
+enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package authinfo-mode
     :ensure quelpa
@@ -1001,8 +1000,7 @@ Config-general-mode is applied for all unix configuration files.
 *** Snippets
 #+begin_src emacs-lisp
   (use-package java-snippets
-    :ensure t
-    :after yasnippet)
+    :ensure t)
 #+end_src
 *** Javadoc
 #+begin_src emacs-lisp
@@ -1042,8 +1040,7 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package flycheck-gradle
     :ensure t
-    :defer t
-    :after (gradle flycheck))
+    :defer t)
 #+end_src
 ** Latex
 *** Global
@@ -1329,8 +1326,6 @@ Config-general-mode is applied for all unix configuration files.
     :ensure t)
 
   (use-package company-lua
-    :after lua-mode
-    :after company
     :ensure t)
 #+end_src
 ** Matlab
