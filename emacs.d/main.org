@@ -5276,16 +5276,16 @@ I actually use this part for minor correction. The tags are done when abcde is c
 
     Org. related          Help                Zooming        bookmarks          other helpers     completion
     ------------------------------------------------------------------------------------------------------------------
-    _c_: org-capture        _f_: function doc.    _+_: zoom in     _B_: list bookmarks  _p_: prodigy        _y_: ivy-yasnippet
-    _g_: org-web-get-url    _v_: variable doc.    _-_: zoom out    _b_: bookmark file   _m_: new mail
+    _c_: org-capture        _f_: function doc.    _+_: zoom in     _b_: list bookmarks  _p_: prodigy        _y_: ivy-yasnippet
+    _g_: org-web-get-url    _v_: variable doc.    _-_: zoom out    _B_: bookmark file   _m_: new mail
 
     Backups
     ------------------------------------------------------------------------------------------------------------------
     _s_: list backups
     _S_: snapshot timemachine
     "
-      ("b" bookmark-set)
-      ("B" list-bookmarks)
+      ("B" bookmark-set)
+      ("b" list-bookmarks)
       ("c" org-capture)
       ("f" describe-function)
       ("g" org-web-tools-read-url-as-org)
