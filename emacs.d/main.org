@@ -654,6 +654,18 @@ Starting process in background is really nice to avoid being spammed. So let's m
           bpr-window-creator #'split-window-vertically
           bpr-on-start 'my-bpr-on-start))
 #+end_src
+*** Paging support for comint
+In order to monitor each process started via comint, I use bifocal which splits the window accordingly.
+#+begin_src emacs-lisp
+  (use-package bifocal
+    :ensure t
+    :hook
+    (inferior-python-mode . #'bifocal-mode)
+
+    :config
+    (bifocal-global-mode 1)
+    )
+#+end_src
 ** Environment control helpers
 I prefer to control some hardware using emacs directly. For now the keyboard, the screen and the sound.
 *** desktop environment
