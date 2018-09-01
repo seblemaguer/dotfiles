@@ -251,6 +251,12 @@ Sometimes it can be useful to edit multiple region at once. To do that, I use ie
     :config
     (delete-selection-mode t))
 #+end_src
+*** Surrounding helper
+I use siege-mode to surround a string by delimiters more complicated than brackets and xml tags.
+#+begin_src emacs-lisp
+  (use-package siege-mode
+    :ensure t)
+#+end_src
 *** Alignment
 I defined this helper to as I like to align equations based on the equal sign.
 #+begin_src emacs-lisp
