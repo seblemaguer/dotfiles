@@ -3124,6 +3124,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (define-key dired-mode-map "." 'hydra-dired/body)
 #+end_src
 ** Images
+*** Visualisation
 #+begin_src emacs-lisp
   (use-package image+
     :ensure t
@@ -3154,6 +3155,13 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       ("r" imagex-sticky-rotate-right "rotate right")
       ("l" imagex-sticky-rotate-left "rotate left")))
 
+#+end_src
+*** Manipulation
+#+begin_src emacs-lisp
+  (use-package blimp
+    :ensure t
+    :hook
+    (image-mode . blimp-mode))
 #+end_src
 ** Diff
 *** Global
