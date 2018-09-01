@@ -1359,10 +1359,8 @@ enough to be on melpa so I use quelpa.
 #+end_src
 *** Syntax highlight in block
 #+begin_src emacs-lisp
-  (use-package polymode
-    :ensure t
-    :config
-    (require 'poly-markdown))
+  (use-package poly-markdown
+    :ensure t)
 #+end_src
 ** PDF
 *** Global
