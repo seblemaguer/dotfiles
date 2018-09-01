@@ -141,8 +141,7 @@ I use some minor modes based on some filetypes. This package is an helper which 
 activations.
 #+begin_src emacs-lisp
   (use-package auto-minor-mode
-    :ensure t
-    :defer t)
+    :ensure t)
 #+end_src
 ** Helpers
 I define here some global helpers used either in the rest of the file, either available to use at runtime
