@@ -14,7 +14,7 @@ The following soft should be install to be able to achieve the installation
   - zsh
   - vim
   - python (>= 3.6 tested, I don't know for below)
-  - dotfiles (can be installed through pip)
+  - pip
 
 ### Installation
 
