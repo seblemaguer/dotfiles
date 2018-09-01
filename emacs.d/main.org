@@ -1580,6 +1580,9 @@ enough to be on melpa so I use quelpa.
 ** R
 *** ESS configuration
 #+begin_src emacs-lisp
+  (use-package julia-mode
+    :ensure t) ;; FIXME: patch to make ess work for now
+
   (use-package ess
     :ensure t)
 
