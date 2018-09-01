@@ -4692,7 +4692,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :config
     (load-theme 'meacupla t))
 #+end_src
-** Frame part
+** Frame
 *** Title
 #+begin_src emacs-lisp
   (defun frame-title-format ()
@@ -4715,6 +4715,34 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
+#+end_src
+** Window
+e2wm is nice to provide (also temporarily) an IDE view functionnality.
+#+begin_src emacs-lisp
+  (use-package e2wm
+    :ensure t
+    :config
+    (autoload 'e2wm:dp-edbi "e2wm-edbi" nil t))
+
+  (use-package e2wm-direx
+    :ensure t
+    :config
+    (setq e2wm:c-code-recipe
+          '(| (:left-max-size 40)
+              (- (:upper-size-ratio 0.6)
+                 tree history)
+              (- (:lower-max-size 150)
+                 (| (:right-max-size 40)
+                    main imenu)
+                 sub)))
+
+    (setq e2wm:c-code-winfo
+          '((:name main)
+            (:name tree    :plugin direx)
+            (:name history :plugin history-list)
+            (:name imenu   :plugin imenu :default-hide nil)
+            (:name sub     :buffer "*info*" :default-hide t)))
+    )
 #+end_src
 ** Buffer
 *** Org-mode
