@@ -2473,7 +2473,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     (esh-section esh-dir
                  "\xf07c"  ;  (faicon folder)
                  (abbreviate-file-name (eshell/pwd))
-                 '(:foreground "blue" :bold ultra-bold :underline t))
+                 '(:foreground "blue" :weight ultra-bold :underline t))
 
     (esh-section esh-git
                  "\xe907"  ;  (git icon)
