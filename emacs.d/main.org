@@ -470,10 +470,10 @@ To deal with the fixme, I relie on two part: fic-mode for the highlighting and o
 listing.
 #+begin_src emacs-lisp
   (use-package fic-mode
-    :commands fic-mode
     :ensure t
-    :init (add-hook 'prog-mode-hook 'fic-mode)
-    :config
+    :hook
+    (prog-mode . fic-mode)
+    :init
 
     (defun fic-view-listing ()
       "Use occur to list related FIXME keywords"
