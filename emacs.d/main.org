@@ -546,15 +546,14 @@ organize read papers or "to read" papers. This is mainly based on https://codear
     :ensure t
     :chords
     (("uu"  . org-ref-cite-hydra/body))
+    :hook
+    (org-export-before-parsing . orcp-citeproc)
     :init
     (setq org-ref-completion-library 'org-ref-ivy-cite
           org-ref-notes-directory "~/Dropbox/org/work/biblio"
           org-ref-bibliography-notes "~/Dropbox/org/work/biblio/index.org"
           org-ref-default-bibliography '("~/Dropbox/org/work/biblio/index.bib")
-          org-ref-pdf-directory "~/Dropbox/org/work/biblio/lib/")
-
-    :config
-    (add-hook 'org-export-before-parsing-hook 'orcp-citeproc))
+          org-ref-pdf-directory "~/Dropbox/org/work/biblio/lib/"))
 
   (use-package interleave
     :ensure t
@@ -1041,14 +1040,12 @@ enough to be on melpa so I use quelpa.
     :ensure t
     :mode ("\.groovy$" "\.gradle$")
     :interpreter ("gradle" "groovy")
+    :hook
+    (groovy-mode .  (lambda () (inf-groovy-keys)))
+
     :config
     (autoload 'run-groovy "inf-groovy" "Run an inferior Groovy process")
-    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode")
-
-    ;; Some keys for
-    (add-hook 'groovy-mode-hook
-              '(lambda ()
-                 (inf-groovy-keys))))
+    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode"))
 
   ;; Subpackages
   (use-package groovy-imports :ensure t)
@@ -1064,8 +1061,14 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package tex-site
     :ensure auctex
-    :defer t
     :after (tex latex)
+    :hook
+    (LaTeX-mode . turn-off-auto-fill)
+    (LaTeX-mode . (lambda () (TeX-fold-mode t)))
+    (LaTeX-mode . flyspell-mode)
+    (LaTeX-mode . LaTeX-math-mode)
+    (LaTeX-mode . outline-minor-mode)
+    (LaTeX-mode . TeX-source-correlate-mode)
     :config
 
     ;; Spelling
@@ -1106,12 +1109,6 @@ enough to be on melpa so I use quelpa.
     (setq TeX-parse-self t
           TeX-auto-save t)
 
-    ;; Filling
-    (add-hook 'LaTeX-mode-hook 'turn-off-auto-fill)
-    (add-hook 'LaTeX-mode-hook
-              (lambda ()
-                (TeX-fold-mode t)))
-
     ;; Minor helpers for comment and quotes
     (add-to-list 'LaTeX-verbatim-environments "comment")
     (setq TeX-open-quote "\enquote{"
@@ -1123,11 +1120,6 @@ enough to be on melpa so I use quelpa.
           TeX-brace-indent-level 4
           TeX-newline-function 'newline-and-indent)
 
-
-    ;; Some usefull hooks
-    (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-    (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-    (add-hook 'LaTeX-mode-hook 'outline-minor-mode)
 
     (defadvice LaTeX-fill-region-as-paragraph (around LaTeX-sentence-filling)
       "Start each sentence on a new line."
@@ -1151,7 +1143,7 @@ enough to be on melpa so I use quelpa.
 
     ;; PDF/Tex correlation
     (setq TeX-source-correlate-method 'synctex)
-    (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+
 
     ;; Keys
     (define-key LaTeX-mode-map (kbd "C-c C-=") 'align-current))
