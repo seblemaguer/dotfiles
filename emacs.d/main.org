@@ -644,9 +644,10 @@ Starting process in background is really nice to avoid being spammed. So let's m
 
   (use-package bpr
     :ensure t
-    :after projectile
     :config
-    (setq bpr-colorize-output t
+    (setq bpr-scroll-direction 1
+          bpr-show-progress nil
+          bpr-colorize-output t
           bpr-close-after-success t
           bpr-use-projectile t
           bpr-process-mode #'comint-mode
