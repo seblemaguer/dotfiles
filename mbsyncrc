@@ -102,6 +102,31 @@ Channel SebGmail-sent
 
 
 ##########################################################################
+# TCD
+##########################################################################
+IMAPAccount TCD
+Host outlook.office365.com
+User lemagues@tcd.ie
+PassCmd "python3 ~/.get_passwd.py 'outlook.office365.com' 'lemagues@tcd.ie'"
+Port 993
+SSLType IMAPS
+# CertificateFile /etc/ssl/certs/ca-bundle.crt
+
+IMAPStore TCD-remote
+Account TCD
+
+MaildirStore TCD-local
+Path ~/mail/TCD/
+Inbox ~/mail/TCD/INBOX
+SubFolders Legacy
+
+Channel TCD
+Master :TCD-remote:
+Slave :TCD-local:
+Patterns "INBOX" *
+
+
+##########################################################################
 # Coli Saarland
 ##########################################################################
 IMAPAccount Saarland

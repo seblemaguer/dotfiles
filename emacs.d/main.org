@@ -485,13 +485,14 @@ listing.
 Minibuffer configuration part. Nothing really outstanding, just the classical stuff.
 #+begin_src emacs-lisp
   (use-package minibuffer
+    ;; :hook
+    ;; (eval-expression-minibuffer-setup .  #'eldoc-mode)
     :config
     (setq read-file-name-completion-ignore-case t
           completion-ignore-case t
           resize-mini-windows t)
-    (file-name-shadow-mode 1)
 
-    (add-hook 'eval-expression-minibuffer-setup-hook #'eldoc-mode))
+    (file-name-shadow-mode 1))
 #+end_src
 ** Buffers
 Some buffer specificities configuration like how to deal with trailing whitespaces or the
@@ -581,6 +582,15 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
     :ensure quelpa
     :quelpa (prodigy :fetcher github :repo "seblemaguer/prodigy.el" :branch "auto-start")
     :config
+
+    (prodigy-define-service
+      :name "TCD imap notify"
+      :command "imapnotify"
+      :args '("-c" "~/configuration/imapnotify/tcd.js")
+      :tags '(work mail)
+      :stop-signal 'sigterm
+      :auto-start t
+      :kill-process-buffer-on-stop t)
 
     (prodigy-define-service
       :name "Saarland imap notify"
@@ -2605,8 +2615,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     :ensure quelpa
     :quelpa (gradle-mode :repo "seblemaguer/emacs-gradle-mode" :fetcher github)
     :config
-    (setq gradle-gradlew-executable "./gradlew"
-          gradle-use-gradlew t)
+    (setq gradle-use-gradlew t)
     (gradle-mode))
 #+end_src
 
@@ -4051,13 +4060,18 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   #+begin_src emacs-lisp
     (use-package smtpmail-multi
       :ensure t
-      :after flyspell
       ;; :ensure-system-package msmtp
       :config
 
       (setq user-full-name "Sébastien Le Maguer"
             smtpmail-multi-accounts
             '(
+              (tcd . ("lemagues@tcd.ie"
+                      "smtp.office365.com"
+                      587
+                      "lemagues@tcd.ie"
+                      starttls
+                      nil nil nil))
               (sebgmail . ("seb.lemaguer@gmail.com"
                            "smtp.gmail.com"
                            587
@@ -4079,13 +4093,14 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
               )
 
             smtpmail-multi-associations
-            '(("slemaguer@coli.uni-saarland.de" coli)
+            '(("lemagues@tcd.ie" tcd)
+              ("slemaguer@coli.uni-saarland.de" coli)
               ("lemaguer@mmci.uni-saarland.de" mmci)
               ("seb.lemaguer@gmail.com" sebgmail))
 
-            smtpmail-multi-default-account 'coli
+            smtpmail-multi-default-account 'tcd
             message-send-mail-function 'smtpmail-multi-send-it
-            mail-host-address "coli.uni-saarland.de"
+            mail-host-address "tcd.ie"
 
             ;; Debug part
             smtpmail-debug-info nil
@@ -4107,10 +4122,9 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           gnus-inhibit-images nil
           notmuch-always-prompt-for-sender t
           notmuch-show-indent-messages-width 2
+          notmuch-identities '("lemagues@tcd.ie" "seb.lemaguer@gmail.com")
           notmuch-fcc-dirs '(("slemaguer@coli.uni-saarland.de" . "Saarland/INBOX/.Sent")
-                             ("lemaguer@mmci.uni-saarland.de" . "MMCI/Sent")
-                             ("seb.lemaguer@gmail.com" . "SebGmail/Sent")
-                             ))
+                             ("seb.lemaguer@gmail.com" . "SebGmail/Sent")))
 
     ;; Hook for notmuch
     (defcustom notmuch-index-updated-hook nil
@@ -4121,7 +4135,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (defun notmuch-message-mark-sent ()
       "Mark all the message from any interesting sent folders as sent."
       (interactive)
-      (notmuch-tag "folder:Saarland/INBOX/.Sent or folder:*/Sent"
+      (notmuch-tag "folder:Saarland/INBOX/.Sent or folder:*/Sent or 'folder:\"TCD/Sent Items\"'"
                    (notmuch-tag-change-list '("-inbox" "-unread" "+sent"))))
 
     (defun notmuch-update-index ()
