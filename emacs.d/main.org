@@ -3327,7 +3327,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
                     ("Mail"
                      (or
-                      (mode . message-mode)
+                      (derived-mode . message-mode)
                       (mode . bbdb-mode)
                       (mode . mail-mode)
                       (mode . notmuch-show-mode)
