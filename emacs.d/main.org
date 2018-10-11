@@ -3753,6 +3753,11 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :ensure t
     :defer t)
 #+end_src
+** Clipboard
+#+begin_src emacs-lisp
+  (use-package cliphist
+    :ensure t)
+#+end_src
 ** COMMENT unison interaction
 #+begin_src emacs-lisp
   (use-package unison :ensure t)
