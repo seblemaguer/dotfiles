@@ -4055,7 +4055,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :config
     (setq message-auto-save-directory nil
           message-citation-line-function 'message-insert-formatted-citation-line
-          message-citation-line-format "Le %e %B %Y à %-H:%M %Z, %N a écrit :"
+          message-citation-line-format  "\n\n-----------------------\nOn %a, %b %d %Y (%-H:%M %Z), %N wrote:\n"
           message-sendmail-f-is-evil nil
           message-signature-file (format "%s/third_parties/mail/signature" config-basedir)
           message-fill-column 100)
