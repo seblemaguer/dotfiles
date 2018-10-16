@@ -584,6 +584,15 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
     :config
 
     (prodigy-define-service
+      :name "ADAPT imap notify"
+      :command "imapnotify"
+      :args '("-c" "~/configuration/imapnotify/adaptgmail.js")
+      :tags '(work mail)
+      :stop-signal 'sigterm
+      :auto-start t
+      :kill-process-buffer-on-stop t)
+
+    (prodigy-define-service
       :name "TCD imap notify"
       :command "imapnotify"
       :args '("-c" "~/configuration/imapnotify/tcd.js")
@@ -4077,6 +4086,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                       "lemagues@tcd.ie"
                       starttls
                       nil nil nil))
+              (adaptgmail . ("sebastien.lemaguer@adaptcentre.ie"
+                             "smtp.gmail.com"
+                             587
+                             "sebastien.lemaguer@adaptcentre.ie"
+                             starttls
+                             nil nil nil))
               (sebgmail . ("seb.lemaguer@gmail.com"
                            "smtp.gmail.com"
                            587
@@ -4099,6 +4114,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
             smtpmail-multi-associations
             '(("lemagues@tcd.ie" tcd)
+              ("sebastien.lemaguer@adaptcentre.ie" adaptgmail)
               ("slemaguer@coli.uni-saarland.de" coli)
               ("lemaguer@mmci.uni-saarland.de" mmci)
               ("seb.lemaguer@gmail.com" sebgmail))
@@ -4112,7 +4128,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
             smtpmail-debug-verbose nil)
       )
   #+end_src
-*** notmuch
+*** Notmuch
 **** Global configuration
 #+begin_src emacs-lisp
   (use-package notmuch
@@ -4195,7 +4211,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
             (notmuch-show-tag '("-deleted"))
           (notmuch-show-tag '("+deleted" "-inbox" "-unread")))))
 
-
     (global-set-key (kbd "<f2>") 'notmuch))
 #+end_src
 **** Welcome
@@ -4226,6 +4241,10 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                                      ;; Folder
                                      (:key "p" :name "Saarland inbox" :query "folder:Saarland/INBOX")
                                      (:key "s" :name "SebGmail inbox" :query "folder:SebGmail/INBOX")
+                                     (:key "T" :name "TCD inbox" :query "folder:TCD/INBOX")
+                                     (:key "A" :name "Adapt inbox" :query "folder:AdaptGmail/INBOX")
+
+                                     (:key "a" :name "Daft" :query "daft")
                                      ))
 
     (defun my-count-query (query)

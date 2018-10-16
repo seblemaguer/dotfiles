@@ -76,29 +76,45 @@ Channel SebGmail-inbox
 Channel SebGmail-sent
 
 
-# ##########################################################################
-# # Irisa
-# ##########################################################################
-# IMAPAccount Irisa
-# Host zimbra.inria.fr
-# User slemague
-# PassCmd "python3 ~/.get_passwd.py 'zimbra.inria.fr' 'slemague'"
-# Port 993
-# SSLType IMAPS
-# # CertificateFile /etc/ssl/certs/ca-bundle.crt
+# =========================================================================================================
+# =========================================================================================================
+# =========================================================================================================
 
 
-# IMAPStore Irisa-remote
-# Account Irisa
+##########################################################################
+# Gmail adapt
+##########################################################################
+IMAPAccount AdaptGmail
+Host imap.gmail.com
+User sebastien.lemaguer@adaptcentre.ie
+PassCmd "python3 ~/.get_passwd.py 'imap.gmail.com' 'sebastien.lemaguer@adaptcentre.ie'"
+SSLType IMAPS
+AuthMechs LOGIN
 
-# MaildirStore Irisa-local
-# Path ~/mail/Irisa/
-# Inbox ~/mail/Irisa/INBOX
+IMAPStore AdaptGmail-remote
+Account AdaptGmail
 
-# Channel Irisa
-# Master :Irisa-remote:
-# Slave :Irisa-local:
-# Patterns "Sent" "INBOX" "Deleted Items"
+MaildirStore AdaptGmail-local
+Path ~/mail/AdaptGmail/
+Inbox ~/mail/AdaptGmail/INBOX
+
+Channel AdaptGmail-inbox
+Master :AdaptGmail-remote:
+Slave :AdaptGmail-local:
+Patterns "INBOX"
+
+Channel AdaptGmail-sent
+Master :AdaptGmail-remote:"[Gmail]/Sent Mail"
+Slave :AdaptGmail-local:sent
+
+Channel AdaptGmail-trash
+Master :AdaptGmail-remote:"[Gmail]/Trash"
+Slave :AdaptGmail-local:trash
+
+Group AdaptGmail
+Channel AdaptGmail-inbox
+Channel AdaptGmail-sent
+Channel AdaptGmail-trash
 
 
 ##########################################################################
@@ -123,8 +139,11 @@ SubFolders Legacy
 Channel TCD
 Master :TCD-remote:
 Slave :TCD-local:
-Patterns "INBOX" *
+Patterns "INBOX" "Deleted Items" "Sent Items"
 
+# =========================================================================================================
+# =========================================================================================================
+# =========================================================================================================
 
 ##########################################################################
 # Coli Saarland
@@ -201,3 +220,29 @@ Channel MMCI
 Master :MMCI-remote:
 Slave :MMCI-local:
 Patterns "INBOX" *
+
+
+
+# ##########################################################################
+# # Irisa
+# ##########################################################################
+# IMAPAccount Irisa
+# Host zimbra.inria.fr
+# User slemague
+# PassCmd "python3 ~/.get_passwd.py 'zimbra.inria.fr' 'slemague'"
+# Port 993
+# SSLType IMAPS
+# # CertificateFile /etc/ssl/certs/ca-bundle.crt
+
+
+# IMAPStore Irisa-remote
+# Account Irisa
+
+# MaildirStore Irisa-local
+# Path ~/mail/Irisa/
+# Inbox ~/mail/Irisa/INBOX
+
+# Channel Irisa
+# Master :Irisa-remote:
+# Slave :Irisa-local:
+# Patterns "Sent" "INBOX" "Deleted Items"

@@ -1,3 +1,4 @@
+# -*- mode: config-general -*-
 # .notmuch-config - Configuration file for the notmuch mail system
 #
 # For more information about notmuch, see https://notmuchmail.org
@@ -30,8 +31,8 @@ path=/home/slemaguer/mail
 #
 [user]
 name=Sébastien Le Maguer
-primary_email=slemaguer@coli.uni-saarland.de
-other_email=seb.lemaguer@gmail.com; lemaguer@mmci.uni-saarland.de
+primary_email=lemagues@tcd.ie
+other_email=seb.lemaguer@gmail.com;sebastien.lemaguer@adaptcentre.ie;slemaguer@coli.uni-saarland.de;lemaguer@mmci.uni-saarland.de
 
 # Configuration for "notmuch new"
 #
