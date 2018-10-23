@@ -2924,6 +2924,9 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 * File/Directory management
 ** Dired
 *** Run associated application - define helpers
+First, globally association achieve thanks to *xdg-open*.  Also, by making some minor adaptations, I
+defined some helpers to play video/audio using emms directly. It is mainly adapted from here:
+https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
 #+begin_src emacs-lisp
   (defun dired-open-native ()
     "Open marked files (or the file the cursor is on) from dired."
@@ -2944,6 +2947,40 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (save-window-excursion
       (dired-do-async-shell-command
        "xdg-open .")))
+
+  (defun emms-clear-playlist-if-any ()
+    "Clear emms playlist (coming from: https://www.emacswiki.org/emacs/SimpleEmmsUserInterface )."
+    (when emms-playlist-buffer
+      (save-excursion
+        (set-buffer emms-playlist-buffer)
+        (emms-playlist-clear))))
+
+  (defun file-audio-or-video-p (file-path)
+    "Detect if the FILE-PATH is pointing to a video/audio file or not."
+    (let* ((safe-path (replace-regexp-in-string "\"" "\\\"" (expand-file-name file-path)))
+           (mime (shell-command-to-string (format "file --mime --brief \"%s\"" safe-path)))
+           (type (car (split-string mime "/"))))
+      (if (member type '(video audio))
+          type
+        nil)))
+
+  ;; Disable video output to prevent a stupid new window.
+  (defun dired-emms-play ()
+    "Play current file from the dired buffer using emms"
+    (interactive)
+    (let ((file-path (dired-get-filename)))
+      (if (or (member (file-name-extension file-path)
+                      '("ogg" "mp3" "wav" "mpg" "mpeg" "wmv" "wma" "3gpp"
+                        "mov" "avi" "divx" "ogm" "ogv" "asf" "mkv"
+                        "rm" "rmvb" "mp4" "flac" "vrob" "m4a" "ape"
+                        "flv" "webm"))
+              (file-audio-or-video-p file-path))
+
+          (progn
+            (emms-play-dired)
+            (emms-clear-playlist-if-any))))
+
+    (dired-next-line 1))
 #+end_src
 *** Main configuration
 #+begin_src emacs-lisp
@@ -2989,6 +3026,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (define-key dired-mode-map (kbd "C-o") 'dired-omit-mode)
     (define-key dired-mode-map (kbd "<C-return>") 'dired-open-native)
     (define-key dired-mode-map (kbd "e") 'dired-open-externally)
+    (define-key dired-mode-map (kbd "p") 'dired-emms-play)
 
 
     ;; Diff
@@ -3080,7 +3118,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (define-key dired-mode-map ";" 'dired-subtree-remove)
     )
 #+end_src
-*** Dired / images
+*** Images
 #+begin_src emacs-lisp
   (use-package image-dired+
     :ensure t
