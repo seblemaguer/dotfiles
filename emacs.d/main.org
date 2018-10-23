@@ -1076,6 +1076,23 @@ enough to be on melpa so I use quelpa.
     :ensure t
     :defer t)
 #+end_src
+*** Kotlin
+**** Global mode
+#+begin_src emacs-lisp
+  (use-package kotlin-mode
+    :ensure t
+    :mode "\\.kts?\\'"
+    :config
+    (setq kotlin-tab-width 4))
+#+end_src
+**** Syntax checking
+#+begin_src emacs-lisp
+  (use-package flycheck-kotlin
+    :ensure t
+    :after kotlin-mode
+    :config
+    (flycheck-kotlin-setup))
+#+end_src
 ** Latex
 *** Global
 #+begin_src emacs-lisp
