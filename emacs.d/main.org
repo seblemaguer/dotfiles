@@ -3295,14 +3295,16 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 ** Tramp
 #+begin_src emacs-lisp
-  ;; Global configuration
-  (setq tramp-default-method "ssh")
-  (setq password-cache-expiry 60)
-  (setq tramp-auto-save-directory temporary-file-directory)
+  (use-package tramp
+    :init
+    (setq tramp-default-method "ssh"
+          password-cache-expiry 60
+          tramp-auto-save-directory temporary-file-directory)
 
-  ;; Debug
-  ;;(setq tramp-verbose 9)
-  (setq tramp-debug-buffer nil)
+          ;; ;; Debug
+          ;; tramp-verbose 9)
+          ;; tramp-debug-buffer t)
+  )
 #+end_src
 ** Trash
 #+begin_src emacs-lisp
