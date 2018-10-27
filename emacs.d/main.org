@@ -1877,6 +1877,13 @@ Extracted from https://github.com/zakame/emacs-for-javascript
     (eval-after-load "web-mode"
       '(bind-key "C-c C-d" 'ng-snip-show-docs-at-point web-mode-map)))
 #+end_src
+**** Nodenv
+#+begin_src emacs-lisp
+  (use-package nodenv
+    :ensure t
+    :hook
+    (js-mode . #'nodenv-mode))
+#+end_src
 **** Some helpers
 #+begin_src emacs-lisp
   (defun grunt-serve ()
