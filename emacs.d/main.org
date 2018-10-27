@@ -4193,6 +4193,58 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       )
   #+end_src
 *** Notmuch
+**** Define some helpers
+#+begin_src emacs-lisp
+  (defvar notmuch-base-attachment-dir "~/Downloads"
+    "Directory where the attachments will be downloaded.")
+
+  (defun notmuch-get-attachments-parent-dir ()
+    (interactive)
+    (let ((dir (concat base-attachment-dir
+                       (format-time-string "%y.%m.%d" (date-to-time (notmuch-show-get-date)))
+                       " "
+                       (notmuch-show-strip-re (notmuch-show-get-subject)))))
+      dir))
+
+  (defun notmuch-save-all-attachments ()
+    "Save all attachments from the current message."
+    (interactive)
+    (let ((dir (get-attachments-parent-dir)))
+      (mkdir dir 't)
+      (with-current-notmuch-show-message
+       (let ((mm-handle (mm-dissect-buffer)))
+         (notmuch-count-attachments mm-handle)
+         (nd-notmuch-save-attachments mm-handle dir)))
+      (dired dir)))
+
+  (defun notmuch-save-attachments (mm-handle dir)
+    (notmuch-foreach-mime-part
+     (lambda (p)
+       (let ((disposition (mm-handle-disposition p)))
+         (and (listp disposition)
+              (or (equal (car disposition) "attachment")
+                  (and (equal (car disposition) "inline")
+                       (assq 'filename disposition)))
+              (nd-mm-save-part p dir))))
+     mm-handle))
+
+  (defun notmuch-mm-save-part (handle dir)
+    "Write HANDLE to a file.
+  PROMPT overrides the default one used to ask user for a file name."
+    (let ((filename (or (mail-content-type-get (mm-handle-disposition handle) 'filename)
+                        (mail-content-type-get (mm-handle-type handle) 'name)))
+          file)
+      (when filename
+        (setq filename (gnus-map-function mm-file-name-rewrite-functions (file-name-nondirectory filename))))
+      (setq file (expand-file-name filename dir))
+      (setq mm-default-directory (file-name-directory file))
+      (and (or (not (file-exists-p file))
+               (yes-or-no-p (format "File %s already exists; overwrite? "
+                                    file)))
+           (progn
+             (mm-save-part-to-file handle file)
+             file))))
+#+end_src
 **** Global configuration
 #+begin_src emacs-lisp
   (use-package notmuch
@@ -4267,6 +4319,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
     ;; Show shortcuts
     (define-key notmuch-show-mode-map "\C-c\C-o" 'browse-url-at-point)
+    (define-key notmuch-show-mode-map "w" 'notmuch-save-all-attachments)
 
     (define-key notmuch-show-mode-map "d"
       (lambda ()
@@ -4308,8 +4361,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                                      (:key "s" :name "SebGmail inbox" :query "folder:SebGmail/INBOX")
                                      (:key "T" :name "TCD inbox" :query "folder:TCD/INBOX")
                                      (:key "A" :name "Adapt inbox" :query "folder:AdaptGmail/INBOX")
-
-                                     (:key "a" :name "Daft" :query "daft")
                                      ))
 
     (defun my-count-query (query)
