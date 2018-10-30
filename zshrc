@@ -123,21 +123,23 @@ else
 
 
     #############################################################################################################
-    #### Aliases
+    #### Aliases / Helpers
     #############################################################################################################
+    # Some
     alias vi='vim'
-    alias v='vim'
-    alias e='emacs'
-    alias mvn="mvn-color"
 
-    # = Color
+    # Coloring some command
+    alias mvn="mvn-color"
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
     alias less="$VIMRUNTIME/macros/less.sh"
 
-    #
+    # Network
     alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
+
+    # Keyboard switch
+    setxkbmap -layout "fr,bg" -variant ",phonetic" -option "grp:ctrls_toggle"
 
     #############################################################################################################
     #### Options
