@@ -130,7 +130,6 @@ In order to have a better and more visual control of undoing, I use undo-tree.
     :quelpa (undo-tree :fetcher git :url "http://www.dr-qubit.org/git/undo-tree.git")
     :defer t
     :init
-
     (setq undo-tree-visualizer-timestamps nil
           undo-tree-visualizer-diff t)
 
@@ -766,6 +765,7 @@ configuration here.
   (use-package company
     :ensure t
     :config
+
     ;; Global
     (setq company-idle-delay 1
           company-minimum-prefix-length 1
@@ -2701,8 +2701,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package org-projectile
     :ensure t
-    :after org
-    :after projectile
+    :disabled t
     :config
     (org-projectile-per-project)
     (setq org-projectile-per-project-filepath "todo.org"
