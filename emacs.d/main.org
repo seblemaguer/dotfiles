@@ -1959,6 +1959,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
           org-clone-delete-id t
           org-cycle-include-plain-lists t
           org-src-fontify-natively t
+          org-src-tab-acts-natively t
           org-hide-emphasis-markers t)
 
     ;; Activate spelling
