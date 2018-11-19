@@ -5056,9 +5056,12 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp
   (use-package diff-hl
     :ensure t
+    :hook
+    (dired-mode . diff-hl-dired-mode-unless-remote)
+
     :config
     (global-diff-hl-mode)
-    (fringe-mode 10))
+    (fringe-mode 5))
 #+end_src
 *** Faces/Colors
 **** COMMENT Terminal
