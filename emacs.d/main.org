@@ -37,10 +37,10 @@ We want to be able to have 4 things:
             '(
               (trizen .
                       ((default-sudo . nil)
-                       (install . "trizen -S")
+                       (install . "trizen -S --noconfirm")
                        (search . "trizen -Ss")
                        (uninstall . "trizen -Rns")
-                       (update . "trizen -Syu")
+                       (update . "trizen -Syu --noconfirm")
                        (clean-cache . "trizen -Sc")
                        (log . "cat /var/log/trizen.log")
                        (get-info . "trizen -Qi")
