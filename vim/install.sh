@@ -11,15 +11,17 @@ then
     git clone https://github.com/VundleVim/Vundle.vim.git $HOME/.vim/bundle/vundle
 
     # Prepare powerline
+    FONT_CONF_DIR=$HOME/.cache/fontconfig/
     wget https://raw.githubusercontent.com/powerline/powerline/develop/font/10-powerline-symbols.conf
-    mkdir -p $HOME/.fonts.conf.d
-    mv 10-powerline-symbols.conf $HOME/.fonts.conf.d
+    mkdir -p $FONT_CONF_DIR
+    mv 10-powerline-symbols.conf $FONT_CONF_DIR
 
+    FONT_DIR=$HOME/.local/share/fonts/
     wget https://github.com/powerline/powerline/raw/develop/font/PowerlineSymbols.otf
-    mkdir $HOME/.fonts
-    mv PowerlineSymbols.otf $HOME/.fonts/PowerlineSymbols.otf
+    mkdir -p $FONT_DIR
+    mv PowerlineSymbols.otf $FONT_DIR
 
-    fc-cache -vf ~/.fonts
+    fc-cache -vf $FONT_DIR
 
     # Prepare wiki path
     mkdir -p $HOME/.vim/vimwiki
