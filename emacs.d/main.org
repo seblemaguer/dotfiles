@@ -2188,15 +2188,18 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package org-super-agenda
     :ensure t
-    :after (org org-agenda)
     :config
     (org-super-agenda-mode)
     (setq org-super-agenda-groups
-
-          '((:name "Important tasks ":priority "A")
+          '(
+            (:name "Today"  ; Optionally specify section name
+                   :time-grid t  ; Items that appear on the time grid
+                   :todo "TODAY")  ; Items that have this TODO keyword
+            (:name "Important tasks "
+                   :priority "A")
             (:name "SynSIG" :tag "SynSIG")
             (:auto-category t)
-           )))
+            )))
 #+end_src
 ** Capturing
 *** Global
