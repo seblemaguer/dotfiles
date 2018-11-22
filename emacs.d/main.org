@@ -3952,7 +3952,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     ;; Defining the networks
     (setq circe-network-options
           '(("bitlbee"
-             :nick "slemaguer"
+             :nick "lemagues"
              :server-buffer-name "⇄ bitlbee"
              :nickserv-password my-irc-password
              :nickserv-mask "\\(bitlbee\\|root\\)!\\(bitlbee\\|root\\)@"
