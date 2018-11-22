@@ -2,7 +2,7 @@
 Name=SaarlandImapNotify
 GenericName=Saarland mail Synchronizer
 Comment=start imapnotify on the Saarland Account
-Exec=imapnotify -c /home/slemaguer/.imapnotify/saarland.js
+Exec=imapnotify -c /home/lemagues/.imapnotify/saarland.js
 Terminal=false
 Type=Application
 Categories=Network;FileTransfer;

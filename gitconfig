@@ -9,7 +9,7 @@
     textconv = markdown
 
 [core]
-	excludesfile = /home/slemaguer/.gitignore
+	excludesfile = /home/lemagues/.gitignore
 	editor = emacs
 
 # [gpg]
@@ -19,4 +19,4 @@
 # 	gpgsign = true
 
 [include]
-	path = /home/slemaguer/.private_git
+	path = /home/lemagues/.private_git
