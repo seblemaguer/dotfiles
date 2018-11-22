@@ -4263,7 +4263,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           gnus-inhibit-images nil
           notmuch-always-prompt-for-sender t
           notmuch-show-indent-messages-width 2
-          notmuch-identities '("lemagues@tcd.ie" "seb.lemaguer@gmail.com")
+          notmuch-identities '("lemagues@tcd.ie" "seb.lemaguer@gmail.com" "sebastien.lemaguer@adaptcentre.ie")
           notmuch-fcc-dirs '(("slemaguer@coli.uni-saarland.de" . "Saarland/INBOX/.Sent")
                              ("seb.lemaguer@gmail.com" . "SebGmail/Sent")))
 
