@@ -853,6 +853,13 @@ file type dedicated templates. The templates are available in =third_parties/tem
     ;; (add-hook 'find-file-hook 'auto-insert)
     )
 #+end_src
+** Prescient
+Prescient helps to sort candidates by last used first and then sorting by length.
+#+begin_src emacs-lisp
+(use-package prescient :ensure t :config (prescient-persist-mode))
+(use-package ivy-prescient :ensure t :config (ivy-prescient-mode))
+(use-package company-prescient :ensure t :config (company-prescient-mode))
+#+end_src
 * Filetype
 Now that we have achieved the global configuration, I am going to focus on the language specific
 configuration.
