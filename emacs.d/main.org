@@ -2454,6 +2454,29 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
           org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex"))
           org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex"))))
 #+end_src
+*** Anki editor
+#+begin_src emacs-lisp
+  (use-package anki-editor
+    :ensure t
+    :init
+    (defhydra anki-editor-hydra (:color teal)
+      "Anki editor"
+      ("s"  anki-start             "Start anki" )
+      ("p"  anki-editor-push-notes "\"Commit\"" )
+      ("q"  nil                    "cancel"     :color blue))
+
+    ;; :bind
+    ;; (:map anki-editor-map ("C-x v" . anki-editor-hydra/body))
+
+    :config
+    (defun anki-start ()
+      "Spawns 'grunt serve' process"
+      (interactive)
+      (let* ((bpr-scroll-direction 1) (bpr-show-progress nil) (bpr-use-projectile nil))
+        (bpr-spawn "/usr/bin/anki")
+        (bpr-open-last-buffer)))
+    )
+#+end_src
 ** COMMENT Async
 #+begin_src emacs-lisp
   ;; Setup the part for asynchronous
