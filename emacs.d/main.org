@@ -2220,6 +2220,10 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
              (file+headline "~/Dropbox/org/todo/todo.org" "To read")
              (file ,(format "%s/third_parties/org-capture-templates/book.org" config-basedir)))
 
+            ("f" "Reference" entry
+             (file+headline "~/Dropbox/org/todo/todo.org" "Reference task")
+             (file ,(format "%s/third_parties/org-capture-templates/reference.org" config-basedir)))
+
             ("L" "Bookmark" entry
              (file+olp "~/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
              (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" config-basedir)))
