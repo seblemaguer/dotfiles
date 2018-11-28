@@ -2067,7 +2067,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
       (setq org-agenda-files
             (append org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$"))))
 
-
     ;; Deadline management
     (setq org-agenda-include-diary nil
           org-deadline-warning-days 7
@@ -3994,7 +3993,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
              :nickserv-password my-irc-password
              :nickserv-mask "\\(bitlbee\\|root\\)!\\(bitlbee\\|root\\)@"
              :nickserv-identify-challenge "use the \x02identify\x02 command to identify yourself"
-             :nickserv-identify-command "PRIVMSG NickServ :IDENTIFY {nick} {password}"
+             :nickserv-identify-command "PRIVMSG nickserv :identify {password}"
              :nickserv-identify-confirmation "Password accepted, settings and accounts loaded"
              :channels ("&bitlbee")
              :host "localhost"
