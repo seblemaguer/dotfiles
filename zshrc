@@ -171,14 +171,6 @@ else
         source ~/.private_variables
     fi
 
-    # Coli variable
-    if [ -e "/etc/profile.d/coli-path.sh" ]
-    then
-        source /etc/profile.d/coli-path.sh
-        source /etc/profile.d/coli-proxy.sh
-        source /etc/profile.d/coli-print.sh
-    fi
-
 
     #############################################################################################################
     #### Aliases / Helpers
