@@ -377,15 +377,20 @@ endtry
 
 
 """"""""""""""""""""""""""""""
+" => Global theme
+""""""""""""""""""""""""""""""
+Bundle 'dracula/vim'
+colorschem dracula
+
+""""""""""""""""""""""""""""""
 " => Statusline
 """"""""""""""""""""""""""""""
-Bundle 'vim-airline/vim-airline-themes'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 
 set laststatus=2
 let g:airline_powerline_fonts=1
-
 let g:airline_theme='luna'
-
 let g:airline#extensions#tabline#enabled = 1
 
 
