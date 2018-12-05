@@ -78,18 +78,19 @@ else
     antigen bundle gvm
 
     # Theme
-    antigen theme bhilburn/powerlevel9k powerlevel9k
-    # antigen theme caiogondim/bullet-train-oh-my-zsh-theme bullet-train
+    antigen theme bhilburn/powerlevel9k
 
     POWERLEVEL9K_MODE='awesome-fontconfig'
-    #POWERLEVEL9K_MODE='awesome-patched'
     ZSH_THEME="powerlevel9k/powerlevel9k"
-    POWERLEVEL9K_COLOR_SCHEME='light'
+    POWERLEVEL9K_COLOR_SCHEME='dark'
+
     POWERLEVEL9K_PROMPT_ON_NEWLINE=true
     POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="%{%F{249}%}\u250f"
     POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%{%F{249}%}\u2517%{%F{default}%}❯ "
+
     POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
     POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
+
     POWERLEVEL9K_VCS_STAGED_ICON="\u00b1"
     POWERLEVEL9K_VCS_UNTRACKED_ICON="\u25CF"
     POWERLEVEL9K_VCS_UNSTAGED_ICON="\u00b1"
@@ -101,24 +102,28 @@ else
     POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND="clear"
     POWERLEVEL9K_VCS_MODIFIED_FOREGROUND="clear"
     POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND="clear"
+
     POWERLEVEL9K_DIR_HOME_BACKGROUND="clear"
     POWERLEVEL9K_DIR_HOME_FOREGROUND="blue"
     POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND="clear"
     POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND="blue"
     POWERLEVEL9K_DIR_DEFAULT_BACKGROUND="clear"
     POWERLEVEL9K_DIR_DEFAULT_FOREGROUND="white"
+
     POWERLEVEL9K_ROOT_INDICATOR_BACKGROUND="red"
     POWERLEVEL9K_ROOT_INDICATOR_FOREGROUND="white"
+
     POWERLEVEL9K_TODO_BACKGROUND="clear"
     POWERLEVEL9K_TODO_FOREGROUND="green"
-    POWERLEVEL9K_OS_ICON_BACKGROUND="clear"
-    POWERLEVEL9K_OS_ICON_FOREGROUND="white"
+
     POWERLEVEL9K_HISTORY_BACKGROUND="clear"
     POWERLEVEL9K_HISTORY_FOREGROUND="blue"
+
     POWERLEVEL9K_STATUS_OK_BACKGROUND="clear"
     POWERLEVEL9K_STATUS_OK_FOREGROUND="green"
     POWERLEVEL9K_STATUS_ERROR_BACKGROUND="clear"
     POWERLEVEL9K_STATUS_ERROR_FOREGROUND="red"
+
     POWERLEVEL9K_LOAD_CRITICAL_BACKGROUND="clear"
     POWERLEVEL9K_LOAD_WARNING_BACKGROUND="clear"
     POWERLEVEL9K_LOAD_NORMAL_BACKGROUND="clear"
@@ -128,16 +133,26 @@ else
     POWERLEVEL9K_LOAD_CRITICAL_VISUAL_IDENTIFIER_COLOR="red"
     POWERLEVEL9K_LOAD_WARNING_VISUAL_IDENTIFIER_COLOR="yellow"
     POWERLEVEL9K_LOAD_NORMAL_VISUAL_IDENTIFIER_COLOR="green"
+
     POWERLEVEL9K_RAM_BACKGROUND="clear"
     POWERLEVEL9K_RAM_FOREGROUND="green"
     POWERLEVEL9K_RAM_ELEMENTS="ram_free"
+
     POWERLEVEL9K_TIME_BACKGROUND="clear"
     POWERLEVEL9K_TIME_FOREGROUND="white"
+
     POWERLEVEL9K_TIME_FORMAT="%D{\uf017 %H:%M \uf073 %d.%m.%y}"
     POWERLEVEL9K_STATUS_VERBOSE="true"
-    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=('status' 'background_jobs' 'root_indicator' 'os_icon' 'context' 'dir' 'vcs')
+    POWERLEVEL9K_BATTERY_STAGES=(
+        $'▏    ▏' $'▎    ▏' $'▍    ▏' $'▌    ▏' $'▋    ▏' $'▊    ▏' $'▉    ▏' $'█    ▏'
+        $'█▏   ▏' $'█▎   ▏' $'█▍   ▏' $'█▌   ▏' $'█▋   ▏' $'█▊   ▏' $'█▉   ▏' $'██   ▏'
+        $'██   ▏' $'██▎  ▏' $'██▍  ▏' $'██▌  ▏' $'██▋  ▏' $'██▊  ▏' $'██▉  ▏' $'███  ▏'
+        $'███  ▏' $'███▎ ▏' $'███▍ ▏' $'███▌ ▏' $'███▋ ▏' $'███▊ ▏' $'███▉ ▏' $'████ ▏'
+        $'████ ▏' $'████▎▏' $'████▍▏' $'████▌▏' $'████▋▏' $'████▊▏' $'████▉▏' $'█████▏'
+    )
+
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=('status' 'background_jobs' 'root_indicator' 'dir' 'vcs')
     POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=('load' 'ram' 'battery' 'history' 'todo' 'time')
-    POWERLEVEL9K_BATTERY_STAGES="▁▂▃▄▅▆▇█"
 
     # Distro specific
     antigen bundle archlinux
