@@ -2643,6 +2643,14 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     :config
     (add-hook 'eshell-mode-hook 'eshell-fringe-status-mode))
 #+end_src
+** Fish completion
+#+begin_src emacs-lisp
+  (use-package fish-completion
+    :ensure t
+    :ensure-system-package fish
+    :config
+    (global-fish-completion-mode))
+#+end_src
 ** Some helpers
 #+begin_src emacs-lisp
   (defun eshell/clear ()
