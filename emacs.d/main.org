@@ -715,16 +715,17 @@ emacs. This has been proven useful, especially for java editing.
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
-    :init (setq lsp-inhibit-message t
-                lsp-eldoc-render-all nil
-                lsp-highlight-symbol-at-point nil))
+    :init
+    (setq lsp-before-save-edits t
+          lsp-inhibit-message t
+          lsp-eldoc-render-all nil
+          lsp-highlight-symbol-at-point nil))
 
   (use-package company-lsp
-    :after  company
     :ensure t
     :config
     (setq company-lsp-enable-snippet t
-          company-lsp-cache-candidates t))
+          company-lsp-cache-candidates 'auto))
 
   (use-package lsp-ui
     :ensure t
@@ -783,7 +784,7 @@ configuration here.
       (set-face-attribute 'company-scrollbar-fg nil :background "gray40"))
 
     ;; Default backends
-    (setq company-backends '((company-files)))
+    (setq company-backends '(company-capf company-files))
 
     ;; Activating globally
     (global-company-mode t))
@@ -823,7 +824,7 @@ Ivy-yasnippet is used for snippet discovery.
     :config
 
     ;; Adding yasnippet support to company
-    (add-to-list 'company-backends '(company-yasnippet))
+    (add-to-list 'company-backends 'company-yasnippet)
 
     ;; Activate global
     (yas-global-mode))
