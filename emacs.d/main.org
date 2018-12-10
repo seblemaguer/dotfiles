@@ -254,6 +254,7 @@ Sometimes it can be useful to edit multiple region at once. To do that, I use ie
 I use siege-mode to surround a string by delimiters more complicated than brackets and xml tags.
 #+begin_src emacs-lisp
   (use-package siege-mode
+    :disabled t
     :ensure t)
 #+end_src
 *** Alignment
@@ -1061,8 +1062,8 @@ enough to be on melpa so I use quelpa.
                            ))
 
 #+end_src
-*** Groovy
-**** Global groovy
+** Groovy
+*** Global groovy
 #+begin_src emacs-lisp
   (use-package groovy-mode
     :ensure t
@@ -1078,14 +1079,14 @@ enough to be on melpa so I use quelpa.
   ;; Subpackages
   (use-package groovy-imports :ensure t)
 #+end_src
-**** Gradle specificities
+*** Gradle specificities
 #+begin_src emacs-lisp
   (use-package flycheck-gradle
     :ensure t
     :defer t)
 #+end_src
-*** Kotlin
-**** Global mode
+** Kotlin
+*** Global mode
 #+begin_src emacs-lisp
   (use-package kotlin-mode
     :ensure t
@@ -1907,6 +1908,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
 #+begin_src emacs-lisp
   (use-package nodenv
     :ensure t
+    :disabled t
     :hook
     (js-mode . #'nodenv-mode))
 #+end_src
@@ -1961,7 +1963,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
         (indent-region begin end))))
 #+END_SRC
 * Org
-** Global part
+** Global
 #+begin_src emacs-lisp
   (use-package org
     :ensure t
@@ -3152,8 +3154,8 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
   (use-package dired-collapse
     :ensure t
     :defer
-    :init
-    (add-hook 'dired-mode-hook 'dired-collapse-mode))
+    :hook
+    (dired-mode . dired-collapse-mode))
 #+end_src
 *** dired-filter
 #+begin_src emacs-lisp
