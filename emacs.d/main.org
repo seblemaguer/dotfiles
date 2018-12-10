@@ -4035,12 +4035,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                                ("IvanaDidirkova" "francais")
                                ("." "american")))
 
-    ;; Formatting
+    ;; Formatting / Visual
     (enable-circe-color-nicks)
-
     (setq lui-time-stamp-position 'right-margin
           lui-time-stamp-format "%H:%M"
           lui-fill-type nil)
+    (enable-circe-display-images)
 
     (defun my-lui-setup ()
       (setq
