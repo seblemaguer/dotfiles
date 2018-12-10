@@ -1093,7 +1093,28 @@ enough to be on melpa so I use quelpa.
     :config
     (setq kotlin-tab-width 4))
 #+end_src
-**** Syntax checking
+*** Indentation
+#+begin_src emacs-lisp
+  (use-package my-kotlin-indent
+    :init
+    (defun kotlin-mode-use-my-kotlin-indent ()
+      (setq indent-line-function 'kotlin-mode--elk-indent-line))
+    :hook
+    (kotlin-mode . kotlin-mode-use-my-kotlin-indent))
+#+end_src
+*** LSP connection
+#+begin_src emacs-lisp
+  (use-package lsp-kotlin
+    :ensure quelpa
+    :quelpa (lsp-kotlin :repo "seblemaguer/lsp-kotlin" :fetcher github)
+    :hook
+    (kotlin-mode . (lambda () (add-to-list (make-local-variable 'company-backends) 'company-lsp)))
+    (kotlin-mode . lsp-kotlin-enable)
+    (kotlin-mode . flycheck-mode)
+    (kotlin-mode . (lambda () (lsp-ui-flycheck-enable t)))
+    (kotlin-mode . lsp-ui-sideline-mode))
+#+end_src
+*** Syntax checking
 #+begin_src emacs-lisp
   (use-package flycheck-kotlin
     :ensure t
