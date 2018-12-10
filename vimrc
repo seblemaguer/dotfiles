@@ -93,7 +93,7 @@ filetype off
 set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 
-Bundle 'gmarik/vundle'
+Plugin 'gmarik/vundle'
 
 filetype plugin indent on
 
@@ -379,7 +379,7 @@ endtry
 """"""""""""""""""""""""""""""
 " => Global theme
 """"""""""""""""""""""""""""""
-Bundle 'dracula/vim'
+Plugin 'dracula/vim'
 colorschem dracula
 
 """"""""""""""""""""""""""""""
@@ -481,20 +481,20 @@ map <leader>u :TMiniBufExplorer<cr>
 """"""""""""""""""""""""""""""
 " => Vimwiki plugin
 """"""""""""""""""""""""""""""
-Bundle 'vimwiki/vimwiki'
+Plugin 'vimwiki/vimwiki'
 let g:vimwiki_list=[{'path':'~/.vim/vimwiki'}]
 
 
 """"""""""""""""""""""""""""""
 " => Git / Mercurial
 """"""""""""""""""""""""""""""
-Bundle 'tpope/vim-fugitive'
-Bundle 'phleet/vim-mercenary'
+Plugin 'tpope/vim-fugitive'
+Plugin 'phleet/vim-mercenary'
 
 """"""""""""""""""""""""""""""
 " => File tree
 """"""""""""""""""""""""""""""
-Bundle 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdtree'
 
 map <F2> <Esc>:NERDTreeToggle<CR>
 
@@ -519,14 +519,14 @@ map <leader>s? z=
 """"""""""""""""""""""""""""""
 " => org-mode
 """"""""""""""""""""""""""""""
-Bundle 'speeddating.vim'
-Bundle 'jceb/vim-orgmode.git'
+Plugin 'speeddating.vim'
+Plugin 'jceb/vim-orgmode.git'
 au BufNewFile,BufRead *.org set filetype=org
 
 """"""""""""""""""""""""""""""
 " => Gradle/groovy
 """"""""""""""""""""""""""""""
-Bundle 'rdolgushin/groovy.vim'
+Plugin 'rdolgushin/groovy.vim'
 
 au BufNewFile,BufRead *.gradle set filetype=groovy
 
