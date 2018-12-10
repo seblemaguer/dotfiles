@@ -1569,18 +1569,16 @@ enough to be on melpa so I use quelpa.
     :config
     (setq python-indent-offset 4))
 #+end_src
-*** Anaconda configuration
+*** LSP configuration
 #+begin_src emacs-lisp
-  (use-package anaconda-mode
+  (use-package lsp-python
     :ensure t
-    :after python
     :hook
-    (python-mode . anaconda-mode)
-    (python-mode . anaconda-eldoc-mode))
-
-  (use-package company-anaconda
-    :ensure t
-    :hook (python-mode . (lambda () (add-to-list (make-local-variable 'company-backends)'(company-anaconda :with company-capf)))))
+    (python-mode . (lambda () (add-to-list (make-local-variable 'company-backends) 'company-lsp)))
+    (python-mode . lsp-python-enable)
+    (python-mode . flycheck-mode)
+    (python-mode . (lambda () (lsp-ui-flycheck-enable t)))
+    (python-mode . lsp-ui-sideline-mode))
 #+end_src
 *** Pipenv
 #+begin_src emacs-lisp
@@ -1595,8 +1593,7 @@ enough to be on melpa so I use quelpa.
 #+end_src
 *** virtual environment
 #+begin_src emacs-lisp
-  (use-package pyvenv
-          :ensure t)
+  (use-package pyvenv :ensure t)
 #+end_src
 *** Interpreter configuration
 #+begin_src emacs-lisp
