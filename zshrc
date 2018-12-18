@@ -216,6 +216,8 @@ else
     APPEND_HISTORY=true
     HIST_EXPIRE_DUPS_FIRST=true
     HIST_ALLOW_CLOBBER=true
+    HIST_IGNORE_SPACE=true
+    HIST_SAVE_NO_DUPS=true
 
     # = Diverse
     AUTO_CD=true
