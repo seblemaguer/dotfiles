@@ -85,16 +85,37 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => vundle
+" => Plugin managment
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set nocompatible
 filetype off
 
 set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
+call vundle#begin()
 
-Plugin 'gmarik/vundle'
 
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" VCS"
+Plugin 'tpope/vim-fugitive'
+Plugin 'phleet/vim-mercenary'
+
+"Org mode"
+Plugin 'speeddating.vim'
+Plugin 'jceb/vim-orgmode.git'
+
+"Helpers"
+Plugin 'scrooloose/nerdtree'
+Plugin 'vimwiki/vimwiki'
+
+"Theme "
+Plugin 'dracula/vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+
+
+call vundle#end()
 filetype plugin indent on
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -172,6 +193,7 @@ set listchars=nbsp:¬,eol:¶,tab:>-,extends:»,precedes:«,trail:•
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax enable "Enable syntax hl
+:silent! color dracula
 
 set t_Co=256
 
@@ -375,19 +397,9 @@ try
 catch
 endtry
 
-
-""""""""""""""""""""""""""""""
-" => Global theme
-""""""""""""""""""""""""""""""
-Plugin 'dracula/vim'
-colorschem dracula
-
 """"""""""""""""""""""""""""""
 " => Statusline
 """"""""""""""""""""""""""""""
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-
 set laststatus=2
 let g:airline_powerline_fonts=1
 let g:airline_theme='luna'
@@ -481,20 +493,16 @@ map <leader>u :TMiniBufExplorer<cr>
 """"""""""""""""""""""""""""""
 " => Vimwiki plugin
 """"""""""""""""""""""""""""""
-Plugin 'vimwiki/vimwiki'
 let g:vimwiki_list=[{'path':'~/.vim/vimwiki'}]
 
 
 """"""""""""""""""""""""""""""
 " => Git / Mercurial
 """"""""""""""""""""""""""""""
-Plugin 'tpope/vim-fugitive'
-Plugin 'phleet/vim-mercenary'
 
 """"""""""""""""""""""""""""""
 " => File tree
 """"""""""""""""""""""""""""""
-Plugin 'scrooloose/nerdtree'
 
 map <F2> <Esc>:NERDTreeToggle<CR>
 
@@ -519,8 +527,6 @@ map <leader>s? z=
 """"""""""""""""""""""""""""""
 " => org-mode
 """"""""""""""""""""""""""""""
-Plugin 'speeddating.vim'
-Plugin 'jceb/vim-orgmode.git'
 au BufNewFile,BufRead *.org set filetype=org
 
 """"""""""""""""""""""""""""""
