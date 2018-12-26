@@ -32,10 +32,17 @@
 (require 'cl)
 (require 'package)
 
-(setq package-enable-at-startup nil)
-(setq package-check-signature nil)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
-(add-to-list 'package-archives '("orgmode" . "http://orgmode.org/elpa/"))
+(setq package-enable-at-startup nil
+      package-check-signature nil
+      package-archives '(("GNU ELPA"     . "https://elpa.gnu.org/packages/")
+                         ("MELPA Stable" . "https://stable.melpa.org/packages/")
+                         ("MELPA"        . "https://melpa.org/packages/")
+                         ("ORGMODE"      . "http://orgmode.org/elpa/"))
+      package-archive-priorities  '(("ORGMODE"      . 15)
+                                    ("MELPA Stable" . 10)
+                                    ("GNU ELPA"     . 5)
+                                    ("MELPA"        . 0)))
+
 (package-initialize)
 
 (unless (package-installed-p 'use-package)

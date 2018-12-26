@@ -1444,6 +1444,7 @@ enough to be on melpa so I use quelpa.
   #+begin_src emacs-lisp
     (use-package pdf-tools
       :ensure t
+      :pin MELPA
       :after hydra
       :config
 
@@ -3778,6 +3779,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package sauron
     :ensure t
+    :pin MELPA
     :config
 
     ;;
