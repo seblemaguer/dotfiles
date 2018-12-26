@@ -1,6 +1,6 @@
 #+TITLE: Emacs configuration file
 #+AUTHOR: Sébastien Le Maguer
-#+EMAIL: slemaguer@coli.uni-saarland.de
+#+EMAIL: lemagues@tcd.ie
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  fr
@@ -11,9 +11,6 @@
 
 This is my emacs configuration file. It is under version control and available, among other
 configurations, at this repository: https://github.com/seblemaguer/dotfiles
-
-This configuration relies mainly on melpa and repository named "local-melpa". This local-melpa
-repository is corresponding to the branch "personal" of my fork of melpa (see here: https://github.com/seblemaguer/melpa/tree/personal )
 
 * Prerequisite
 This part focusing on some baseline prerequisites before the main configuration part
