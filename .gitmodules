@@ -1,0 +1,15 @@
+[submodule "config/awesome/awesome-switcher"]
+	path = config/awesome/awesome-switcher
+	url = https://github.com/troglobit/awesome-switcher.git
+[submodule "config/awesome/freedesktop"]
+	path = config/awesome/freedesktop
+	url = https://github.com/lcpz/awesome-freedesktop.git
+[submodule "config/awesome/lain"]
+	path = config/awesome/lain
+	url = https://github.com/lcpz/lain.git
+[submodule "config/awesome/net_widgets"]
+	path = config/awesome/net_widgets
+	url = https://github.com/pltanton/net_widgets.git
+[submodule "config/awesome/radical"]
+	path = config/awesome/radical
+	url = https://github.com/Elv13/radical.git
