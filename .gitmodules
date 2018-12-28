@@ -13,3 +13,21 @@
 [submodule "config/awesome/radical"]
 	path = config/awesome/radical
 	url = https://github.com/Elv13/radical.git
+[submodule "config/awesome/pulseaudio-awesome"]
+	path = config/awesome/pulseaudio-awesome
+	url = https://github.com/orofarne/pulseaudio-awesome.git
+[submodule "config/awesome/calendar"]
+	path = config/awesome/calendar
+	url = https://github.com/deficient/calendar.git
+[submodule "config/awesome/battery-widget"]
+	path = config/awesome/battery-widget
+	url = https://github.com/deficient/battery-widget.git
+[submodule "config/awesome/cpuinfo"]
+	path = config/awesome/cpuinfo
+	url = https://github.com/deficient/cpuinfo.git
+[submodule "config/awesome/vicious"]
+	path = config/awesome/vicious
+	url = https://github.com/vicious-widgets/vicious.git
+[submodule "config/awesome/leds-widget"]
+	path = config/awesome/leds-widget
+	url = https://github.com/deficient/leds-widget.git
