@@ -3160,6 +3160,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
 #+begin_src emacs-lisp
   (use-package dired-collapse
     :ensure t
+    :disabled t
     :defer
     :hook
     (dired-mode . dired-collapse-mode))
