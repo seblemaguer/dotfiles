@@ -521,61 +521,6 @@ fill-column for example.
   ;; Redefine fill-column as my screen is not 80 chars :D
   (setq-default fill-column 100)
 #+end_src
-** Productivity behavior
-This part is dedicated to ensure productivity configuration. This involves mainly isolating,
-capturing and bibliography.
-*** Dark room
-Sometimes I just want to ignore everything except the current document. Darkroom is exactly designed for that
-#+begin_src emacs-lisp
-(use-package darkroom :ensure t)
-#+end_src
-*** ORG/Web tools
-Org-web-tools is a nice package which allows to sniff a webpage and convert it into org-mode
-format. This is really useful to homogeneise documentation.
-#+begin_src emacs-lisp
-(use-package org-web-tools :ensure t)
-#+end_src
-*** Biblio
-This part focus on bibliography/library configuration. The goal is to have a global configuration to
-organize read papers or "to read" papers. This is mainly based on https://codearsonist.com/reading-for-programmers
-#+begin_src emacs-lisp
-  (use-package ivy-bibtex
-    :ensure t
-    :config
-    (setq ivy-bibtex-bibliography "~/shared/Dropbox/org/work/biblio/index.bib" ;; where your references are stored
-          ivy-bibtex-library-path "~/shared/Dropbox/org/work/biblio/lib/" ;; where your pdfs etc are stored
-          ivy-bibtex-notes-path "~/shared/Dropbox/org/work/biblio/index.org" ;; where your notes are stored
-          bibtex-completion-bibliography "~/shared/Dropbox/org/work/biblio/index.bib" ;; writing completion
-          bibtex-completion-notes-path "~/shared/Dropbox/org/work/biblio/index.org"))
-
-  (use-package org-ref
-    :after org
-    :ensure t
-    :chords
-    (("uu"  . org-ref-cite-hydra/body))
-    :hook
-    (org-export-before-parsing . orcp-citeproc)
-    :init
-    (setq org-ref-completion-library 'org-ref-ivy-cite
-          org-ref-notes-directory "~/shared/Dropbox/org/work/biblio"
-          org-ref-bibliography-notes "~/shared/Dropbox/org/work/biblio/index.org"
-          org-ref-default-bibliography '("~/shared/Dropbox/org/work/biblio/index.bib")
-          org-ref-pdf-directory "~/shared/Dropbox/org/work/biblio/lib/"))
-
-  (use-package interleave
-    :ensure t
-    :bind ("C-x i" . interleave-mode)
-    :config
-    (setq interleave-split-direction 'horizontal
-          interleave-split-lines 20
-          interleave-disable-narrowing t))
-#+end_src
-*** Paper
-As I write papers, it is useful to have some helper to start to have the inspiration.
-#+begin_src emacs-lisp
-  (use-package academic-phrases :ensure t)
-  (use-package powerthesaurus :ensure t)
-#+end_src
 ** Process management
 I want to have some services and processes managed directly in emacs. This services/processes are
 closely related to my emacs use and there have to be shutdown when emacs is stopping.
@@ -4842,6 +4787,61 @@ I actually use this part for minor correction. The tags are done when abcde is c
   :commands (wttrin)
   :init
   (setq wttrin-default-cities '("Saarbrücken" "Lannion" "Sofia")))
+#+end_src
+* Productivity behavior
+This part is dedicated to ensure productivity configuration. This involves mainly isolating,
+capturing and bibliography.
+** Dark room
+Sometimes I just want to ignore everything except the current document. Darkroom is exactly designed for that
+#+begin_src emacs-lisp
+(use-package darkroom :ensure t)
+#+end_src
+** ORG/Web tools
+Org-web-tools is a nice package which allows to sniff a webpage and convert it into org-mode
+format. This is really useful to homogeneise documentation.
+#+begin_src emacs-lisp
+(use-package org-web-tools :ensure t)
+#+end_src
+** Biblio
+This part focus on bibliography/library configuration. The goal is to have a global configuration to
+organize read papers or "to read" papers. This is mainly based on https://codearsonist.com/reading-for-programmers
+#+begin_src emacs-lisp
+  (use-package ivy-bibtex
+    :ensure t
+    :config
+    (setq ivy-bibtex-bibliography "~/shared/Dropbox/org/work/biblio/index.bib" ;; where your references are stored
+          ivy-bibtex-library-path "~/shared/Dropbox/org/work/biblio/lib/" ;; where your pdfs etc are stored
+          ivy-bibtex-notes-path "~/shared/Dropbox/org/work/biblio/index.org" ;; where your notes are stored
+          bibtex-completion-bibliography "~/shared/Dropbox/org/work/biblio/index.bib" ;; writing completion
+          bibtex-completion-notes-path "~/shared/Dropbox/org/work/biblio/index.org"))
+
+  (use-package org-ref
+    :after org
+    :ensure t
+    :chords
+    (("uu"  . org-ref-cite-hydra/body))
+    :hook
+    (org-export-before-parsing . orcp-citeproc)
+    :init
+    (setq org-ref-completion-library 'org-ref-ivy-cite
+          org-ref-notes-directory "~/shared/Dropbox/org/work/biblio"
+          org-ref-bibliography-notes "~/shared/Dropbox/org/work/biblio/index.org"
+          org-ref-default-bibliography '("~/shared/Dropbox/org/work/biblio/index.bib")
+          org-ref-pdf-directory "~/shared/Dropbox/org/work/biblio/lib/"))
+
+  (use-package interleave
+    :ensure t
+    :bind ("C-x i" . interleave-mode)
+    :config
+    (setq interleave-split-direction 'horizontal
+          interleave-split-lines 20
+          interleave-disable-narrowing t))
+#+end_src
+** Paper
+As I write papers, it is useful to have some helper to start to have the inspiration.
+#+begin_src emacs-lisp
+  (use-package academic-phrases :ensure t)
+  (use-package powerthesaurus :ensure t)
 #+end_src
 * Visual
 ** Global theme
