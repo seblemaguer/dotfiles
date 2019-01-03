@@ -296,10 +296,10 @@ leads to this configuration
 
     ;; elfeed
     (add-to-list 'recentf-exclude (format "%s/\\.elfeed/.*" (getenv "HOME")))
-    (add-to-list 'recentf-exclude (format "%s/Dropbox/emacs/elfeed/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/shared/Dropbox/emacs/elfeed/.*" (getenv "HOME")))
 
     ;; Org-mode organisation
-    (add-to-list 'recentf-exclude (format "%s/Dropbox/org/organisation/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/shared/Dropbox/org/organisation/.*" (getenv "HOME")))
 
     ;; Org/todo/calendars
     (add-to-list 'recentf-exclude ".*todo.org")
@@ -542,11 +542,11 @@ organize read papers or "to read" papers. This is mainly based on https://codear
   (use-package ivy-bibtex
     :ensure t
     :config
-    (setq ivy-bibtex-bibliography "~/Dropbox/org/work/biblio/index.bib" ;; where your references are stored
-          ivy-bibtex-library-path "~/Dropbox/org/work/biblio/lib/" ;; where your pdfs etc are stored
-          ivy-bibtex-notes-path "~/Dropbox/org/work/biblio/index.org" ;; where your notes are stored
-          bibtex-completion-bibliography "~/Dropbox/org/work/biblio/index.bib" ;; writing completion
-          bibtex-completion-notes-path "~/Dropbox/org/work/biblio/index.org"))
+    (setq ivy-bibtex-bibliography "~/shared/Dropbox/org/work/biblio/index.bib" ;; where your references are stored
+          ivy-bibtex-library-path "~/shared/Dropbox/org/work/biblio/lib/" ;; where your pdfs etc are stored
+          ivy-bibtex-notes-path "~/shared/Dropbox/org/work/biblio/index.org" ;; where your notes are stored
+          bibtex-completion-bibliography "~/shared/Dropbox/org/work/biblio/index.bib" ;; writing completion
+          bibtex-completion-notes-path "~/shared/Dropbox/org/work/biblio/index.org"))
 
   (use-package org-ref
     :after org
@@ -557,10 +557,10 @@ organize read papers or "to read" papers. This is mainly based on https://codear
     (org-export-before-parsing . orcp-citeproc)
     :init
     (setq org-ref-completion-library 'org-ref-ivy-cite
-          org-ref-notes-directory "~/Dropbox/org/work/biblio"
-          org-ref-bibliography-notes "~/Dropbox/org/work/biblio/index.org"
-          org-ref-default-bibliography '("~/Dropbox/org/work/biblio/index.bib")
-          org-ref-pdf-directory "~/Dropbox/org/work/biblio/lib/"))
+          org-ref-notes-directory "~/shared/Dropbox/org/work/biblio"
+          org-ref-bibliography-notes "~/shared/Dropbox/org/work/biblio/index.org"
+          org-ref-default-bibliography '("~/shared/Dropbox/org/work/biblio/index.bib")
+          org-ref-pdf-directory "~/shared/Dropbox/org/work/biblio/lib/"))
 
   (use-package interleave
     :ensure t
@@ -2083,13 +2083,13 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 
     ;; Todo part
     (setq org-agenda-files '())
-    (when (file-exists-p "~/Dropbox/org/todo/todo.org")
+    (when (file-exists-p "~/shared/Dropbox/org/todo/todo.org")
       (setq org-agenda-files
-            (append org-agenda-files '("~/Dropbox/org/todo/todo.org"))))
+            (append org-agenda-files '("~/shared/Dropbox/org/todo/todo.org"))))
 
-    (when (file-exists-p "~/Dropbox/org/organisation/bookmarks.org")
+    (when (file-exists-p "~/shared/Dropbox/org/organisation/bookmarks.org")
       (setq org-agenda-files
-            (append org-agenda-files '("~/Dropbox/org/organisation/bookmarks.org"))))
+            (append org-agenda-files '("~/shared/Dropbox/org/organisation/bookmarks.org"))))
 
     (when (file-exists-p "~/Calendars")
       (setq org-agenda-files
@@ -2244,19 +2244,19 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     ;; Capture
     (setq org-capture-templates
           `(("b" "Adding book" entry
-             (file+headline "~/Dropbox/org/todo/todo.org" "To read")
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To read")
              (file ,(format "%s/third_parties/org-capture-templates/book.org" config-basedir)))
 
             ("f" "Reference" entry
-             (file+headline "~/Dropbox/org/todo/todo.org" "Reference task")
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Reference task")
              (file ,(format "%s/third_parties/org-capture-templates/reference.org" config-basedir)))
 
             ("L" "Bookmark" entry
-             (file+olp "~/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
+             (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
              (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" config-basedir)))
 
             ("m" "mail" entry
-             (file+headline "~/Dropbox/org/todo/todo.org" "Mailing")
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Mailing")
              (file ,(format "%s/third_parties/org-capture-templates/mail.org" config-basedir)))
 
             ("M" "MSP calendar" entry
@@ -2268,11 +2268,11 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
              (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir)))
 
             ("r" "RSS" entry
-             (file+olp "~/Dropbox/org/todo/todo.org" "To review" "RSS")
+             (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "RSS")
              (file ,(format "%s/third_parties/org-capture-templates/rss.org" config-basedir)))
 
             ("t" "ToDo Entry" entry
-             (file+headline "~/Dropbox/org/todo/todo.org" "To sort")
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
              (file ,(format "%s/third_parties/org-capture-templates/default.org" config-basedir))
              :empty-lines-before 1)))
     )
@@ -2283,7 +2283,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :ensure t
     :config
     (add-to-list 'org-capture-templates
-                 '("c" "Cookbook" entry (file "~/Dropbox/recipes/cookbook.org")
+                 '("c" "Cookbook" entry (file "~/shared/Dropbox/recipes/cookbook.org")
                    "%(org-chef-get-recipe-from-url)"
                    :empty-lines 1)))
 #+end_src
@@ -4532,7 +4532,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :config
 
     ;; Change the storage directory
-    (setq elfeed-db-directory "~/Dropbox/emacs/elfeed")
+    (setq elfeed-db-directory "~/shared/Dropbox/emacs/elfeed")
 
     ;; Formatting dates
     (setq elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left))
@@ -4565,10 +4565,10 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :ensure t
     :after elfeed
     :config
-    (when (file-exists-p "~/Dropbox/org/organisation/rss.org")
+    (when (file-exists-p "~/shared/Dropbox/org/organisation/rss.org")
       (progn
         (elfeed-org)
-        (setq rmh-elfeed-org-files (list "~/Dropbox/org/organisation/rss.org"))
+        (setq rmh-elfeed-org-files (list "~/shared/Dropbox/org/organisation/rss.org"))
         (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
 
 
