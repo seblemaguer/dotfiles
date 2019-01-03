@@ -1608,6 +1608,7 @@ enough to be on melpa so I use quelpa.
 
   (use-package ess-smart-underscore
     :ensure t
+    :disabled t
     :after ess)
 
   (use-package ess-view
