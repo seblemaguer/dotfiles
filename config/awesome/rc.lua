@@ -22,7 +22,7 @@ local pulse         = require("pulseaudio-awesome/pulseaudio")
 local freedesktop   = require("freedesktop")
 
 local net_widgets   = require("net_widgets")
--- local switcher      = require("awesome-switcher")
+local switcher      = require("awesome-switcher")
 
 -- }}}
 
@@ -213,28 +213,9 @@ root.buttons(awful.util.table.join(
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-   -- -- Improved alt tab (FIXME: can't exit so it is not working)
-   -- awful.key({ "Mod1",           }, "Tab", function ()  switcher.switch( 1, "Alt_L", "Tab", "ISO_Left_Tab")  end),
-   -- awful.key({ "Mod1", "Shift"   }, "Tab", function ()  switcher.switch(-1, "Alt_L", "Tab", "ISO_Left_Tab")  end),
-
-   -- Standard alt tab
-   awful.key({ "Mod1",           }, "Tab",
-      function ()
-         -- awful.client.focus.history.previous()
-         awful.client.focus.byidx(-1)
-         if client.focus then
-            client.focus:raise()
-         end
-   end),
-
-   awful.key({ "Mod1", "Shift"   }, "Tab",
-      function ()
-         -- awful.client.focus.history.previous()
-         awful.client.focus.byidx(1)
-         if client.focus then
-            client.focus:raise()
-         end
-   end),
+   -- Improved alt tab
+   awful.key({ "Mod1",           }, "Tab", function ()  switcher.switch( 1, "Alt_L", "Tab", "ISO_Left_Tab")  end),
+   awful.key({ "Mod1", "Shift"   }, "Tab", function ()  switcher.switch(-1, "Alt_L", "Tab", "ISO_Left_Tab")  end),
 
    -- Hotkeys
    awful.key({ modkey,           }, "h",      hotkeys_popup.show_help,                          {description = "show help", group="awesome"}),
