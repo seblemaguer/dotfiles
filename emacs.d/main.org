@@ -4847,11 +4847,10 @@ As I write papers, it is useful to have some helper to start to have the inspira
 * Visual
 ** Global theme
 #+begin_src emacs-lisp
-  (use-package meacupla-theme
-    :ensure quelpa
-    :quelpa (meacupla-theme :repo "seblemaguer/meacupla-theme" :fetcher gitlab)
+  (use-package flucui-themes
+    :ensure t
     :config
-    (load-theme 'meacupla t))
+    (flucui-themes-load-style 'light))
 #+end_src
 ** Frame
 *** Title
