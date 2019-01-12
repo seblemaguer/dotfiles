@@ -1954,7 +1954,10 @@ Extracted from https://github.com/zakame/emacs-for-javascript
     (use-package ob-exp)
     (use-package ox-bibtex)
     (use-package org-protocol)
-    (use-package org-dashboard :ensure t)
+    (use-package org-dashboard
+      :ensure t
+      :config
+      (setq org-dashboard-files org-agenda-files))
 
     ;; Todo part
     (setq org-todo-keywords '((sequence
