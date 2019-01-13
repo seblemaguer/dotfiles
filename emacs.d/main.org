@@ -776,17 +776,28 @@ Ivy-yasnippet is used for snippet discovery.
     :config
 
     ;; Adding yasnippet support to company
-    (add-to-list 'company-backends 'company-yasnippet)
+    (eval-after-load 'company
+      '(lambda ()
+         (add-to-list 'company-backends 'company-yasnippet)))
+
+    ;; Add third parties snippets
+    (defvar third-parties-snippet-dir (format "%s/third_parties/snippets" config-basedir)
+      "Directory containing my own snippets")
+
+    (defun third-parties-snippets-initialize ()
+      (add-to-list 'yas-snippet-dirs 'third-parties-snippet-dir t)
+      (yas-load-directory yasnippet-snippets-dir t))
+
+    (eval-after-load 'yasnippet '(third-parties-snippets-initialize))
 
     ;; Activate global
     (yas-global-mode))
 
-  (use-package yasnippet-snippets
-    :ensure t
-    )
+  ;; Load official snippets
+  (use-package yasnippet-snippets :ensure t)
 
-  (use-package ivy-yasnippet
-    :ensure t)
+  ;; Connect with ivy to have a list on demand
+  (use-package ivy-yasnippet :ensure t)
 #+end_src
 *** Filetype templates
 This part is using yatemplate (an over-layer of yasnippet) coupled with auto-insert to have a set of
