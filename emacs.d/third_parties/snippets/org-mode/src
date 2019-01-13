@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: src
+# key: src_
+# --
+#+BEGIN_SRC ${1:lang} :session ${2:session01} :exports ${3:both} :tangle yes
+#+END_SRC

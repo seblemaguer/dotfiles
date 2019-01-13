@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+# name: biblio_entry
+# key: <biblio_entry
+# --
+
+* TODO ${1:Title}
+:PROPERTIES:
+:INTERLEAVE_PDF: ${2:pdf_file}
+:END:
+
+** Reference
+#+begin_src bibtex :tangle yes
+#+end_src
+** Category
+$0
+** Analysis
+*** Context
+*** Correctness
+*** Contributions
+*** Clarity
+*** Other info
