@@ -1611,11 +1611,11 @@ enough to be on melpa so I use quelpa.
 ** R
 *** ESS configuration
 #+begin_src emacs-lisp
-  (use-package julia-mode
-    :ensure t) ;; FIXME: patch to make ess work for now
-
+  ;; ESS for R programming
   (use-package ess
-    :ensure t)
+    :ensure t
+    :config
+    (setq ess-default-style 'RRR+))
 
   (use-package ess-smart-underscore
     :ensure t
@@ -1623,10 +1623,6 @@ enough to be on melpa so I use quelpa.
     :after ess)
 
   (use-package ess-view
-    :ensure t
-    :after ess)
-
-  (use-package ess-R-data-view
     :ensure t
     :after ess)
 #+end_src
