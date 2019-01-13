@@ -1633,7 +1633,7 @@ enough to be on melpa so I use quelpa.
   :config
   (extend-dnd-activate))
 #+end_src
-*** completing
+*** Completing
 #+begin_src emacs-lisp
   (use-package company-statistics
     :ensure t
@@ -2214,10 +2214,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
             ("m" "mail" entry
              (file+headline "~/shared/Dropbox/org/todo/todo.org" "Mailing")
              (file ,(format "%s/third_parties/org-capture-templates/mail.org" config-basedir)))
-
-            ("M" "MSP calendar" entry
-             (file "~/Calendars/Calendar-MSP.org")
-             (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir)))
 
             ("P" "Personnal calendar" entry
              (file "~/Calendars/Calendar-Personal.org")
@@ -5426,7 +5422,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     "
       ("B" bookmark-set)
       ("b" list-bookmarks)
-      ("c" org-capture)
+      ("c" counsel-org-capture)
       ("f" describe-function)
       ("g" org-web-tools-read-url-as-org)
       ("m" notmuch-mua-new-mail)
