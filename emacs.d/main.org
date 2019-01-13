@@ -786,7 +786,7 @@ Ivy-yasnippet is used for snippet discovery.
 
     (defun third-parties-snippets-initialize ()
       (add-to-list 'yas-snippet-dirs 'third-parties-snippet-dir t)
-      (yas-load-directory yasnippet-snippets-dir t))
+      (yas-load-directory third-parties-snippet-dir t))
 
     (eval-after-load 'yasnippet '(third-parties-snippets-initialize))
 
