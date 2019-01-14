@@ -1,21 +1,16 @@
 # -*- mode: snippet -*-
 # name: biblio_entry
-# key: <biblio_entry
+# key: bib_entry
 # --
 
-* TODO ${1:Title}
+`(make-string (+ (org-current-level) 1) ?*)` TODO ${1:Title}
 :PROPERTIES:
-:INTERLEAVE_PDF: ${2:pdf_file}
+:INTERLEAVE_PDF: ${2:$$(read-file-name "pdf file path")}
 :END:
 
-** Reference
+`(make-string (+ (org-current-level) 2) ?*)` Reference
 #+begin_src bibtex :tangle yes
 #+end_src
-** Category
+
+`(make-string (+ (org-current-level) 2) ?*)` Notes
 $0
-** Analysis
-*** Context
-*** Correctness
-*** Contributions
-*** Clarity
-*** Other info
