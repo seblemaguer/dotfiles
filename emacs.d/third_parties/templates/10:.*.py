@@ -55,10 +55,12 @@ if __name__ == '__main__':
 
         # Verbose level => logging level
         log_level = args.verbosity
-        if (args.verbosity > len(LEVEL)):
-            logging.warning("verbosity level is too high, I'm gonna assume you're taking the highes ")
+        if (args.verbosity >= len(LEVEL)):
             log_level = len(LEVEL) - 1
-        logging.basicConfig(level=LEVEL[log_level])
+            logging.basicConfig(level=LEVEL[log_level])
+            logging.warning("verbosity level is too high, I'm gonna assume you're taking the highest (%d)" % log_level)
+        else:
+            logging.basicConfig(level=LEVEL[log_level])
 
         # Debug time
         start_time = time.time()
