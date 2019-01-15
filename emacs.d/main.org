@@ -4460,7 +4460,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :defer t
     :bind ("C-x y" . youtube-dl-list)
     :config
-    (setq youtube-dl-directory "~/netshare")
+    (setq youtube-dl-directory "~/Downloads")
 
     ;; FIXME: should be moved !
     (defun expose (function &rest args)
