@@ -4762,13 +4762,12 @@ organize read papers or "to read" papers. This is mainly based on https://codear
           org-ref-default-bibliography '("~/shared/Dropbox/org/work/biblio/index.bib")
           org-ref-pdf-directory "~/shared/Dropbox/org/work/biblio/lib/"))
 
-  (use-package interleave
+  (use-package org-noter
     :ensure t
-    :bind ("C-x i" . interleave-mode)
+    :bind ("C-x i" . org-noter)
     :config
-    (setq interleave-split-direction 'horizontal
-          interleave-split-lines 20
-          interleave-disable-narrowing t))
+    (setq org-noter-property-doc-file "INTERLEAVE_PDF"
+          org-noter-property-note-location "INTERLEAVE_PAGE_NOTE"))
 #+end_src
 ** Paper
 As I write papers, it is useful to have some helper to start to have the inspiration.
