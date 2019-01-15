@@ -4668,7 +4668,8 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** MPV as a player
 #+begin_src emacs-lisp
   (use-package emms-player-simple-mpv
-    :ensure t
+    ;; :ensure t
+    :quelpa (emms-player-simple-mpv :fetcher github :repo "seblemaguer/emms-player-simple-mpv")
     :after emms
     :config
 
