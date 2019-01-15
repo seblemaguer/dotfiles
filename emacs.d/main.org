@@ -2079,7 +2079,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 
                                            ;; Deadlines / dates
                                            ("\\([Pp]resentations?\\)" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
-                                           ("\\([Pp]apers?\\|[Bb]lio?\\|[Aa]rticles?\\)" ,(format "%s/third_parties/icons/book.png" config-basedir) nil nil :ascent center)
+                                           ("\\([Pp]apers?\\|[Bb]lio\\|[Aa]rticles?\\|[Rr]eading\\|[Ww]riting\\)" ,(format "%s/third_parties/icons/book.png" config-basedir) nil nil :ascent center)
                                            ("[Mm]ails?" ,(format "%s/third_parties/icons/gnus.png" config-basedir) nil nil :ascent center)
                                            ("[Rr]eview?" ,(format "%s/third_parties/icons/review.png" config-basedir) nil nil :ascent center)
 
