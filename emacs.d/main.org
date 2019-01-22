@@ -3527,7 +3527,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
     ;; Collapsing some buffer groups
     (setq mp/ibuffer-collapsed-groups
-          (list "Calendar" "Todos"
+          (list "Calendar" "Todos" "Prodigy"
                 "Emms" "RSS/Podcast"
                 "Temp" "Help" "*Tramp*"))
 
