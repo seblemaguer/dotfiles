@@ -3372,7 +3372,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                       (mode . notmuch-search-mode)
                       (mode . notmuch-hello-mode)
                       (name . "^\.bbdb$")
-                      (name . "^\.newsrc-dribble")))))
+                      (name . "^\.newsrc-dribble")))
+                    ("Slack"
+                     (or
+                      (derived-mode . slack-mode)
+                      (name . "^[*]?[Ss]lack.*")))
+                    ))
 
                   (ibuffer-circe-generate-filter-groups-by-server)
                   (ibuffer-tramp-generate-filter-groups-by-tramp-connection)
@@ -3998,9 +4003,39 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :config
     (sauron-circe-start))
 #+end_src
+** Slack
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package slack
+    :commands (slack-start)
+    :ensure t
+    :init
+    (setq slack-buffer-emojify t ;; if you want to enable emoji, default nil
+          slack-prefer-current-team t)
+
+    :config
+    (setq stackb-client-id (replace-regexp-in-string "\\^.*$" "" (my:auth-source-get-user :host "stack-b")))
+    (setq adapt-client-id (replace-regexp-in-string "\\^.*$" "" (my:auth-source-get-user :host "adaptcentre")))
+    (slack-register-team
+     :name "adaptcentre"
+     :default t
+     :client-id adapt-client-id
+     :client-secret (my:auth-source-get-passwd :host "adaptcentre" :user (format "%s^secret" adapt-client-id))
+     :token (my:auth-source-get-passwd :host "adaptcentre" :user (format "%s^token" adapt-client-id))
+     :subscribed-channels '(general hpc-users location tools_and_kits)
+     :full-and-display-names t)
+
+    (slack-register-team
+     :name "stack-b"
+     :client-id stackb-client-id
+     :client-secret (my:auth-source-get-passwd :host "stack-b" :user (format "%s^secret" stackb-client-id))
+     :token (my:auth-source-get-passwd :host "stack-b" :user (format "%s^token" stackb-client-id))
+     :subscribed-channels '(general random social)
+     :full-and-display-names t)
+    )
+#+END_SRC
 ** Mail
 *** TTLS
-  #+begin_src emacs-lisp
+  #+begin_src emacs-lisp :tangle yes
     (use-package starttls
       :config
       (setq starttls-use-gnutls t
