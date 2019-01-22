@@ -14,9 +14,24 @@ configurations, at this repository: https://github.com/seblemaguer/dotfiles
 
 * Prerequisite
 This part focusing on some baseline prerequisites before the main configuration part
+** Identification helper
+Easy use wrapper around auth-* authentification emacs utils
+#+begin_src emacs-lisp :tangle yes
+  (defun* my:auth-source-get-user (&rest spec &allow-other-keys)
+    "Helper to get the user given the SPEC from authsource."
+    (let ((founds (apply 'auth-source-search spec)))
+      (when founds
+        (plist-get (nth 0 founds) :user))))
+
+  (defun* my:auth-source-get-passwd (&rest spec &allow-other-keys)
+    "Helper to get the password given the SPEC from authsource."
+    (let ((founds (apply 'auth-source-search spec)))
+      (when founds
+        (funcall (plist-get (nth 0 founds) :secret)))))
+#+end_src
 ** Daemon mode
 First start a server as it is going to be the 99% of my use of emacs.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (server-start)
 #+end_src
 ** Packages
@@ -61,22 +76,23 @@ We want to be able to have 4 things:
     :ensure t)
 #+end_src
 - Use an enhanced package list visualizer (paradox)
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package paradox
     :ensure t
     :defer t
     :config
     (setq paradox-spinner-type 'progress-bar
-          paradox-execute-asynchronously t))
+          paradox-execute-asynchronously t
+          paradox-github-token (my:auth-source-get-passwd :host "github.cm" :user "seblemaguer^paradox")))
 #+end_src
 - Dealing with key-chord support
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package use-package-chords
   :ensure t
   :config (key-chord-mode 1))
 #+end_src
 - Update all packages on one shot. This part is copied from https://emacs.stackexchange.com/questions/16398/noninteractively-upgrade-all-packages
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun package-upgrade-all ()
     "Upgrade all packages automatically without showing *Packages* buffer."
     (interactive)
@@ -110,14 +126,14 @@ We want to be able to have 4 things:
 *** Quelpa
 Quelpa is super useful for developer package management. Adding the adaptation for the use-package
 makes it configuration file proof.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package quelpa-use-package
       :ensure t
       :init
       (setq quelpa-update-melpa-p nil))
 #+end_src
 *** Auto-update
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package auto-package-update
     :ensure t
     :config
@@ -148,28 +164,15 @@ In order to have a better and more visual control of undoing, I use undo-tree.
 ** Minor-mode activation
 I use some minor modes based on some filetypes. This package is an helper which facilitates these
 activations.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package auto-minor-mode
     :ensure t)
 #+end_src
 ** Helpers
 I define here some global helpers used either in the rest of the file, either available to use at runtime
-*** Authentification
-Easy use wrapper around auth-* authentification emacs utils
-#+begin_src emacs-lisp
-(defun* my:auth-source-get-passwd (&rest spec &allow-other-keys)
-  (let ((founds (apply 'auth-source-search spec)))
-    (when founds
-      (funcall (plist-get (nth 0 founds) :secret)))))
-
-(defun* my:auth-source-get-user (&rest spec &allow-other-keys)
-  (let ((founds (apply 'auth-source-search spec)))
-    (when founds
-      (plist-get (nth 0 founds) :user))))
-#+end_src
 *** Editing as root
 Defining a simple helper to edit file as root using tramp
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (defun edit-current-file-as-root ()
   "Edit the file that is associated with the current buffer as root"
   (interactive)
@@ -2859,23 +2862,30 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     (setq magithub-clone-default-directory "~/tmp"))
 #+end_src
 *** Gist
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package gist :ensure t)
 #+end_src
 *** Gitlab
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package gitlab :ensure t)
 (use-package ivy-gitlab :ensure t)
 #+end_src
 *** Browsing at remote
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package browse-at-remote :ensure t)
 #+end_src
 ** Continuous building
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package travis
     :ensure t
     :config
+
+    (require 'travis-utils)
+
+    (defun travis--get-github-token ()
+      "Retrieve the Travis token ID."
+      (my:auth-source-get-passwd :host "travis-ci.org" :user "seblemaguer"))
+
 
     (defun show-my-travis-projects ()
       (interactive)
