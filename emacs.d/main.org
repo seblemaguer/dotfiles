@@ -26,7 +26,7 @@ This section focuses on the package management configuration.
 
 We want to be able to have 4 things:
 - Adapt the system package manager (for archlinux tool trizen) + enable use-package-ensure-system-package
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package system-packages
       :ensure t
       :config
@@ -125,12 +125,16 @@ makes it configuration file proof.
           auto-package-update-hide-results t)
     (auto-package-update-maybe))
 #+end_src
+*** General
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package general :ensure t)
+#+END_SRC
 * Global
 This section is about configuring global emacs helpers which are not specific to a dedicated
 language (or filetype) but are useful for any edition use-case in emacs.
 ** Undo
 In order to have a better and more visual control of undoing, I use undo-tree.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package undo-tree
     :ensure quelpa
     :quelpa (undo-tree :fetcher git :url "http://www.dr-qubit.org/git/undo-tree.git")
@@ -176,13 +180,13 @@ Defining a simple helper to edit file as root using tramp
     (message "Current buffer does not have an associated file.")))
 #+end_src
 ** TODO Accent problem
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (load-library "iso-transl")
 #+end_src
 ** TODO Message buffer
 The main idea here is to add a timestamp to the messages as it helps to understand the sequence of
 problems. For now the advice is not activated as it causes some problems.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defvar debug-messages nil)
 
   (defun current-time-microseconds ()
@@ -205,7 +209,7 @@ problems. For now the advice is not activated as it causes some problems.
 ** Encoding
 Define the global encoding as utf-8 english US related. Of course, it is possible de locally change
 this information per buffer.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq system-time-locale "en_US.utf8")
 (prefer-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
@@ -215,7 +219,7 @@ this information per buffer.
 In order to have a unify folding support, I use origami in couple with hydra. The advantage of hydra
 is to see all the alternatives more easily. Also inspire from
 https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package origami
     :ensure quelpa
     :quelpa (origami :repo "seblemaguer/origami.el" :fetcher github)
@@ -250,7 +254,7 @@ https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
 This section is dedicated to hacks and helpers to facilitate global edition.
 *** Edit simultanously multiple region
 Sometimes it can be useful to edit multiple region at once. To do that, I use iedit.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package iedit
     :ensure t
     :config
@@ -258,14 +262,14 @@ Sometimes it can be useful to edit multiple region at once. To do that, I use ie
 #+end_src
 *** Surrounding helper
 I use siege-mode to surround a string by delimiters more complicated than brackets and xml tags.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package siege-mode
     :disabled t
     :ensure t)
 #+end_src
 *** Alignment
 I defined this helper to as I like to align equations based on the equal sign.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (defun align-to-equals (begin end)
   "Align region to equal signs"
    (interactive "r")
@@ -274,7 +278,7 @@ I defined this helper to as I like to align equations based on the equal sign.
 ** Recent file
 Opening recent files is always an easy and fast shortcut. Some files should be ignored though. That
 leads to this configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package recentf
     :init
     (recentf-mode 1)
@@ -314,7 +318,7 @@ This section is dedicated to deal with backups. The main logic is to exlude some
 other ones, I want to have an easy way to navigate in it.
 *** Global backup configuration
 This the global backup configuration. For that I adapted a little bit the wonderful snapshot-timemachine package.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package snapshot-timemachine
     :ensure t
     :init
@@ -371,7 +375,7 @@ This the global backup configuration. For that I adapted a little bit the wonder
 *** Sensitive mode
 There are some files which are not desired to be backed up. This part goal is to setup this
 "avoiding saving" spécificities.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (define-minor-mode sensitive-mode
     "For sensitive files like password lists.
   It disables backup creation and auto saving.
@@ -407,7 +411,7 @@ There are some files which are not desired to be backed up. This part goal is to
 #+end_src
 ** Copy/Pasted
 Baseline configuration for copy/pasting
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq mouse-drag-copy-region nil
         x-select-enable-primary nil
         x-select-enable-clipboard t
@@ -415,7 +419,7 @@ Baseline configuration for copy/pasting
 #+end_src
 ** Spell
 Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package flyspell
     :ensure t
     :config
@@ -474,7 +478,7 @@ Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
 ** Fixme
 To deal with the fixme, I relie on two part: fic-mode for the highlighting and occur for the
 listing.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package fic-mode
     :ensure t
     :hook
@@ -489,7 +493,7 @@ listing.
 #+end_src
 ** Minibuffer
 Minibuffer configuration part. Nothing really outstanding, just the classical stuff.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package minibuffer
     ;; :hook
     ;; (eval-expression-minibuffer-setup .  #'eldoc-mode)
@@ -503,7 +507,7 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
 ** Buffers
 Some buffer specificities configuration like how to deal with trailing whitespaces or the
 fill-column for example.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; Open Large file
   (use-package vlf
     :ensure t
@@ -528,7 +532,7 @@ closely related to my emacs use and there have to be shutdown when emacs is stop
 The main use case (actually the only for now) is the imap notification system. To do so I use the
 couple prodigy (to start the process in emacs) and imapnotify to actually activate the push
 service. Internally, imapnotify is going to call emacsclient to notify the user about a new mail.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package prodigy
     :ensure quelpa
     :quelpa (prodigy :fetcher github :repo "seblemaguer/prodigy.el" :branch "auto-start")
@@ -602,12 +606,12 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
 #+end_src
 *** System daemons
 With this package I can also manage my system services (tested on archlinux).
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package daemons :ensure t)
 #+end_src
 *** Background process configuration
 Starting process in background is really nice to avoid being spammed. So let's make it available
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun my-bpr-on-start (process)
     "Routine to allow colors in commint buffer"
     (set-process-filter process 'comint-output-filter))
@@ -626,7 +630,7 @@ Starting process in background is really nice to avoid being spammed. So let's m
 #+end_src
 *** Paging support for comint
 In order to monitor each process started via comint, I use bifocal which splits the window accordingly.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package bifocal
     :ensure t
     :hook
@@ -640,7 +644,7 @@ In order to monitor each process started via comint, I use bifocal which splits 
 I prefer to control some hardware using emacs directly. For now the keyboard, the screen and the sound.
 *** desktop environment
 Thanks to desktop environement, I can control the keyboard and the screen brightness.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package desktop-environment
     :ensure t
     :config
@@ -655,7 +659,7 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
 #+end_src
 *** pulseaudio
 Thanks to pulseaudio-control, I can control my soundcard.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package pulseaudio-control
     :ensure t
     :config
@@ -664,7 +668,7 @@ Thanks to pulseaudio-control, I can control my soundcard.
 ** Language interaction (LSP)
 LSP is a set of helper to interact with external "ide" tools and provide their functionalities into
 emacs. This has been proven useful, especially for java editing.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package lsp-mode
     :ensure t
     :init
@@ -693,7 +697,7 @@ This part focuses on completion configuration. Language specific configurations 
 but in the dedicate language configuration part. This section is just for global configuration.
 ** Ivy/swipper/counsel
 I do prefer vertical completion, which is why I use extensively Ivy and extensions.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ivy
     :ensure t
     :config
@@ -714,7 +718,7 @@ I do prefer vertical completion, which is why I use extensively Ivy and extensio
 In order to have inline completion, really important for coding, I use company. However I adapted
 some facing attributes. Each language is also adding its backend when needed. Therefore, only global
 configuration here.
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package company
     :ensure t
     :config
@@ -749,7 +753,7 @@ configuration here.
     (company-quickhelp-mode 1))
 #+end_src
 ** Helm
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package helm
     :ensure t
     :config
@@ -770,7 +774,7 @@ I use templates for 2 use cases: the buffer edition and the file specific templa
 *** Edition templates
 The default configuration of yasnippet consists of activating it and plugging it with company.
 Ivy-yasnippet is used for snippet discovery.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package yasnippet
     :ensure t
     :config
@@ -802,7 +806,7 @@ Ivy-yasnippet is used for snippet discovery.
 *** Filetype templates
 This part is using yatemplate (an over-layer of yasnippet) coupled with auto-insert to have a set of
 file type dedicated templates. The templates are available in =third_parties/templates= directory.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package yatemplate
     :ensure t
     :after yasnippet
@@ -819,7 +823,7 @@ file type dedicated templates. The templates are available in =third_parties/tem
 #+end_src
 ** Prescient
 Prescient helps to sort candidates by last used first and then sorting by length.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package prescient :ensure t :config (prescient-persist-mode))
 (use-package ivy-prescient :ensure t :config (ivy-prescient-mode))
 (use-package company-prescient :ensure t :config (company-prescient-mode))
@@ -832,7 +836,7 @@ C and C++ configuration is mainly relying on irony. Some minor adaptations, like
 part, are also integrated.
 *** Irony main configuration
 We just load irony add support for c derivative mode.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package irony
     :ensure t
     :defer t
@@ -841,7 +845,7 @@ We just load irony add support for c derivative mode.
            (c++-mode .irony-mode)))
 #+end_src
 *** Checking/documentation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package flycheck-irony
     :ensure t
     :after (flycheck irony)
@@ -856,7 +860,7 @@ We just load irony add support for c derivative mode.
 *** Completion
 For the completion, I am relying on company and irony. The configuration consists of add irony
 into company backend.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package company-irony
     :ensure t
     :hook (irony-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-irony)))))
@@ -869,7 +873,7 @@ into company backend.
 Sometimes, I don't want to have a makefile or any complicated project compilation. So I just use
 gcc/g++. Therefore, here, either there is a makefile and use it, either there is none and I use
 gcc/++ directly.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (add-hook 'c-mode-hook
             (lambda ()
               (unless (or (file-exists-p "Makefile") (boundp 'buffer-file-name))
@@ -887,14 +891,14 @@ gcc/++ directly.
 #+END_SRC
 *** C++ specificities
 For C++, I use a dedicated font lock.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package modern-cpp-font-lock :ensure t)
 #+end_src
 ** Configuration and log files
 This part is dedicated to unix and more general configuration files as well as logs.
 *** Default unix configuration
 Config-general-mode is applied for all unix configuration files.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package config-general-mode
     :ensure t
     :mode ("\\.conf$" "\\.*rc$"))
@@ -902,21 +906,21 @@ Config-general-mode is applied for all unix configuration files.
 *** Authinfo
 I developed a dedicated mode for syntax highlighting authinfo files. For now, it is not stable
 enough to be on melpa so I use quelpa.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package authinfo-mode
     :ensure quelpa
     :quelpa (authinfo-mode :repo "seblemaguer/authinfo-mode" :fetcher github)
     :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . authinfo-mode))
 #+end_src
 *** Apache
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package apache-mode
     :ensure t
     :mode ("\\.htaccess\\'" "httpd\\.conf\\'" "srm\\.conf\\'"
            "access\\.conf\\'" "sites-\\(available\\|enabled\\)/"))
 #+end_src
 *** SSH configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ssh-config-mode
     :ensure t
     :mode ("/\\.ssh/config\\'" "/system/ssh\\'" "/sshd?_config\\'" "/known_hosts\\'" "/authorized_keys2?\\'")
@@ -926,13 +930,13 @@ enough to be on melpa so I use quelpa.
     (autoload 'ssh-config-mode "ssh-config-mode" t))
 #+end_src
 *** Logview
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package logview
     :ensure t
     :mode ("syslog\\(?:\\.[0-9]+\\)" "\\.log\\(?:\\.[0-9]+\\)?\\'"))
 #+end_src
 *** yaml
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package yaml-mode
     :ensure t
     :mode (".yaml$"))
@@ -941,13 +945,13 @@ enough to be on melpa so I use quelpa.
     :ensure t)
 #+end_src
 *** vimrc
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     (use-package vimrc-mode
       :ensure t
       :mode ("^\\.vimrc\\'"))
 #+end_src
 ** CSS
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package scss
     :defer t
     :mode ("\\.scss\\'")
@@ -956,7 +960,7 @@ enough to be on melpa so I use quelpa.
     (setq scss-compile-at-save 'nil))
 #+END_SRC
 ** CSV
- #+begin_src emacs-lisp
+ #+begin_src emacs-lisp :tangle yes
    (use-package csv-mode
      :ensure t
      :defer t
@@ -972,7 +976,7 @@ enough to be on melpa so I use quelpa.
      :disabled t)
  #+end_src
 ** Cue
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package cue-mode
     :ensure quelpa
     :quelpa (cue-mode :repo "seblemaguer/cue-mode" :fetcher github)
@@ -980,7 +984,7 @@ enough to be on melpa so I use quelpa.
 
 #+end_src
 ** Graphviz
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package graphviz-dot-mode
     :ensure t
     :init
@@ -991,7 +995,7 @@ enough to be on melpa so I use quelpa.
 
 ** Java based
 *** Global (lsp-java)
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package lsp-java
     :ensure t
     :requires (lsp-ui-flycheck lsp-ui-sideline)
@@ -1005,12 +1009,12 @@ enough to be on melpa so I use quelpa.
     (setq lsp-java-save-action-organize-imports nil))
 #+end_src
 *** Snippets
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package java-snippets
     :ensure t)
 #+end_src
 *** Javadoc
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package javadoc-lookup
     :ensure t
     :config
@@ -1026,7 +1030,7 @@ enough to be on melpa so I use quelpa.
 #+end_src
 ** Groovy
 *** Global groovy
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package groovy-mode
     :ensure t
     :mode ("\.groovy$" "\.gradle$")
@@ -1042,14 +1046,14 @@ enough to be on melpa so I use quelpa.
   (use-package groovy-imports :ensure t)
 #+end_src
 *** Gradle specificities
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package flycheck-gradle
     :ensure t
     :defer t)
 #+end_src
 ** Kotlin
 *** Global mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package kotlin-mode
     :ensure t
     :mode "\\.kts?\\'"
@@ -1057,7 +1061,7 @@ enough to be on melpa so I use quelpa.
     (setq kotlin-tab-width 4))
 #+end_src
 *** Indentation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package my-kotlin-indent
     :init
     (defun kotlin-mode-use-my-kotlin-indent ()
@@ -1066,7 +1070,7 @@ enough to be on melpa so I use quelpa.
     (kotlin-mode . kotlin-mode-use-my-kotlin-indent))
 #+end_src
 *** LSP connection
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package lsp-kotlin
     :ensure quelpa
     :quelpa (lsp-kotlin :repo "seblemaguer/lsp-kotlin" :fetcher github)
@@ -1078,7 +1082,7 @@ enough to be on melpa so I use quelpa.
     (kotlin-mode . lsp-ui-sideline-mode))
 #+end_src
 *** Syntax checking
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package flycheck-kotlin
     :ensure t
     :after kotlin-mode
@@ -1087,7 +1091,7 @@ enough to be on melpa so I use quelpa.
 #+end_src
 ** Latex
 *** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package tex-site
     :ensure auctex
     :after (tex latex)
@@ -1178,7 +1182,7 @@ enough to be on melpa so I use quelpa.
     (define-key LaTeX-mode-map (kbd "C-c C-=") 'align-current))
 #+end_src
 *** Bibtex
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package bibtex
     :defer t
     :config
@@ -1212,7 +1216,7 @@ enough to be on melpa so I use quelpa.
           bibtex-autokey-titlewords 1))
 #+end_src
 *** Completion
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; Completion
   (setq TeX-auto-global (format "%s/auctex/style" generated-basedir))
 
@@ -1241,7 +1245,7 @@ enough to be on melpa so I use quelpa.
     (org-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-math-symbols-unicode)))))
 #+end_src
 *** Compilation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; Escape mode
   (defun TeX-toggle-escape nil
     (interactive)
@@ -1284,7 +1288,7 @@ enough to be on melpa so I use quelpa.
     (setq buffer-read-only nil))
 #+end_src
 *** Reftex
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package reftex
     :defer t
     :init
@@ -1321,7 +1325,7 @@ enough to be on melpa so I use quelpa.
           reftex-cite-cleanup-optional-args t))
 #+end_src
 *** Preview
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package latex-math-preview
     :ensure t
     :config
@@ -1330,7 +1334,7 @@ enough to be on melpa so I use quelpa.
     (add-hook 'LaTeX-mode-hook 'LaTeX-preview-setup))
 #+end_src
 ** Ledger
- #+begin_src emacs-lisp
+ #+begin_src emacs-lisp :tangle yes
    (use-package ledger-mode
      :ensure t
      :defer t
@@ -1341,7 +1345,7 @@ enough to be on melpa so I use quelpa.
      :after (flycheck ledger-mode))
  #+end_src
 ** TODO (E)Lisp
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; Disable checking doc
   (use-package flycheck
     :config
@@ -1359,7 +1363,7 @@ enough to be on melpa so I use quelpa.
     :hook (emacs-lisp-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-elisp)))))
 #+end_src
 ** Lua
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package lua-mode
     :ensure t)
 
@@ -1367,7 +1371,7 @@ enough to be on melpa so I use quelpa.
     :ensure t)
 #+end_src
 ** Matlab
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package matlab-load
     :ensure matlab-mode
     :mode ("\\.m\\'" . matlab-mode)
@@ -1379,7 +1383,7 @@ enough to be on melpa so I use quelpa.
 #+end_src
 ** Markdown
 *** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package markdown-mode
     :ensure t
     :mode ("\\.md$"))
@@ -1391,13 +1395,13 @@ enough to be on melpa so I use quelpa.
     :defer t)
 #+end_src
 *** Syntax highlight in block
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package poly-markdown
     :ensure t)
 #+end_src
 ** PDF
 *** Global
-  #+begin_src emacs-lisp
+  #+begin_src emacs-lisp :tangle yes
     (use-package pdf-tools
       :ensure t
       :pin MELPA
@@ -1499,7 +1503,7 @@ enough to be on melpa so I use quelpa.
               ("h" image-backward-hscroll :color red)))
   #+end_src
 *** Org specific
-  #+begin_src emacs-lisp
+  #+begin_src emacs-lisp :tangle yes
     (use-package org-pdfview
       :ensure t
       :config
@@ -1508,7 +1512,7 @@ enough to be on melpa so I use quelpa.
 		   '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
   #+end_src
 ** Perl
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package cperl-mode
     :config
     (defalias 'perl-mode 'cperl-mode)
@@ -1536,13 +1540,13 @@ enough to be on melpa so I use quelpa.
 #+END_SRC
 
 ** Praat
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package praat-mode
     :mode ("\\.praat" "\\.[tT][Gg]"))
 #+END_SRC
 ** Python
 *** Global configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package python
     :mode
     ("\\.py\\'" . python-mode)
@@ -1555,7 +1559,7 @@ enough to be on melpa so I use quelpa.
     (setq python-indent-offset 4))
 #+end_src
 *** LSP configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package lsp-python
     :ensure t
     :hook
@@ -1566,7 +1570,7 @@ enough to be on melpa so I use quelpa.
     (python-mode . lsp-ui-sideline-mode))
 #+end_src
 *** Pipenv
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package pipenv
     :ensure t
     :hook
@@ -1577,11 +1581,11 @@ enough to be on melpa so I use quelpa.
           #'pipenv-projectile-after-switch-extended))
 #+end_src
 *** virtual environment
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package pyvenv :ensure t)
 #+end_src
 *** Interpreter configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ein
     :ensure t
     :config
@@ -1600,7 +1604,7 @@ enough to be on melpa so I use quelpa.
       (ein:notebooklist-open)))
 #+end_src
 *** Sphinx documentation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package sphinx-doc
     :ensure t
     :config
@@ -1610,7 +1614,7 @@ enough to be on melpa so I use quelpa.
 #+end_src
 ** R
 *** ESS configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; ESS for R programming
   (use-package ess
     :ensure t
@@ -1627,21 +1631,21 @@ enough to be on melpa so I use quelpa.
     :after ess)
 #+end_src
 *** Support drag & drop
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package extend-dnd
   :ensure t
   :config
   (extend-dnd-activate))
 #+end_src
 *** Completing
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package company-statistics
     :ensure t
     :after company
     :hook (after-init . company-statistics-mode))
 #+end_src
 ** Shell
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package company-shell
     :ensure t
     :hook
@@ -1650,7 +1654,7 @@ enough to be on melpa so I use quelpa.
     )
 #+end_src
 ** PlantUML
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package plantuml-mode
     :ensure t
     :after org
@@ -1661,7 +1665,7 @@ enough to be on melpa so I use quelpa.
 #+end_src
 ** Web configuration
 *** Global web configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     (use-package web-mode
       :ensure t
       :mode
@@ -1699,7 +1703,7 @@ enough to be on melpa so I use quelpa.
     (use-package web-mode-edit-element :ensure t)
 #+end_src
 *** EMMET
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package emmet-mode
     :ensure t
     :diminish (emmet-mode . "ε")
@@ -1717,14 +1721,14 @@ enough to be on melpa so I use quelpa.
           emmet-move-cursor-between-quotes t))
 #+end_src
 *** Completion
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package company-web
     :ensure t
     :hook (web-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-web-html)))))
 #+end_src
 *** Javascript
 **** Global
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package js2-mode
     :ensure t
     :mode
@@ -1838,7 +1842,7 @@ enough to be on melpa so I use quelpa.
           company-tooltip-align-annotations t))
 #+END_SRC
 **** JSON
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package json-mode
     :ensure t
     :mode
@@ -1850,7 +1854,7 @@ enough to be on melpa so I use quelpa.
 #+end_src
 **** AngularJS
 Extracted from https://github.com/zakame/emacs-for-javascript
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package react-snippets
     :ensure t)
 
@@ -1865,7 +1869,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
       '(bind-key "C-c C-d" 'ng-snip-show-docs-at-point web-mode-map)))
 #+end_src
 **** Nodenv
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package nodenv
     :ensure t
     :disabled t
@@ -1873,7 +1877,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
     (js-mode . #'nodenv-mode))
 #+end_src
 **** Some helpers
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun grunt-serve ()
     "Spawns 'grunt serve' process"
     (interactive)
@@ -1884,7 +1888,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
       (bpr-open-last-buffer)))
 #+end_src
 ** XML
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package nxml-mode
     :mode ("\\.xml$" . nxml-mode)
     :commands (pretty-print-xml-region)
@@ -1924,7 +1928,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
 #+END_SRC
 * Org
 ** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package org
     :ensure t
     :after flyspell
@@ -2000,7 +2004,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
 #+end_src
 ** Todo management - some helpers
 Extracted from https://www.emacswiki.org/emacs/org-extension.el
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun org-archive-all-done-item ()
     "Archive all item that have with prefix DONE."
     (interactive)
@@ -2032,7 +2036,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+end_src
 ** Calendar / Agenda
 *** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package org-agenda
     :after (hydra org)
     :config
@@ -2175,7 +2179,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (global-set-key (kbd "<f12>") 'org-agenda)
 #+end_src
 *** Super agenda
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package org-super-agenda
     :ensure t
     :config
@@ -2193,7 +2197,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+end_src
 ** Capturing
 *** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package org-capture
     :config
 
@@ -2230,7 +2234,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     )
 #+end_src
 *** Cooking
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package org-chef
     :ensure t
     :config
@@ -2240,7 +2244,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                    :empty-lines 1)))
 #+end_src
 ** Editing
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq org-list-allow-alphabetical t
         org-highlight-latex-and-related '(latex)
         org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
@@ -2273,14 +2277,14 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 
 #+end_src
 *** Id generations
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package org-id+
     :ensure quelpa
     :quelpa (org-id+ :repo "seblemaguer/org-id-plus" :fetcher github))
 #+end_src
 ** Exporting
 *** HTML
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package htmlize :ensure t)
 
   (use-package ox-html
@@ -2317,7 +2321,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :requires (ox-html htmlize))
 #+end_src
 *** LaTeX
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ox-latex
     :after ox
     :defer t
@@ -2327,7 +2331,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
           org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 #+end_src
 *** Beamer
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ox-beamer
     :after ox
     :config
@@ -2337,19 +2341,19 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     (add-to-list 'org-export-filter-bold-functions 'my-beamer-bold))
 #+end_src
 *** Docbook
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq org-export-docbook-xsl-fo-proc-command "fop %s %s"
       org-export-docbook-xslt-proc-command "xsltproc --output %s /usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl %s")
 #+end_src
 *** Markdown
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ox-gfm
       :ensure t
       :after ox
       :config (require 'ox-gfm))
 #+end_src
 *** Pandoc
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ox-pandoc
     :ensure t
     :after ox
@@ -2364,7 +2368,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
           org-pandoc-options-for-latex-pdf '((pdf-engine . "xelatex"))))
 #+end_src
 *** Anki editor
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package anki-editor
     :ensure t
     :init
@@ -2387,7 +2391,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     )
 #+end_src
 ** COMMENT Async
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; Setup the part for asynchronous
   (setq org-export-in-background t
         org-export-async-debug t
@@ -2395,11 +2399,11 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+end_src
 * Documentation
 ** Help
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package helpful :ensure t)
 #+end_src
 ** Apropos
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package apropos-fn+var
     :ensure t
     :disabled
@@ -2407,12 +2411,12 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     (setq apropos-do-all t))
 #+end_src
 ** Info
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package info-buffer :ensure t)
   (use-package info+ :ensure t :disabled)
 #+end_src
 ** Man
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package man
     :ensure t
     :config
@@ -2427,7 +2431,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 * Shell
 ** Global
 The key configuration is mainly coming from https://github.com/jcf/emacs.d the rest is coming from http://www.modernemacs.com/post/custom-eshell/ with some adaptation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package eshell
     :init
     (add-hook 'eshell-mode-hook
@@ -2542,14 +2546,14 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     )
 #+end_src
 ** Status in the fringe
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package eshell-fringe-status
     :ensure t
     :config
     (add-hook 'eshell-mode-hook 'eshell-fringe-status-mode))
 #+end_src
 ** Fish completion
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package fish-completion
     :ensure t
     :ensure-system-package fish
@@ -2557,7 +2561,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     (global-fish-completion-mode))
 #+end_src
 ** Some helpers
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun eshell/clear ()
     "Clear the eshell buffer."
     (let ((inhibit-read-only t))
@@ -2582,19 +2586,19 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 #+end_src
 * Compilation
 ** TODO some requires to check
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (require 'compile-)
   (require 'compile)
   (require 'compile+)
 #+end_src
 ** Flychecking
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package flycheck-stack
     :ensure t
     :after flycheck)
 #+end_src
 ** Gradle global support
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package gradle-mode
     :ensure quelpa
     :quelpa (gradle-mode :repo "seblemaguer/emacs-gradle-mode" :fetcher github)
@@ -2604,7 +2608,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 #+end_src
 
 ** Compilation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package winnow
     :ensure t
     :init
@@ -2615,7 +2619,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 * Project management
 ** Configuration projectile
 The commands are based on http://endlessparentheses.com/improving-projectile-with-extra-commands.html?source=rss
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package projectile
     :ensure t
     :config
@@ -2649,7 +2653,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 )
 #+end_src
 ** Todos/projectile
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package org-projectile
     :ensure t
     :disabled t
@@ -2660,7 +2664,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
           (append org-agenda-files (org-projectile-todo-files))))
 #+end_src
 ** Completion
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package counsel-projectile
     :ensure t
     :after projectile)
@@ -2671,7 +2675,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 - Externally opening has been copied from https://gist.github.com/dotemacs/9a0433341e75e01461c9
 - Pretty configuration is adapted from https://ekaschalk.github.io/post/pretty-magit/
 **** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package magit
     :ensure t
     :config
@@ -2760,13 +2764,13 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                 (local-set-key (kbd "o") 'magit-open-repo))))
 #+end_src
 **** Diff
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package magit-tbdiff
     :ensure t
     :after magit)
 #+end_src
 **** Todo
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package magit-todos
     :ensure t
     :commands (magit-todos-mode)
@@ -2777,7 +2781,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :custom (magit-todos-keywords (list "TODO" "FIXME")))
 #+end_src
 *** Git ignore
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package gitignore-mode
     :ensure t)
 
@@ -2785,7 +2789,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :ensure t)
 #+end_src
 *** Config edition
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package gitconfig-mode
     :ensure t
     :defer t
@@ -2794,7 +2798,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     ("/vcs/gitconfig\'"    . gitconfig-mode))
 #+end_src
 *** Helpers for edition
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package git-commit
     :ensure t
     :defer t)
@@ -2804,7 +2808,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :defer t)
 #+end_src
 *** Git prefix
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package git-msg-prefix
     :ensure t
     :defer t
@@ -2816,11 +2820,11 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     )
 #+end_src
 *** Commit navigation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package git-timemachine :ensure t)
 #+end_src
 *** Send patch by email
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package gitpatch
     :ensure t
     :config
@@ -2828,17 +2832,17 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 ** Mercurial
 *** Monky
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package monky :ensure t)
 #+end_src
 *** Configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package hgignore-mode :ensure t)
 (use-package hgrc-mode :ensure t)
 #+end_src
 ** Providers
 *** Github
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; Github api
   (use-package gh :ensure t)
   (use-package gh-md :ensure t)
@@ -2883,7 +2887,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 First, globally association achieve thanks to *xdg-open*.  Also, by making some minor adaptations, I
 defined some helpers to play video/audio using emms directly. It is mainly adapted from here:
 https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun dired-open-native ()
     "Open marked files (or the file the cursor is on) from dired."
     (interactive)
@@ -2939,7 +2943,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
     (dired-next-line 1))
 #+end_src
 *** Main configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package dired
     :config
 
@@ -3009,7 +3013,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
     )
 #+end_src
 *** peep-dired
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package peep-dired
     :ensure t
     :config
@@ -3017,7 +3021,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
   )
 #+end_src
 *** dired-narrow
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package dired-narrow
     :ensure t
     :config
@@ -3025,7 +3029,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
   )
 #+end_src
 *** dired-single
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package dired-single
     :ensure t
     :config
@@ -3034,7 +3038,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
     )
 #+end_src
 *** dired-collapse
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package dired-collapse
     :ensure t
     :disabled t
@@ -3043,7 +3047,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
     (dired-mode . dired-collapse-mode))
 #+end_src
 *** dired-filter
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package dired-filter
     :ensure t
     :init
@@ -3067,7 +3071,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
     )
 #+end_src
 *** dired-subtree
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package dired-subtree
     :ensure t
     :config
@@ -3076,7 +3080,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
     )
 #+end_src
 *** Images
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package image-dired+
     :ensure t
     :config
@@ -3084,7 +3088,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
     (eval-after-load 'image-dired+ '(image-diredx-async-mode 1)))
 #+end_src
 *** Async
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package async
     :ensure t
     :after dired
@@ -3096,7 +3100,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
       (dired-async-mode 1)))
 #+end_src
 *** Dired / Rsync
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package dired-rsync
     :defer t
     :ensure t
@@ -3105,7 +3109,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
 #+end_src
 *** Hydra
 Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired and adapted.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defhydra hydra-dired (:hint nil :color pink)
     "
   _+_ mkdir          _v_iew           _m_ark             _(_ details        _i_nsert-subdir    wdired
@@ -3161,7 +3165,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 ** Images
 *** Visualisation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package image+
     :ensure t
     :init
@@ -3193,7 +3197,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
 #+end_src
 *** Manipulation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package blimp
     :ensure t
     :hook
@@ -3201,7 +3205,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 ** Diff
 *** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ediff
     :config
     (autoload 'diff-mode "diff-mode" "Diff major mode" t)
@@ -3215,7 +3219,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
               (split-window-vertically arg)))))
 #+end_src
 *** Helpers for region diff
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun diff-region ()
     "Select a region to compare"
     (interactive)
@@ -3244,7 +3248,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       ))
 #+end_src
 ** Tramp
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package tramp
     :init
     (setq tramp-default-method "ssh"
@@ -3257,7 +3261,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   )
 #+end_src
 ** Trash
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; Ask confirmation only once and move to trash
   (setq dired-recursive-deletes 'always)
   (setq delete-by-moving-to-trash t)
@@ -3273,7 +3277,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (find-file "~/.local/share/Trash/files"))
 #+end_src
 ** Treemacs
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package treemacs
     :ensure t
     :after hl-line-mode
@@ -3305,7 +3309,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 * Ibuffer
 ** Filter
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun my-own-ibuffer-hook ()
     ""
     (interactive)
@@ -3442,7 +3446,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                     )))))))
 #+end_src
 ** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ibuffer
     :after hydra
     :config
@@ -3631,7 +3635,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (global-set-key (kbd "C-x C-b") 'ibuffer))
 #+end_src
 ** Helpers
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun ibuffer-clean ()
     "Clean automatically created buffers"
     (interactive)
@@ -3654,7 +3658,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+END_SRC
 * Notification
 ** Sauron
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package sauron
     :ensure t
     :pin MELPA
@@ -3668,7 +3672,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (sauron-start-hidden))
 #+end_src
 ** Alert
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package alert
     :after sauron
     :config
@@ -3760,35 +3764,35 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 * System
 ** Docker
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package docker :ensure t)
   (use-package docker-api :ensure t)
   (use-package docker-tramp :ensure t)
   (use-package dockerfile-mode :ensure t)
 #+end_src
 ** SSH
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ssh :ensure t)
   (use-package ssh-deploy :ensure t)
 #+end_src
 ** Monitoring
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package symon
     :ensure t
     :defer t)
 #+end_src
 ** Clipboard
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package cliphist
     :ensure t)
 #+end_src
 ** COMMENT unison interaction
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package unison :ensure t)
 #+end_src
 * Internet/network
 ** Globalize clickable url
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; Activate clickage everywhere
   (use-package goto-addr
     :config
@@ -3802,22 +3806,22 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 ** Searching
 *** Google
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package google :ensure t)
   (use-package google-maps :ensure t)
   (use-package google-translate :ensure t)
 #+end_src
 *** Youtube
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ivy-youtube :ensure t)
 #+end_src
 *** Codesearch
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package counsel-codesearch :ensure t)
 #+end_src
 ** IRC
 *** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package circe
     :ensure t
     :bind ("<S-f2>" . circe-init)
@@ -3919,18 +3923,18 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
        (if (circe-network-connected-p "bitlbee")
            (switch-to-buffer "&bitlbee")
          (progn
-           (circe-maybe-connect "Freenode")
+           ;; (circe-maybe-connect "Freenode")
            (circe-maybe-connect "bitlbee"))))
     )
 #+end_src
 *** Logging
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package lui-logging
     :commands enable-lui-logging)
 
 #+end_src
 *** Autopasting
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package lui-autopaste
     :after circe
     :config
@@ -3968,14 +3972,14 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (setq lui-autopaste-function 'lui-autopaste-service-gist))
 #+end_src
 *** Some coloring
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package lui-irc-colors
     :after circe
     :config
     (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
 #+end_src
 *** Notification
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package sauron-circe
     :ensure quelpa
     :quelpa (sauron-circe :repo "seblemaguer/sauron-circe" :fetcher github)
@@ -3995,7 +3999,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
   #+end_src
 *** Message composition
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package message
     :init
     (add-hook 'message-mode-hook 'flyspell-mode)
@@ -4012,7 +4016,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     )
 #+end_src
 *** Composing/Sending
-  #+begin_src emacs-lisp
+  #+begin_src emacs-lisp :tangle yes
     (use-package smtpmail-multi
       :ensure t
       ;; :ensure-system-package msmtp
@@ -4071,7 +4075,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   #+end_src
 *** Notmuch
 **** Define some helpers
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defvar notmuch-base-attachment-dir "~/Downloads"
     "Directory where the attachments will be downloaded.")
 
@@ -4123,7 +4127,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
              file))))
 #+end_src
 **** Global configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package notmuch
     :ensure t
     :ensure-system-package notmuch
@@ -4210,7 +4214,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 **** Welcome
 ***** Use-package start
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package notmuch-hello
     :defer t
     :config
@@ -4219,7 +4223,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           notmuch-column-control 1.0) ;; don't display columns
 #+end_src
 ***** Saved searches
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
       ;; Research
       (setq notmuch-saved-searches '(
                                      ;; Quick helpers
@@ -4296,7 +4300,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
 #+end_src
 ***** Recent searches
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     (defun my-notmuch-hello-insert-recent-searches ()
       "Insert recent searches."
       (when notmuch-search-history
@@ -4338,7 +4342,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
 #+end_src
 ***** Header
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defface my-notmuch-hello-header-face
     '((t :foreground "white"
          :background "#0088FC"
@@ -4347,7 +4351,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :group 'notmuch-faces)
 #+end_src
 ***** Generate welcome page
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun my-notmuch-hello-insert-separator ()
     (insert "\n\f\n"))
 
@@ -4368,11 +4372,11 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
               ))
 #+end_src
 ***** End of use-package
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     )
 #+end_src
 **** Notification
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package sauron-notmuch
     :ensure quelpa
     :quelpa (sauron-notmuch :repo "seblemaguer/sauron-notmuch" :fetcher github)
@@ -4386,11 +4390,11 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (sauron-notmuch-start))
 #+end_src
 **** Integration with org-mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package org-notmuch)
 #+end_src
 **** Reply/citation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package notmuch-mua
   :defer t
   :config
@@ -4398,12 +4402,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 )
 #+end_src
 **** Interactive search
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package counsel-notmuch :ensure t)
 #+end_src
 ** RSS
 *** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package elfeed
     :ensure t
     :config
@@ -4437,7 +4441,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                       (elfeed))))
 #+end_src
 *** Org connection
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package elfeed-org
     :ensure t
     :after elfeed
@@ -4452,7 +4456,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (elfeed-update-background-start))
 #+end_src
 *** Youtube specificities
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package youtube-dl
     :ensure quelpa
     :quelpa (youtube-dl :repo "skeeto/youtube-dl-emacs" :fetcher github)
@@ -4496,7 +4500,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (define-key elfeed-search-mode-map "L" 'youtube-dl-list))
 #+end_src
 *** Notification part
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package sauron
     :ensure t
     :config
@@ -4507,7 +4511,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
 #+end_src
 *** Helpers
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (defun elfeed-mark-all-as-read ()
       (interactive)
       (mark-whole-buffer)
@@ -4515,7 +4519,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
 #+end_src
 ** Stackexchange
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package sx
   :ensure t
   :config
@@ -4530,7 +4534,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
              ("s" . sx-search)))
 #+end_src
 ** Reddit
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package md4rd
     :ensure t
     :init
@@ -4561,7 +4565,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (setq md4rd-subs-active '(lisp+Common_Lisp emacs)))
 #+end_src
 ** github
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun gh-issue-new-url (project title body)
     "Generate the github url based on the PROJECT for the base and as the parameters TITLE and BODY"
     (concat "https://github.com/"
@@ -4588,7 +4592,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 * Music
 ** Global
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package emms
     :ensure t
     :config
@@ -4665,7 +4669,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           emms-info-functions '(emms-info-libtag)))
 #+end_src
 ** MPV as a player
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package emms-player-simple-mpv
     ;; :ensure t
     :quelpa (emms-player-simple-mpv :fetcher github :repo "seblemaguer/emms-player-simple-mpv")
@@ -4695,11 +4699,11 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 ** Tagging using emms
 I actually use this part for minor correction. The tags are done when abcde is converting the cd
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package emms-mark-ext :ensure t)
 #+end_src
 ** Browser
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package emms-browser
     :after emms
     :config
@@ -4714,7 +4718,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
           emms-browser-playlist-info-title-format "%T. %t [%d]"))
 #+end_src
 * Weather
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package wttrin
   :ensure t
   :commands (wttrin)
@@ -4726,19 +4730,19 @@ This part is dedicated to ensure productivity configuration. This involves mainl
 capturing and bibliography.
 ** Dark room
 Sometimes I just want to ignore everything except the current document. Darkroom is exactly designed for that
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package darkroom :ensure t)
 #+end_src
 ** ORG/Web tools
 Org-web-tools is a nice package which allows to sniff a webpage and convert it into org-mode
 format. This is really useful to homogeneise documentation.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package org-web-tools :ensure t)
 #+end_src
 ** Biblio
 This part focus on bibliography/library configuration. The goal is to have a global configuration to
 organize read papers or "to read" papers. This is mainly based on https://codearsonist.com/reading-for-programmers
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package ivy-bibtex
     :ensure t
     :config
@@ -4771,13 +4775,13 @@ organize read papers or "to read" papers. This is mainly based on https://codear
 #+end_src
 ** Paper
 As I write papers, it is useful to have some helper to start to have the inspiration.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package academic-phrases :ensure t)
   (use-package powerthesaurus :ensure t)
 #+end_src
 * Visual
 ** Global theme
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package flucui-themes
     :ensure t
     :config
@@ -4785,7 +4789,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
 #+end_src
 ** Frame
 *** Title
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun frame-title-format ()
     "Return frame title with current project name, where applicable."
     (let ((file buffer-file-name))
@@ -4802,14 +4806,14 @@ As I write papers, it is useful to have some helper to start to have the inspira
     (setq frame-title-format '((:eval (frame-title-format)))))
 #+end_src
 *** Remove unused part
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (tool-bar-mode -1)
   (menu-bar-mode -1)
   (scroll-bar-mode -1)
 #+end_src
 ** Window
 e2wm is nice to provide (also temporarily) an IDE view functionnality.
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package e2wm
     :ensure t
     :config
@@ -4838,7 +4842,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 ** Buffer
 *** Org-mode
 **** Faces
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package org
     :ensure t
     :config
@@ -4863,14 +4867,14 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
                                  (?E . (:foreground "forest green")))))
 #+end_src
 **** Org-bullets
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package org-bullets
     :ensure t
     :init
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 #+end_src
 **** Fancy priority
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package org-fancy-priorities
     :ensure t
     :init
@@ -4883,7 +4887,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
             (?I . "Imaportant"))))
 #+end_src
 *** Highlight
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package volatile-highlights
     :ensure t
     :config
@@ -4901,13 +4905,13 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 
 *** Indentation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package indent-guide
     :ensure t
     :defer t)
 #+end_src
 *** Column/line
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package nlinum
     :ensure t
     :disabled t
@@ -4937,7 +4941,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 
 *** Paging
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (use-package page-break-lines
   :ensure t
   :diminish page-break-lines-mode
@@ -4946,7 +4950,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 *** Parenthesis
 **** Smart parents
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package smartparens
     :ensure t
     :after circe
@@ -4963,7 +4967,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (sp-pair "'" nil :actions :rem))
 #+end_src
 **** Rainbow delimiter
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package rainbow-delimiters
     :ensure t
     :config
@@ -4980,11 +4984,11 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+end_src
 *** Show current function
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (which-func-mode 1)
 #+end_src
 *** Diff
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package diff-hl
     :ensure t
     :hook
@@ -4996,7 +5000,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 *** Faces/Colors
 **** COMMENT Terminal
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (set-face-foreground 'term-color-black "#4d4d4d")
   (set-face-foreground 'term-color-red "#cc9393")
   (set-face-foreground 'term-color-green "#7f9f7f")
@@ -5007,7 +5011,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (set-face-foreground 'term-color-white "#dcdccc")
 #+end_src
 **** Dired (using dired-rainbow)
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package dired-rainbow
     :ensure t
     :defer t
@@ -5046,7 +5050,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     )
 #+end_src
 **** Elfeed
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package elfeed
     :config
     ;; Adapt the faces
@@ -5085,7 +5089,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (push '(youtube elfeed-youtube) elfeed-search-face-alist))
 #+end_src
 *** Emoji
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package emojify
     :ensure t
     :config
@@ -5109,7 +5113,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     :after emojify)
 #+end_src
 *** Specific mode cleaning helper
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun disable-global-facilities ()
     "Function to disable some utilities globally activated for current buffer"
     (interactive)
@@ -5118,13 +5122,13 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     )
 #+end_src
 ** Icons
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package all-the-icons :ensure t)
   (use-package all-the-icons-dired :ensure t)
   (use-package all-the-icons-ivy :ensure t)
 #+end_src
 ** Fonts
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defun set-icon-fonts (CODE-FONT-ALIST)
     "Utility to associate many unicode points with specified fonts."
     (--each CODE-FONT-ALIST
@@ -5167,7 +5171,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (load-default-fonts))
 #+end_src
 ** Mode line - spaceline
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package fancy-battery :ensure t)
   (use-package spaceline-config :ensure spaceline)
 
@@ -5399,12 +5403,12 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 
 * Keys/shortcuts
 ** Mac adaptation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 (setq mac-option-modifier nil
       mac-command-modifier 'meta)
 #+end_src
 ** Main entry
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
     (defhydra hydra-main (:color teal :hint nil)
   "
    Main helper
@@ -5438,7 +5442,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (global-set-key (kbd "<f1>") 'hydra-main/body)
 #+end_src
 ** Project/Version control
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (defhydra hydra-projectile-other-window (:color teal)
     "projectile-other-window"
     ("f"  projectile-find-file-other-window        "file")
@@ -5543,7 +5547,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (global-set-key (kbd "<f4>") 'hydra-project/body)
 #+end_src
 ** Shell/terminal
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   ;; Function coming from here: http://www.howardism.org/Technical/Emacs/eshell-fun.html
   (defun eshell-here ()
     "Opens up a new shell in the directory associated with the
@@ -5578,7 +5582,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 ** Global keys
 *** Compilation
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (global-set-key (kbd "C-c C-c") 'compile)
 
   (defhydra hydra-next-error (global-map "C-x")
@@ -5599,21 +5603,21 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
       ("q" nil            nil :color blue))
 #+end_src
 *** Commenting
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (global-set-key (kbd "C-c C-;") 'comment-region)
   (global-set-key (kbd "C-c C-:") 'uncomment-region)
 #+end_src
 *** Buffers
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (global-set-key (kbd "M-g") 'goto-line)
   (global-set-key (kbd "M-G") 'what-line)
 #+end_src
 *** Windows
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (global-set-key (kbd "C-c =") 'compare-windows)
 #+end_src
 *** Files
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (global-set-key (kbd "C-x C-r") 'counsel-recentf)
   (global-set-key (kbd "C-x C-d") 'dired)
 
@@ -5622,25 +5626,25 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (global-set-key [(control c) ?3] 'grep-find)
 #+end_src
 *** Multimedia
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (global-set-key (kbd "<XF86AudioPlay>") 'emms-pause)
   (global-set-key (kbd "<XF86AudioStop>") 'emms-stop)
   (global-set-key (kbd "<XF86AudioPrev>") 'emms-previous)
   (global-set-key (kbd "<XF86AudioNext>") 'emms-next)
 #+end_src
 *** Mac key remapping
-#+BEGIN_SRC emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (global-set-key (kbd "<end>") 'move-end-of-line)
   (global-set-key (kbd "<home>") 'move-beginning-of-line)
 #+END_SRC
 * Finalization
 ** Startup
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (setq inhibit-startup-message t)
   (setq find-file-suppress-same-file-warnings t)
 #+end_src
 ** Scratch
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
   (use-package scratch-ext
     :ensure t
     :hook (after-init . scratch-ext-restore-last-scratch)
