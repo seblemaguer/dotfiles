@@ -41,7 +41,8 @@
       package-archive-priorities  '(("ORGMODE"      . 15)
                                     ("MELPA Stable" . 10)
                                     ("GNU ELPA"     . 5)
-                                    ("MELPA"        . 0)))
+                                    ("MELPA"        . 0))
+      package-check-signature nil)
 
 (package-initialize)
 
