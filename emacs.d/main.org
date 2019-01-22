@@ -1970,6 +1970,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
     (use-package org-protocol)
     (use-package org-dashboard
       :ensure t
+      :commands (org-dashboard-display)
       :config
       (setq org-dashboard-files org-agenda-files))
 
