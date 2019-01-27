@@ -34,13 +34,17 @@ This section is configuring the bootstrap packages (enhancing use-package and su
 #+END_SRC
 ** Load use-package
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
 
-(eval-when-compile
-  (require 'use-package))
+  (eval-when-compile
+    (require 'use-package))
 
+  ;; (setq use-package-always-defer t)
+
+  ;; (eval-when-compile
+  ;;   (setq use-package-expand-minimally byte-compile-current-file))
 #+END_SRC
 ** Define some important variables
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
@@ -63,29 +67,29 @@ This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org
     "Tangles main.org and byte compiles ~/.emacs.d/"
     (interactive)
     (when (equal (buffer-name)
-                 (concat "main.org"))
-      (org-babel-tangle)
+		 (concat "main.org"))
+
+      ;; Recompile plugins
       (byte-recompile-directory (expand-file-name slm~plugin-dir) 0)
 
-      ;; Delete to force
-      (when (file-exists-p (format "%s/init.elc" user-emacs-directory))
-        (delete-file (format "%s/init.elc" user-emacs-directory)))
+      ;; Tangle to init.el
+      (org-babel-tangle)
 
-      ;; Recompile file !
-      (byte-compile-file (format "%s/init.el" user-emacs-directory))))
+      ;; Recompile init file
+      (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)))
 
   (add-hook 'after-save-hook #'slm~tangle-byte-compile-org)
 #+END_SRC
 ** Identification helper
 Easy use wrapper around auth-* authentification emacs utils
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (defun* my:auth-source-get-user (&rest spec &allow-other-keys)
+  (cl-defun my:auth-source-get-user (&rest spec &allow-other-keys)
     "Helper to get the user given the SPEC from authsource."
     (let ((founds (apply 'auth-source-search spec)))
       (when founds
         (plist-get (nth 0 founds) :user))))
 
-  (defun* my:auth-source-get-passwd (&rest spec &allow-other-keys)
+  (cl-defun my:auth-source-get-passwd (&rest spec &allow-other-keys)
     "Helper to get the password given the SPEC from authsource."
     (let ((founds (apply 'auth-source-search spec)))
       (when founds
@@ -136,9 +140,10 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
 #+end_src
 *** Add keychord support
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
-(use-package use-package-chords
-  :ensure t
-  :config (key-chord-mode 1))
+  (use-package use-package-chords
+    :ensure t
+    :demand t
+    :config (key-chord-mode 1))
 #+END_SRC
 *** Quelpa
 Quelpa is super useful for developer package management. Adding the adaptation for the use-package
@@ -146,24 +151,26 @@ makes it configuration file proof.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package quelpa-use-package
       :ensure t
+      :demand t
       :init
       (setq quelpa-update-melpa-p nil))
 #+end_src
 *** Hydra
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package use-package-hydra
-    :ensure t)
+    :ensure t
+    :demand t)
 #+END_SRC
 *** General
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
-  (use-package general :ensure t)
+  (use-package general :ensure t :demand t)
 #+END_SRC
 
 ** Paradox to enhance package list management
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package paradox
     :ensure t
-    :defer t
+    :commands paradox-list-package
     :config
     (setq paradox-spinner-type 'progress-bar
           paradox-execute-asynchronously t
@@ -189,7 +196,6 @@ In order to have a better and more visual control of undoing, I use undo-tree.
   (use-package undo-tree
     :ensure quelpa
     :quelpa (undo-tree :fetcher git :url "http://www.dr-qubit.org/git/undo-tree.git")
-    :defer t
     :init
     (setq undo-tree-visualizer-timestamps nil
           undo-tree-visualizer-diff t)
@@ -454,7 +460,7 @@ Baseline configuration for copy/pasting
         select-enable-clipboard t
         select-active-regions t)
 #+end_src
-** Spell
+** COMMENT Spelling
 Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package flyspell
@@ -747,9 +753,9 @@ I do prefer vertical completion, which is why I use extensively Ivy and extensio
 
   (use-package counsel
     :ensure t
-    :config
-    (global-set-key (kbd "M-x") 'counsel-M-x)
-    (global-set-key (kbd "C-x C-f") 'counsel-find-file))
+    :bind
+    (("M-x" . counsel-M-x)
+     ("C-x C-f" . counsel-find-file)))
 #+end_src
 ** Company
 In order to have inline completion, really important for coding, I use company. However I adapted
@@ -758,6 +764,7 @@ configuration here.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package company
     :ensure t
+    :demand t
     :config
 
     ;; Global
@@ -822,7 +829,7 @@ Ivy-yasnippet is used for snippet discovery.
          (add-to-list 'company-backends 'company-yasnippet)))
 
     ;; Add third parties snippets
-    (defvar third-parties-snippet-dir (format "%s/third_parties/snippets" config-basedir)
+    (defvar third-parties-snippet-dir (format "%s/third_parties/snippets" user-emacs-directory)
       "Directory containing my own snippets")
 
     (defun third-parties-snippets-initialize ()
@@ -850,7 +857,7 @@ file type dedicated templates. The templates are available in =third_parties/tem
     :config
 
     ;; Define template directory
-    (setq yatemplate-dir (concat config-basedir "/third_parties/templates"))
+    (setq yatemplate-dir (concat user-emacs-directory "/third_parties/templates"))
 
     ;; Coupling with auto-insert
     (setq auto-insert-alist nil)
@@ -1053,40 +1060,40 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
           org-agenda-category-icon-alist
           `(
             ;; Tools / utils
-            ("[Ee]macs" ,(format "%s/third_parties/icons/emacs24.png" config-basedir) nil nil :ascent center)
-            ("[Oo]rg" ,(format "%s/third_parties/icons/org.png" config-basedir) nil nil :ascent center)
-            ("^[Hh][Tt][Ss]$" ,(format "%s/third_parties/icons/hts.png" config-basedir) nil nil :ascent center)
-            ("^[Mm]ary[tT]\\{2\\}[sS]$" ,(format "%s/third_parties/icons/marytts.png" config-basedir) nil nil :ascent center)
-            ("^SFB$" ,(format "%s/third_parties/icons/sfb.png" config-basedir) nil nil :ascent center)
-            ("[Ss]ystem" ,(format "%s/third_parties/icons/debian.png" config-basedir) nil nil :ascent center)
-            ("[Tt]ools?" ,(format "%s/third_parties/icons/wrench.png" config-basedir) nil nil :ascent center)
-            ("[Ex]pe\\(riment\\)s?" ,(format "%s/third_parties/icons/expes.png" config-basedir) nil nil :ascent center)
+            ("[Ee]macs" ,(format "%s/third_parties/icons/emacs24.png" user-emacs-directory) nil nil :ascent center)
+            ("[Oo]rg" ,(format "%s/third_parties/icons/org.png" user-emacs-directory) nil nil :ascent center)
+            ("^[Hh][Tt][Ss]$" ,(format "%s/third_parties/icons/hts.png" user-emacs-directory) nil nil :ascent center)
+            ("^[Mm]ary[tT]\\{2\\}[sS]$" ,(format "%s/third_parties/icons/marytts.png" user-emacs-directory) nil nil :ascent center)
+            ("^SFB$" ,(format "%s/third_parties/icons/sfb.png" user-emacs-directory) nil nil :ascent center)
+            ("[Ss]ystem" ,(format "%s/third_parties/icons/debian.png" user-emacs-directory) nil nil :ascent center)
+            ("[Tt]ools?" ,(format "%s/third_parties/icons/wrench.png" user-emacs-directory) nil nil :ascent center)
+            ("[Ex]pe\\(riment\\)s?" ,(format "%s/third_parties/icons/expes.png" user-emacs-directory) nil nil :ascent center)
 
             ;; Admin / meeting
-            ("[Aa]dmin" ,(format "%s/third_parties/icons/admin.png" config-basedir) nil nil :ascent center)
-            ("[Mm]eeting" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
-            ("[Aa]ppointments?" ,(format "%s/third_parties/icons/appointment.png" config-basedir) nil nil :ascent center)
-            ("[Vv]isitors" ,(format "%s/third_parties/icons/visitors.png" config-basedir) nil nil :ascent center)
-            ("synsig" ,(format "%s/third_parties/icons/isca.png" config-basedir) nil nil :ascent center)
-            ("\\([Tt]rip\\|[Dd]eplacement\\)" ,(format "%s/third_parties/icons/trip.png" config-basedir) nil nil :ascent center)
-            ("Train" ,(format "%s/third_parties/icons/train.png" config-basedir) nil nil :ascent center)
+            ("[Aa]dmin" ,(format "%s/third_parties/icons/admin.png" user-emacs-directory) nil nil :ascent center)
+            ("[Mm]eeting" ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory) nil nil :ascent center)
+            ("[Aa]ppointments?" ,(format "%s/third_parties/icons/appointment.png" user-emacs-directory) nil nil :ascent center)
+            ("[Vv]isitors" ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory) nil nil :ascent center)
+            ("synsig" ,(format "%s/third_parties/icons/isca.png" user-emacs-directory) nil nil :ascent center)
+            ("\\([Tt]rip\\|[Dd]eplacement\\)" ,(format "%s/third_parties/icons/trip.png" user-emacs-directory) nil nil :ascent center)
+            ("Train" ,(format "%s/third_parties/icons/train.png" user-emacs-directory) nil nil :ascent center)
 
             ;; Deadlines / dates
-            ("\\([Pp]resentations?\\)" ,(format "%s/third_parties/icons/meeting.png" config-basedir) nil nil :ascent center)
-            ("\\([Pp]apers?\\|[Bb]lio\\|[Aa]rticles?\\|[Rr]eading\\|[Ww]riting\\)" ,(format "%s/third_parties/icons/book.png" config-basedir) nil nil :ascent center)
-            ("[Mm]ails?" ,(format "%s/third_parties/icons/gnus.png" config-basedir) nil nil :ascent center)
-            ("[Rr]eview?" ,(format "%s/third_parties/icons/review.png" config-basedir) nil nil :ascent center)
+            ("\\([Pp]resentations?\\)" ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory) nil nil :ascent center)
+            ("\\([Pp]apers?\\|[Bb]lio\\|[Aa]rticles?\\|[Rr]eading\\|[Ww]riting\\)" ,(format "%s/third_parties/icons/book.png" user-emacs-directory) nil nil :ascent center)
+            ("[Mm]ails?" ,(format "%s/third_parties/icons/gnus.png" user-emacs-directory) nil nil :ascent center)
+            ("[Rr]eview?" ,(format "%s/third_parties/icons/review.png" user-emacs-directory) nil nil :ascent center)
 
             ;; Personnal dates
-            ("Medical" ,(format "%s/third_parties/icons/medical.png" config-basedir) nil nil :ascent center)
-            ("\\(Party\\|Celeb\\)" ,(format "%s/third_parties/icons/party.png" config-basedir) nil nil :ascent center)
-            ("Anniv" ,(format "%s/third_parties/icons/anniversary.png" config-basedir) nil nil :ascent center)
-            ("\\([Hh]olidays\\|[Vv]acations?\\)" ,(format "%s/third_parties/icons/holidays.png" config-basedir) nil nil :ascent center)
+            ("Medical" ,(format "%s/third_parties/icons/medical.png" user-emacs-directory) nil nil :ascent center)
+            ("\\(Party\\|Celeb\\)" ,(format "%s/third_parties/icons/party.png" user-emacs-directory) nil nil :ascent center)
+            ("Anniv" ,(format "%s/third_parties/icons/anniversary.png" user-emacs-directory) nil nil :ascent center)
+            ("\\([Hh]olidays\\|[Vv]acations?\\)" ,(format "%s/third_parties/icons/holidays.png" user-emacs-directory) nil nil :ascent center)
 
             ;; Personnal diverse
-            ("Music" ,(format "%s/third_parties/icons/music.png" config-basedir) nil nil :ascent center)
-            ("Book" ,(format "%s/third_parties/icons/book.png" config-basedir) nil nil :ascent center)
-            ("[Pp]rojects?" ,(format "%s/third_parties/icons/project.png" config-basedir) nil nil :ascent center)
+            ("Music" ,(format "%s/third_parties/icons/music.png" user-emacs-directory) nil nil :ascent center)
+            ("Book" ,(format "%s/third_parties/icons/book.png" user-emacs-directory) nil nil :ascent center)
+            ("[Pp]rojects?" ,(format "%s/third_parties/icons/project.png" user-emacs-directory) nil nil :ascent center)
             (".*" '(space . (:width (16)))))
 
           ;; Some commands
@@ -1144,31 +1151,31 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     (setq org-capture-templates
           `(("b" "Adding book" entry
              (file+headline "~/shared/Dropbox/org/todo/todo.org" "To read")
-             (file ,(format "%s/third_parties/org-capture-templates/book.org" config-basedir)))
+             (file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory)))
 
             ("f" "Reference" entry
              (file+headline "~/shared/Dropbox/org/todo/todo.org" "Reference task")
-             (file ,(format "%s/third_parties/org-capture-templates/reference.org" config-basedir)))
+             (file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory)))
 
             ("L" "Bookmark" entry
              (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
-             (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" config-basedir)))
+             (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" user-emacs-directory)))
 
             ("m" "mail" entry
              (file+headline "~/shared/Dropbox/org/todo/todo.org" "Mailing")
-             (file ,(format "%s/third_parties/org-capture-templates/mail.org" config-basedir)))
+             (file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory)))
 
             ("P" "Personnal calendar" entry
              (file "~/Calendars/Calendar-Personal.org")
-             (file ,(format "%s/third_parties/org-capture-templates/calendar.org" config-basedir)))
+             (file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory)))
 
             ("r" "RSS" entry
              (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "RSS")
-             (file ,(format "%s/third_parties/org-capture-templates/rss.org" config-basedir)))
+             (file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory)))
 
             ("t" "ToDo Entry" entry
              (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
-             (file ,(format "%s/third_parties/org-capture-templates/default.org" config-basedir))
+             (file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory))
              :empty-lines-before 1)))
     )
 #+end_src
@@ -1244,14 +1251,14 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
       "Export org audio links to hmtl."
       (cl-case format
         (html (format "<audio src=\"%s\" controls>%s</audio>" path (or desc "")))))
-    (org-add-link-type "audio" #'ignore #'endless/export-audio-link)
+    (org-link-set-parameters "audio" :ignore #'endless/export-audio-link)
 
 
     (defun endless/export-video-link (path desc format)
       "Export org video links to hmtl."
       (cl-case format
         (html (format "<video controls src=\"%s\">%s</video>" path (or desc "")))))
-    (org-add-link-type "video" #'ignore #'endless/export-video-link)
+    (org-link-set-parameters "video" :ignore #'endless/export-video-link)
 
     (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/firefox %s")))
 
@@ -1263,7 +1270,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package ox-latex
     :after ox
-    :defer t
     :config
     (setq org-latex-listings t
           org-export-with-LaTeX-fragments t
@@ -1296,7 +1302,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package ox-pandoc
     :ensure t
     :after ox
-    :defer t
     :config
     ;; default options for all output formats
     (setq org-pandoc-options '((standalone . t))
@@ -1318,7 +1323,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
       ("q"  nil                    "cancel"     :color blue))
 
     :bind
-    (:map anki-editor-map ("C-x v" . anki-editor-hydra/body))
+    (:map anki-editor-mode-map ("C-x v" . anki-editor-hydra/body))
 
     :config
     (defun anki-start ()
@@ -1334,7 +1339,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   ;; Setup the part for asynchronous
   (setq org-export-in-background t
         org-export-async-debug t
-        org-export-async-init-file (expand-file-name (format "%s/org-export.el" config-basedir)))
+        org-export-async-init-file (expand-file-name (format "%s/org-export.el" user-emacs-directory)))
 #+end_src
 * Filetype
 Now that we have achieved the global configuration, I am going to focus on the language specific
@@ -1347,7 +1352,6 @@ We just load irony add support for c derivative mode.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package irony
     :ensure t
-    :defer t
     :hook ((c-mode . irony-mode)
            (objc-mode . irony-mode)
            (c++-mode .irony-mode)))
@@ -1356,14 +1360,11 @@ We just load irony add support for c derivative mode.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package flycheck-irony
     :ensure t
-    :after (flycheck irony)
-    :defer t)
+    :after (flycheck irony))
 
   (use-package irony-eldoc
     :ensure t
-    :after (irony)
-    :defer t)
-
+    :after (irony))
 #+end_src
 *** Completion
 For the completion, I am relying on company and irony. The configuration consists of add irony
@@ -1461,7 +1462,6 @@ enough to be on melpa so I use quelpa.
 ** CSS
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package scss
-    :defer t
     :mode ("\\.scss\\'")
     :config
     (autoload 'scss-mode "scss-mode")
@@ -1471,7 +1471,6 @@ enough to be on melpa so I use quelpa.
  #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
    (use-package csv-mode
      :ensure t
-     :defer t
      :config
 
      ;; Define separators
@@ -1556,8 +1555,7 @@ enough to be on melpa so I use quelpa.
 *** Gradle specificities
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package flycheck-gradle
-    :ensure t
-    :defer t)
+    :ensure t)
 #+end_src
 ** Kotlin
 *** Global mode
@@ -1693,7 +1691,6 @@ enough to be on melpa so I use quelpa.
 *** Bibtex
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package bibtex
-    :defer t
     :config
     (defun bibtex-generate-autokey ()
       (let* ((bibtex-autokey-names nil)
@@ -1727,7 +1724,7 @@ enough to be on melpa so I use quelpa.
 *** Completion
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   ;; Completion
-  (setq TeX-auto-global (format "%s/auctex/style" generated-basedir))
+  (setq TeX-auto-global (format "%s/auctex/style" user-emacs-directory))
 
   (use-package company-auctex
     :ensure t
@@ -1799,7 +1796,6 @@ enough to be on melpa so I use quelpa.
 *** Reftex
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package reftex
-    :defer t
     :init
     (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
     :config
@@ -1846,7 +1842,6 @@ enough to be on melpa so I use quelpa.
  #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
    (use-package ledger-mode
      :ensure t
-     :defer t
      :mode ("\\.ledger$"))
 
    (use-package flycheck-ledger
@@ -1900,8 +1895,7 @@ enough to be on melpa so I use quelpa.
 
   (use-package markdown-mode+
     :ensure t
-    :after markdown-mode
-    :defer t)
+    :after markdown-mode)
 #+end_src
 *** Syntax highlight in block
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -1940,20 +1934,20 @@ enough to be on melpa so I use quelpa.
       :hydra
       (hydra-pdftools (:color blue :hint nil)
                       "
-          PDF tools
+            PDF tools
 
-       Move  History   Scale/Fit                  Annotations     Search/Link     Do
-    ------------------------------------------------------------------------------------------------
-         ^^_g_^^      _B_    ^↧^    _+_    ^ ^     _al_: list    _s_: search    _u_: revert buffer
-         ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤   _am_: markup  _o_: outline   _i_: info
-         ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^     _at_: text    _F_: link      _d_: dark mode
-         ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   _ad_: delete  _f_: search link
-    _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_     _aa_: dired
-         ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   _y_:  yank
-         ^^_n_^^      ^ ^  _r_eset slice box
-         ^^^↓^^^
-         ^^_G_^^
-    "
+         Move  History   Scale/Fit                  Annotations     Search/Link     Do
+      ------------------------------------------------------------------------------------------------
+           ^^_g_^^      _B_    ^↧^    _+_    ^ ^     _al_: list    _s_: search    _u_: revert buffer
+           ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤   _am_: markup  _o_: outline   _i_: info
+           ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^     _at_: text    _F_: link      _d_: dark mode
+           ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   _ad_: delete  _f_: search link
+      _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_     _aa_: dired
+           ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   _y_:  yank
+           ^^_n_^^      ^ ^  _r_eset slice box
+           ^^^↓^^^
+           ^^_G_^^
+      "
                       ("\\" hydra-master/body "back")
                       ("<ESC>" nil "quit")
                       ("al" pdf-annot-list-annotations)
@@ -1987,7 +1981,7 @@ enough to be on melpa so I use quelpa.
                       ("l" image-forward-hscroll :color red)
                       ("h" image-backward-hscroll :color red))
 
-      :mode ("\\.pdf$" . pdf-view-mode)
+      :magic ("%PDF" . pdf-view-mode)
 
       :config
       ;; Install what need to be installed !
@@ -2014,7 +2008,7 @@ enough to be on melpa so I use quelpa.
                   (cua-mode 0)
                   )))
   #+end_src
-*** Org specific
+*** COMMENT Org specific
   #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
     (use-package org-pdfview
       :ensure t
@@ -2111,8 +2105,8 @@ enough to be on melpa so I use quelpa.
     (setq ein:query-timeout 1000)
 
     (defun load-ein ()
-      (ein:notebooklist-load)
       (interactive)
+      (ein:notebooklist-load)
       (ein:notebooklist-open)))
 #+end_src
 *** Sphinx documentation
@@ -2399,7 +2393,6 @@ Extracted from https://github.com/zakame/emacs-for-javascript
   (use-package nxml-mode
     :mode ("\\.xml$" . nxml-mode)
     :commands (pretty-print-xml-region)
-    :defer t
     :init
     ;; Mapping xml to nxml
     (fset 'xml-mode 'nxml-mode)
@@ -2460,7 +2453,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
     (setq woman-manpath
           `(
             "/usr/share/man/" "/usr/local/man/" ;; System
-            ,(format "%s/local/man" config-basedir) ;; Private environment
+            ,(format "%s/local/man" user-emacs-directory) ;; Private environment
             )))
 #+end_src
 
@@ -2682,7 +2675,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
       (projectile-switch-project))
 
     ;; Keys
-    (setq projectile-keymap-prefix (kbd "C-x p"))
+    (define-key projectile-mode-map (kbd "C-x p") 'projectile-command-map)
 
     ;; Activate globally
     (projectile-mode)
@@ -2699,7 +2692,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
           org-agenda-files
           (append org-agenda-files (org-projectile-todo-files))))
 #+end_src
-** Completion
+** COMMENT Completion
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package counsel-projectile
     :ensure t
@@ -2714,6 +2707,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package magit
     :ensure t
+    :commands magit
     :config
 
     ;; Ignore recent commit
@@ -2828,7 +2822,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package gitconfig-mode
     :ensure t
-    :defer t
     :mode
     ("/\.gitconfig\'"    . gitconfig-mode)
     ("/vcs/gitconfig\'"    . gitconfig-mode))
@@ -2836,18 +2829,15 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 *** Helpers for edition
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package git-commit
-    :ensure t
-    :defer t)
+    :ensure t)
 
   (use-package gitattributes-mode
-    :ensure t
-    :defer t)
+    :ensure t)
 #+end_src
 *** Git prefix
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package git-msg-prefix
     :ensure t
-    :defer t
     :config
     (setq git-msg-prefix-log-flags " --since='1 week ago' "
           git-msg-prefix-regex "^\\([^:]*: \\)"
@@ -3138,7 +3128,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package dired-collapse
     :ensure t
     :disabled t
-    :defer
     :hook
     (dired-mode . dired-collapse-mode))
 #+end_src
@@ -3198,7 +3187,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** Dired / Rsync
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package dired-rsync
-    :defer t
     :ensure t
     :config
     (bind-key "C-c C-r" 'dired-rsync dired-mode-map))
@@ -3322,7 +3310,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package treemacs
     :ensure t
-    :after hl-line-mode
     :config
     (setq treemacs-follow-after-init          t
           treemacs-width                      35
@@ -3825,8 +3812,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** Monitoring
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package symon
-    :ensure t
-    :defer t)
+    :ensure t)
 #+end_src
 ** Clipboard
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -3944,11 +3930,11 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     ;; Connection
     (defun circe-network-connected-p (network)
       "Return non-nil if there's any Circe server-buffer whose
-    `circe-server-netwok' is NETWORK."
+    `circe-netwok' is NETWORK."
       (catch 'return
         (dolist (buffer (circe-server-buffers))
           (with-current-buffer buffer
-            (if (string= network circe-server-network)
+            (if (string= network circe-network)
                 (throw 'return t))))))
 
      (defun circe-maybe-connect (network)
@@ -4091,8 +4077,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
      :client-secret (my:auth-source-get-passwd :host "stack-b" :user (format "%s^secret" stackb-client-id))
      :token (my:auth-source-get-passwd :host "stack-b" :user (format "%s^token" stackb-client-id))
      :subscribed-channels '(general random social)
-     :full-and-display-names t)
-    )
+     :full-and-display-names t))
 #+END_SRC
 ** Mail
 *** TTLS
@@ -4118,7 +4103,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           message-citation-line-function 'message-insert-formatted-citation-line
           message-citation-line-format  "\n\n-----------------------\nOn %a, %b %d %Y (%-H:%M %Z), %N wrote:\n"
           message-sendmail-f-is-evil nil
-          message-signature-file (format "%s/third_parties/mail/signature" config-basedir)
+          message-signature-file (format "%s/third_parties/mail/signature" user-emacs-directory)
           message-fill-column 100)
     )
 #+end_src
@@ -4188,7 +4173,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
   (defun notmuch-get-attachments-parent-dir ()
     (interactive)
-    (let ((dir (concat base-attachment-dir
+    (let ((dir (concat notmuch-base-attachment-dir
                        (format-time-string "%y.%m.%d" (date-to-time (notmuch-show-get-date)))
                        " "
                        (notmuch-show-strip-re (notmuch-show-get-subject)))))
@@ -4205,7 +4190,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
          (nd-notmuch-save-attachments mm-handle dir)))
       (dired dir)))
 
-  (defun notmuch-save-attachments (mm-handle dir)
+  (defun nd-notmuch-save-attachments (mm-handle dir)
     (notmuch-foreach-mime-part
      (lambda (p)
        (let ((disposition (mm-handle-disposition p)))
@@ -4213,10 +4198,10 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
               (or (equal (car disposition) "attachment")
                   (and (equal (car disposition) "inline")
                        (assq 'filename disposition)))
-              (nd-mm-save-part p dir))))
+              (nd-notmuch-mm-save-part p dir))))
      mm-handle))
 
-  (defun notmuch-mm-save-part (handle dir)
+  (defun nd-notmuch-mm-save-part (handle dir)
     "Write HANDLE to a file.
   PROMPT overrides the default one used to ask user for a file name."
     (let ((filename (or (mail-content-type-get (mm-handle-disposition handle) 'filename)
@@ -4323,7 +4308,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ***** Use-package start
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package notmuch-hello
-    :defer t
     :config
 
     (setq notmuch-hello-thousands-separator "." ;; Add a thousand separator
@@ -4503,7 +4487,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 **** Reply/citation
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
 (use-package notmuch-mua
-  :defer t
   :config
   (setq notmuch-mua-cite-function #'message-cite-original-without-signature)
 )
@@ -4551,7 +4534,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package elfeed-org
     :ensure t
-    :after elfeed
     :config
     (when (file-exists-p "~/shared/Dropbox/org/organisation/rss.org")
       (progn
@@ -4567,7 +4549,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package youtube-dl
     :ensure quelpa
     :quelpa (youtube-dl :repo "skeeto/youtube-dl-emacs" :fetcher github)
-    :defer t
     :bind ("C-x y" . youtube-dl-list)
     :config
     (setq youtube-dl-directory "~/Downloads")
@@ -4646,9 +4627,9 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :ensure t
     :hydra
     (md4rd-hydra (:color blue :hint none)
-                 "
-        _(or )_: open   _u_: upvote       _e_: expand all     _t_: toggle line
-                  _d_: downvote     _c_: collapse all
+       "
+        _o_: open   _u_: upvote       _e_: expand all     _t_: toggle line
+                    _d_: downvote     _c_: collapse all
         "
                  ("u" md4rd-upvote)
                  ("d" md4rd-downvote)
@@ -4702,6 +4683,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package emms
     :ensure t
+    :commands emms
     :config
 
     (emms-all)
@@ -5014,8 +4996,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 *** Indentation
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package indent-guide
-    :ensure t
-    :defer t)
+    :ensure t)
 #+end_src
 *** Column/line
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -5092,7 +5073,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 *** Show current function
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (which-func-mode 1)
+  (which-function-mode 1)
 #+end_src
 *** Diff
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -5121,7 +5102,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package dired-rainbow
     :ensure t
-    :defer t
     :init
     (eval-after-load 'dired '(require 'dired-rainbow))
 
@@ -5199,10 +5179,8 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package emojify
     :ensure t
+    :defer t
     :config
-
-    (use-package company-emoji
-      :ensure t)
 
     (setq emojify-user-emojis
           '(("(heart)" . (("name" . "Heart")
@@ -5214,10 +5192,8 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
       (emojify-set-emoji-data)))
 
 
-
-  (use-package flycheck-status-emoji
-    :ensure t
-    :after emojify)
+  (use-package company-emoji :ensure t)
+  (use-package flycheck-status-emoji :ensure t)
 #+end_src
 *** Specific mode cleaning helper
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -5610,10 +5586,10 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   "
     ("<ESC>" nil "quit")
     ("<" hydra-project/body "back")
-    ("f" magit-pull)
-    ("p" magit-push)
-    ("c" magit-commit)
-    ("d" magit-diff)
+    ("f" magit-pull-branch)
+    ("p" magit-push-other)
+    ("c" magit-commit-create)
+    ("d" magit-diff-range)
     ("l" magit-log-all)
     ("s" magit-status)
     ("t" git-timeline)
@@ -5750,7 +5726,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (setq inhibit-startup-message t)
   (setq find-file-suppress-same-file-warnings t)
 #+end_src
-** Scratch
+** COMMENT Scratch
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package scratch-ext
     :ensure t
