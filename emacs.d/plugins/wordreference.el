@@ -1,10 +1,10 @@
-;;; wordreference.el --- 
+;;; wordreference.el ---
 
 ;; Copyright 2013 Sébastien Le Maguer
 ;;
 ;; Author: Sébastien Le Maguer
 ;; Version: $Id: wordreference.el,v 0.0 2013/07/19 10:23:33 lemaguer Exp $
-;; Keywords: 
+;; Keywords:
 ;; X-URL: not distributed yet
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -23,14 +23,14 @@
 
 ;;; Commentary:
 
-;; 
+;;
 
 ;; Put this file into your load-path and the following into your ~/.emacs:
 ;;   (require 'wordreference)
 
 ;;; Code:
 
-(require 'w3m)
+(require 'shr)
 
 ;;;;##########################################################################
 ;;;;  User Options, Variables
@@ -49,7 +49,7 @@
 (defun translate (word)
   "Translate the given word using WordReference"
   (interactive "sEnter the word to translate: ")
-  (w3m-browse-url (concat wordreference-roots wordreference-source-language
+  (shr-browse-url (concat wordreference-roots wordreference-source-language
 					  wordreference-target-language "/"
 					  word))
   )
