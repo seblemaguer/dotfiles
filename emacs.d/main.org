@@ -170,7 +170,7 @@ makes it configuration file proof.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package paradox
     :ensure t
-    :commands paradox-list-package
+    :commands (paradox-list-package)
     :config
     (setq paradox-spinner-type 'progress-bar
           paradox-execute-asynchronously t
@@ -714,6 +714,8 @@ emacs. This has been proven useful, especially for java editing.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package lsp-mode
     :ensure t
+    :hook
+    (python-mode . lsp)
     :init
     (setq lsp-before-save-edits t
           lsp-inhibit-message t
@@ -984,6 +986,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 *** Global
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package org-agenda
+    :commands (org-agenda)
     :hydra
     (hydra-org-agenda-view (:color blue :hint none)
                            "
@@ -1032,10 +1035,9 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                            ("q" (message "Abort") :exit t))
 
     :bind
-    (:map org-agenda-mode-map
-          ("v"  . hydra-org-agenda-view/body))
-    (:map global-map
-          ([12] . org-agenda))
+    (([12] . org-agenda)
+     :map org-agenda-mode-map
+     ("v"  . hydra-org-agenda-view/body))
 
     :config
 
@@ -1301,7 +1303,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package ox-pandoc
     :ensure t
-    :after ox
+    :defines (org-pandoc-options-for-docx org-pandoc-options-for-beamer-pdf org-pandoc-options-for-latex-pdf)
     :config
     ;; default options for all output formats
     (setq org-pandoc-options '((standalone . t))
@@ -1314,7 +1316,9 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 *** Anki editor
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package anki-editor
+    :defines (anki-editor-mode-map)
     :ensure t
+    :pin MELPA
     :hydra
     (anki-editor-hydra (:color teal)
       "Anki editor"
@@ -1461,10 +1465,11 @@ enough to be on melpa so I use quelpa.
 #+end_src
 ** CSS
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (use-package scss
+  (use-package scss-mode
+    :ensure t
+    :defines scss-compile-at-save
     :mode ("\\.scss\\'")
     :config
-    (autoload 'scss-mode "scss-mode")
     (setq scss-compile-at-save 'nil))
 #+END_SRC
 ** CSV
@@ -1877,8 +1882,12 @@ enough to be on melpa so I use quelpa.
 ** Matlab
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package matlab-load
-    :ensure matlab-mode
+    :ensure quelpa
+    :quelpa (matlab-emacs :fetcher "github" :repo "ayonga/matlab-emacs")
+    :defines (matlab-shell-command-switches mlint-programs)
+    :ensure t
     :mode ("\\.m\\'" . matlab-mode)
+    :commands (matlab-shell)
     :config
 
     ;; Command defines
@@ -2020,6 +2029,7 @@ enough to be on melpa so I use quelpa.
 ** Perl
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package cperl-mode
+    :defines (compile-dwim-check-tools)
     :config
     (defalias 'perl-mode 'cperl-mode)
     (cperl-set-style "BSD")
@@ -2063,17 +2073,6 @@ enough to be on melpa so I use quelpa.
 
     :config
     (setq python-indent-offset 4))
-#+end_src
-*** LSP configuration
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (use-package lsp-python
-    :ensure t
-    :hook
-    (python-mode . (lambda () (add-to-list (make-local-variable 'company-backends) 'company-lsp)))
-    (python-mode . lsp-python-enable)
-    (python-mode . flycheck-mode)
-    (python-mode . (lambda () (lsp-ui-flycheck-enable t)))
-    (python-mode . lsp-ui-sideline-mode))
 #+end_src
 *** Pipenv
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -2316,6 +2315,7 @@ enough to be on melpa so I use quelpa.
 
 
   (use-package gulp-task-runner
+    :ensure t
     :commands (gulp))
 
   (use-package js-auto-beautify
@@ -2707,7 +2707,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package magit
     :ensure t
-    :commands magit
+    :commands (magit)
     :config
 
     ;; Ignore recent commit
@@ -3858,8 +3858,8 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package circe
     :ensure t
     :bind ("<S-f2>" . circe-init)
-    :init
-    (add-hook 'circe-chat-mode-hook 'disable-global-facilities)
+    :hook
+    (circe-chat-mode . disable-global-facilities)
 
     :config
 
@@ -3963,7 +3963,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** Logging
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package lui-logging
-    :commands enable-lui-logging)
+    :commands (enable-lui-logging))
 
 #+end_src
 *** Autopasting
@@ -4053,8 +4053,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       ("q"  nil                    "cancel"     :color blue))
 
     :init
-    (setq slack-buffer-emojify t ;; if you want to enable emoji, default nil
-          slack-prefer-current-team t)
+    (setq slack-buffer-emojify t)
 
     :config
 
@@ -4085,18 +4084,18 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (use-package starttls
       :config
       (setq starttls-use-gnutls t
-	    starttls-gnutls-program "gnutls-cli"
-	    starttls-extra-arguments '("--insecure")
-	    auth-sources '("~/.authinfo.gpg")))
+            starttls-gnutls-program "gnutls-cli"
+            starttls-extra-arguments '("--insecure")
+            auth-sources '("~/.authinfo.gpg")))
 
   #+end_src
 *** Message composition
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package message
-    :init
-    (add-hook 'message-mode-hook 'flyspell-mode)
-    (add-hook 'message-setup-hook '(lambda () (footnote-mode t)))
-    (add-hook 'message-mode-hook 'disable-global-facilities)
+    :hook
+    (message-mode . flyspell-mode)
+    (message-mode . disable-global-facilities)
+    (message-setup . (lambda () (footnote-mode t)))
 
     :config
     (setq message-auto-save-directory nil
@@ -4222,8 +4221,25 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package notmuch
     :ensure t
+    :commands (notmuch)
     :ensure-system-package notmuch
     :ensure-system-package isync
+    :bind
+    (
+     ([f2] . notmuch)
+
+     :map notmuch-hello-mode-map
+     ("U" . notmuch-sync-and-update-index)
+     ("g" . notmuch-update-index-and-refresh-buffer)
+
+     :map notmuch-search-mode-map
+     ("g" . notmuch-update-index-and-refresh-buffer)
+
+     :map notmuch-show-mode-map
+     ("\C-c\C-o" . browse-url-at-point)
+     ("w" . notmuch-save-all-attachments)
+     )
+
     :config
     (setq notmuch-search-oldest-first nil
           notmuch-print-mechanism 'notmuch-print-muttprint/evince
@@ -4268,12 +4284,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       (call-process "mbsync" nil t nil "-a")
       (notmuch-update-index))
 
-    ;; Hello shortcuts
-    (define-key notmuch-hello-mode-map "U" 'notmuch-sync-and-update-index)
-    (define-key notmuch-hello-mode-map "g" 'notmuch-update-index-and-refresh-buffer)
-
     ;; Search shortcuts
-    (define-key notmuch-search-mode-map "g" 'notmuch-update-index-and-refresh-buffer)
     (define-key notmuch-search-mode-map "d"
       (lambda ()
         "toggle deleted tag for thread"
@@ -4290,19 +4301,13 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
             (notmuch-search-tag '("-unread"))
           (notmuch-search-tag '("+unread")))))
 
-    ;; Show shortcuts
-    (define-key notmuch-show-mode-map "\C-c\C-o" 'browse-url-at-point)
-    (define-key notmuch-show-mode-map "w" 'notmuch-save-all-attachments)
-
     (define-key notmuch-show-mode-map "d"
       (lambda ()
         "toggle deleted tag for message"
         (interactive)
         (if (member "deleted" (notmuch-show-get-tags))
             (notmuch-show-tag '("-deleted"))
-          (notmuch-show-tag '("+deleted" "-inbox" "-unread")))))
-
-    (global-set-key (kbd "<f2>") 'notmuch))
+          (notmuch-show-tag '("+deleted" "-inbox" "-unread"))))))
 #+end_src
 **** Welcome
 ***** Use-package start
@@ -4500,35 +4505,15 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package elfeed
     :ensure t
-    :config
+    :commands (elfeed)
+    :bind (([f9] . elfeed))
 
+    :config
     ;; Change the storage directory
     (setq elfeed-db-directory "~/shared/Dropbox/emacs/elfeed")
 
     ;; Formatting dates
-    (setq elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left))
-
-    ;; Hook
-    (add-hook 'elfeed-new-entry-hook
-              (elfeed-make-tagger :before "7 days ago"
-                                  :remove 'unread))
-
-    ;; Shortcuts
-    (global-set-key (kbd "<f9>")
-                    (lambda ()
-                      (interactive)
-                      (elfeed-search-set-filter "+unread")
-                      (elfeed)))
-    (global-set-key (kbd "C-<f9>")
-                    (lambda ()
-                      (interactive)
-                      (elfeed-search-set-filter "+unread +mustread")
-                      (elfeed)))
-    (global-set-key (kbd "S-<f9>")
-                    (lambda ()
-                      (interactive)
-                      (elfeed-search-set-filter "+unread +emacs")
-                      (elfeed))))
+    (setq elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left)))
 #+end_src
 *** Org connection
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -4683,7 +4668,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package emms
     :ensure t
-    :commands emms
+    :commands (emms)
     :config
 
     (emms-all)
@@ -4966,9 +4951,9 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package org-fancy-priorities
     :ensure t
-    :init
-    (add-hook 'org-agenda-mode-hook 'org-fancy-priorities-mode)
-    (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
+    :hook
+    (org-agenda-mode . org-fancy-priorities-mode)
+    (org-mode . org-fancy-priorities-mode)
     :config
     (setq org-fancy-priorities-list
           '((?A . "❗") (?B . "⬆") (?C . "⬇") (?D . "☕")
