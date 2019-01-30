@@ -7,8 +7,10 @@
 :PROPERTIES:
 :INTERLEAVE_PDF: ${1:$$(file-relative-name (read-file-name "pdf file path"))}
 :END:
+
 `(make-string (+ (org-current-level) 2) ?*)` Reference
 #+begin_src bibtex :tangle yes
 #+end_src
+
 `(make-string (+ (org-current-level) 2) ?*)` Notes
 $0

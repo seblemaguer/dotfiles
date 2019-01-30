@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+# name: new_project
+# key: new_project_
+# --
+
+`(make-string (+ (org-current-level) 1) ?*)` ${1:Name} [%]
+
+`(make-string (+ (org-current-level) 2) ?*)` Meeting
+:PROPERTIES:
+:CATEGORY: Meeting
+:END:
+
+`(make-string (+ (org-current-level) 2) ?*)` Deadlines
+:PROPERTIES:
+:CATEGORY: Writing
+:END:
+
+`(make-string (+ (org-current-level) 2) ?*)` Bibliography [/]
+:PROPERTIES:
+:CATEGORY: Reading
+:END:
+
+`(make-string (+ (org-current-level) 2) ?*)` Publication [/]
+:PROPERTIES:
+:CATEGORY: Writing
+:END:
+
+
+`(make-string (+ (org-current-level) 2) ?*)` Tools/Experiments [/]
