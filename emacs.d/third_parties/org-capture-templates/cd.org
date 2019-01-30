@@ -1,4 +1,4 @@
-* MAIL Respond to %:from on %a
+* RELEASE %^{Artist} - %^{Title}
 :LOGBOOK:
 - Added: %U
 :END:

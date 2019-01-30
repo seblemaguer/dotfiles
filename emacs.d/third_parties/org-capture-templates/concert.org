@@ -1,0 +1,6 @@
+* EVENT %^{Description} - %^{Location}
+:LOGBOOK:
+- Added: %U
+:END:
+
+SCHEDULED: %(org-insert-time-stamp (org-read-date t t))

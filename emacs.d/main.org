@@ -918,26 +918,20 @@ Prescient helps to sort candidates by last used first and then sorting by length
     (use-package ob-exp)
     (use-package ox-bibtex)
     (use-package org-protocol)
-    (use-package org-dashboard
-      :ensure t
-      :commands (org-dashboard-display)
-      :config
-      (setq org-dashboard-files org-agenda-files))
 
     ;; Todo part
-    (setq org-todo-keywords '((sequence
-                               "TODO(t)" "REVIEW(r)" "NEXT(N)" "STARTED(s)"
-                               "WAITING(w)" "DELEGATED(e)" "MAYBE(m)" "|"
-                               "DONE(d)" "NOTE(n)" "DEFERRED(f)" "CANCELLED(c@/!)"))
+    (setq org-todo-keywords '(;; Baseline sequence
+                              (sequence "NEW(n)" "TODO(t)" "DELEGATED(e)" "WAITING(w)" "PLANNED(p)" "|" "DONE(d)" "CANCELLED(c@/!)" "POSTPONED(o@/!)")
+
+                              ;; Specific "to complete"
+                              (sequence "REVIEW(r)" "MAIL(m)" "|")
+
+                              ;; Note information
+                              (sequence "|" "NOTE(N)" "RELEASE(R)" "EVENT(E)")))
 
           org-todo-state-tags-triggers '(("CANCELLED" ("CANCELLED" . t))
-                                         ("WAITING" ("WAITING" . t))
-                                         ("HOLD" ("WAITING" . t) ("HOLD" . t))
-                                         (done ("WAITING") ("HOLD"))
-                                         ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-                                         ("IN PROGRESS" ("NEXT") ("WAITING") ("CANCELLED") ("HOLD"))
-                                         ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-                                         ("DONE" ("WAITING") ("CANCELLED") ("HOLD"))))
+                                         ("WAITING"   ("WAITING"   . t))
+                                         ("POSTPONED" ("POSTPONED" . t)))
 
     ;; Priority definition
     (setq org-highest-priority ?A
@@ -950,7 +944,7 @@ Prescient helps to sort candidates by last used first and then sorting by length
           org-archive-location "%s_archive::* Archived Tasks")
 
     ;; Refiling
-    (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3)))
+    (setq org-refile-targets '((org-agenda-files . (:maxlevel . 6)))
           org-completion-use-ido nil
           org-refile-use-outline-path 'file
           org-outline-path-complete-in-steps nil
@@ -996,12 +990,12 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :hydra
     (hydra-org-agenda-view (:color blue :hint none)
                            "
-      _d_: ?d? day        _g_: time grid=?g? _a_: arch-trees
-      _w_: ?w? week       _[_: inactive      _A_: arch-files
-      _t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?
-      _m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?
-      _y_: ?y? year       _q_: quit          _L__l__c_: ?l?
-         "
+        _d_: ?d? day        _g_: time grid=?g? _a_: arch-trees
+        _w_: ?w? week       _[_: inactive      _A_: arch-files
+        _t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?
+        _m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?
+        _y_: ?y? year       _q_: quit          _L__l__c_: ?l?
+           "
 
                            ("SPC" org-agenda-reset-view)
                            ("d" org-agenda-day-view
@@ -1068,40 +1062,68 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
           org-agenda-category-icon-alist
           `(
             ;; Tools / utils
-            ("[Ee]macs" ,(format "%s/third_parties/icons/emacs24.png" user-emacs-directory) nil nil :ascent center)
-            ("[Oo]rg" ,(format "%s/third_parties/icons/org.png" user-emacs-directory) nil nil :ascent center)
-            ("^[Hh][Tt][Ss]$" ,(format "%s/third_parties/icons/hts.png" user-emacs-directory) nil nil :ascent center)
-            ("^[Mm]ary[tT]\\{2\\}[sS]$" ,(format "%s/third_parties/icons/marytts.png" user-emacs-directory) nil nil :ascent center)
-            ("^SFB$" ,(format "%s/third_parties/icons/sfb.png" user-emacs-directory) nil nil :ascent center)
-            ("[Ss]ystem" ,(format "%s/third_parties/icons/debian.png" user-emacs-directory) nil nil :ascent center)
-            ("[Tt]ools?" ,(format "%s/third_parties/icons/wrench.png" user-emacs-directory) nil nil :ascent center)
-            ("[Ex]pe\\(riment\\)s?" ,(format "%s/third_parties/icons/expes.png" user-emacs-directory) nil nil :ascent center)
+            ("[Ee]macs"
+             ,(format "%s/third_parties/icons/emacs24.png" user-emacs-directory) nil nil :ascent center)
+            ("[Oo]rg"
+             ,(format "%s/third_parties/icons/org.png" user-emacs-directory) nil nil :ascent center)
+            ("^[Hh][Tt][Ss]$"
+             ,(format "%s/third_parties/icons/hts.png" user-emacs-directory) nil nil :ascent center)
+            ("^[Mm]ary[tT]\\{2\\}[sS]$"
+             ,(format "%s/third_parties/icons/marytts.png" user-emacs-directory) nil nil :ascent center)
+            ("^SFB$"
+             ,(format "%s/third_parties/icons/sfb.png" user-emacs-directory) nil nil :ascent center)
+            ("[Ss]ystem"
+             ,(format "%s/third_parties/icons/debian.png" user-emacs-directory) nil nil :ascent center)
+            ("[Tt]ools?"
+             ,(format "%s/third_parties/icons/wrench.png" user-emacs-directory) nil nil :ascent center)
+            ("[Ex]pe\\(riment\\)s?"
+             ,(format "%s/third_parties/icons/expes.png" user-emacs-directory) nil nil :ascent center)
 
             ;; Admin / meeting
-            ("[Aa]dmin" ,(format "%s/third_parties/icons/admin.png" user-emacs-directory) nil nil :ascent center)
-            ("[Mm]eeting" ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory) nil nil :ascent center)
-            ("[Aa]ppointments?" ,(format "%s/third_parties/icons/appointment.png" user-emacs-directory) nil nil :ascent center)
-            ("[Vv]isitors" ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory) nil nil :ascent center)
-            ("synsig" ,(format "%s/third_parties/icons/isca.png" user-emacs-directory) nil nil :ascent center)
-            ("\\([Tt]rip\\|[Dd]eplacement\\)" ,(format "%s/third_parties/icons/trip.png" user-emacs-directory) nil nil :ascent center)
-            ("Train" ,(format "%s/third_parties/icons/train.png" user-emacs-directory) nil nil :ascent center)
+            ("[Aa]dmin"
+             ,(format "%s/third_parties/icons/admin.png" user-emacs-directory) nil nil :ascent center)
+            ("[Mm]eeting"
+             ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory) nil nil :ascent center)
+            ("[Aa]ppointments?"
+             ,(format "%s/third_parties/icons/appointment.png" user-emacs-directory) nil nil :ascent center)
+            ("[Vv]isitors"
+             ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory) nil nil :ascent center)
+            ("synsig"
+             ,(format "%s/third_parties/icons/isca.png" user-emacs-directory) nil nil :ascent center)
+            ("\\([Tt]rip\\|[Dd]eplacement\\)"
+             ,(format "%s/third_parties/icons/trip.png" user-emacs-directory) nil nil :ascent center)
+            ("Train"
+             ,(format "%s/third_parties/icons/train.png" user-emacs-directory) nil nil :ascent center)
 
             ;; Deadlines / dates
-            ("\\([Pp]resentations?\\)" ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory) nil nil :ascent center)
-            ("\\([Pp]apers?\\|[Bb]lio\\|[Aa]rticles?\\|[Rr]eading\\|[Ww]riting\\)" ,(format "%s/third_parties/icons/book.png" user-emacs-directory) nil nil :ascent center)
-            ("[Mm]ails?" ,(format "%s/third_parties/icons/gnus.png" user-emacs-directory) nil nil :ascent center)
-            ("[Rr]eview?" ,(format "%s/third_parties/icons/review.png" user-emacs-directory) nil nil :ascent center)
+            ("\\([Pp]resentations?\\)"
+             ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory) nil nil :ascent center)
+            ("\\([Pp]apers?\\|[Bb]lio\\|[Aa]rticles?\\|[Rr]eading\\|[Ww]riting\\)"
+             ,(format "%s/third_parties/icons/book.png" user-emacs-directory) nil nil :ascent center)
+            ("[Mm]ails?"
+             ,(format "%s/third_parties/icons/gnus.png" user-emacs-directory) nil nil :ascent center)
+            ("[Rr]eview?"
+             ,(format "%s/third_parties/icons/review.png" user-emacs-directory) nil nil :ascent center)
 
             ;; Personnal dates
-            ("Medical" ,(format "%s/third_parties/icons/medical.png" user-emacs-directory) nil nil :ascent center)
-            ("\\(Party\\|Celeb\\)" ,(format "%s/third_parties/icons/party.png" user-emacs-directory) nil nil :ascent center)
-            ("Anniv" ,(format "%s/third_parties/icons/anniversary.png" user-emacs-directory) nil nil :ascent center)
-            ("\\([Hh]olidays\\|[Vv]acations?\\)" ,(format "%s/third_parties/icons/holidays.png" user-emacs-directory) nil nil :ascent center)
+            ("Medical"
+             ,(format "%s/third_parties/icons/medical.png" user-emacs-directory) nil nil :ascent center)
+            ("\\(Party\\|Celeb\\)"
+             ,(format "%s/third_parties/icons/party.png" user-emacs-directory) nil nil :ascent center)
+            ("Anniv"
+             ,(format "%s/third_parties/icons/anniversary.png" user-emacs-directory) nil nil :ascent center)
+            ("\\([Hh]olidays\\|[Vv]acations?\\)"
+             ,(format "%s/third_parties/icons/holidays.png" user-emacs-directory) nil nil :ascent center)
+            ("Concert"
+             ,(format "%s/third_parties/icons/music.png" user-emacs-directory) nil nil :ascent center)
 
             ;; Personnal diverse
-            ("Music" ,(format "%s/third_parties/icons/music.png" user-emacs-directory) nil nil :ascent center)
-            ("Book" ,(format "%s/third_parties/icons/book.png" user-emacs-directory) nil nil :ascent center)
-            ("[Pp]rojects?" ,(format "%s/third_parties/icons/project.png" user-emacs-directory) nil nil :ascent center)
+            ("CD"
+             ,(format "%s/third_parties/icons/cd.png" user-emacs-directory) nil nil :ascent center)
+            ("Book"
+             ,(format "%s/third_parties/icons/book.png" user-emacs-directory) nil nil :ascent center)
+            ("[Pp]rojects?"
+             ,(format "%s/third_parties/icons/project.png" user-emacs-directory) nil nil :ascent center)
             (".*" '(space . (:width (16)))))
 
           ;; Some commands
@@ -1136,6 +1158,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package org-super-agenda
     :ensure t
+    :disabled t
     :config
     (org-super-agenda-mode)
     (setq org-super-agenda-groups
@@ -1161,6 +1184,14 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
              (file+headline "~/shared/Dropbox/org/todo/todo.org" "To read")
              (file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory)))
 
+            ("c" "CD" entry
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "CD")
+             (file ,(format "%s/third_parties/org-capture-templates/cd.org" user-emacs-directory)))
+
+            ("C" "Concert" entry
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Concert")
+             (file ,(format "%s/third_parties/org-capture-templates/concert.org" user-emacs-directory)))
+
             ("f" "Reference" entry
              (file+headline "~/shared/Dropbox/org/todo/todo.org" "Reference task")
              (file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory)))
@@ -1172,6 +1203,10 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
             ("m" "mail" entry
              (file+headline "~/shared/Dropbox/org/todo/todo.org" "Mailing")
              (file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory)))
+
+            ("M" "Meeting" entry
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
+             (file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory)))
 
             ("P" "Personnal calendar" entry
              (file "~/Calendars/Calendar-Personal.org")
@@ -4912,16 +4947,30 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     :config
 
     (setq org-todo-keyword-faces
-          '(("TODO" :background "red1" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("REVIEW" :background "orange" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("NEXT" :background "red1" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("STARTED" :background "orange" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("WAITING" :background "yellow" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("DEFERRED" :background "gold" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("DELEGATED" :background "gold" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("MAYBE" :background "gray" :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("DONE" :background "forest green" :weight bold :box (:line-width 2 :style released-button))
-            ("CANCELLED" :background "lime green" :foreground "black" :weight bold :box (:line-width 2 :style released-button)))
+          '(("NEW"       :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("TODO"      :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("PLANNED"   :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+
+            ;; Specific helpers
+            ("REVIEW"    :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("MAIL"      :background "purple"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+
+            ;; I can't really do anything here!
+            ("WAITING"   :background "gold"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("DELEGATED" :background "gold"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+
+            ;; Done but not complete
+            ("CANCELLED" :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("POSTPONED" :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+
+            ;; Done and I don't care to be complete
+            ("EVENT"     :foreground "purple"                            :weight bold)
+            ("NOTE"      :foreground "purple"                            :weight bold)
+            ("RELEASE"   :foreground "purple"                            :weight bold)
+
+            ;; Done and complete
+            ("DONE"      :background "forest green"                      :weight bold :box (:line-width 2 :style released-button))
+            )
 
 
             org-priority-faces '((?A . (:foreground "red" :weight bold))
