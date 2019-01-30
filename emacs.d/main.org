@@ -59,26 +59,33 @@ This section is configuring the bootstrap packages (enhancing use-package and su
 
   ;; Silence!!!!!!
   (setq save-abbrevs 'silently)
+  (setq ad-redefinition-action 'accept)
+
+  ;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
+  (setq gc-cons-threshold 50000000)
+  (setq large-file-warning-threshold 100000000)
 #+END_SRC
 ** Dealing with tangling this file
 This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
-  (defun slm~tangle-byte-compile-org ()
-    "Tangles main.org and byte compiles ~/.emacs.d/"
-    (interactive)
-    (when (equal (buffer-name)
-		 (concat "main.org"))
+    (defun slm~tangle-byte-compile-org ()
+      "Tangles main.org and byte compiles ~/.emacs.d/"
+      (interactive)
+      (when (equal (buffer-name)
+                   (concat "main.org"))
 
-      ;; Recompile plugins
-      (byte-recompile-directory (expand-file-name slm~plugin-dir) 0)
+        ;; Recompile plugins
+        (byte-recompile-directory (expand-file-name slm~plugin-dir) 0)
 
-      ;; Tangle to init.el
-      (org-babel-tangle)
+        ;; Tangle to init.el
+        (org-babel-tangle)
 
-      ;; Recompile init file
-      (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)))
+        ;; ;; Recompile init file (FIXME: commented as long as org-mode and matlab problem remains!)
+        ;; (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)
 
-  (add-hook 'after-save-hook #'slm~tangle-byte-compile-org)
+        ))
+
+    ;; (add-hook 'after-save-hook #'slm~tangle-byte-compile-org)
 #+END_SRC
 ** Identification helper
 Easy use wrapper around auth-* authentification emacs utils
@@ -142,7 +149,6 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package use-package-chords
     :ensure t
-    :demand t
     :config (key-chord-mode 1))
 #+END_SRC
 *** Quelpa
@@ -151,26 +157,25 @@ makes it configuration file proof.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package quelpa-use-package
       :ensure t
-      :demand t
       :init
       (setq quelpa-update-melpa-p nil))
 #+end_src
 *** Hydra
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package use-package-hydra
-    :ensure t
-    :demand t)
+    :ensure t)
 #+END_SRC
 *** General
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
-  (use-package general :ensure t :demand t)
+  (use-package general
+    :ensure t)
 #+END_SRC
 
 ** Paradox to enhance package list management
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package paradox
     :ensure t
-    :commands (paradox-list-package)
+    :commands (paradox-list-packages)
     :config
     (setq paradox-spinner-type 'progress-bar
           paradox-execute-asynchronously t
@@ -185,8 +190,6 @@ makes it configuration file proof.
           auto-package-update-hide-results t)
     (auto-package-update-maybe))
 #+end_src
-* Prerequisite
-This part focusing on some baseline prerequisites before the main configuration part
 * Global
 This section is about configuring global emacs helpers which are not specific to a dedicated
 language (or filetype) but are useful for any edition use-case in emacs.
@@ -195,11 +198,14 @@ In order to have a better and more visual control of undoing, I use undo-tree.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package undo-tree
     :ensure quelpa
+    :commands (undo-tree-visualize)
+    :bind ("C-x u" . undo-tree-visualize)
     :quelpa (undo-tree :fetcher git :url "http://www.dr-qubit.org/git/undo-tree.git")
     :init
     (setq undo-tree-visualizer-timestamps nil
           undo-tree-visualizer-diff t)
 
+    :config
     (global-undo-tree-mode))
 #+end_src
 ** Minor-mode activation
@@ -264,6 +270,7 @@ https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package origami
     :ensure quelpa
+    :commands (origami-mode)
     :quelpa (origami :repo "seblemaguer/origami.el" :fetcher github)
 
     :custom
@@ -327,9 +334,7 @@ leads to this configuration
     (recentf-mode 1)
 
     :config
-
-    ;; Increase limit
-    (setq recentf-max-menu-items 100)
+    (setq recentf-max-menu-items 100)     ;; Increase limit
 
     ;; Emacs
     (add-to-list 'recentf-exclude (format "%s/.orhc-bibtex-cache" (getenv "HOME")))
@@ -460,7 +465,7 @@ Baseline configuration for copy/pasting
         select-enable-clipboard t
         select-active-regions t)
 #+end_src
-** COMMENT Spelling
+** Spelling
 Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package flyspell
@@ -676,6 +681,7 @@ In order to monitor each process started via comint, I use bifocal which splits 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package bifocal
     :ensure t
+    :disabled t
     :hook
     (inferior-python-mode . #'bifocal-mode)
 
@@ -1035,7 +1041,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                            ("q" (message "Abort") :exit t))
 
     :bind
-    (([12] . org-agenda)
+    (([f12] . org-agenda)
      :map org-agenda-mode-map
      ("v"  . hydra-org-agenda-view/body))
 
@@ -1303,6 +1309,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package ox-pandoc
     :ensure t
+    :disabled t
     :defines (org-pandoc-options-for-docx org-pandoc-options-for-beamer-pdf org-pandoc-options-for-latex-pdf)
     :config
     ;; default options for all output formats
@@ -1580,18 +1587,6 @@ enough to be on melpa so I use quelpa.
     :hook
     (kotlin-mode . kotlin-mode-use-my-kotlin-indent))
 #+end_src
-*** LSP connection
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (use-package lsp-kotlin
-    :ensure quelpa
-    :quelpa (lsp-kotlin :repo "seblemaguer/lsp-kotlin" :fetcher github)
-    :hook
-    (kotlin-mode . (lambda () (add-to-list (make-local-variable 'company-backends) 'company-lsp)))
-    (kotlin-mode . lsp-kotlin-enable)
-    (kotlin-mode . flycheck-mode)
-    (kotlin-mode . (lambda () (lsp-ui-flycheck-enable t)))
-    (kotlin-mode . lsp-ui-sideline-mode))
-#+end_src
 *** Syntax checking
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package flycheck-kotlin
@@ -1858,7 +1853,17 @@ enough to be on melpa so I use quelpa.
   ;; Disable checking doc
   (use-package flycheck
     :config
-    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+
+    (flycheck-define-checker proselint
+			     "A linter for prose."
+			     :command ("proselint" source-inplace)
+			     :error-patterns
+			     ((warning line-start (file-name) ":" line ":" column ": "
+				       (id (one-or-more (not (any " "))))
+				       (message) line-end))
+			     :modes (text-mode markdown-mode gfm-mode org-mode))
+    )
 
   ;; Package lint
   (use-package package-lint :ensure t)
@@ -1881,14 +1886,22 @@ enough to be on melpa so I use quelpa.
 #+end_src
 ** Matlab
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (use-package matlab-load
-    :ensure quelpa
-    :quelpa (matlab-emacs :fetcher "github" :repo "ayonga/matlab-emacs")
-    :defines (matlab-shell-command-switches mlint-programs)
+  (use-package matlab-mode
     :ensure t
-    :mode ("\\.m\\'" . matlab-mode)
+    :defines (matlab-shell-command-switches mlint-programs)
+    :mode ("\\.m$" . matlab-mode)
     :commands (matlab-shell)
+
+    :init
+    (use-package matlab-load)
+
     :config
+    ;; (eval-after-load 'company
+    ;;   '(add-to-list 'company-backends 'company-matlab))
+
+    ;; (eval-after-load 'flycheck
+    ;;   '(require 'flycheck-matlab-mlint)))
+
 
     ;; Command defines
     (setq matlab-shell-command-switches '("-nodesktop -nosplash")
@@ -3064,9 +3077,11 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
     ;; Adapt ls for mac
     (when (eq system-type 'darwin)
-      (require 'ls-lisp)
-      (setq ls-lisp-use-insert-directory-program t
-            insert-directory-program "/usr/local/bin/gls"))
+      (use-package ls-lisp
+        :defines ls-lisp-use-insert-directory-program
+        :config
+        (setq ls-lisp-use-insert-directory-program t
+              insert-directory-program "/usr/local/bin/gls")))
 
     ;; Omitting
     (setq-default dired-omit-files "^\\.[^.]+"
@@ -4960,24 +4975,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
             (?1 . "⚡") (?2 . "⮬") (?3 . "⮮") (?4 . "☕")
             (?I . "Imaportant"))))
 #+end_src
-*** Highlight
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (use-package volatile-highlights
-    :ensure t
-    :config
-    (volatile-highlights-mode t))
-
-  (use-package hl-line+
-    :ensure t
-    :disabled
-    :config
-    (global-hl-line-mode)
-    (setq font-lock-maximum-decoration t)
-    (setq font-lock-maximum-size nil)
-    (global-font-lock-mode t)
-    (transient-mark-mode t))
-#+end_src
-
 *** Indentation
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package indent-guide
@@ -5711,7 +5708,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (setq inhibit-startup-message t)
   (setq find-file-suppress-same-file-warnings t)
 #+end_src
-** COMMENT Scratch
+** Scratch
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package scratch-ext
     :ensure t
