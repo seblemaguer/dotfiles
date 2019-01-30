@@ -4688,6 +4688,9 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
     (emms-all)
 
+    ;; Use mpv player
+    (setq emms-player-list '(emms-player-mpv))
+
     ;; A minor macos adaptation
     (when (eq system-type 'darwin)
       (setq emms-source-file-gnu-find "/usr/local/bin/gfind"))
@@ -4732,19 +4735,20 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
         (emms-track-simple-description track)))
     (setq emms-track-description-function 'track-description)
 
-
-    ;; Show the progress bar when seek (FIXME: is not working have to correct)
     ;; taken from http://emacs.stackexchange.com/questions/21747/emms-how-can-i-have-a-progress-bar?rq=1
-    (defun chunyang-emms-indicate-seek (_sec)
+    (defun emms-indicate-seek (_sec)
+      "Show the progress bar when seek."
       (let* ((total-playing-time (emms-track-get
                                   (emms-playlist-current-selected-track)
                                   'info-playing-time))
              (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
-        (with-temp-message (format "[%-100s] %2d%%"
+        (with-temp-message (format "[%-100s] %2d%% ([%02d:%02d]/[%02d:%02d])"
                                    (make-string elapsed/total ?=)
-                                   elapsed/total)
+                                   elapsed/total
+                                   (/ emms-playing-time 60) (% emms-playing-time 60)
+                                   (/ total-playing-time 60) (% total-playing-time 60))
           (sit-for 2))))
-    (add-hook 'emms-player-seeked-functions #'chunyang-emms-indicate-seek 'append)
+    (add-hook 'emms-player-seeked-functions #'emms-indicate-seek 'append)
 
     ;; Some shortcuts
     (global-set-key (kbd "<f5>") 'emms-browse-by-artist)
@@ -4756,35 +4760,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
     (setq emms-info-asynchronously nil
           emms-info-functions '(emms-info-libtag)))
-#+end_src
-** MPV as a player
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (use-package emms-player-simple-mpv
-    ;; :ensure t
-    :quelpa (emms-player-simple-mpv :fetcher github :repo "seblemaguer/emms-player-simple-mpv")
-    :after emms
-    :config
-
-    ;; Subpackages
-    (use-package emms-player-simple-mpv-e.g.time-display)
-    (use-package emms-player-simple-mpv-e.g.playlist-fname)
-    (use-package emms-player-simple-mpv-e.g.hydra)
-    (use-package emms-player-simple-mpv)
-    (use-package emms-player-simple-mpv-control-functions)
-
-    (define-emms-simple-player-mpv my-mpv '(file url streamlist playlist)
-      (concat "\\`\\(http[s]?\\|mms\\)://\\|"
-              (apply #'emms-player-simple-regexp
-                     "aac" "pls" "m3u"
-                     emms-player-base-format-list))
-      "mpv" "--no-terminal" "--force-window=no" "--audio-display=no")
-
-
-    (emms-player-simple-mpv-add-to-converters
-     'emms-player-my-mpv "." '(playlist)
-     (lambda (track-name) (format "--playlist=%s" track-name)))
-
-    (add-to-list 'emms-player-list 'emms-player-my-mpv))
 #+end_src
 ** Tagging using emms
 I actually use this part for minor correction. The tags are done when abcde is converting the cd
