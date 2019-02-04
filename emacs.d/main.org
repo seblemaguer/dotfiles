@@ -4871,6 +4871,11 @@ organize read papers or "to read" papers. This is mainly based on https://codear
     :config
     (setq org-noter-property-doc-file "INTERLEAVE_PDF"
           org-noter-property-note-location "INTERLEAVE_PAGE_NOTE"))
+
+  (use-package gscholar-bibtex
+    :ensure t
+    :commands (gscholar-bibtex)
+    )
 #+end_src
 ** Paper
 As I write papers, it is useful to have some helper to start to have the inspiration.
