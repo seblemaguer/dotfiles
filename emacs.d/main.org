@@ -7,7 +7,7 @@
 #+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="http://www.coli.uni-saarland.de/~slemaguer/css/default.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/default.css" />
 
 This is my emacs configuration file. It is under version control and available, among other
 configurations, at this repository: https://github.com/seblemaguer/dotfiles
