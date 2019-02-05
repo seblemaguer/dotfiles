@@ -1,6 +1,5 @@
 * MAIL Respond to %:from on %a
+SCHEDULED: %(org-insert-time-stamp (org-read-date t t) t)
 :LOGBOOK:
 - Added: %U
 :END:
-
-SCHEDULED: %(org-insert-time-stamp (org-read-date nil t))
