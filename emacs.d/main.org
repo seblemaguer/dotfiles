@@ -4841,6 +4841,14 @@ I actually use this part for minor correction. The tags are done when abcde is c
           emms-browser-playlist-info-album-format "%cS %a - %A : "
           emms-browser-playlist-info-title-format "%T. %t [%d]"))
 #+end_src
+** Release
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
+  (use-package ma2oa
+    :ensure quelpa
+    :quelpa (ma2oa :fetcher github :repo "seblemaguer/ma2oa.el")
+    :config
+    (add-to-list 'org-agenda-files "~/.emacs.d/ma-releases.org"))
+#+END_SRC
 * Weather
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
 (use-package wttrin
