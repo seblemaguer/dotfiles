@@ -1917,14 +1917,11 @@ enough to be on melpa so I use quelpa.
 #+end_src
 ** Matlab
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (use-package matlab-mode
-    :ensure t
+  (use-package matlab-load
+    :ensure matlab-mode
     :defines (matlab-shell-command-switches mlint-programs)
     :mode ("\\.m$" . matlab-mode)
     :commands (matlab-shell)
-
-    :init
-    (use-package matlab-load)
 
     :config
     ;; (eval-after-load 'company
