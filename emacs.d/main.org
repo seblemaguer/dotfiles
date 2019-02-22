@@ -1400,7 +1400,7 @@ We just load irony add support for c derivative mode.
     :ensure t
     :hook ((c-mode . irony-mode)
            (objc-mode . irony-mode)
-           (c++-mode .irony-mode)))
+           (c++-mode . irony-mode)))
 #+end_src
 *** Checking/documentation
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -1429,21 +1429,17 @@ Sometimes, I don't want to have a makefile or any complicated project compilatio
 gcc/g++. Therefore, here, either there is a makefile and use it, either there is none and I use
 gcc/++ directly.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (add-hook 'c-mode-hook
-            (lambda ()
-              (unless (or (file-exists-p "Makefile") (boundp 'buffer-file-name))
-                (set (make-local-variable 'compile-command)
-                     (let ((file (file-name-nondirectory buffer-file-name)))
-                       (concat "gcc -g -Wall -Wextra -o " (file-name-sans-extension file) " " file))))))
+  (use-package smart-compile
+    :bind (("C-c C-c" . smart-compile)
 
+           :map c-mode-map
+           ("C-c C-c" . smart-compile)
 
-  (add-hook 'c++-mode-hook
-            (lambda ()
-              (unless (file-exists-p "Makefile")
-                (set (make-local-variable 'compile-command)
-                     (let ((file (file-name-nondirectory buffer-file-name)))
-                       (concat "g++ -g -Wall -Wextra -o " (file-name-sans-extension file) " " file))))))
-#+END_SRC
+           :map c++-mode-map
+           ("C-c C-c" . smart-compile))
+
+    :ensure t)
+#+end_src
 *** C++ specificities
 For C++, I use a dedicated font lock.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -5677,8 +5673,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 ** Global keys
 *** Compilation
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (global-set-key (kbd "C-c C-c") 'compile)
-
   (defhydra hydra-next-error (global-map "C-x")
       "
   Compilation errors:
@@ -5699,7 +5693,12 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 *** Commenting
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (global-set-key (kbd "C-c C-;") 'comment-region)
+  (dolist (map (list c-mode-map c++-mode-map))
+    (define-key map (kbd "C-c C-;") 'comment-region))
+
   (global-set-key (kbd "C-c C-:") 'uncomment-region)
+  (dolist (map (list c-mode-map c++-mode-map))
+    (define-key map (kbd "C-c C-:") 'uncomment-region))
 #+end_src
 *** Buffers
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
