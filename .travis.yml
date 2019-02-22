@@ -30,4 +30,10 @@ install:
 
 script:
   - /usr/bin/emacs --version
+  - emacs -Q --batch --eval "
+    (progn
+      (require 'ob-tangle)
+      (dolist (file command-line-args-left)
+        (with-current-buffer (find-file-noselect file)
+          (org-babel-tangle))))" "~/.emacs.d/main.org"
   - /usr/bin/emacs --debug-init -nw -Q --batch -L ~/.emacs.d --eval "(require 'init)"
