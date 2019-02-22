@@ -3367,9 +3367,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (find-file "~/.local/share/Trash/files"))
 #+end_src
 ** Treemacs
+*** Global
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package treemacs
     :ensure t
+    :bind (:map global-map
+                ([f8]        . treemacs-toggle))
     :config
     (setq treemacs-follow-after-init          t
           treemacs-width                      35
@@ -3385,16 +3388,28 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           treemacs-goto-tag-strategy          'refetch-index)
 
     (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t)
-    :bind
-    (:map global-map
-          ([f8]        . treemacs-toggle)))
-
+    (treemacs-filewatch-mode t))
+#+end_src
+*** Projectile
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package treemacs-projectile
     :ensure t
-    :after treemacs
+    :after treemacs projectile
     :config
     (setq treemacs-header-function #'treemacs-projectile-create-header))
+#+end_src
+*** Magit
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+(use-package treemacs-magit
+  :after treemacs magit
+  :ensure t)
+#+end_src
+*** Icons
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+(use-package treemacs-icons-dired
+  :after treemacs dired
+  :ensure t
+  :config (treemacs-icons-dired-mode))
 #+end_src
 * Ibuffer
 ** Filter
