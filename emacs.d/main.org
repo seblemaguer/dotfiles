@@ -1233,6 +1233,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                    :empty-lines 1)))
 #+end_src
 ** Editing
+*** Global
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (setq org-list-allow-alphabetical t
         org-highlight-latex-and-related '(latex)
@@ -1265,6 +1266,14 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
 
 #+end_src
+*** Yanking
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (use-package org-rich-yank
+    :ensure t
+    :demand t
+    :bind (:map org-mode-map ("C-M-y" . org-rich-yank)))
+#+end_src
+
 *** Id generations
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package org-id+
