@@ -221,7 +221,7 @@ globalkeys = awful.util.table.join(
    awful.key({ modkey,           }, "h",      hotkeys_popup.show_help,                          {description = "show help", group="awesome"}),
 
    -- System part
-   awful.key({ modkey,           }, "l",      function () awful.spawn("xlock -mode blank") end,
+   awful.key({ modkey,           }, "l",      function () awful.spawn("xtrlock -b") end,
       {description = "lock", group="system"}),
    awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,                          {description = "shutdown", group="system"}),
 
