@@ -1245,13 +1245,13 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package org-notebook :ensure t)
 
   ;; Add languages
-  (use-package ob-ipython :ensure t)
+  (use-package jupyter :ensure t)
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t)
                                  (dot . t)
                                  (ditaa . t)
                                  (R . t)
-                                 (ipython . t)
+                                 (jupyter . t)
                                  (ruby . t)
                                  (gnuplot . t)
                                  (clojure . t)
