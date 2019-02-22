@@ -3211,11 +3211,19 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package dired-subtree
     :ensure t
-    :config
-    (define-key dired-mode-map "i" 'dired-subtree-insert)
-    (define-key dired-mode-map ";" 'dired-subtree-remove)
-    )
+    :bind (:map dired-mode-map
+                ("i" . dired-subtree-insert)
+                (";" . dired-subtree-remove)))
 #+end_src
+*** dired-git-info
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (use-package dired-git-info
+    :ensure t
+    :bind (:map dired-mode-map
+                (")"  . dired-git-info-mode)))
+#+END_SRC
+#+end_src
+
 *** Images
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package image-dired+
