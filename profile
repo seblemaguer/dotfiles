@@ -2,10 +2,11 @@
 #-*- mode: sh; -*-
 
 # Main path variable
-export PATH=${HOME}/environment/local/bin:$HOME/work/tools/local/bin/:$HOME/work/maintained_tools/local/bin/:$PATH
+export PATH=${HOME}/environment/local/bin:$PATH
+export PATH=$HOME/work/tools/local/bin/:$HOME/work/maintained_tools/local/bin/:$PATH
 export PATH=$HOME/work/tools/local/share/matlab/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
-export PATH=$HOME/work/tools/src/festival/festival-2.4/bin/:$HOME/work/tools/src/speech_tools/speech_tools-2.4/bin/:$PATH
+export PATH=$HOME/environment/local/go/bin:$PATH
 
 # Libraries
 export DYLD_LIBRARY_PATH=$HOME/environment/local/lib:$HOME/work/tools/local/lib:$HOME/work/maintained_tools/local/lib:/usr/local/opt/icu4c/lib/:$HOME/.local/lib:$DYLD_LIBRARY_PATH
@@ -30,6 +31,9 @@ export PERL_MM_OPT="INSTALL_BASE=$HOME/environment/local/perl"
 
 # Groovy part
 export GROOVY_HOME="/usr/share/groovy"
+
+# Go part
+export GOPATH=$HOME/environment/local/go
 
 # R part
 export R_LIBS_USER=$HOME/environment/local/R
