@@ -588,6 +588,7 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package prodigy
     :ensure quelpa
+    :unless (member (system-name) slm~machine-not-connected)
     :quelpa (prodigy :fetcher github :repo "seblemaguer/prodigy.el" :branch "auto-start")
     :config
 
@@ -4103,8 +4104,9 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** Slack
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package slack
-    :commands (slack-start)
+    :unless (member (system-name) slm~machine-not-connected)
     :ensure t
+    :commands (slack-start)
     :hydra
     (slack-hydra (:color blue :hint none)
       "
@@ -4301,6 +4303,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package notmuch
     :ensure t
+    :unless (member (system-name) slm~machine-not-connected)
     :commands (notmuch)
     :ensure-system-package notmuch
     :ensure-system-package isync
@@ -4555,6 +4558,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package sauron-notmuch
     :ensure quelpa
+    :unless (member (system-name) slm~machine-not-connected)
     :quelpa (sauron-notmuch :repo "seblemaguer/sauron-notmuch" :fetcher github)
     :after (sauron notmuch)
     :config
@@ -4567,23 +4571,30 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 **** Integration with org-mode
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-(use-package org-notmuch)
+  (use-package org-notmuch
+    :unless (member (system-name) slm~machine-not-connected)
+    )
 #+end_src
 **** Reply/citation
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-(use-package notmuch-mua
-  :config
-  (setq notmuch-mua-cite-function #'message-cite-original-without-signature)
-)
+  (use-package notmuch-mua
+    :unless (member (system-name) slm~machine-not-connected)
+    :config
+    (setq notmuch-mua-cite-function #'message-cite-original-without-signature)
+  )
 #+end_src
 **** Interactive search
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-(use-package counsel-notmuch :ensure t)
+  (use-package counsel-notmuch
+    :unless (member (system-name) slm~machine-not-connected)
+    :ensure t
+    )
 #+end_src
 ** RSS
 *** Global
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package elfeed
+    :unless (member (system-name) slm~machine-not-connected)
     :ensure t
     :commands (elfeed)
     :bind (([f9] . elfeed))
@@ -4598,6 +4609,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** Org connection
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package elfeed-org
+    :unless (member (system-name) slm~machine-not-connected)
     :ensure t
     :config
     (when (file-exists-p "~/shared/Dropbox/org/organisation/rss.org")
@@ -5789,6 +5801,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package scratch-ext
     :ensure t
+    :unless (member (system-name) slm~machine-not-connected)
     :hook (after-init . scratch-ext-restore-last-scratch)
     :config
     ;; Org-mode + start folded buffer
