@@ -12,8 +12,7 @@
 This is my emacs configuration file. It is under version control and available, among other
 configurations, at this repository: https://github.com/seblemaguer/dotfiles
 
-* Initialization/bootstrap configuration
-This section is configuring the bootstrap packages (enhancing use-package and support quelpa)
+* Package management
 ** Emacs package configuration
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
   (require 'package)
@@ -46,70 +45,7 @@ This section is configuring the bootstrap packages (enhancing use-package and su
   ;; (eval-when-compile
   ;;   (setq use-package-expand-minimally byte-compile-current-file))
 #+END_SRC
-** Define some important variables
-#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
-  ;; Define root directory and add the plugins
-  (defvar slm~plugin-dir (format "%s/plugins" user-emacs-directory)
-    "The plugins directory")
-  (add-to-list 'load-path slm~plugin-dir)
-
-  ;; Don't screw up my files with custom
-  (setq custom-file (format "%s/custom.el" user-emacs-directory))
-  (load custom-file 'noerror)
-
-  ;; Silence!!!!!!
-  (setq save-abbrevs 'silently)
-  (setq ad-redefinition-action 'accept)
-
-  ;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
-  (setq gc-cons-threshold 50000000)
-  (setq large-file-warning-threshold 100000000)
-#+END_SRC
-** Dealing with tangling this file
-This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
-#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
-    (defun slm~tangle-byte-compile-org ()
-      "Tangles main.org and byte compiles ~/.emacs.d/"
-      (interactive)
-      (when (equal (buffer-name)
-                   (concat "main.org"))
-
-        ;; Recompile plugins
-        (byte-recompile-directory (expand-file-name slm~plugin-dir) 0)
-
-        ;; Tangle to init.el
-        (org-babel-tangle)
-
-        ;; ;; Recompile init file (FIXME: commented as long as org-mode and matlab problem remains!)
-        ;; (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)
-
-        ))
-
-    ;; (add-hook 'after-save-hook #'slm~tangle-byte-compile-org)
-#+END_SRC
-** Identification helper
-Easy use wrapper around auth-* authentification emacs utils
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (cl-defun my:auth-source-get-user (&rest spec &allow-other-keys)
-    "Helper to get the user given the SPEC from authsource."
-    (let ((founds (apply 'auth-source-search spec)))
-      (when founds
-        (plist-get (nth 0 founds) :user))))
-
-  (cl-defun my:auth-source-get-passwd (&rest spec &allow-other-keys)
-    "Helper to get the password given the SPEC from authsource."
-    (let ((founds (apply 'auth-source-search spec)))
-      (when founds
-        (funcall (plist-get (nth 0 founds) :secret)))))
-#+end_src
-** Daemon mode
-First start a server as it is going to be the 99% of my use of emacs.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (server-start)
-#+end_src
-* Package management configuration
-** Use package "improvements"
-*** System package dependency interaction
+** System package dependency interaction
 Adapt the system package manager (for archlinux tool trizen) + enable use-package-ensure-system-package.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package system-packages
@@ -145,13 +81,13 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
   (use-package use-package-ensure-system-package
     :ensure t)
 #+end_src
-*** Add keychord support
+** Add keychord support
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package use-package-chords
     :ensure t
     :config (key-chord-mode 1))
 #+END_SRC
-*** Quelpa
+** Quelpa
 Quelpa is super useful for developer package management. Adding the adaptation for the use-package
 makes it configuration file proof.
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
@@ -160,12 +96,12 @@ makes it configuration file proof.
       :init
       (setq quelpa-update-melpa-p nil))
 #+end_src
-*** Hydra
+** Hydra
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package use-package-hydra
     :ensure t)
 #+END_SRC
-*** General
+** General
 #+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package general
     :ensure t)
@@ -189,6 +125,75 @@ makes it configuration file proof.
     (setq auto-package-update-delete-old-versions t
           auto-package-update-hide-results t)
     (auto-package-update-maybe))
+#+end_src
+* Configuration helpers
+This section focus on defining some variables/helpers needed to have a more global configuration
+** Define some important variables
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
+  ;; Define root directory and add the plugins
+  (defvar slm~plugin-dir (format "%s/plugins" user-emacs-directory)
+    "The plugins directory")
+  (add-to-list 'load-path slm~plugin-dir)
+
+  ;; Define some machine name identifiers
+  (defvar slm~machine-not-connected '("lemagues-laptop")
+    "Hostname of computers which are not connected to
+    internet. This variable is needed to ignore some package which
+    requires some synchronization (dropbox, ....).")
+
+  ;; Don't screw up my files with custom
+  (setq custom-file (format "%s/custom.el" user-emacs-directory))
+  (load custom-file 'noerror)
+
+  ;; Silence!!!!!!
+  (setq save-abbrevs 'silently)
+  (setq ad-redefinition-action 'accept)
+
+  ;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
+  (setq gc-cons-threshold 50000000)
+  (setq large-file-warning-threshold 100000000)
+#+END_SRC
+** Dealing with tangling this file
+This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
+  (defun slm~tangle-byte-compile-org ()
+    "Tangles main.org and byte compiles ~/.emacs.d/"
+    (interactive)
+    (when (equal (buffer-name)
+                 (concat "main.org"))
+
+      ;; Recompile plugins
+      (byte-recompile-directory (expand-file-name slm~plugin-dir) 0)
+
+      ;; Tangle to init.el
+      (org-babel-tangle)
+
+      ;; ;; Recompile init file (FIXME: commented as long as org-mode and matlab problem remains!)
+      ;; (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)
+
+      ))
+
+  ;; (add-hook 'after-save-hook #'slm~tangle-byte-compile-org)
+#+END_SRC
+** Identification helper
+Easy use wrapper around auth-* authentification emacs utils
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (cl-defun my:auth-source-get-user (&rest spec &allow-other-keys)
+    "Helper to get the user given the SPEC from authsource."
+    (let ((founds (apply 'auth-source-search spec)))
+      (when founds
+        (plist-get (nth 0 founds) :user))))
+
+  (cl-defun my:auth-source-get-passwd (&rest spec &allow-other-keys)
+    "Helper to get the password given the SPEC from authsource."
+    (let ((founds (apply 'auth-source-search spec)))
+      (when founds
+        (funcall (plist-get (nth 0 founds) :secret)))))
+#+end_src
+* Daemon mode
+Now that we are ready to actually configure emacs properly, let's first start the server!
+#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+  (server-start)
 #+end_src
 * Global
 This section is about configuring global emacs helpers which are not specific to a dedicated
