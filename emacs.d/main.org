@@ -5321,237 +5321,40 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
       (add-hook 'after-make-frame-functions #'load-fonts)
     (load-default-fonts))
 #+end_src
-** Mode line - spaceline
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+** Mode line
+*** Fancy battery
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package fancy-battery :ensure t)
-  (use-package spaceline-config :ensure spaceline)
-
-  (use-package spaceline-all-the-icons
+#+END_SRC
+*** Anzu
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
+  (use-package anzu
     :ensure t
-    :after (:all spaceline)
     :config
+    (global-anzu-mode +1))
+#+END_SRC
+*** Minor mode menu
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
+  (use-package minions
+    :ensure t
+    :config (minions-mode 1))
+#+END_SRC
+*** Doom modeline
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
+  (use-package doom-modeline
+        :ensure t
+        :hook (after-init . doom-modeline-mode)
+        :init
 
-    ;; Separator configuration
-    (setq spaceline-all-the-icons-separator-type 'wave
-          spaceline-separator-dir-left '(left . left)
-          spaceline-separator-dir-right '(right . right)
-          spaceline-minor-modes-separator " ")
-
-    ;;Other configuration
-    (setq spaceline-all-the-icons-icon-set-flycheck-slim 'dots
-          spaceline-all-the-icons-icon-set-git-ahead 'commit
-          spaceline-all-the-icons-flycheck-alternate t
-          spaceline-all-the-icons-highlight-file-name t
-          spaceline-highlight-face-func 'spaceline-highlight-face-modified)
-
-    ;; Change this ugly orange color
-    (set-face-attribute 'spaceline-unmodified nil :background "LightSkyBlue")
-
-    ;; Info
-    (spaceline-info-mode)
-
-    ;; Battery
-    (add-hook 'after-init-hook #'fancy-battery-mode)
-    (display-battery-mode -1)
-
-    ;; Reduce projectile account
-    (setq projectile-mode-line " P")
-
-    (spaceline-all-the-icons--setup-anzu)
-    (spaceline-all-the-icons--setup-package-updates)
-    (spaceline-all-the-icons--setup-paradox)
-    (spaceline-all-the-icons--setup-neotree)
-
-    (spaceline-toggle-all-the-icons-vc-icon-on)
-    (spaceline-toggle-all-the-icons-fullscreen-on)
-    (spaceline-toggle-all-the-icons-flycheck-status-on)
-    (spaceline-toggle-all-the-icons-git-status-on)
-    (spaceline-toggle-all-the-icons-vc-icon-on)
-    (spaceline-toggle-all-the-icons-mode-icon-on)
-    (spaceline-toggle-all-the-icons-package-updates-on)
-    (spaceline-toggle-all-the-icons-text-scale-on)
-    (spaceline-toggle-all-the-icons-region-info-on)
-
-    ;; EMMS part
-    (spaceline-define-segment all-the-icons-track
-      "Show the current played track."
-      (emms-mode-line-icon-function))
-
-    ;; Circe specific part
-    (spaceline-define-segment circe-track
-      "Show the circe buffers with new messages. Requires `circe-track-mode' to be enabled."
-      (if tracking-buffers
-          (s-join " " (tracking-shorten tracking-buffers))))
-
-    ;; Redfine linenum for pdf-view mode compatibility
-    (spaceline-define-segment line-column
-      "The current line and column numbers."
-      (if (eq major-mode 'pdf-view-mode)
-          (concat (number-to-string (pdf-view-current-page))
-                  "/"
-                  (number-to-string (pdf-cache-number-of-pages)))
-        mode-line-position
-        "%l:%2c"))
-
-    ;; Redefine battery segment to add percentage
-
-  (spaceline-define-segment all-the-icons-battery-status
-    "An `all-the-icons' segment to show the battery information"
-    (let* ((charging?  (string= "AC" (cdr (assoc ?L fancy-battery-last-status))))
-           (percent    (string-to-number (cdr (assoc ?p fancy-battery-last-status))))
-           (time       (cdr (assoc ?t fancy-battery-last-status)))
-
-           (icon-alist
-            (cond
-             (charging? '((icon . "charging") (inherit . fancy-battery-charging) (height . 1.3) (raise . 0.0)))
-             ((> percent 95) '((icon . "full") (inherit . fancy-battery-charging)))
-             ((> percent 70) '((icon . "three-quarters")))
-             ((> percent 30) '((icon . "half")))
-             ((> percent 15) '((icon . "quarter") (inherit . fancy-battery-discharging)))
-             (t '((icon . "empty") (inherit . fancy-battery-critical)))))
-
-           (icon-set (if charging? 'alltheicon 'faicon))
-           (icon-f   (all-the-icons--function-name icon-set))
-           (family-f (all-the-icons--family-name icon-set))
-
-           (icon-face `(:family ,(funcall family-f) :background ,(spaceline-all-the-icons--face-background default-face)))
-           (text-face `(:height ,(spaceline-all-the-icons--height 0.9) :background ,(spaceline-all-the-icons--face-background default-face))))
-
-      (let-alist icon-alist
-        (setq icon-face (append `(:height ,(spaceline-all-the-icons--height (when .height .height))) icon-face))
-        (if (not .inherit)
-            (setq icon-face (append icon-face '(:inherit))
-                  text-face (append text-face '(:inherit)))
-          (setq icon-face (append icon-face `(:inherit ,(macroexpand .inherit)))
-                text-face (append text-face `(:inherit ,(macroexpand .inherit)))))
-
-        (propertize
-         (concat
-          (propertize (funcall icon-f (format "battery-%s" .icon))
-                      'face icon-face
-                      'display `(raise ,(or .raise 0.0)))
-          (propertize (cond
-                       (spaceline-all-the-icons-slim-render "")
-                       (charging? (format " %s%%%% " percent))
-                       (t (concat " " time " (" (format "%2d" percent) "%%" ")")))
-                      'face text-face
-                      'display '(raise 0.1)))
-         'help-echo `(format "%s Remaining" ,time)
-         'mouse-face (spaceline-all-the-icons--highlight))))
-
-    :global-override fancy-battery-mode-line
-    :when (and active (bound-and-true-p fancy-battery-mode)))
-
-    ;; Redine the mode-line theme
-    (defun spaceline-all-the-icons-theme (&rest additional-segments)
-      "Install the `spaceline-ml-all-the-icons'.
-  Add ADDITIONAL-SEGMENTS to the end of the theme."
-      (interactive)
-      (spaceline-compile
-        "all-the-icons"
-        '(
-          ;; Azu
-          (all-the-icons-anzu
-           :face mode-line
-           :skip-alternate t)
-
-          ;; Buffer information
-          ((all-the-icons-modified
-            line-column
-            buffer-encoding
-            all-the-icons-buffer-size)
-           :face highlight-face
-           :skip-alternate t
-
-           :separator (spaceline-all-the-icons--separator spaceline-all-the-icons-secondary-separator " "))
-
-          all-the-icons-separator-left-active-1
-
-          ;; Projectile / major mode
-          ((all-the-icons-projectile
-            all-the-icons-mode-icon
-            ((all-the-icons-buffer-path
-              all-the-icons-buffer-id) :separator ""))
-           :face default-face)
-
-          all-the-icons-separator-left-active-2
-
-          ;; ???
-          ((all-the-icons-process
-            all-the-icons-region-info
-            all-the-icons-fullscreen
-            all-the-icons-text-scale
-            all-the-icons-narrowed
-            all-the-icons-multiple-cursors)
-           :face highlight-face
-           :separator (spaceline-all-the-icons--separator spaceline-all-the-icons-primary-separator " "))
-
-          all-the-icons-separator-left-active-3
-          all-the-icons-separator-left-inactive
-
-          ;; VC/check/update informations
-          ((all-the-icons-vc-icon
-            all-the-icons-vc-status
-            ((all-the-icons-git-ahead
-              all-the-icons-git-status) :separator " ")
-            ((all-the-icons-flycheck-status
-              all-the-icons-flycheck-status-info) :separator " ")
-            all-the-icons-package-updates)
-           :face other-face
-           :separator (spaceline-all-the-icons--separator spaceline-all-the-icons-secondary-separator " "))
-
-          ;; Minor modes
-          ((all-the-icons-separator-minor-mode-left
-            all-the-icons-minor-modes
-            all-the-icons-separator-minor-mode-right)
-           :tight t
-           :face highlight-face
-           :when spaceline-all-the-icons-minor-modes-p)
-
-          ;; Which function
-          ((all-the-icons-which-function)
-           :face powerline-active2
-           :separator ""))
-
-        `(((,@additional-segments) :when active :face powerline-active2)
-          ((,@additional-segments) :when (not active) :face powerline-inactive2)
-
-          ;; Wweather
-          ((all-the-icons-weather
-            all-the-icons-temperature
-            all-the-icons-sunrise
-            all-the-icons-sunset)
-           :face powerline-active2
-           :separator (spaceline-all-the-icons--separator spaceline-all-the-icons-secondary-separator " "))
-
-          ;; Music info
-          ((all-the-icons-player-volume
-            all-the-icons-player-controls
-            all-the-icons-track
-            all-the-icons-player-controls-shuffle)
-           :face powerline-active2)
-
-          all-the-icons-separator-right-active-1
-          ((all-the-icons-hud
-            all-the-icons-buffer-position)
-           :separator " " :when active)
-
-          all-the-icons-separator-right-active-2
-          all-the-icons-separator-right-inactive
-
-          ;; Time info
-          ((all-the-icons-org-clock-current-task
-            all-the-icons-battery-status
-            all-the-icons-time)
-           :separator (spaceline-all-the-icons--separator spaceline-all-the-icons-primary-separator " ")
-           :face default-face)))
-
-      (setq-default mode-line-format spaceline-all-the-icons-theme))
-
-    ;; Loading
-    (spaceline-all-the-icons-theme 'circe-track))
-#+end_src
-
+        (setq doom-modeline-icon t              ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
+              doom-modeline-major-mode-icon t   ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
+              doom-modeline-buffer-file-name-style 'truncate-upto-project
+              doom-modeline-persp-name t
+              doom-modeline-checker-simple-format t
+              doom-modeline-env-version t
+              )
+        )
+#+END_SRC
 * Keys/shortcuts
 ** Mac adaptation
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
