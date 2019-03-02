@@ -918,8 +918,6 @@ Prescient helps to sort candidates by last used first and then sorting by length
     (add-to-list 'ispell-skip-region-alist '("^#+begin_src" . "^#+end_src"))
 
 
-    ;; TODO to sort
-    (use-package ob-async :ensure t)
     (use-package org-checklist)
     (use-package ob-exp)
     (use-package ox-bibtex)
@@ -1257,6 +1255,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                                  (dot . t)
                                  (ditaa . t)
                                  (R . t)
+                                 (python . t)
                                  (jupyter . t)
                                  (ruby . t)
                                  (gnuplot . t)
@@ -1395,12 +1394,18 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
         (bpr-open-last-buffer)))
     )
 #+end_src
-** COMMENT Async
+** Async
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  ;; Setup the part for asynchronous
-  (setq org-export-in-background t
-        org-export-async-debug t
-        org-export-async-init-file (expand-file-name (format "%s/org-export.el" user-emacs-directory)))
+  (use-package ob-async
+    :ensure t
+    :after org
+    :commands (ob-async-org-babel-execute-src-block)
+    :init
+    (setq ob-async-no-async-languages-alist '("ipython" "jupyter-python" "jupyter")))
+
+  ;; org-export-in-background t
+  ;; org-export-async-debug t
+  ;; org-export-async-init-file (expand-file-name (format "%s/org-export.el" user-emacs-directory)))
 #+end_src
 * Filetype
 Now that we have achieved the global configuration, I am going to focus on the language specific
@@ -5344,16 +5349,14 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (use-package doom-modeline
         :ensure t
         :hook (after-init . doom-modeline-mode)
-        :init
 
+        :init
         (setq doom-modeline-icon t              ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
               doom-modeline-major-mode-icon t   ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
               doom-modeline-buffer-file-name-style 'truncate-upto-project
               doom-modeline-persp-name t
               doom-modeline-checker-simple-format t
-              doom-modeline-env-version t
-              )
-        )
+              doom-modeline-env-version t))
 #+END_SRC
 * Keys/shortcuts
 ** Mac adaptation
