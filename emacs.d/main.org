@@ -40,8 +40,6 @@ configurations, at this repository: https://github.com/seblemaguer/dotfiles
   (eval-when-compile
     (require 'use-package))
 
-  ;; (setq use-package-always-defer t)
-
   ;; (eval-when-compile
   ;;   (setq use-package-expand-minimally byte-compile-current-file))
 #+END_SRC
@@ -76,7 +74,6 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
             system-packages-use-sudo nil
             system-packages-package-manager 'trizen)
       )
-
 
   (use-package use-package-ensure-system-package
     :ensure t)
@@ -146,12 +143,12 @@ This section focus on defining some variables/helpers needed to have a more glob
   (load custom-file 'noerror)
 
   ;; Silence!!!!!!
-  (setq save-abbrevs 'silently)
-  (setq ad-redefinition-action 'accept)
+  (setq save-abbrevs 'silently
+        ad-redefinition-action 'accept
 
-  ;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
-  (setq gc-cons-threshold 50000000)
-  (setq large-file-warning-threshold 100000000)
+        ;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
+        gc-cons-threshold 50000000
+        large-file-warning-threshold 100000000)
 #+END_SRC
 ** Dealing with tangling this file
 This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
