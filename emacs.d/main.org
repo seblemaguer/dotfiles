@@ -652,7 +652,7 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
       :auto-start t
       :kill-process-buffer-on-stop t)
 
-      (prodigy-auto-start)
+    (prodigy-enable-auto-start)
     )
 #+end_src
 *** System daemons
