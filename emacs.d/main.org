@@ -1626,15 +1626,6 @@ enough to be on melpa so I use quelpa.
     :config
     (setq kotlin-tab-width 4))
 #+end_src
-*** Indentation
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
-  (use-package my-kotlin-indent
-    :init
-    (defun kotlin-mode-use-my-kotlin-indent ()
-      (setq indent-line-function 'kotlin-mode--elk-indent-line))
-    :hook
-    (kotlin-mode . kotlin-mode-use-my-kotlin-indent))
-#+end_src
 *** Syntax checking
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package flycheck-kotlin
