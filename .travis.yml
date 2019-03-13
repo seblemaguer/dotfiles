@@ -6,7 +6,7 @@ branches:
 # System part
 matrix:
   include:
-    - os: linux
+    - dist: xenial
 
 language: python
 
@@ -15,7 +15,7 @@ addons:
     sources:
       - sourceline: "ppa:kelleyk/emacs"
     packages:
-      - emacs25
+      - emacs26
       - vim
       - zsh
       - python-setuptools
@@ -23,7 +23,7 @@ addons:
 before_install:
   - pip install dotfiles
   - ln -s $TRAVIS_BUILD_DIR /home/travis/configuration
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo update-alternatives --set emacs /usr/bin/emacs25; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo update-alternatives --set emacs /usr/bin/emacs26; fi
 
 install:
   - zsh ./install.sh
