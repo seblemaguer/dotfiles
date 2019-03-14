@@ -1256,9 +1256,24 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                    "%(org-chef-get-recipe-from-url)"
                    :empty-lines 1)))
 #+end_src
+** Clocking
+#+begin_src emacs-lisp
+(use-package org-mru-clock
+    :ensure t
+    :bind* (("C-c C-x i" . org-mru-clock-in)
+            ("C-c C-x C-j" . org-mru-clock-select-recent-task))
+    :init
+    (setq org-mru-clock-how-many 100
+          org-mru-clock-keep-formatting t
+          org-mru-clock-completing-read #'ivy-completing-read
+          org-clock-persist t)
+
+    :config
+    (org-clock-persistence-insinuate))
+#+end_src
 ** Editing
 *** Global
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+#+begin_src emacs-lisp
   (setq org-list-allow-alphabetical t
         org-highlight-latex-and-related '(latex)
         org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
