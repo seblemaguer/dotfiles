@@ -745,6 +745,15 @@ emacs. This has been proven useful, especially for java editing.
           lsp-ui-sideline-show-hover t
           lsp-ui-sideline-show-code-actions t
           lsp-ui-sideline-update-mode 'point))
+
+  (use-package dap-mode
+    :ensure t
+    :defer t
+    :commands dap-debug
+    :after lsp-mode
+    :init
+    (dap-mode t)
+    (dap-ui-mode t))
 #+end_src
 * Completion
 This part focuses on completion configuration. Language specific configurations are not done here
