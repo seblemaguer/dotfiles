@@ -528,10 +528,19 @@ Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
          (advice-add 'flyspell-emacs-popup :around #'flyspell-emacs-popup-choose)))
     )
 #+end_src
+*** English checking
+#+BEGIN_SRC emacs-lisp
+(use-package langtool
+  :ensure quelpa
+  :quelpa (langtool :fetcher github :repo "mhayashi1120/Emacs-langtool")
+  :init
+  (setq langtool-language-tool-server-jar "~/work/tools/src/languagetool/languagetool/languagetool-server.jar"))
+
+#+END_SRC
 ** Fixme
 To deal with the fixme, I relie on two part: fic-mode for the highlighting and occur for the
 listing.
-#+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
+#+begin_src emacs-lisp
   (use-package fic-mode
     :ensure t
     :hook
