@@ -735,7 +735,9 @@ emacs. This has been proven useful, especially for java editing.
     :ensure t
     :config
     (setq company-lsp-enable-snippet t
-          company-lsp-cache-candidates 'auto))
+          company-lsp-cache-candidates 'auto)
+
+    (push 'company-lsp company-backends))
 
   (use-package lsp-ui
     :ensure t
