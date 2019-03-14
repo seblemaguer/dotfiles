@@ -2123,6 +2123,18 @@ enough to be on melpa so I use quelpa.
     :config
     (setq python-indent-offset 4))
 #+end_src
+*** Lsp (with microsoft language server)
+#+BEGIN_SRC emacs-lisp :tangle ~/.emacs.d/init.el
+  (use-package lsp-python-ms
+    :ensure quelpa
+    :quelpa (lsp-python-ms :repo "andrew-christianson/lsp-python-ms" :fetcher github)
+    :after lsp-mode
+    :hook (python-mode . lsp)
+    :config
+    (require 'lsp-python-ms) ;; FIXME: why?!
+    (setq lsp-python-ms-executable
+          "/usr/bin/mspyls"))
+#+END_SRC
 *** Pipenv
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package pipenv
@@ -2134,7 +2146,7 @@ enough to be on melpa so I use quelpa.
     (setq pipenv-projectile-after-switch-function
           #'pipenv-projectile-after-switch-extended))
 #+end_src
-*** virtual environment
+*** Virtual environment
 #+begin_src emacs-lisp :tangle ~/.emacs.d/init.el
   (use-package pyvenv :ensure t)
 #+end_src
