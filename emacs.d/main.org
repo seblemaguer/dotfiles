@@ -959,6 +959,62 @@ Prescient helps to sort candidates by last used first and then sorting by length
     :tags '("COMPLETION")
     :config (company-prescient-mode))
 #+end_src
+* Compilation
+** TODO some requires to check
+#+begin_src emacs-lisp
+  (use-package compile-
+    :tags '("COMPILATION"))
+
+  (use-package compile
+    :tags '("COMPILATION"))
+
+  (use-package compile+
+    :tags '("COMPILATION"))
+#+end_src
+** Flychecking
+#+begin_src emacs-lisp
+  ;; Disable checking doc
+  (use-package flycheck
+    :tags '("CORE")
+    :config
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+
+    (flycheck-define-checker proselint
+      "A linter for prose."
+      :command ("proselint" source-inplace)
+      :error-patterns
+      ((warning line-start (file-name) ":" line ":" column ": "
+                (id (one-or-more (not (any " "))))
+                (message) line-end))
+      :modes (text-mode markdown-mode gfm-mode org-mode))
+    )
+
+  (use-package flycheck-stack
+    :ensure t
+    :tags '("COMPILATION")
+    :after flycheck)
+#+end_src
+** Gradle global support
+#+begin_src emacs-lisp
+  (use-package gradle-mode
+    :ensure quelpa
+    :quelpa (gradle-mode :repo "seblemaguer/emacs-gradle-mode" :fetcher github)
+    :tags '("COMPILATION")
+    :config
+    (setq gradle-use-gradlew t)
+    (gradle-mode))
+#+end_src
+
+** Compilation
+#+begin_src emacs-lisp
+  (use-package winnow
+    :ensure t
+    :tags '("COMPILATION")
+    :init
+    (add-hook 'compilation-mode-hook 'winnow-mode)
+    (add-hook 'ag-mode-hook 'winnow-mode))
+#+end_src
+
 * Org
 ** Global
 #+begin_src emacs-lisp
@@ -1521,22 +1577,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+end_src
 * Emacs Lisp
 #+begin_src emacs-lisp
-  ;; Disable checking doc
-  (use-package flycheck
-    :tags '("CORE")
-    :config
-    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-
-    (flycheck-define-checker proselint
-                             "A linter for prose."
-                             :command ("proselint" source-inplace)
-                             :error-patterns
-                             ((warning line-start (file-name) ":" line ":" column ": "
-                                       (id (one-or-more (not (any " "))))
-                                       (message) line-end))
-                             :modes (text-mode markdown-mode gfm-mode org-mode))
-    )
-
   ;; Package lint
   (use-package package-lint
     :ensure t
@@ -2885,46 +2925,6 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
       (clipboard/set fpath)
       (concat "Copied path: " fpath)))
 #+end_src
-* Compilation
-** TODO some requires to check
-#+begin_src emacs-lisp
-  (use-package compile-
-    :tags '("COMPILATION"))
-
-  (use-package compile
-    :tags '("COMPILATION"))
-
-  (use-package compile+
-    :tags '("COMPILATION"))
-#+end_src
-** Flychecking
-#+begin_src emacs-lisp
-  (use-package flycheck-stack
-    :ensure t
-    :tags '("COMPILATION")
-    :after flycheck)
-#+end_src
-** Gradle global support
-#+begin_src emacs-lisp
-  (use-package gradle-mode
-    :ensure quelpa
-    :quelpa (gradle-mode :repo "seblemaguer/emacs-gradle-mode" :fetcher github)
-    :tags '("COMPILATION")
-    :config
-    (setq gradle-use-gradlew t)
-    (gradle-mode))
-#+end_src
-
-** Compilation
-#+begin_src emacs-lisp
-  (use-package winnow
-    :ensure t
-    :tags '("COMPILATION")
-    :init
-    (add-hook 'compilation-mode-hook 'winnow-mode)
-    (add-hook 'ag-mode-hook 'winnow-mode))
-#+end_src
-
 * Project management
 ** Configuration projectile
 The commands are based on http://endlessparentheses.com/improving-projectile-with-extra-commands.html?source=rss
