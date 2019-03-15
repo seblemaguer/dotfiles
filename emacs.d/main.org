@@ -61,15 +61,16 @@ Normally it should be a temporary part
     :quelpa (use-package-tags :fetcher github :repo "seblemaguer/use-package-tags")
     :config
     (setq use-package-tags-enabled
-          '(("lemagues-laptop" . ("!CONNECTED"))))
-    )
+	  `(("lemagues-laptop" . ("!CONNECTED"))
+	    ("stb067" . ("ALL"))
+	    (,use-package-tags-default-host . ("CORE" "!USER")))))
 #+END_SRC
 ** System package dependency interaction
 Adapt the system package manager (for archlinux tool trizen) + enable use-package-ensure-system-package.
 #+begin_src emacs-lisp
   (use-package system-packages
       :ensure t
-      :tags '("PRE-REQUISITES")
+      :tags '("CORE")
       :config
       (setq system-packages-supported-package-managers
             '(
@@ -104,27 +105,27 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
 #+BEGIN_SRC emacs-lisp
   (use-package use-package-chords
     :ensure t
-    :tags '("PRE-REQUISITES")
+    :tags '("CORE")
     :config (key-chord-mode 1))
 #+END_SRC
 ** Hydra
 #+BEGIN_SRC emacs-lisp
   (use-package use-package-hydra
     :ensure t
-    :tags '("PRE-REQUISITES"))
+    :tags '("CORE"))
 #+END_SRC
 ** General
 #+BEGIN_SRC emacs-lisp
   (use-package general
     :ensure t
-    :tags '("PRE-REQUISITES"))
+    :tags '("CORE"))
 #+END_SRC
 
 ** Paradox to enhance package list management
 #+begin_src emacs-lisp
   (use-package paradox
     :ensure t
-    :tags '("PRE-REQUISITES")
+    :tags '("CORE")
     :commands (paradox-list-packages)
     :config
     (setq paradox-spinner-type 'progress-bar
@@ -135,7 +136,7 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
 #+begin_src emacs-lisp
   (use-package auto-package-update
     :ensure t
-    :tags '("PRE-REQUISITES")
+    :tags '("CORE")
     :config
     (setq auto-package-update-delete-old-versions t
           auto-package-update-hide-results t)
@@ -1344,7 +1345,10 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   ;; Add languages
   (use-package jupyter
     :ensure t
-    :tags '("ORG"))
+    :tags '("ORG" "USER")
+    :config
+    (org-babel-do-load-languages 'org-babel-load-languages
+                                 '((jupyter . t))))
 
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t)
@@ -1352,7 +1356,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                                  (ditaa . t)
                                  (R . t)
                                  (python . t)
-                                 (jupyter . t)
                                  (ruby . t)
                                  (gnuplot . t)
                                  (clojure . t)
@@ -1478,6 +1481,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package anki-editor
     :defines (anki-editor-mode-map)
     :ensure t
+    :disabled t
     :tags '("ORG" "CONNECTED")
     :pin MELPA
     :hydra
@@ -1739,7 +1743,9 @@ enough to be on melpa so I use quelpa.
     (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode"))
 
   ;; Subpackages
-  (use-package groovy-imports :ensure t)
+  (use-package groovy-imports
+    :ensure t
+    :tags '("LANGUAGE"))
 #+end_src
 *** Gradle specificities
 #+begin_src emacs-lisp
@@ -1946,6 +1952,7 @@ enough to be on melpa so I use quelpa.
 
   (use-package auctex-latexmk
     :ensure t
+    :tags '("LANGUAGE")
     :config
     (setq auctex-latexmk-inherit-TeX-PDF-mode t)
     (auctex-latexmk-setup))
@@ -5511,6 +5518,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp
   (use-package dired-rainbow
     :ensure t
+    :tags '("VISUAL")
     :init
     (eval-after-load 'dired '(require 'dired-rainbow))
 
@@ -5548,34 +5556,36 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 **** Elfeed
 #+begin_src emacs-lisp
   (use-package elfeed
+    :tags '("CONNECTED")
     :config
     ;; Adapt the faces
     (defface elfeed-must-read-face
       '((((class color) (background light)) (:foreground "#f00"))
-        (((class color) (background dark))  (:foreground "#f00")))
+	(((class color) (background dark))  (:foreground "#f00")))
       "Face used in search mode for titles."
       :group 'elfeed)
 
     (defface elfeed-emacs-face
       '((((class color) (background light)) (:foreground "#090"))
-        (((class color) (background dark))  (:foreground "#090")))
+	(((class color) (background dark))  (:foreground "#090")))
       "Face used in search mode for titles."
       :group 'elfeed)
 
     (defface elfeed-news-face
       '((((class color) (background light)) (:foreground "#AAA"))
-        (((class color) (background dark))  (:foreground "#AAA")))
+	(((class color) (background dark))  (:foreground "#AAA")))
       "Face used in search mode for titles."
       :group 'elfeed)
 
     (setq elfeed-search-face-alist
-          '((unread elfeed-search-unread-title-face)
-            (mustread elfeed-must-read-face)
-            (news elfeed-news-face)
-            (emacs elfeed-emacs-face)))
+	  '((unread elfeed-search-unread-title-face)
+	    (mustread elfeed-must-read-face)
+	    (news elfeed-news-face)
+	    (emacs elfeed-emacs-face)))
     )
 
   (use-package youtube-dl
+    :tags '("CONNECTED")
     :config
     (defface elfeed-youtube
       '((t :foreground "#f9f"))
