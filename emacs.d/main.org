@@ -44,11 +44,32 @@ configurations, at this repository: https://github.com/seblemaguer/dotfiles
   ;; (eval-when-compile
   ;;   (setq use-package-expand-minimally byte-compile-current-file))
 #+END_SRC
+** Quelpa
+ Quelpa is super useful for developer package management. Adding the adaptation for the use-package
+ makes it configuration file proof.
+ #+begin_src emacs-lisp
+   (use-package quelpa-use-package
+     :ensure t
+     :init
+     (setq quelpa-update-melpa-p nil))
+ #+end_src
+** TODO Tagging
+Normally it should be a temporary part
+#+BEGIN_SRC emacs-lisp
+  (use-package use-package-tags
+    :ensure quelpa
+    :quelpa (use-package-tags :fetcher github :repo "seblemaguer/use-package-tags")
+    :config
+    (setq use-package-tags-enabled
+          '(("lemagues-laptop" . ("!CONNECTED"))))
+    )
+#+END_SRC
 ** System package dependency interaction
 Adapt the system package manager (for archlinux tool trizen) + enable use-package-ensure-system-package.
 #+begin_src emacs-lisp
   (use-package system-packages
       :ensure t
+      :tags '("PRE-REQUISITES")
       :config
       (setq system-packages-supported-package-managers
             '(
@@ -83,32 +104,27 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
 #+BEGIN_SRC emacs-lisp
   (use-package use-package-chords
     :ensure t
+    :tags '("PRE-REQUISITES")
     :config (key-chord-mode 1))
 #+END_SRC
-** Quelpa
-Quelpa is super useful for developer package management. Adding the adaptation for the use-package
-makes it configuration file proof.
-#+begin_src emacs-lisp
-  (use-package quelpa-use-package
-      :ensure t
-      :init
-      (setq quelpa-update-melpa-p nil))
-#+end_src
 ** Hydra
 #+BEGIN_SRC emacs-lisp
   (use-package use-package-hydra
-    :ensure t)
+    :ensure t
+    :tags '("PRE-REQUISITES"))
 #+END_SRC
 ** General
 #+BEGIN_SRC emacs-lisp
   (use-package general
-    :ensure t)
+    :ensure t
+    :tags '("PRE-REQUISITES"))
 #+END_SRC
 
 ** Paradox to enhance package list management
 #+begin_src emacs-lisp
   (use-package paradox
     :ensure t
+    :tags '("PRE-REQUISITES")
     :commands (paradox-list-packages)
     :config
     (setq paradox-spinner-type 'progress-bar
@@ -119,6 +135,7 @@ makes it configuration file proof.
 #+begin_src emacs-lisp
   (use-package auto-package-update
     :ensure t
+    :tags '("PRE-REQUISITES")
     :config
     (setq auto-package-update-delete-old-versions t
           auto-package-update-hide-results t)
@@ -132,12 +149,6 @@ This section focus on defining some variables/helpers needed to have a more glob
   (defvar slm~plugin-dir (format "%s/plugins" user-emacs-directory)
     "The plugins directory")
   (add-to-list 'load-path slm~plugin-dir)
-
-  ;; Define some machine name identifiers
-  (defvar slm~machine-not-connected '("lemagues-laptop")
-    "Hostname of computers which are not connected to
-    internet. This variable is needed to ignore some package which
-    requires some synchronization (dropbox, ....).")
 
   ;; Don't screw up my files with custom
   (setq custom-file (format "%s/custom.el" user-emacs-directory))
@@ -201,9 +212,10 @@ In order to have a better and more visual control of undoing, I use undo-tree.
 #+begin_src emacs-lisp
   (use-package undo-tree
     :ensure quelpa
+    :quelpa (undo-tree :fetcher git :url "http://www.dr-qubit.org/git/undo-tree.git")
+    :tags '("CORE")
     :commands (undo-tree-visualize)
     :bind ("C-x u" . undo-tree-visualize)
-    :quelpa (undo-tree :fetcher git :url "http://www.dr-qubit.org/git/undo-tree.git")
     :init
     (setq undo-tree-visualizer-timestamps nil
           undo-tree-visualizer-diff t)
@@ -216,7 +228,8 @@ I use some minor modes based on some filetypes. This package is an helper which 
 activations.
 #+begin_src emacs-lisp
   (use-package auto-minor-mode
-    :ensure t)
+    :ensure t
+    :tags '("CORE"))
 #+end_src
 ** Helpers
 I define here some global helpers used either in the rest of the file, either available to use at runtime
@@ -273,8 +286,9 @@ https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
 #+begin_src emacs-lisp
   (use-package origami
     :ensure quelpa
-    :commands (origami-mode)
     :quelpa (origami :repo "seblemaguer/origami.el" :fetcher github)
+    :tags '("CORE")
+    :commands (origami-mode)
 
     :custom
     (origami-show-fold-header t)
@@ -310,6 +324,7 @@ Sometimes it can be useful to edit multiple region at once. To do that, I use ie
 #+begin_src emacs-lisp
   (use-package iedit
     :ensure t
+    :tags '("CORE")
     :config
     (delete-selection-mode t))
 #+end_src
@@ -318,7 +333,8 @@ I use siege-mode to surround a string by delimiters more complicated than bracke
 #+begin_src emacs-lisp
   (use-package siege-mode
     :disabled t
-    :ensure t)
+    :ensure t
+    :tags '("CORE"))
 #+end_src
 *** Alignment
 I defined this helper to as I like to align equations based on the equal sign.
@@ -333,6 +349,7 @@ Opening recent files is always an easy and fast shortcut. Some files should be i
 leads to this configuration
 #+begin_src emacs-lisp
   (use-package recentf
+    :tags '("CORE")
     :init
     (recentf-mode 1)
 
@@ -372,6 +389,7 @@ This the global backup configuration. For that I adapted a little bit the wonder
 #+begin_src emacs-lisp
   (use-package snapshot-timemachine
     :ensure t
+    :tags '("CORE")
     :init
 
     ;; Default Backup directory
@@ -475,6 +493,7 @@ Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
 #+begin_src emacs-lisp
   (use-package flyspell
     :ensure t
+    :tags '("CORE")
     :config
 
     ;; Set programms
@@ -530,12 +549,12 @@ Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
 #+end_src
 *** English checking
 #+BEGIN_SRC emacs-lisp
-(use-package langtool
-  :ensure quelpa
-  :quelpa (langtool :fetcher github :repo "mhayashi1120/Emacs-langtool")
-  :init
-  (setq langtool-language-tool-server-jar "~/work/tools/src/languagetool/languagetool/languagetool-server.jar"))
-
+  (use-package langtool
+    :ensure quelpa
+    :quelpa (langtool :fetcher github :repo "mhayashi1120/Emacs-langtool")
+    :tags '("CORE")
+    :init
+    (setq langtool-language-tool-server-jar "~/work/tools/src/languagetool/languagetool/languagetool-server.jar"))
 #+END_SRC
 ** Fixme
 To deal with the fixme, I relie on two part: fic-mode for the highlighting and occur for the
@@ -543,6 +562,7 @@ listing.
 #+begin_src emacs-lisp
   (use-package fic-mode
     :ensure t
+    :tags '("CORE")
     :hook
     (prog-mode . fic-mode)
     :init
@@ -550,13 +570,13 @@ listing.
     (defun fic-view-listing ()
       "Use occur to list related FIXME keywords"
       (interactive)
-      (occur "\\<\\(FIXME\\|WRITEME\\|WRITEME!\\|TODO\\|BUG\\):?"))
-    )
+      (occur "\\<\\(FIXME\\|WRITEME\\|WRITEME!\\|TODO\\|BUG\\):?")))
 #+end_src
 ** Minibuffer
 Minibuffer configuration part. Nothing really outstanding, just the classical stuff.
 #+begin_src emacs-lisp
   (use-package minibuffer
+    :tags '("CORE")
     ;; :hook
     ;; (eval-expression-minibuffer-setup .  #'eldoc-mode)
     :config
@@ -573,6 +593,7 @@ fill-column for example.
   ;; Open Large file
   (use-package vlf
     :ensure t
+    :tags '("CORE")
     :config
     (require 'vlf-setup))
 
@@ -597,8 +618,8 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
 #+begin_src emacs-lisp
   (use-package prodigy
     :ensure quelpa
-    :unless (member (system-name) slm~machine-not-connected)
     :quelpa (prodigy :fetcher github :repo "seblemaguer/prodigy.el" :branch "auto-start")
+    :tags '("CONNECTED")
     :config
 
     (prodigy-define-service
@@ -670,7 +691,9 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
 *** System daemons
 With this package I can also manage my system services (tested on archlinux).
 #+begin_src emacs-lisp
-  (use-package daemons :ensure t)
+  (use-package daemons
+    :ensure t
+    :tags '("CORE"))
 #+end_src
 *** Background process configuration
 Starting process in background is really nice to avoid being spammed. So let's make it available
@@ -681,6 +704,7 @@ Starting process in background is really nice to avoid being spammed. So let's m
 
   (use-package bpr
     :ensure t
+    :tags '("CORE")
     :config
     (setq bpr-scroll-direction 1
           bpr-show-progress nil
@@ -696,13 +720,13 @@ In order to monitor each process started via comint, I use bifocal which splits 
 #+begin_src emacs-lisp
   (use-package bifocal
     :ensure t
+    :tags '("CORE")
     :disabled t
     :hook
     (inferior-python-mode . #'bifocal-mode)
 
     :config
-    (bifocal-global-mode 1)
-    )
+    (bifocal-global-mode 1))
 #+end_src
 ** Environment control helpers
 I prefer to control some hardware using emacs directly. For now the keyboard, the screen and the sound.
@@ -711,14 +735,14 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
 #+begin_src emacs-lisp
   (use-package desktop-environment
     :ensure t
+    :tags '("CORE")
     :config
     (setq desktop-environment-brightness-normal-increment "-inc 10"
           desktop-environment-brightness-normal-decrement "-dec 10"
           desktop-environment-brightness-small-increment "-inc 5"
           desktop-environment-brightness-small-decrement "-dec 5"
           desktop-environment-brightness-get-command "xbacklight -get"
-          desktop-environment-brightness-set-command "xbacklight"
-          )
+          desktop-environment-brightness-set-command "xbacklight")
     (desktop-environment-mode))
 #+end_src
 *** pulseaudio
@@ -726,6 +750,7 @@ Thanks to pulseaudio-control, I can control my soundcard.
 #+begin_src emacs-lisp
   (use-package pulseaudio-control
     :ensure t
+    :tags '("CORE")
     :config
     (setq pulseaudio-control--current-sink "@DEFAULT_SINK@"))
 #+end_src
@@ -735,6 +760,7 @@ emacs. This has been proven useful, especially for java editing.
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
+    :tags '("CORE")
     :hook
     (python-mode . lsp)
     :init
@@ -745,6 +771,7 @@ emacs. This has been proven useful, especially for java editing.
 
   (use-package company-lsp
     :ensure t
+    :tags '("CORE")
     :config
     (setq company-lsp-enable-snippet t
           company-lsp-cache-candidates 'auto)
@@ -753,6 +780,7 @@ emacs. This has been proven useful, especially for java editing.
 
   (use-package lsp-ui
     :ensure t
+    :tags '("CORE")
     :config
     (setq lsp-ui-sideline-enable t
           lsp-ui-sideline-show-symbol t
@@ -762,6 +790,7 @@ emacs. This has been proven useful, especially for java editing.
 
   (use-package dap-mode
     :ensure t
+    :tags '("CORE")
     :defer t
     :commands dap-debug
     :after lsp-mode
@@ -777,6 +806,7 @@ I do prefer vertical completion, which is why I use extensively Ivy and extensio
 #+begin_src emacs-lisp
   (use-package ivy
     :ensure t
+    :tags '("COMPLETION")
     :config
     (ivy-mode)
     (setq ivy-display-style 'fancy
@@ -787,6 +817,7 @@ I do prefer vertical completion, which is why I use extensively Ivy and extensio
 
   (use-package counsel
     :ensure t
+    :tags '("COMPLETION")
     :bind
     (("M-x" . counsel-M-x)
      ("C-x C-f" . counsel-find-file)))
@@ -798,7 +829,7 @@ configuration here.
 #+begin_src emacs-lisp
   (use-package company
     :ensure t
-    :demand t
+    :tags '("COMPLETION")
     :config
 
     ;; Global
@@ -827,6 +858,7 @@ configuration here.
   (use-package company-quickhelp
     :ensure t
     :after company
+    :tags '("COMPLETION")
     :config
     (company-quickhelp-mode 1))
 #+end_src
@@ -834,6 +866,7 @@ configuration here.
 #+begin_src emacs-lisp
   (use-package helm
     :ensure t
+    :tags '("COMPLETION")
     :config
     (setq helm-scroll-amount 4 ; scroll 4 lines other window using M-<next>/M-<prior>
           helm-quick-update t ; do not display invisible candidates
@@ -855,6 +888,7 @@ Ivy-yasnippet is used for snippet discovery.
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
+    :tags '("COMPLETION")
     :config
 
     ;; Adding yasnippet support to company
@@ -876,10 +910,14 @@ Ivy-yasnippet is used for snippet discovery.
     (yas-global-mode))
 
   ;; Load official snippets
-  (use-package yasnippet-snippets :ensure t)
+  (use-package yasnippet-snippets
+    :ensure t
+    :tags '("COMPLETION"))
 
   ;; Connect with ivy to have a list on demand
-  (use-package ivy-yasnippet :ensure t)
+  (use-package ivy-yasnippet
+    :ensure t
+    :tags '("COMPLETION"))
 #+end_src
 *** Filetype templates
 This part is using yatemplate (an over-layer of yasnippet) coupled with auto-insert to have a set of
@@ -887,6 +925,7 @@ file type dedicated templates. The templates are available in =third_parties/tem
 #+begin_src emacs-lisp
   (use-package yatemplate
     :ensure t
+    :tags '("COMPLETION")
     :after yasnippet
     :config
 
@@ -902,15 +941,27 @@ file type dedicated templates. The templates are available in =third_parties/tem
 ** Prescient
 Prescient helps to sort candidates by last used first and then sorting by length.
 #+begin_src emacs-lisp
-(use-package prescient :ensure t :config (prescient-persist-mode))
-(use-package ivy-prescient :ensure t :config (ivy-prescient-mode))
-(use-package company-prescient :ensure t :config (company-prescient-mode))
+  (use-package prescient
+    :ensure t
+    :tags '("COMPLETION")
+    :config (prescient-persist-mode))
+
+  (use-package ivy-prescient
+    :ensure t
+    :tags '("COMPLETION")
+    :config (ivy-prescient-mode))
+
+  (use-package company-prescient
+    :ensure t
+    :tags '("COMPLETION")
+    :config (company-prescient-mode))
 #+end_src
 * Org
 ** Global
 #+begin_src emacs-lisp
   (use-package org
     :ensure org-plus-contrib
+    :tags '("ORG")
     :config
 
     ;; Global
@@ -937,7 +988,7 @@ Prescient helps to sort candidates by last used first and then sorting by length
     (add-hook 'org-mode 'flyspell-mode)
     (add-to-list 'ispell-skip-region-alist '("^#+begin_src" . "^#+end_src"))
 
-
+    ;; FIXME: to sort !
     (use-package org-checklist)
     (use-package ob-exp)
     (use-package ox-bibtex)
@@ -953,9 +1004,9 @@ Prescient helps to sort candidates by last used first and then sorting by length
                               ;; Note information
                               (sequence "|" "NOTE(N)" "RELEASE(R)" "EVENT(E)")))
 
-          org-todo-state-tags-triggers '(("CANCELLED" ("CANCELLED" . t))
-                                         ("WAITING"   ("WAITING"   . t))
-                                         ("POSTPONED" ("POSTPONED" . t)))
+    org-todo-state-tags-triggers '(("CANCELLED" ("CANCELLED" . t))
+                                   ("WAITING"   ("WAITING"   . t))
+                                   ("POSTPONED" ("POSTPONED" . t)))
 
     ;; Priority definition
     (setq org-highest-priority ?A
@@ -1010,6 +1061,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 *** Global
 #+begin_src emacs-lisp
   (use-package org-agenda
+    :tags '("ORG")
     :commands (org-agenda)
     :hydra
     (hydra-org-agenda-view (:color blue :hint none)
@@ -1182,6 +1234,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package org-super-agenda
     :ensure t
+    :tags '("ORG")
     :disabled t
     :config
     (org-super-agenda-mode)
@@ -1200,6 +1253,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 *** Global
 #+begin_src emacs-lisp
   (use-package org-capture
+    :tags '("ORG")
     :config
 
     ;; Capture
@@ -1250,6 +1304,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package org-chef
     :ensure t
+    :tags '("ORG")
     :config
     (add-to-list 'org-capture-templates
                  '("c" "Cookbook" entry (file "~/shared/Dropbox/recipes/cookbook.org")
@@ -1258,18 +1313,19 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+end_src
 ** Clocking
 #+begin_src emacs-lisp
-(use-package org-mru-clock
-    :ensure t
-    :bind* (("C-c C-x i" . org-mru-clock-in)
-            ("C-c C-x C-j" . org-mru-clock-select-recent-task))
-    :init
-    (setq org-mru-clock-how-many 100
-          org-mru-clock-keep-formatting t
-          org-mru-clock-completing-read #'ivy-completing-read
-          org-clock-persist t)
+  (use-package org-mru-clock
+      :ensure t
+      :tags '("ORG")
+      :bind* (("C-c C-x i" . org-mru-clock-in)
+              ("C-c C-x C-j" . org-mru-clock-select-recent-task))
+      :init
+      (setq org-mru-clock-how-many 100
+            org-mru-clock-keep-formatting t
+            org-mru-clock-completing-read #'ivy-completing-read
+            org-clock-persist t)
 
-    :config
-    (org-clock-persistence-insinuate))
+      :config
+      (org-clock-persistence-insinuate))
 #+end_src
 ** Editing
 *** Global
@@ -1281,10 +1337,15 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
         org-confirm-babel-evaluate nil
         org-startup-with-inline-images t)
 
-  (use-package org-notebook :ensure t)
+  (use-package org-notebook
+    :ensure t
+    :tags '("ORG"))
 
   ;; Add languages
-  (use-package jupyter :ensure t)
+  (use-package jupyter
+    :ensure t
+    :tags '("ORG"))
+
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t)
                                  (dot . t)
@@ -1304,13 +1365,12 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   ; Define specific modes for specific tools
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
-
 #+end_src
 *** Yanking
 #+begin_src emacs-lisp
   (use-package org-rich-yank
     :ensure t
-    :demand t
+    :tags '("ORG")
     :bind (:map org-mode-map ("C-M-y" . org-rich-yank)))
 #+end_src
 
@@ -1318,26 +1378,30 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package org-id+
     :ensure quelpa
-    :quelpa (org-id+ :repo "seblemaguer/org-id-plus" :fetcher github))
+    :quelpa (org-id+ :repo "seblemaguer/org-id-plus" :fetcher github)
+    :tags '("ORG"))
 #+end_src
 ** Exporting
 *** HTML
 #+begin_src emacs-lisp
-  (use-package htmlize :ensure t)
+  (use-package htmlize
+    :ensure t
+    :tags '("ORG"))
 
   (use-package ox-html
     :after ox
     :requires (htmlize)
+    :tags '("ORG")
     :config
     (setq org-html-xml-declaration '(("html" . "")
-                                   ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
-                                   ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))
-        org-export-html-inline-images t
-        org-export-with-sub-superscripts nil
-        org-export-html-style-extra "<link rel=\"stylesheet\" href=\"org.css\" type=\"text/css\" />"
-        org-export-html-style-include-default nil
-        org-export-htmlize-output-type 'css ; Do not generate internal css formatting for HTML exports
-        )
+                                     ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
+                                     ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))
+          org-export-html-inline-images t
+          org-export-with-sub-superscripts nil
+          org-export-html-style-extra "<link rel=\"stylesheet\" href=\"org.css\" type=\"text/css\" />"
+          org-export-html-style-include-default nil
+          org-export-htmlize-output-type 'css ; Do not generate internal css formatting for HTML exports
+          )
 
     (defun endless/export-audio-link (path desc format)
       "Export org audio links to hmtl."
@@ -1356,11 +1420,13 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 
   (use-package ox-reveal
     :ensure t
+    :tags '("ORG")
     :requires (ox-html htmlize))
 #+end_src
 *** LaTeX
 #+begin_src emacs-lisp
   (use-package ox-latex
+    :tags '("ORG")
     :after ox
     :config
     (setq org-latex-listings t
@@ -1370,6 +1436,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 *** Beamer
 #+begin_src emacs-lisp
   (use-package ox-beamer
+    :tags '("ORG")
     :after ox
     :config
     (defun my-beamer-bold (contents backend info)
@@ -1386,6 +1453,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package ox-gfm
       :ensure t
+      :tags '("ORG")
       :after ox
       :config (require 'ox-gfm))
 #+end_src
@@ -1393,6 +1461,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package ox-pandoc
     :ensure t
+    :tags '("ORG")
     :disabled t
     :defines (org-pandoc-options-for-docx org-pandoc-options-for-beamer-pdf org-pandoc-options-for-latex-pdf)
     :config
@@ -1409,6 +1478,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package anki-editor
     :defines (anki-editor-mode-map)
     :ensure t
+    :tags '("ORG" "CONNECTED")
     :pin MELPA
     :hydra
     (anki-editor-hydra (:color teal)
@@ -1433,6 +1503,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package ob-async
     :ensure t
+    :tags '("ORG")
     :after org
     :commands (ob-async-org-babel-execute-src-block)
     :init
@@ -1453,6 +1524,7 @@ We just load irony add support for c derivative mode.
 #+begin_src emacs-lisp
   (use-package irony
     :ensure t
+    :tags '("LANGUAGE")
     :hook ((c-mode . irony-mode)
            (objc-mode . irony-mode)
            (c++-mode . irony-mode)))
@@ -1461,10 +1533,12 @@ We just load irony add support for c derivative mode.
 #+begin_src emacs-lisp
   (use-package flycheck-irony
     :ensure t
+    :tags '("LANGUAGE")
     :after (flycheck irony))
 
   (use-package irony-eldoc
     :ensure t
+    :tags '("LANGUAGE")
     :after (irony))
 #+end_src
 *** Completion
@@ -1473,10 +1547,12 @@ into company backend.
 #+begin_src emacs-lisp
   (use-package company-irony
     :ensure t
+    :tags '("LANGUAGE")
     :hook (irony-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-irony)))))
 
   (use-package company-irony-c-headers
     :ensure t
+    :tags '("LANGUAGE")
     :hook (irony-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-irony-c-headers)))))
 #+end_src
 *** Adapt compilation
@@ -1485,20 +1561,19 @@ gcc/g++. Therefore, here, either there is a makefile and use it, either there is
 gcc/++ directly.
 #+begin_src emacs-lisp
   (use-package smart-compile
+    :ensure t
+    :tags '("LANGUAGE")
     :bind (("C-c C-c" . smart-compile)
 
-           :map c-mode-map
-           ("C-c C-c" . smart-compile)
-
-           :map c++-mode-map
-           ("C-c C-c" . smart-compile))
-
-    :ensure t)
+           :map c-mode-base-map
+           ("C-c C-c" . smart-compile)))
 #+end_src
 *** C++ specificities
 For C++, I use a dedicated font lock.
 #+begin_src emacs-lisp
-(use-package modern-cpp-font-lock :ensure t)
+  (use-package modern-cpp-font-lock
+    :ensure t
+    :tags '("LANGUAGE"))
 #+end_src
 ** Configuration and log files
 This part is dedicated to unix and more general configuration files as well as logs.
@@ -1507,6 +1582,7 @@ Config-general-mode is applied for all unix configuration files.
 #+begin_src emacs-lisp
   (use-package config-general-mode
     :ensure t
+    :tags '("LANGUAGE")
     :mode ("\\.conf$" "\\.*rc$"))
 #+end_src
 *** Authinfo
@@ -1516,12 +1592,14 @@ enough to be on melpa so I use quelpa.
   (use-package authinfo-mode
     :ensure quelpa
     :quelpa (authinfo-mode :repo "seblemaguer/authinfo-mode" :fetcher github)
+    :tags '("LANGUAGE")
     :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . authinfo-mode))
 #+end_src
 *** Apache
 #+begin_src emacs-lisp
   (use-package apache-mode
     :ensure t
+    :tags '("LANGUAGE")
     :mode ("\\.htaccess\\'" "httpd\\.conf\\'" "srm\\.conf\\'"
            "access\\.conf\\'" "sites-\\(available\\|enabled\\)/"))
 #+end_src
@@ -1529,6 +1607,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package ssh-config-mode
     :ensure t
+    :tags '("LANGUAGE")
     :mode ("/\\.ssh/config\\'" "/system/ssh\\'" "/sshd?_config\\'" "/known_hosts\\'" "/authorized_keys2?\\'")
     :hook (ssh-config-mode . turn-on-font-lock)
 
@@ -1539,27 +1618,32 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package logview
     :ensure t
+    :tags '("LANGUAGE")
     :mode ("syslog\\(?:\\.[0-9]+\\)" "\\.log\\(?:\\.[0-9]+\\)?\\'"))
 #+end_src
 *** yaml
 #+begin_src emacs-lisp
   (use-package yaml-mode
     :ensure t
+    :tags '("LANGUAGE")
     :mode (".yaml$"))
 
   (use-package yaml-tomato
-    :ensure t)
+    :ensure t
+    :tags '("LANGUAGE"))
 #+end_src
 *** vimrc
 #+begin_src emacs-lisp
-    (use-package vimrc-mode
-      :ensure t
-      :mode ("^\\.vimrc\\'"))
+  (use-package vimrc-mode
+    :ensure t
+    :tags '("LANGUAGE")
+    :mode ("^\\.vimrc\\'"))
 #+end_src
 ** CSS
 #+begin_src emacs-lisp
   (use-package scss-mode
     :ensure t
+    :tags '("LANGUAGE")
     :defines scss-compile-at-save
     :mode ("\\.scss\\'")
     :config
@@ -1569,15 +1653,17 @@ enough to be on melpa so I use quelpa.
  #+begin_src emacs-lisp
    (use-package csv-mode
      :ensure t
+     :tags '("LANGUAGE")
      :config
 
      ;; Define separators
      (setq csv-separators '("," ";" ":" " ")))
 
 
-     ;; Subpackages
+   ;; Subpackages
    (use-package csv-nav
      :ensure t
+     :tags '("LANGUAGE")
      :disabled t)
  #+end_src
 ** Cue
@@ -1585,13 +1671,14 @@ enough to be on melpa so I use quelpa.
   (use-package cue-mode
     :ensure quelpa
     :quelpa (cue-mode :repo "seblemaguer/cue-mode" :fetcher github)
+    :tags '("LANGUAGE")
     :mode ("\\.cue$"))
-
 #+end_src
 ** Graphviz
 #+begin_src emacs-lisp
   (use-package graphviz-dot-mode
     :ensure t
+    :tags '("LANGUAGE")
     :init
     (defvar default-tab-width nil)
 
@@ -1603,6 +1690,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package lsp-java
     :ensure t
+    :tags '("LANGUAGE")
     :requires (lsp-ui-flycheck lsp-ui-sideline)
     :hook
     (java-mode . (lambda () (add-to-list (make-local-variable 'company-backends) 'company-lsp)))
@@ -1616,12 +1704,14 @@ enough to be on melpa so I use quelpa.
 *** Snippets
 #+begin_src emacs-lisp
   (use-package java-snippets
-    :ensure t)
+    :ensure t
+    :tags '("LANGUAGE"))
 #+end_src
 *** Javadoc
 #+begin_src emacs-lisp
   (use-package javadoc-lookup
     :ensure t
+    :tags '("LANGUAGE")
     :config
     (when (file-exists-p "/usr/share/doc/openjdk-8-jdk/api")
       (javadoc-add-roots "/usr/share/doc/openjdk-8-jdk/api"))
@@ -1638,6 +1728,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package groovy-mode
     :ensure t
+    :tags '("LANGUAGE")
     :mode ("\.groovy$" "\.gradle$")
     :interpreter ("gradle" "groovy")
     :hook
@@ -1653,13 +1744,15 @@ enough to be on melpa so I use quelpa.
 *** Gradle specificities
 #+begin_src emacs-lisp
   (use-package flycheck-gradle
-    :ensure t)
+    :ensure t
+    :tags '("LANGUAGE"))
 #+end_src
 ** Kotlin
 *** Global mode
 #+begin_src emacs-lisp
   (use-package kotlin-mode
     :ensure t
+    :tags '("LANGUAGE")
     :mode "\\.kts?\\'"
     :config
     (setq kotlin-tab-width 4))
@@ -1668,6 +1761,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package flycheck-kotlin
     :ensure t
+    :tags '("LANGUAGE")
     :after kotlin-mode
     :config
     (flycheck-kotlin-setup))
@@ -1677,6 +1771,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package tex-site
     :ensure auctex
+    :tags '("LANGUAGE")
     :after (tex latex)
     :hook
     (LaTeX-mode . turn-off-auto-fill)
@@ -1768,6 +1863,7 @@ enough to be on melpa so I use quelpa.
 *** Bibtex
 #+begin_src emacs-lisp
   (use-package bibtex
+    :tags '("LANGUAGE")
     :config
     (defun bibtex-generate-autokey ()
       (let* ((bibtex-autokey-names nil)
@@ -1805,24 +1901,28 @@ enough to be on melpa so I use quelpa.
 
   (use-package company-auctex
     :ensure t
+    :tags '("LANGUAGE")
     :hook
     (latex-mode . (company-auctex-init)))
 
 
   (use-package company-bibtex
     :ensure t
+    :tags '("LANGUAGE")
     :hook
     (latex-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-bibtex))))
     (org-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-bibtex)))))
 
   (use-package company-reftex
     :ensure t
+    :tags '("LANGUAGE")
     :hook
     (latex-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-reftex-labels company-reftex-citations))))
     (org-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-reftex-labels company-reftex-citations)))))
 
   (use-package company-math
     :ensure t
+    :tags '("LANGUAGE")
     :hook
     (latex-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-math-symbols-unicode))))
     (org-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-math-symbols-unicode)))))
@@ -1873,6 +1973,7 @@ enough to be on melpa so I use quelpa.
 *** Reftex
 #+begin_src emacs-lisp
   (use-package reftex
+    :tags '("LANGUAGE")
     :init
     (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
     :config
@@ -1910,6 +2011,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package latex-math-preview
     :ensure t
+    :tags '("LANGUAGE")
     :config
     (autoload 'LaTeX-preview-setup "preview")
     (setq preview-scale-function 1.2)
@@ -1919,52 +2021,63 @@ enough to be on melpa so I use quelpa.
  #+begin_src emacs-lisp
    (use-package ledger-mode
      :ensure t
+     :tags '("LANGUAGE")
      :mode ("\\.ledger$"))
 
    (use-package flycheck-ledger
      :ensure t
+     :tags '("LANGUAGE")
      :after (flycheck ledger-mode))
  #+end_src
 ** TODO (E)Lisp
 #+begin_src emacs-lisp
   ;; Disable checking doc
   (use-package flycheck
+    :tags '("LANGUAGE")
     :config
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
     (flycheck-define-checker proselint
-			     "A linter for prose."
-			     :command ("proselint" source-inplace)
-			     :error-patterns
-			     ((warning line-start (file-name) ":" line ":" column ": "
-				       (id (one-or-more (not (any " "))))
-				       (message) line-end))
-			     :modes (text-mode markdown-mode gfm-mode org-mode))
+                             "A linter for prose."
+                             :command ("proselint" source-inplace)
+                             :error-patterns
+                             ((warning line-start (file-name) ":" line ":" column ": "
+                                       (id (one-or-more (not (any " "))))
+                                       (message) line-end))
+                             :modes (text-mode markdown-mode gfm-mode org-mode))
     )
 
   ;; Package lint
-  (use-package package-lint :ensure t)
+  (use-package package-lint
+    :ensure t
+      :tags '("LANGUAGE"))
 
   ;; Pretty print for lisp
-  (use-package ipretty :ensure t)
+  (use-package ipretty
+    :ensure t
+      :tags '("LANGUAGE"))
 
-  ;; Completion
+  ;; Completion (FIXME: move back to company configuration)
   (use-package company
     :ensure t
+    :tags '("LANGUAGE")
     :hook (emacs-lisp-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-elisp)))))
 #+end_src
 ** Lua
 #+begin_src emacs-lisp
   (use-package lua-mode
-    :ensure t)
+    :ensure t
+    :tags '("LANGUAGE"))
 
   (use-package company-lua
-    :ensure t)
+    :ensure t
+    :tags '("LANGUAGE"))
 #+end_src
 ** Matlab
 #+begin_src emacs-lisp
   (use-package matlab-load
     :ensure matlab-mode
+    :tags '("LANGUAGE")
     :defines (matlab-shell-command-switches mlint-programs)
     :mode ("\\.m$" . matlab-mode)
     :commands (matlab-shell)
@@ -1986,17 +2099,20 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package markdown-mode
     :ensure t
+    :tags '("LANGUAGE")
     :mode ("\\.md$"))
 
 
   (use-package markdown-mode+
     :ensure t
+    :tags '("LANGUAGE")
     :after markdown-mode)
 #+end_src
 *** Syntax highlight in block
 #+begin_src emacs-lisp
   (use-package poly-markdown
-    :ensure t)
+    :ensure t
+    :tags '("LANGUAGE"))
 #+end_src
 ** PDF
 *** Global
@@ -2004,6 +2120,7 @@ enough to be on melpa so I use quelpa.
     (use-package pdf-tools
       :ensure t
       :pin MELPA
+      :tags '("LANGUAGE")
       :bind
       (:map pdf-view-mode-map
             ("/" . hydra-pdftools/body)
@@ -2108,14 +2225,16 @@ enough to be on melpa so I use quelpa.
   #+begin_src emacs-lisp
     (use-package org-pdfview
       :ensure t
+      :tags '("LANGUAGE")
       :config
 
       (add-to-list 'org-file-apps
-		   '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
+                   '("\\.pdf\\'" . (lambda (file link) (org-pdfview-open link)))))
   #+end_src
 ** Perl
 #+begin_src emacs-lisp
   (use-package cperl-mode
+    :tags '("LANGUAGE")
     :defines (compile-dwim-check-tools)
     :config
     (defalias 'perl-mode 'cperl-mode)
@@ -2145,12 +2264,14 @@ enough to be on melpa so I use quelpa.
 ** Praat
 #+begin_src emacs-lisp
   (use-package praat-mode
+    :tags '("LANGUAGE")
     :mode ("\\.praat" "\\.[tT][Gg]"))
 #+END_SRC
 ** Python
 *** Global configuration
 #+begin_src emacs-lisp
   (use-package python
+    :tags '("LANGUAGE")
     :mode
     ("\\.py\\'" . python-mode)
     ("\\.wsgi$" . python-mode)
@@ -2166,6 +2287,7 @@ enough to be on melpa so I use quelpa.
   (use-package lsp-python-ms
     :ensure quelpa
     :quelpa (lsp-python-ms :repo "andrew-christianson/lsp-python-ms" :fetcher github)
+    :tags '("LANGUAGE")
     :after lsp-mode
     :hook (python-mode . lsp)
     :config
@@ -2177,6 +2299,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package pipenv
     :ensure t
+    :tags '("LANGUAGE")
     :hook
     ((python-mode . pipenv-mode))
 
@@ -2186,12 +2309,15 @@ enough to be on melpa so I use quelpa.
 #+end_src
 *** Virtual environment
 #+begin_src emacs-lisp
-  (use-package pyvenv :ensure t)
+  (use-package pyvenv
+    :ensure t
+    :tags '("LANGUAGE"))
 #+end_src
 *** Interpreter configuration
 #+begin_src emacs-lisp
   (use-package ein
     :ensure t
+    :tags '("LANGUAGE")
     :config
 
     (setq ein:complete-on-dot -1)
@@ -2211,6 +2337,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package sphinx-doc
     :ensure t
+    :tags '("LANGUAGE")
     :config
     (add-hook 'python-mode-hook
               (lambda ()
@@ -2222,29 +2349,34 @@ enough to be on melpa so I use quelpa.
   ;; ESS for R programming
   (use-package ess
     :ensure t
+    :tags '("LANGUAGE")
     :config
     (setq ess-default-style 'RRR+))
 
   (use-package ess-smart-underscore
     :ensure t
+    :tags '("LANGUAGE")
     :disabled t
     :after ess)
 
   (use-package ess-view
     :ensure t
+    :tags '("LANGUAGE")
     :after ess)
 #+end_src
 *** Support drag & drop
 #+begin_src emacs-lisp
-(use-package extend-dnd
-  :ensure t
-  :config
-  (extend-dnd-activate))
+  (use-package extend-dnd
+    :ensure t
+    :tags '("LANGUAGE")
+    :config
+    (extend-dnd-activate))
 #+end_src
 *** Completing
 #+begin_src emacs-lisp
   (use-package company-statistics
     :ensure t
+    :tags '("LANGUAGE")
     :after company
     :hook (after-init . company-statistics-mode))
 #+end_src
@@ -2252,6 +2384,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package company-shell
     :ensure t
+    :tags '("LANGUAGE")
     :hook
     (eshell-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-shell company-shell-env company-fish-shell))))
     (sh-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-shell company-shell-env company-fish-shell))))
@@ -2261,6 +2394,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package plantuml-mode
     :ensure t
+    :tags '("LANGUAGE")
     :after org
     :mode ("\\.plantuml\\'")
     :config
@@ -2270,46 +2404,54 @@ enough to be on melpa so I use quelpa.
 ** Web configuration
 *** Global web configuration
 #+begin_src emacs-lisp
-    (use-package web-mode
-      :ensure t
-      :mode
-      ("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.[agj]sp\\'" "\\.as[cp]x\\'"
-      "\\.erb\\'" "\\.mustache\\'" "\\.djhtml\\'" "\\.html?\\'")
+  (use-package web-mode
+    :ensure t
+    :tags '("LANGUAGE")
+    :mode
+    ("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.[agj]sp\\'" "\\.as[cp]x\\'"
+    "\\.erb\\'" "\\.mustache\\'" "\\.djhtml\\'" "\\.html?\\'")
 
-      :init
-      (setq web-mode-markup-indent-offset 2
-            web-mode-code-indent-offset 2
-            web-mode-css-indent-offset 2
+    :init
+    (setq web-mode-markup-indent-offset 2
+          web-mode-code-indent-offset 2
+          web-mode-css-indent-offset 2
 
-            web-mode-enable-auto-pairing t
-            web-mode-enable-auto-expanding t
-            web-mode-enable-css-colorization t)
+          web-mode-enable-auto-pairing t
+          web-mode-enable-auto-expanding t
+          web-mode-enable-css-colorization t)
 
-      :config
-      ;; Template
-      (setq web-mode-engines-alist
-            '(("php"    . "\\.phtml\\'")
-              ("blade"  . "\\.blade\\."))
-            )
+    :config
+    ;; Template
+    (setq web-mode-engines-alist
+          '(("php"    . "\\.phtml\\'")
+            ("blade"  . "\\.blade\\."))
+          )
 
-      )
+    )
 
-    (use-package web-beautify
-      :ensure t
-      :commands (web-beautify-css
-                 web-beautify-css-buffer
-                 web-beautify-html
-                 web-beautify-html-buffer
-                 web-beautify-js
-                 web-beautify-js-buffer))
+  (use-package web-beautify
+    :ensure t
+    :tags '("LANGUAGE")
+    :commands (web-beautify-css
+               web-beautify-css-buffer
+               web-beautify-html
+               web-beautify-html-buffer
+               web-beautify-js
+               web-beautify-js-buffer))
 
-    (use-package web-completion-data :ensure t)
-    (use-package web-mode-edit-element :ensure t)
+  (use-package web-completion-data
+    :ensure t
+    :tags '("LANGUAGE"))
+
+  (use-package web-mode-edit-element
+    :ensure t
+    :tags '("LANGUAGE"))
 #+end_src
 *** EMMET
 #+begin_src emacs-lisp
   (use-package emmet-mode
     :ensure t
+    :tags '("LANGUAGE")
     :diminish (emmet-mode . "ε")
     :bind* (("C-)" . emmet-next-edit-point)
             ("C-(" . emmet-prev-edit-point))
@@ -2328,6 +2470,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package company-web
     :ensure t
+    :tags '("LANGUAGE")
     :hook (web-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-web-html)))))
 #+end_src
 *** Javascript
@@ -2335,6 +2478,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package js2-mode
     :ensure t
+    :tags '("LANGUAGE")
     :mode
     ("\\.js\\'")
     :config
@@ -2344,6 +2488,7 @@ enough to be on melpa so I use quelpa.
 
   (use-package js2-refactor
     :ensure t
+    :tags '("LANGUAGE")
     :hook
     (js2-mode . js2-refactor-mode)
 
@@ -2399,6 +2544,7 @@ enough to be on melpa so I use quelpa.
 
   (use-package xref-js2
     :ensure t
+    :tags '("LANGUAGE")
     :config
 
     (add-hook 'js2-mode-hook
@@ -2407,6 +2553,7 @@ enough to be on melpa so I use quelpa.
 
   (use-package indium
     :ensure t
+    :tags '("LANGUAGE")
     :diminish indium-interaction-mode
     :init
     (setq indium-update-script-on-save t))
@@ -2415,16 +2562,20 @@ enough to be on melpa so I use quelpa.
 
   (use-package gulp-task-runner
     :ensure t
+    :tags '("LANGUAGE")
     :commands (gulp))
 
   (use-package js-auto-beautify
-    :ensure t)
+    :ensure t
+    :tags '("LANGUAGE"))
 
   (use-package js-import
-    :ensure t)
+    :ensure t
+    :tags '("LANGUAGE"))
 
   (use-package company-tern
     :ensure t
+    :tags '("LANGUAGE")
     :hook
     (js2-mode . tern-mode)
     (js2-mode . company-mode)
@@ -2445,25 +2596,29 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package json-mode
     :ensure t
+    :tags '("LANGUAGE")
     :mode
     ("\\.json$"))
 
-
   ;; Subpackage
-  (use-package json-reformat :ensure t)
+  (use-package json-reformat
+    :ensure t
+    :tags '("LANGUAGE"))
 #+end_src
 **** AngularJS
 Extracted from https://github.com/zakame/emacs-for-javascript
 #+begin_src emacs-lisp
   (use-package react-snippets
-    :ensure t)
+    :ensure t
+    :tags '("LANGUAGE"))
 
   (use-package angular-mode
     :ensure t
-    )
+    :tags '("LANGUAGE"))
 
   (use-package angular-snippets
     :ensure t
+    :tags '("LANGUAGE")
     :config
     (eval-after-load "web-mode"
       '(bind-key "C-c C-d" 'ng-snip-show-docs-at-point web-mode-map)))
@@ -2472,6 +2627,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
 #+begin_src emacs-lisp
   (use-package nodenv
     :ensure t
+    :tags '("LANGUAGE")
     :disabled t
     :hook
     (js-mode . #'nodenv-mode))
@@ -2490,6 +2646,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
 ** XML
 #+begin_src emacs-lisp
   (use-package nxml-mode
+    :tags '("LANGUAGE")
     :mode ("\\.xml$" . nxml-mode)
     :commands (pretty-print-xml-region)
     :init
@@ -2528,25 +2685,35 @@ Extracted from https://github.com/zakame/emacs-for-javascript
 * Documentation
 ** Help
 #+begin_src emacs-lisp
-  (use-package helpful :ensure t)
+  (use-package helpful
+    :ensure t
+    :tags '("DOCUMENTATION"))
 #+end_src
 ** Apropos
 #+begin_src emacs-lisp
   (use-package apropos-fn+var
     :ensure t
-    :disabled
+    :tags '("DOCUMENTATION")
+    :disabled t
     :config
     (setq apropos-do-all t))
 #+end_src
 ** Info
 #+begin_src emacs-lisp
-  (use-package info-buffer :ensure t)
-  (use-package info+ :ensure t :disabled)
+  (use-package info-buffer
+    :ensure t
+    :tags '("DOCUMENTATION"))
+
+  (use-package info+
+    :ensure t
+    :tags '("DOCUMENTATION")
+    :disabled t)
 #+end_src
 ** Man
 #+begin_src emacs-lisp
   (use-package man
     :ensure t
+    :tags '("DOCUMENTATION")
     :config
     (setq Man-notify-method 'pushy)
     (setq woman-manpath
@@ -2561,6 +2728,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
 The key configuration is mainly coming from https://github.com/jcf/emacs.d the rest is coming from http://www.modernemacs.com/post/custom-eshell/ with some adaptation
 #+begin_src emacs-lisp
   (use-package eshell
+    :tags '("SHELL")
     :init
     (add-hook 'eshell-mode-hook
               (lambda ()
@@ -2677,6 +2845,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 #+begin_src emacs-lisp
   (use-package eshell-fringe-status
     :ensure t
+    :tags '("SHELL")
     :config
     (add-hook 'eshell-mode-hook 'eshell-fringe-status-mode))
 #+end_src
@@ -2684,6 +2853,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 #+begin_src emacs-lisp
   (use-package fish-completion
     :ensure t
+    :tags '("SHELL")
     :ensure-system-package fish
     :config
     (global-fish-completion-mode))
@@ -2715,14 +2885,20 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 * Compilation
 ** TODO some requires to check
 #+begin_src emacs-lisp
-  (require 'compile-)
-  (require 'compile)
-  (require 'compile+)
+  (use-package compile-
+    :tags '("COMPILATION"))
+
+  (use-package compile
+    :tags '("COMPILATION"))
+
+  (use-package compile+
+    :tags '("COMPILATION"))
 #+end_src
 ** Flychecking
 #+begin_src emacs-lisp
   (use-package flycheck-stack
     :ensure t
+    :tags '("COMPILATION")
     :after flycheck)
 #+end_src
 ** Gradle global support
@@ -2730,6 +2906,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
   (use-package gradle-mode
     :ensure quelpa
     :quelpa (gradle-mode :repo "seblemaguer/emacs-gradle-mode" :fetcher github)
+    :tags '("COMPILATION")
     :config
     (setq gradle-use-gradlew t)
     (gradle-mode))
@@ -2739,6 +2916,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 #+begin_src emacs-lisp
   (use-package winnow
     :ensure t
+    :tags '("COMPILATION")
     :init
     (add-hook 'compilation-mode-hook 'winnow-mode)
     (add-hook 'ag-mode-hook 'winnow-mode))
@@ -2750,6 +2928,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package projectile
     :ensure t
+    :tags '("PROJECT")
     :config
 
     ;; Global configuration
@@ -2784,6 +2963,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package org-projectile
     :ensure t
+    :tags '("PROJECT")
     :disabled t
     :config
     (org-projectile-per-project)
@@ -2795,6 +2975,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package counsel-projectile
     :ensure t
+    :tags '("PROJECT")
     :after projectile)
 #+end_src
 * Version control
@@ -2806,6 +2987,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t
+    :tags '("VC")
     :commands (magit)
     :config
 
@@ -2896,12 +3078,14 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package magit-tbdiff
     :ensure t
+    :tags '("VC")
     :after magit)
 #+end_src
 **** Todo
 #+begin_src emacs-lisp
   (use-package magit-todos
     :ensure t
+    :tags '("VC")
     :commands (magit-todos-mode)
     :hook (magit-mode . magit-todos-mode)
     :config
@@ -2912,15 +3096,18 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 *** Git ignore
 #+begin_src emacs-lisp
   (use-package gitignore-mode
-    :ensure t)
+    :ensure t
+    :tags '("VC"))
 
   (use-package helm-gitignore
-    :ensure t)
+    :ensure t
+    :tags '("VC"))
 #+end_src
 *** Config edition
 #+begin_src emacs-lisp
   (use-package gitconfig-mode
     :ensure t
+    :tags '("VC")
     :mode
     ("/\.gitconfig\'"    . gitconfig-mode)
     ("/vcs/gitconfig\'"    . gitconfig-mode))
@@ -2928,15 +3115,18 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 *** Helpers for edition
 #+begin_src emacs-lisp
   (use-package git-commit
-    :ensure t)
+    :ensure t
+    :tags '("VC"))
 
   (use-package gitattributes-mode
-    :ensure t)
+    :ensure t
+    :tags '("VC"))
 #+end_src
 *** Git prefix
 #+begin_src emacs-lisp
   (use-package git-msg-prefix
     :ensure t
+    :tags '("VC")
     :config
     (setq git-msg-prefix-log-flags " --since='1 week ago' "
           git-msg-prefix-regex "^\\([^:]*: \\)"
@@ -2946,38 +3136,56 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 *** Commit navigation
 #+begin_src emacs-lisp
-(use-package git-timemachine :ensure t)
+  (use-package git-timemachine
+    :ensure t
+    :tags '("VC"))
 #+end_src
 *** Send patch by email
 #+begin_src emacs-lisp
   (use-package gitpatch
     :ensure t
+    :tags '("VC")
     :config
     (setq gitpatch-mail-attach-patch-key "C-c i"))
 #+end_src
 ** Mercurial
 *** Monky
 #+begin_src emacs-lisp
-(use-package monky :ensure t)
+  (use-package monky
+    :ensure t
+    :tags '("VC"))
 #+end_src
 *** Configuration
 #+begin_src emacs-lisp
-(use-package hgignore-mode :ensure t)
-(use-package hgrc-mode :ensure t)
+  (use-package hgignore-mode
+    :ensure t
+    :tags '("VC"))
+
+  (use-package hgrc-mode
+    :ensure t
+    :tags '("VC"))
 #+end_src
 ** Providers
 *** Github
 #+begin_src emacs-lisp
   ;; Github api
-  (use-package gh :ensure t)
-  (use-package gh-md :ensure t)
+  (use-package gh
+    :ensure t
+    :tags '("VC"))
+
+  (use-package gh-md
+    :ensure t
+    :tags '("VC"))
 
   ;; Search on github
-  (use-package github-search :ensure t)
+  (use-package github-search
+    :ensure t
+    :tags '("VC"))
 
   ;; Mapping github with magit
   (use-package magithub
     :ensure t
+    :tags '("VC")
     :after (:all magit)
     :config
     (magithub-feature-autoinject t)
@@ -2985,21 +3193,31 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 *** Gist
 #+begin_src emacs-lisp
-(use-package gist :ensure t)
+  (use-package gist
+    :ensure t
+    :tags '("VC"))
 #+end_src
 *** Gitlab
 #+begin_src emacs-lisp
-(use-package gitlab :ensure t)
-(use-package ivy-gitlab :ensure t)
+  (use-package gitlab
+    :ensure t
+    :tags '("VC"))
+
+  (use-package ivy-gitlab
+    :ensure t
+    :tags '("VC"))
 #+end_src
 *** Browsing at remote
 #+begin_src emacs-lisp
-(use-package browse-at-remote :ensure t)
+  (use-package browse-at-remote
+    :ensure t
+    :tags '("VC"))
 #+end_src
 ** Continuous building
 #+begin_src emacs-lisp
   (use-package travis
     :ensure t
+    :tags '("VC")
     :config
 
     (require 'travis-utils)
@@ -3078,6 +3296,7 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
 Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired and adapted.
 #+begin_src emacs-lisp
   (use-package dired
+    :tags '("FILE_MANAGEMENT")
     :hydra
     (hydra-dired (:hint nil :color pink)
                  "
@@ -3203,31 +3422,32 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package peep-dired
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :config
-    (define-key dired-mode-map (kbd "P") 'peep-dired)
-  )
+    (define-key dired-mode-map (kbd "P") 'peep-dired))
 #+end_src
 *** dired-narrow
 #+begin_src emacs-lisp
   (use-package dired-narrow
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :config
-    (define-key dired-mode-map (kbd "/") 'dired-narrow)
-  )
+    (define-key dired-mode-map (kbd "/") 'dired-narrow))
 #+end_src
 *** dired-single
 #+begin_src emacs-lisp
   (use-package dired-single
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :config
     (define-key dired-mode-map [return] 'dired-single-buffer)
-    (define-key dired-mode-map [mouse-1] 'dired-single-buffer-mouse)
-    )
+    (define-key dired-mode-map [mouse-1] 'dired-single-buffer-mouse))
 #+end_src
 *** dired-collapse
 #+begin_src emacs-lisp
   (use-package dired-collapse
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :disabled t
     :hook
     (dired-mode . dired-collapse-mode))
@@ -3236,6 +3456,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package dired-filter
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :init
     (add-hook 'dired-mode-hook 'dired-filter-group-mode)
 
@@ -3260,6 +3481,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package dired-subtree
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :bind (:map dired-mode-map
                 ("i" . dired-subtree-insert)
                 (";" . dired-subtree-remove)))
@@ -3268,6 +3490,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package dired-git-info
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :bind (:map dired-mode-map
                 (")"  . dired-git-info-mode)))
 #+END_SRC
@@ -3277,6 +3500,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package image-dired+
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :config
     (setq auto-image-file-mode t)
     (eval-after-load 'image-dired+ '(image-diredx-async-mode 1)))
@@ -3285,6 +3509,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package async
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :after dired
     :config
 
@@ -3297,6 +3522,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package dired-rsync
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :config
     (bind-key "C-c C-r" 'dired-rsync dired-mode-map))
 #+end_src
@@ -3305,6 +3531,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package image+
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :hydra
     (imagex-sticky-binding () ;; global-map "C-x C-l")
                            "Manipulating Image"
@@ -3339,6 +3566,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package blimp
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :hook
     (image-mode . blimp-mode))
 #+end_src
@@ -3346,6 +3574,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** Global
 #+begin_src emacs-lisp
   (use-package ediff
+    :tags '("FILE_MANAGEMENT")
     :config
     (autoload 'diff-mode "diff-mode" "Diff major mode" t)
     (setq diff-switches "-u"
@@ -3389,6 +3618,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** Tramp
 #+begin_src emacs-lisp
   (use-package tramp
+    :tags '("FILE_MANAGEMENT")
     :init
     (setq tramp-default-method "ssh"
           password-cache-expiry 60
@@ -3420,6 +3650,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package treemacs
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :bind (:map global-map
                 ([f8]        . treemacs-toggle))
     :config
@@ -3443,22 +3674,25 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package treemacs-projectile
     :ensure t
+    :tags '("FILE_MANAGEMENT")
     :after treemacs projectile
     :config
     (setq treemacs-header-function #'treemacs-projectile-create-header))
 #+end_src
 *** Magit
 #+begin_src emacs-lisp
-(use-package treemacs-magit
-  :after treemacs magit
-  :ensure t)
+  (use-package treemacs-magit
+    :tags '("FILE_MANAGEMENT")
+    :after treemacs magit
+    :ensure t)
 #+end_src
 *** Icons
 #+begin_src emacs-lisp
-(use-package treemacs-icons-dired
-  :after treemacs dired
-  :ensure t
-  :config (treemacs-icons-dired-mode))
+  (use-package treemacs-icons-dired
+    :tags '("FILE_MANAGEMENT")
+    :after treemacs dired
+    :ensure t
+    :config (treemacs-icons-dired-mode))
 #+end_src
 * Ibuffer
 ** Filter
@@ -3606,6 +3840,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** Global
 #+begin_src emacs-lisp
   (use-package ibuffer
+    :tags '("IBUFFER")
     :hydra
     (hydra-ibuffer-main (:color pink :hint nil)
                         "
@@ -3819,6 +4054,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package sauron
     :ensure t
+    :tags '("NOTIFICATION")
     :pin MELPA
     :config
 
@@ -3832,6 +4068,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** Alert
 #+begin_src emacs-lisp
   (use-package alert
+    :tags '("NOTIFICATION")
     :after sauron
     :config
 
@@ -3923,35 +4160,56 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 * System
 ** Docker
 #+begin_src emacs-lisp
-  (use-package docker :ensure t)
-  (use-package docker-api :ensure t)
-  (use-package docker-tramp :ensure t)
-  (use-package dockerfile-mode :ensure t)
+  (use-package docker
+    :ensure t
+    :tags '("OS"))
+
+  (use-package docker-api
+    :ensure t
+    :tags '("OS"))
+
+  (use-package docker-tramp
+    :ensure t
+    :tags '("OS"))
+
+  (use-package dockerfile-mode
+    :ensure t
+    :tags '("OS"))
 #+end_src
 ** SSH
 #+begin_src emacs-lisp
-  (use-package ssh :ensure t)
-  (use-package ssh-deploy :ensure t)
+  (use-package ssh
+    :ensure t
+    :tags '("OS"))
+
+  (use-package ssh-deploy
+    :ensure t
+    :tags '("OS"))
 #+end_src
 ** Monitoring
 #+begin_src emacs-lisp
   (use-package symon
-    :ensure t)
+    :ensure t
+    :tags '("OS"))
 #+end_src
 ** Clipboard
 #+begin_src emacs-lisp
   (use-package cliphist
-    :ensure t)
+    :ensure t
+    :tags '("OS"))
 #+end_src
 ** COMMENT unison interaction
 #+begin_src emacs-lisp
-  (use-package unison :ensure t)
+  (use-package unison
+    :ensure t
+    :tags '("OS"))
 #+end_src
 * Internet/network
 ** Globalize clickable url
 #+begin_src emacs-lisp
   ;; Activate clickage everywhere
   (use-package goto-addr
+    :tags '("CONNECTED")
     :config
     (define-globalized-minor-mode global-goto-address-mode
       goto-address-mode goto-address-mode :group 'goto-address)
@@ -3964,23 +4222,36 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** Searching
 *** Google
 #+begin_src emacs-lisp
-  (use-package google :ensure t)
-  (use-package google-maps :ensure t)
-  (use-package google-translate :ensure t)
+  (use-package google
+    :ensure t
+    :tags '("CONNECTED"))
+
+  (use-package google-maps
+    :ensure t
+    :tags '("CONNECTED"))
+
+  (use-package google-translate
+    :ensure t
+    :tags '("CONNECTED"))
 #+end_src
 *** Youtube
 #+begin_src emacs-lisp
-  (use-package ivy-youtube :ensure t)
+  (use-package ivy-youtube
+    :ensure t
+    :tags '("CONNECTED"))
 #+end_src
 *** Codesearch
 #+begin_src emacs-lisp
-(use-package counsel-codesearch :ensure t)
+  (use-package counsel-codesearch
+    :ensure t
+    :tags '("CONNECTED"))
 #+end_src
 ** IRC
 *** Global
 #+begin_src emacs-lisp
   (use-package circe
     :ensure t
+    :tags '("CONNECTED")
     :bind ("<S-f2>" . circe-init)
     :hook
     (circe-chat-mode . disable-global-facilities)
@@ -4087,12 +4358,14 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** Logging
 #+begin_src emacs-lisp
   (use-package lui-logging
+    :tags '("CONNECTED")
     :commands (enable-lui-logging))
 
 #+end_src
 *** Autopasting
 #+begin_src emacs-lisp
   (use-package lui-autopaste
+    :tags '("CONNECTED")
     :after circe
     :config
     (add-hook 'circe-channel-mode-hook 'enable-lui-autopaste)
@@ -4131,6 +4404,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** Some coloring
 #+begin_src emacs-lisp
   (use-package lui-irc-colors
+    :tags '("CONNECTED")
     :after circe
     :config
     (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
@@ -4140,6 +4414,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package sauron-circe
     :ensure quelpa
     :quelpa (sauron-circe :repo "seblemaguer/sauron-circe" :fetcher github)
+    :tags '("CONNECTED")
     :after sauron
     :config
     (sauron-circe-start))
@@ -4147,8 +4422,8 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** Slack
 #+BEGIN_SRC emacs-lisp
   (use-package slack
-    :unless (member (system-name) slm~machine-not-connected)
     :ensure t
+    :tags '("CONNECTED")
     :commands (slack-start)
     :hydra
     (slack-hydra (:color blue :hint none)
@@ -4207,6 +4482,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** TTLS
   #+begin_src emacs-lisp
     (use-package starttls
+      :tags '("CONNECTED")
       :config
       (setq starttls-use-gnutls t
             starttls-gnutls-program "gnutls-cli"
@@ -4217,6 +4493,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** Message composition
 #+begin_src emacs-lisp
   (use-package message
+    :tags '("CONNECTED")
     :hook
     (message-mode . flyspell-mode)
     (message-mode . disable-global-facilities)
@@ -4235,6 +4512,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   #+begin_src emacs-lisp
     (use-package smtpmail-multi
       :ensure t
+      :tags '("CONNECTED")
       ;; :ensure-system-package msmtp
       :config
 
@@ -4346,7 +4624,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package notmuch
     :ensure t
-    :unless (member (system-name) slm~machine-not-connected)
+    :tags '("CONNECTED")
     :commands (notmuch)
     :ensure-system-package notmuch
     :ensure-system-package isync
@@ -4439,6 +4717,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ***** Use-package start
 #+begin_src emacs-lisp
   (use-package notmuch-hello
+    :tags '("CONNECTED")
     :config
 
     (setq notmuch-hello-thousands-separator "." ;; Add a thousand separator
@@ -4601,8 +4880,8 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package sauron-notmuch
     :ensure quelpa
-    :unless (member (system-name) slm~machine-not-connected)
     :quelpa (sauron-notmuch :repo "seblemaguer/sauron-notmuch" :fetcher github)
+    :tags '("CONNECTED")
     :after (sauron notmuch)
     :config
 
@@ -4615,13 +4894,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 **** Integration with org-mode
 #+begin_src emacs-lisp
   (use-package org-notmuch
-    :unless (member (system-name) slm~machine-not-connected)
-    )
+    :tags '("CONNECTED"))
 #+end_src
 **** Reply/citation
 #+begin_src emacs-lisp
   (use-package notmuch-mua
-    :unless (member (system-name) slm~machine-not-connected)
+    :tags '("CONNECTED")
     :config
     (setq notmuch-mua-cite-function #'message-cite-original-without-signature)
   )
@@ -4629,16 +4907,15 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 **** Interactive search
 #+begin_src emacs-lisp
   (use-package counsel-notmuch
-    :unless (member (system-name) slm~machine-not-connected)
     :ensure t
-    )
+    :tags '("CONNECTED"))
 #+end_src
 ** RSS
 *** Global
 #+begin_src emacs-lisp
   (use-package elfeed
-    :unless (member (system-name) slm~machine-not-connected)
     :ensure t
+    :tags '("CONNECTED")
     :commands (elfeed)
     :bind (([f9] . elfeed))
 
@@ -4652,15 +4929,14 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** Org connection
 #+begin_src emacs-lisp
   (use-package elfeed-org
-    :unless (member (system-name) slm~machine-not-connected)
     :ensure t
+    :tags '("CONNECTED")
     :config
     (when (file-exists-p "~/shared/Dropbox/org/organisation/rss.org")
       (progn
         (elfeed-org)
         (setq rmh-elfeed-org-files (list "~/shared/Dropbox/org/organisation/rss.org"))
         (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
-
 
     (elfeed-update-background-start))
 #+end_src
@@ -4669,6 +4945,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package youtube-dl
     :ensure quelpa
     :quelpa (youtube-dl :repo "skeeto/youtube-dl-emacs" :fetcher github)
+    :tags '("CONNECTED")
     :bind ("C-x y" . youtube-dl-list)
     :config
     (setq youtube-dl-directory "~/Downloads")
@@ -4709,13 +4986,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 *** Notification part
 #+begin_src emacs-lisp
-  (use-package sauron
-    :ensure t
+  (use-package sauron-elfeed
+    :tags '("CONNECTED")
     :config
-    (require 'sauron-elfeed)
     (cl-loop for feed in elfeed-feeds
-	     do (when (member 'mustread (cdr feed))
-		  (puthash (car feed) 3 sauron-elfeed-prio-hash))))
+             do (when (member 'mustread (cdr feed))
+                  (puthash (car feed) 3 sauron-elfeed-prio-hash))))
 
 #+end_src
 *** Helpers
@@ -4724,27 +5000,28 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       (interactive)
       (mark-whole-buffer)
       (elfeed-search-untag-all-unread))
-
 #+end_src
 ** Stackexchange
 #+begin_src emacs-lisp
-(use-package sx
-  :ensure t
-  :config
-  (bind-keys :prefix "C-c s"
-             :prefix-map my-sx-map
-             :prefix-docstring "Global keymap for SX."
-             ("q" . sx-tab-all-questions)
-             ("i" . sx-inbox)
-             ("o" . sx-open-link)
-             ("u" . sx-tab-unanswered-my-tags)
-             ("a" . sx-ask)
-             ("s" . sx-search)))
+  (use-package sx
+    :ensure t
+    :tags '("CONNECTED")
+    :config
+    (bind-keys :prefix "C-c s"
+               :prefix-map my-sx-map
+               :prefix-docstring "Global keymap for SX."
+               ("q" . sx-tab-all-questions)
+               ("i" . sx-inbox)
+               ("o" . sx-open-link)
+               ("u" . sx-tab-unanswered-my-tags)
+               ("a" . sx-ask)
+               ("s" . sx-search)))
 #+end_src
 ** Reddit
 #+begin_src emacs-lisp
   (use-package md4rd
     :ensure t
+    :tags '("CONNECTED")
     :hydra
     (md4rd-hydra (:color blue :hint none)
        "
@@ -4772,7 +5049,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :config
     (setq md4rd-subs-active '(lisp+Common_Lisp emacs)))
 #+end_src
-** github
+** Github
 #+begin_src emacs-lisp
   (defun gh-issue-new-url (project title body)
     "Generate the github url based on the PROJECT for the base and as the parameters TITLE and BODY"
@@ -4803,6 +5080,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package emms
     :ensure t
+    :tags '("MULTIMEDIA")
     :commands (emms)
     :config
 
@@ -4884,12 +5162,15 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** Tagging using emms
 I actually use this part for minor correction. The tags are done when abcde is converting the cd
 #+begin_src emacs-lisp
-  (use-package emms-mark-ext :ensure t)
+  (use-package emms-mark-ext
+    :ensure t
+    :tags '("MULTIMEDIA"))
 #+end_src
 ** Browser
 #+begin_src emacs-lisp
   (use-package emms-browser
     :after emms
+    :tags '("MULTIMEDIA")
     :config
     (emms-browser-make-filter
      "all-files" (emms-browser-filter-only-type 'file))
@@ -4906,16 +5187,18 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (use-package ma2oa
     :ensure quelpa
     :quelpa (ma2oa :fetcher github :repo "seblemaguer/ma2oa.el")
+    :tags '("CONNECTED")
     :config
     (add-to-list 'org-agenda-files "~/.emacs.d/ma-releases.org"))
 #+END_SRC
 * Weather
 #+begin_src emacs-lisp
-(use-package wttrin
-  :ensure t
-  :commands (wttrin)
-  :init
-  (setq wttrin-default-cities '("Saarbrücken" "Lannion" "Sofia")))
+  (use-package wttrin
+    :ensure t
+    :tags '("CONNECTED")
+    :commands (wttrin)
+    :init
+    (setq wttrin-default-cities '("Saarbrücken" "Lannion" "Sofia")))
 #+end_src
 * Productivity behavior
 This part is dedicated to ensure productivity configuration. This involves mainly isolating,
@@ -4923,13 +5206,17 @@ capturing and bibliography.
 ** Dark room
 Sometimes I just want to ignore everything except the current document. Darkroom is exactly designed for that
 #+begin_src emacs-lisp
-(use-package darkroom :ensure t)
+  (use-package darkroom
+    :ensure t
+    :tags '("PRODUCTION"))
 #+end_src
 ** ORG/Web tools
 Org-web-tools is a nice package which allows to sniff a webpage and convert it into org-mode
 format. This is really useful to homogeneise documentation.
 #+begin_src emacs-lisp
-(use-package org-web-tools :ensure t)
+  (use-package org-web-tools
+    :ensure t
+    :tags '("CONNECTED"))
 #+end_src
 ** Biblio
 This part focus on bibliography/library configuration. The goal is to have a global configuration to
@@ -4937,6 +5224,7 @@ organize read papers or "to read" papers. This is mainly based on https://codear
 #+begin_src emacs-lisp
   (use-package ivy-bibtex
     :ensure t
+    :tags '("PRODUCTION")
     :config
     (setq ivy-bibtex-bibliography "~/shared/Dropbox/org/work/biblio/index.bib" ;; where your references are stored
           ivy-bibtex-library-path "~/shared/Dropbox/org/work/biblio/lib/" ;; where your pdfs etc are stored
@@ -4945,8 +5233,8 @@ organize read papers or "to read" papers. This is mainly based on https://codear
           bibtex-completion-notes-path "~/shared/Dropbox/org/work/biblio/index.org"))
 
   (use-package org-ref
-    :after org
     :ensure t
+    :tags '("ORG")
     :chords
     (("uu"  . org-ref-cite-hydra/body))
     :hook
@@ -4960,6 +5248,7 @@ organize read papers or "to read" papers. This is mainly based on https://codear
 
   (use-package org-noter
     :ensure t
+    :tags '("ORG")
     :bind ("C-x i" . org-noter)
     :config
     (setq org-noter-property-doc-file "INTERLEAVE_PDF"
@@ -4967,20 +5256,27 @@ organize read papers or "to read" papers. This is mainly based on https://codear
 
   (use-package gscholar-bibtex
     :ensure t
+    :tags '("CONNECTED")
     :commands (gscholar-bibtex)
     )
 #+end_src
 ** Paper
 As I write papers, it is useful to have some helper to start to have the inspiration.
 #+begin_src emacs-lisp
-  (use-package academic-phrases :ensure t)
-  (use-package powerthesaurus :ensure t)
+  (use-package academic-phrases
+    :ensure t
+    :tags '("CONNECTED"))
+
+  (use-package powerthesaurus
+    :ensure t
+    :tags '("CONNECTED"))
 #+end_src
 * Visual
 ** Global theme
 #+begin_src emacs-lisp
   (use-package flucui-themes
     :ensure t
+    :tags '("VISUAL")
     :config
     (flucui-themes-load-style 'light))
 #+end_src
@@ -5013,11 +5309,13 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp
   (use-package e2wm
     :ensure t
+    :tags '("VISUAL")
     :config
     (autoload 'e2wm:dp-edbi "e2wm-edbi" nil t))
 
   (use-package e2wm-direx
     :ensure t
+    :tags '("VISUAL")
     :config
     (setq e2wm:c-code-recipe
           '(| (:left-max-size 40)
@@ -5042,6 +5340,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp
   (use-package org
     :ensure t
+    :tags '("VISUAL")
     :config
 
     (setq org-todo-keyword-faces
@@ -5100,12 +5399,14 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 *** Indentation
 #+begin_src emacs-lisp
   (use-package indent-guide
-    :ensure t)
+    :ensure t
+    :tags '("VISUAL"))
 #+end_src
 *** Column/line
 #+begin_src emacs-lisp
   (use-package nlinum
     :ensure t
+    :tags '("VISUAL")
     :disabled t
     :config
     (line-number-mode t)
@@ -5115,6 +5416,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 
   (use-package nlinum-hl
     :ensure t
+    :tags '("VISUAL")
     :after nlinum
     :disabled t
     :config
@@ -5123,6 +5425,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 
   (use-package fill-column-indicator
     :ensure t
+    :tags '("VISUAL")
     :config
 
     ;; Define a global mode but not sure I am going to use it
@@ -5134,18 +5437,19 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 
 *** Paging
 #+begin_src emacs-lisp
-(use-package page-break-lines
-  :ensure t
-  :diminish page-break-lines-mode
-  :config
-  (global-page-break-lines-mode t))
+  (use-package page-break-lines
+    :ensure t
+    :tags '("VISUAL")
+    :diminish page-break-lines-mode
+    :config
+    (global-page-break-lines-mode t))
 #+end_src
 *** Parenthesis
 **** Smart parents
 #+begin_src emacs-lisp
   (use-package smartparens
     :ensure t
-    :after circe
+    :tags '("VISUAL")
     :config
 
     ;; Activate smartparens globally
@@ -5162,6 +5466,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp
   (use-package rainbow-delimiters
     :ensure t
+    :tags '("VISUAL")
     :config
 
     (custom-set-faces
@@ -5170,8 +5475,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 
      ;; show parents (in case of rainbow failing !)
      '(show-paren-match ((t (:foreground "white" :background "green" :weight bold))))
-     '(show-paren-mismatch ((t (:foreground "white" :background "red" :weight bold))))
-     )
+     '(show-paren-mismatch ((t (:foreground "white" :background "red" :weight bold)))))
 
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 #+end_src
@@ -5183,6 +5487,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp
   (use-package diff-hl
     :ensure t
+    :tags '("VISUAL")
     :hook
     (dired-mode . diff-hl-dired-mode-unless-remote)
 
@@ -5282,7 +5587,9 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 *** Scrolling
 #+begin_src emacs-lisp
   (use-package scrollkeeper
+    :ensure quelpa
     :quelpa (scrollkeeper :fetcher github :repo "alphapapa/scrollkeeper.el")
+    :tags '("VISUAL")
     :general ([remap scroll-up-command] #'scrollkeeper-contents-up
               [remap scroll-down-command] #'scrollkeeper-contents-down))
 #+end_src
@@ -5290,6 +5597,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp
   (use-package emojify
     :ensure t
+    :tags '("VISUAL")
     :defer t
     :config
 
@@ -5302,9 +5610,13 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (when (featurep 'emojify)
       (emojify-set-emoji-data)))
 
+  (use-package company-emoji
+    :ensure t
+    :tags '("VISUAL"))
 
-  (use-package company-emoji :ensure t)
-  (use-package flycheck-status-emoji :ensure t)
+  (use-package flycheck-status-emoji
+    :ensure t
+    :tags '("VISUAL"))
 #+end_src
 *** Specific mode cleaning helper
 #+begin_src emacs-lisp
@@ -5317,9 +5629,17 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 ** Icons
 #+begin_src emacs-lisp
-  (use-package all-the-icons :ensure t)
-  (use-package all-the-icons-dired :ensure t)
-  (use-package all-the-icons-ivy :ensure t)
+  (use-package all-the-icons
+    :ensure t
+    :tags '("VISUAL"))
+
+  (use-package all-the-icons-dired
+    :ensure t
+    :tags '("VISUAL"))
+
+  (use-package all-the-icons-ivy
+    :ensure t
+    :tags '("VISUAL"))
 #+end_src
 ** Fonts
 #+begin_src emacs-lisp
@@ -5367,12 +5687,15 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 ** Mode line
 *** Fancy battery
 #+BEGIN_SRC emacs-lisp
-  (use-package fancy-battery :ensure t)
+  (use-package fancy-battery
+    :ensure t
+    :tags '("VISUAL"))
 #+END_SRC
 *** Anzu
 #+BEGIN_SRC emacs-lisp
   (use-package anzu
     :ensure t
+    :tags '("VISUAL")
     :config
     (global-anzu-mode +1))
 #+END_SRC
@@ -5380,21 +5703,23 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+BEGIN_SRC emacs-lisp
   (use-package minions
     :ensure t
+    :tags '("VISUAL")
     :config (minions-mode 1))
 #+END_SRC
 *** Doom modeline
 #+BEGIN_SRC emacs-lisp
   (use-package doom-modeline
-        :ensure t
-        :hook (after-init . doom-modeline-mode)
+    :ensure t
+    :tags '("VISUAL")
+    :hook (after-init . doom-modeline-mode)
 
-        :init
-        (setq doom-modeline-icon t              ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-              doom-modeline-major-mode-icon t   ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
-              doom-modeline-buffer-file-name-style 'truncate-upto-project
-              doom-modeline-persp-name t
-              doom-modeline-checker-simple-format t
-              doom-modeline-env-version t))
+    :init
+    (setq doom-modeline-icon t              ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
+          doom-modeline-major-mode-icon t   ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
+          doom-modeline-buffer-file-name-style 'truncate-upto-project
+          doom-modeline-persp-name t
+          doom-modeline-checker-simple-format t
+          doom-modeline-env-version t))
 #+END_SRC
 * Keys/shortcuts
 ** Mac adaptation
@@ -5598,12 +5923,14 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 *** Commenting
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c C-;") 'comment-region)
-  (dolist (map (list c-mode-map c++-mode-map))
-    (define-key map (kbd "C-c C-;") 'comment-region))
-
   (global-set-key (kbd "C-c C-:") 'uncomment-region)
-  (dolist (map (list c-mode-map c++-mode-map))
-    (define-key map (kbd "C-c C-:") 'uncomment-region))
+
+  (use-package cc-mode
+    :config
+    (dolist (map (list c-mode-base-map c++-mode-map))
+      (define-key map (kbd "C-c C-;") 'comment-region))
+    (dolist (map (list c-mode-base-map c++-mode-map))
+      (define-key map (kbd "C-c C-:") 'uncomment-region)))
 #+end_src
 *** Buffers
 #+begin_src emacs-lisp
@@ -5645,7 +5972,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp
   (use-package scratch-ext
     :ensure t
-    :unless (member (system-name) slm~machine-not-connected)
+    :tags '("CONNECTED")
     :hook (after-init . scratch-ext-restore-last-scratch)
     :config
     ;; Org-mode + start folded buffer
