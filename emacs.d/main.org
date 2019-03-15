@@ -5986,3 +5986,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (set-buffer (get-buffer-create "*scratch*"))
     (set (make-local-variable 'org-startup-folded) t))
 #+end_src
+** Make travis happy
+#+BEGIN_SRC emacs-lisp
+(provide 'init)
+#+END_SRC
