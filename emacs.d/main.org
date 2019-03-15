@@ -699,14 +699,14 @@ With this package I can also manage my system services (tested on archlinux).
 *** Background process configuration
 Starting process in background is really nice to avoid being spammed. So let's make it available
 #+begin_src emacs-lisp
-  (defun my-bpr-on-start (process)
-    "Routine to allow colors in commint buffer"
-    (set-process-filter process 'comint-output-filter))
-
   (use-package bpr
     :ensure t
-    :tags '("CORE")
+    :tags '("PROCESS")
     :config
+    (defun my-bpr-on-start (process)
+      "Routine to allow colors in commint buffer"
+      (set-process-filter process 'comint-output-filter))
+
     (setq bpr-scroll-direction 1
           bpr-show-progress nil
           bpr-colorize-output t
@@ -761,7 +761,7 @@ emacs. This has been proven useful, especially for java editing.
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
-    :tags '("CORE")
+    :tags '("IDE")
     :hook
     (python-mode . lsp)
     :init
@@ -772,7 +772,7 @@ emacs. This has been proven useful, especially for java editing.
 
   (use-package company-lsp
     :ensure t
-    :tags '("CORE")
+    :tags '("IDE")
     :config
     (setq company-lsp-enable-snippet t
           company-lsp-cache-candidates 'auto)
@@ -781,7 +781,7 @@ emacs. This has been proven useful, especially for java editing.
 
   (use-package lsp-ui
     :ensure t
-    :tags '("CORE")
+    :tags '("IDE")
     :config
     (setq lsp-ui-sideline-enable t
           lsp-ui-sideline-show-symbol t
@@ -791,7 +791,7 @@ emacs. This has been proven useful, especially for java editing.
 
   (use-package dap-mode
     :ensure t
-    :tags '("CORE")
+    :tags '("IDE")
     :defer t
     :commands dap-debug
     :after lsp-mode
@@ -831,6 +831,8 @@ configuration here.
   (use-package company
     :ensure t
     :tags '("COMPLETION")
+    :hook
+    (emacs-lisp-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-elisp))))
     :config
 
     ;; Global
@@ -1482,7 +1484,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :defines (anki-editor-mode-map)
     :ensure t
     :disabled t
-    :tags '("ORG" "CONNECTED")
+    :tags '("ORG" "CONNECTED" "PROCESS")
     :pin MELPA
     :hydra
     (anki-editor-hydra (:color teal)
@@ -1516,6 +1518,34 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   ;; org-export-in-background t
   ;; org-export-async-debug t
   ;; org-export-async-init-file (expand-file-name (format "%s/org-export.el" user-emacs-directory)))
+#+end_src
+* Emacs Lisp
+#+begin_src emacs-lisp
+  ;; Disable checking doc
+  (use-package flycheck
+    :tags '("CORE")
+    :config
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
+
+    (flycheck-define-checker proselint
+                             "A linter for prose."
+                             :command ("proselint" source-inplace)
+                             :error-patterns
+                             ((warning line-start (file-name) ":" line ":" column ": "
+                                       (id (one-or-more (not (any " "))))
+                                       (message) line-end))
+                             :modes (text-mode markdown-mode gfm-mode org-mode))
+    )
+
+  ;; Package lint
+  (use-package package-lint
+    :ensure t
+      :tags '("COMPILATION"))
+
+  ;; Pretty print for lisp
+  (use-package ipretty
+    :ensure t
+      :tags '("LANGUAGE"))
 #+end_src
 * Filetype
 Now that we have achieved the global configuration, I am going to focus on the language specific
@@ -2036,40 +2066,6 @@ enough to be on melpa so I use quelpa.
      :tags '("LANGUAGE")
      :after (flycheck ledger-mode))
  #+end_src
-** TODO (E)Lisp
-#+begin_src emacs-lisp
-  ;; Disable checking doc
-  (use-package flycheck
-    :tags '("LANGUAGE")
-    :config
-    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-
-    (flycheck-define-checker proselint
-                             "A linter for prose."
-                             :command ("proselint" source-inplace)
-                             :error-patterns
-                             ((warning line-start (file-name) ":" line ":" column ": "
-                                       (id (one-or-more (not (any " "))))
-                                       (message) line-end))
-                             :modes (text-mode markdown-mode gfm-mode org-mode))
-    )
-
-  ;; Package lint
-  (use-package package-lint
-    :ensure t
-      :tags '("LANGUAGE"))
-
-  ;; Pretty print for lisp
-  (use-package ipretty
-    :ensure t
-      :tags '("LANGUAGE"))
-
-  ;; Completion (FIXME: move back to company configuration)
-  (use-package company
-    :ensure t
-    :tags '("LANGUAGE")
-    :hook (emacs-lisp-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-elisp)))))
-#+end_src
 ** Lua
 #+begin_src emacs-lisp
   (use-package lua-mode
