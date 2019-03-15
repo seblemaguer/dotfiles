@@ -1,5 +1,13 @@
-* PLANNED Meeting with %^{Name}
+* Meeting about %^{something}
 SCHEDULED: %(org-insert-time-stamp (org-read-date t t) t)
 :LOGBOOK:
 - Added: %U
 :END:
+
+** Attendees
+- [X] Sébastien Le Maguer
+- [ ] %?
+
+** Agenda
+
+** Notes
