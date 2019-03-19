@@ -4313,14 +4313,14 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     ;; Formatting / Visual
     (enable-circe-color-nicks)
     (setq lui-time-stamp-position 'right-margin
-          lui-time-stamp-format "%H:%M"
+          lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]"
           lui-fill-type nil)
     (enable-circe-display-images)
 
     (defun my-lui-setup ()
       (setq
        fringes-outside-margins t
-       right-margin-width 5
+       right-margin-width 21
        word-wrap t
        wrap-prefix "    "))
     (add-hook 'lui-mode-hook 'my-lui-setup)
