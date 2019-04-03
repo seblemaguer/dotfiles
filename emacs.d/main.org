@@ -61,7 +61,7 @@ Normally it should be a temporary part
     :quelpa (use-package-tags :fetcher github :repo "seblemaguer/use-package-tags")
     :config
     (setq use-package-tags-enabled
-	  `(("lemagues-laptop" . ("!CONNECTED"))
+	  `(("lemagues-laptop" . ("!REQUIRES_CONNECTION"))
 	    ("stb067" . ("ALL"))
 	    (,use-package-tags-default-host . ("CORE" "!USER")))))
 #+END_SRC
@@ -620,7 +620,7 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
   (use-package prodigy
     :ensure quelpa
     :quelpa (prodigy :fetcher github :repo "seblemaguer/prodigy.el" :branch "auto-start")
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :config
 
     (prodigy-define-service
@@ -1540,7 +1540,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :defines (anki-editor-mode-map)
     :ensure t
     :disabled t
-    :tags '("ORG" "CONNECTED" "PROCESS")
+    :tags '("ORG" "REQUIRES_CONNECTION" "PROCESS")
     :pin MELPA
     :hydra
     (anki-editor-hydra (:color teal)
@@ -4496,7 +4496,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** Message composition
 #+begin_src emacs-lisp
   (use-package message
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :hook
     (message-mode . flyspell-mode)
     (message-mode . disable-global-facilities)
@@ -4515,7 +4515,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   #+begin_src emacs-lisp
     (use-package smtpmail-multi
       :ensure t
-      :tags '("CONNECTED")
+      :tags '("REQUIRES_CONNECTION")
       ;; :ensure-system-package msmtp
       :config
 
@@ -4627,7 +4627,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package notmuch
     :ensure t
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :commands (notmuch)
     :ensure-system-package notmuch
     :ensure-system-package isync
@@ -4720,7 +4720,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ***** Use-package start
 #+begin_src emacs-lisp
   (use-package notmuch-hello
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :config
 
     (setq notmuch-hello-thousands-separator "." ;; Add a thousand separator
@@ -4884,7 +4884,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package sauron-notmuch
     :ensure quelpa
     :quelpa (sauron-notmuch :repo "seblemaguer/sauron-notmuch" :fetcher github)
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :after (sauron notmuch)
     :config
 
@@ -4897,12 +4897,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 **** Integration with org-mode
 #+begin_src emacs-lisp
   (use-package org-notmuch
-    :tags '("CONNECTED"))
+    :tags '("REQUIRES_CONNECTION"))
 #+end_src
 **** Reply/citation
 #+begin_src emacs-lisp
   (use-package notmuch-mua
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :config
     (setq notmuch-mua-cite-function #'message-cite-original-without-signature)
   )
@@ -4911,14 +4911,14 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package counsel-notmuch
     :ensure t
-    :tags '("CONNECTED"))
+    :tags '("REQUIRES_CONNECTION"))
 #+end_src
 ** RSS
 *** Global
 #+begin_src emacs-lisp
   (use-package elfeed
     :ensure t
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :commands (elfeed)
     :bind (([f9] . elfeed))
 
@@ -4933,7 +4933,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package elfeed-org
     :ensure t
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :config
     (when (file-exists-p "~/shared/Dropbox/org/organisation/rss.org")
       (progn
@@ -4990,7 +4990,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 *** Notification part
 #+begin_src emacs-lisp
   (use-package sauron-elfeed
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :config
     (cl-loop for feed in elfeed-feeds
              do (when (member 'mustread (cdr feed))
@@ -5552,7 +5552,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 **** Elfeed
 #+begin_src emacs-lisp
   (use-package elfeed
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :config
     ;; Adapt the faces
     (defface elfeed-must-read-face
@@ -5581,7 +5581,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     )
 
   (use-package youtube-dl
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :config
     (defface elfeed-youtube
       '((t :foreground "#f9f"))
@@ -6006,7 +6006,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+begin_src emacs-lisp
   (use-package scratch-ext
     :ensure t
-    :tags '("CONNECTED")
+    :tags '("REQUIRES_CONNECTION")
     :hook (after-init . scratch-ext-restore-last-scratch)
     :config
     ;; Org-mode + start folded buffer
