@@ -5695,7 +5695,9 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+BEGIN_SRC emacs-lisp
   (use-package fancy-battery
     :ensure t
-    :tags '("VISUAL"))
+    :tags '("VISUAL")
+    :config
+    (fancy-battery-mode))
 #+END_SRC
 *** Anzu
 #+BEGIN_SRC emacs-lisp
@@ -5720,12 +5722,38 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     :hook (after-init . doom-modeline-mode)
 
     :init
-    (setq doom-modeline-icon t              ;; Whether show `all-the-icons' or not (if nil nothing will be showed).
-          doom-modeline-major-mode-icon t   ;; Whether show the icon for major mode. It respects `doom-modeline-icon'.
+    (setq doom-modeline-icon t
+          doom-modeline-major-mode-icon t
           doom-modeline-buffer-file-name-style 'truncate-upto-project
           doom-modeline-persp-name t
           doom-modeline-checker-simple-format t
-          doom-modeline-env-version t))
+
+          ;; Whether display environment version or not
+          doom-modeline-env-version t
+
+          ;; Or for individual languages
+          doom-modeline-env-enable-python t
+          doom-modeline-env-enable-ruby t
+          doom-modeline-env-enable-perl t
+          doom-modeline-env-enable-go t
+          doom-modeline-env-enable-elixir t
+          doom-modeline-env-enable-rust t
+
+          ;; Change the executables to use for the language version string
+          doom-modeline-env-python-executable "python"
+          doom-modeline-env-ruby-executable "ruby"
+          doom-modeline-env-perl-executable "perl"
+          doom-modeline-env-go-executable "go"
+          doom-modeline-env-elixir-executable "iex"
+          doom-modeline-env-rust-executable "rustc"
+
+          ;; Whether display irc notifications or not. Requires `circe' package.
+          doom-modeline-irc t
+          doom-modeline-irc-stylize 'identity
+
+          ;;
+          doom-modeline-checker-simple-format t)
+    )
 #+END_SRC
 * Keys/shortcuts
 ** Mac adaptation
