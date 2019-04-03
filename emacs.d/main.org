@@ -3141,6 +3141,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package git-timemachine
     :ensure t
+    :commands (git-timemachine-toggle)
     :tags '("VC"))
 #+end_src
 *** Send patch by email
@@ -4071,6 +4072,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** Alert
 #+begin_src emacs-lisp
   (use-package alert
+    :ensure t
     :tags '("NOTIFICATION")
     :after sauron
     :config
