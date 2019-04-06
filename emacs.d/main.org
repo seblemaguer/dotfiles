@@ -703,8 +703,14 @@ Starting process in background is really nice to avoid being spammed. So let's m
     :ensure t
     :tags '("PROCESS")
     :config
+
+    (defun encode-cd ()
+      "Encode CD using abcde."
+      (interactive)
+      (bpr-spawn "abcde -1"))
+
     (defun my-bpr-on-start (process)
-      "Routine to allow colors in commint buffer"
+      "Routine to allow colors in comint buffer."
       (set-process-filter process 'comint-output-filter))
 
     (setq bpr-scroll-direction 1
