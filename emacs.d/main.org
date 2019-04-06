@@ -3483,7 +3483,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
              ("Archives"
               (extension "zip" "rar" "gz" "bz2" "tar"))
              ("Multimedia"
-              (extension "ogg" "flv" "mpg" "avi" "mp4" "mp3"))
+              (extension "ogg" "flv" "mpg" "avi" "mp4" "mp3" "mkv" "webm"))
              )))
     )
 #+end_src
