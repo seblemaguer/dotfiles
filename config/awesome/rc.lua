@@ -212,6 +212,7 @@ root.buttons(awful.util.table.join(
 -- }}}
 
 -- {{{ Key bindings
+local rotated = false
 globalkeys = awful.util.table.join(
    -- Improved alt tab
    awful.key({ "Mod1",           }, "Tab", function ()  switcher.switch( 1, "Alt_L", "Tab", "ISO_Left_Tab")  end),
@@ -224,6 +225,18 @@ globalkeys = awful.util.table.join(
    awful.key({ modkey,           }, "l",      function () awful.spawn("xtrlock -b") end,
       {description = "lock", group="system"}),
    awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,                          {description = "shutdown", group="system"}),
+
+   -- XX
+   awful.key({ modkey, "Shift"}, "r", function ()
+         if rotated then
+            awful.spawn("xrandr --output eDP-1 --rotate normal")
+         else
+            awful.spawn("xrandr --output eDP-1 --rotate inverted")
+         end
+         rotated = not rotated
+       end,
+      {description="Rotate the screen (tablet mode)", group="screen"}
+   ),
 
    -- Layout manipulation
    awful.key({ modkey }, "Left", function () awful.client.swap.byidx(  1)    end,               {description = "swap with next client by index", group = "client"}),
