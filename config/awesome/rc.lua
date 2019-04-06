@@ -226,18 +226,6 @@ globalkeys = awful.util.table.join(
       {description = "lock", group="system"}),
    awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,                          {description = "shutdown", group="system"}),
 
-   -- XX
-   awful.key({ modkey, "Shift"}, "r", function ()
-         if rotated then
-            awful.spawn("xrandr --output eDP-1 --rotate normal")
-         else
-            awful.spawn("xrandr --output eDP-1 --rotate inverted")
-         end
-         rotated = not rotated
-       end,
-      {description="Rotate the screen (tablet mode)", group="screen"}
-   ),
-
    -- Layout manipulation
    awful.key({ modkey }, "Left", function () awful.client.swap.byidx(  1)    end,               {description = "swap with next client by index", group = "client"}),
    awful.key({ modkey }, "Right", function () awful.client.swap.byidx( -1)    end,              {description = "swap with previous client by index", group = "client"}),
@@ -279,11 +267,21 @@ globalkeys = awful.util.table.join(
    awful.key({}, "XF86AudioLowerVolume", function() pulseaudio.volumeDown()  end,               {description = "vol -10%", group = "hotkeys"}),
    awful.key({}, "XF86AudioRaiseVolume", function() pulseaudio.volumeUp() end,                  {description = "vol +10%", group = "hotkeys"}),
 
-   -- -- Brightness
-   -- awful.key({ }, "XF86MonBrightnessUp", function () awful.util.spawn("xbacklight -inc 10") end,
-   --           {description = "+10%", group = "hotkeys"}),
-   -- awful.key({ }, "XF86MonBrightnessDown", function () awful.util.spawn("xbacklight -dec 10") end,
-   --           {description = "-10%", group = "hotkeys"}),
+   -- Screen
+   awful.key({ }, "XF86MonBrightnessUp", function () awful.util.spawn("xbacklight -inc 10") end,
+             {description = "+10%", group = "hotkeys"}),
+   awful.key({ }, "XF86MonBrightnessDown", function () awful.util.spawn("xbacklight -dec 10") end,
+             {description = "-10%", group = "hotkeys"}),
+   awful.key({ modkey, "Shift"}, "r", function ()
+         if rotated then
+            awful.spawn("xrandr --output eDP-1 --rotate normal")
+         else
+            awful.spawn("xrandr --output eDP-1 --rotate inverted")
+         end
+         rotated = not rotated
+       end,
+      {description="Rotate the screen (tablet mode)", group="hotkeys"}
+   ),
 
    -- Prompt
    awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,         {description = "run prompt", group = "launcher"}),
