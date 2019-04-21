@@ -1772,16 +1772,17 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package lsp-java
     :ensure t
+    :pin MELPA
     :tags '("LANGUAGE")
-    :requires (lsp-ui-flycheck lsp-ui-sideline)
+    :after lsp
     :hook
-    (java-mode . (lambda () (add-to-list (make-local-variable 'company-backends) 'company-lsp)))
-    (java-mode . lsp-java-enable)
-    (java-mode . flycheck-mode)
-    (java-mode . (lambda () (lsp-ui-flycheck-enable t)))
-    (java-mode . lsp-ui-sideline-mode)
+    (java-mode . lsp)
+
     :config
     (setq lsp-java-save-action-organize-imports nil))
+
+  (use-package dap-java :after (lsp-java))
+  (use-package lsp-java-treemacs :after (treemacs))
 #+end_src
 *** Snippets
 #+begin_src emacs-lisp
