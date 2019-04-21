@@ -768,8 +768,10 @@ emacs. This has been proven useful, especially for java editing.
   (use-package lsp-mode
     :ensure t
     :tags '("IDE")
+    :pin MELPA
     :hook
     (python-mode . lsp)
+    (kotlin-mode . lsp)
     :init
     (setq lsp-before-save-edits t
           lsp-inhibit-message t
@@ -1844,7 +1846,6 @@ enough to be on melpa so I use quelpa.
   (use-package flycheck-kotlin
     :ensure t
     :tags '("LANGUAGE")
-    :after kotlin-mode
     :config
     (flycheck-kotlin-setup))
 #+end_src
