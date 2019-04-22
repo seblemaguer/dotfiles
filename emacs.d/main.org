@@ -110,6 +110,11 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
 #+END_SRC
 ** Hydra
 #+BEGIN_SRC emacs-lisp
+  ;; FIXME: why needed?
+  (use-package lv
+    :ensure t
+    :tags '("CORE"))
+
   (use-package use-package-hydra
     :ensure t
     :tags '("CORE"))
