@@ -3167,6 +3167,12 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :config
     (setq gitpatch-mail-attach-patch-key "C-c i"))
 #+end_src
+*** Exploring repository
+#+BEGIN_SRC emacs-lisp
+  (use-package github-explorer
+    :ensure t
+    :tags '("VC"))
+#+END_SRC
 ** Mercurial
 *** Monky
 #+begin_src emacs-lisp
