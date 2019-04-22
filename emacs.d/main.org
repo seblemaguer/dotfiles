@@ -828,7 +828,6 @@ I do prefer vertical completion, which is why I use extensively Ivy and extensio
     (("M-x" . counsel-M-x)
      ("C-x C-f" . counsel-find-file)))
 
-
   (use-package ivy-rich
     :ensure t
     :config
@@ -853,7 +852,6 @@ configuration here.
           company-show-numbers t
           company-tooltip-limit 20)
 
-
     ;; Facing
     (unless (face-attribute 'company-tooltip :background)
       (set-face-attribute 'company-tooltip nil :background "black" :foreground "gray40")
@@ -868,7 +866,6 @@ configuration here.
 
     ;; Activating globally
     (global-company-mode t))
-
 
   (use-package company-quickhelp
     :ensure t
@@ -2189,7 +2186,7 @@ enough to be on melpa so I use quelpa.
     (use-package pdf-tools
       :ensure t
       :pin MELPA
-      :tags '("LANGUAGE")
+      :tags '("DOCUMENT")
       :bind
       (:map pdf-view-mode-map
             ("/" . hydra-pdftools/body)
