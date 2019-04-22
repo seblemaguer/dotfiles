@@ -1938,6 +1938,7 @@ enough to be on melpa so I use quelpa.
     (define-key LaTeX-mode-map (kbd "C-c C-=") 'align-current))
 #+end_src
 *** Bibtex
+**** Global
 #+begin_src emacs-lisp
   (use-package bibtex
     :tags '("LANGUAGE")
@@ -1971,6 +1972,19 @@ enough to be on melpa so I use quelpa.
           bibtex-autokey-titleword-length 100
           bibtex-autokey-titlewords 1))
 #+end_src
+**** Formatting
+#+BEGIN_SRC emacs-lisp
+  (use-package bibclean-format
+    :ensure t
+    :hook
+    (bibtex-mode . bibclean-format-on-save-mode)
+
+    :commands (bibclean-format)
+
+    :bind
+    (:map bibtex-mode-map
+          ("C-c f" . bibclean-format)))
+#+END_SRC
 *** Completion
 #+begin_src emacs-lisp
   ;; Completion
