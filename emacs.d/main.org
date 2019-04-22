@@ -211,18 +211,11 @@ language (or filetype) but are useful for any edition use-case in emacs.
 ** Undo
 In order to have a better and more visual control of undoing, I use undo-tree.
 #+begin_src emacs-lisp
-  (use-package undo-tree
-    :ensure quelpa
-    :quelpa (undo-tree :fetcher git :url "http://www.dr-qubit.org/git/undo-tree.git")
+  (use-package undo-propose
+    :ensure t
     :tags '("CORE")
-    :commands (undo-tree-visualize)
-    :bind ("C-x u" . undo-tree-visualize)
-    :init
-    (setq undo-tree-visualizer-timestamps nil
-          undo-tree-visualizer-diff t)
-
-    :config
-    (global-undo-tree-mode))
+    :commands (undo-propose)
+    :bind ("C-x u" . undo-propose))
 #+end_src
 ** Minor-mode activation
 I use some minor modes based on some filetypes. This package is an helper which facilitates these
