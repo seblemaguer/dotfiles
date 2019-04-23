@@ -523,7 +523,8 @@ autorunApps =
    {
       "dropbox start",
       "parcellite",
-      "blueman-applet"
+      "blueman-applet",
+      "nm-applet"
    }
 if autorun then
    for app = 1, #autorunApps do
