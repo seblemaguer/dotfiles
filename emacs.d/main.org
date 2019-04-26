@@ -2286,7 +2286,22 @@ enough to be on melpa so I use quelpa.
                   (pdf-isearch-minor-mode)
                   (cua-mode 0)
                   )))
+
+    (use-package pdf-view-restore
+      :ensure t
+      :after pdf-tools
+      :tags '("DOCUMENT")
+      :hook
+      (pdf-view-mode-hook . pdf-view-restore-mode))
   #+end_src
+*** Grepping
+#+BEGIN_SRC emacs-lisp
+  (use-package pdfgrep
+    :ensure t
+      :tags '("DOCUMENT")
+    :config
+    (pdfgrep-mode))
+#+END_SRC
 *** COMMENT Org specific
   #+begin_src emacs-lisp
     (use-package org-pdfview
