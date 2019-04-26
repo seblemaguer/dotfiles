@@ -4989,6 +4989,14 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
     (elfeed-update-background-start))
 #+end_src
+*** Goodies
+#+BEGIN_SRC emacs-lisp
+  (use-package elfeed-goodies
+    :ensure t
+    :tags '("REQUIRES_CONNECTION")
+    :config
+    (elfeed-goodies/setup))
+#+END_SRC
 *** Youtube specificities
 #+begin_src emacs-lisp
   (use-package youtube-dl
@@ -5594,47 +5602,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 
     (dired-rainbow-define log (:inherit default :italic t) ".*\\.log")
     )
-#+end_src
-**** Elfeed
-#+begin_src emacs-lisp
-  (use-package elfeed
-    :tags '("REQUIRES_CONNECTION")
-    :config
-    ;; Adapt the faces
-    (defface elfeed-must-read-face
-      '((((class color) (background light)) (:foreground "#f00"))
-	(((class color) (background dark))  (:foreground "#f00")))
-      "Face used in search mode for titles."
-      :group 'elfeed)
-
-    (defface elfeed-emacs-face
-      '((((class color) (background light)) (:foreground "#090"))
-	(((class color) (background dark))  (:foreground "#090")))
-      "Face used in search mode for titles."
-      :group 'elfeed)
-
-    (defface elfeed-news-face
-      '((((class color) (background light)) (:foreground "#AAA"))
-	(((class color) (background dark))  (:foreground "#AAA")))
-      "Face used in search mode for titles."
-      :group 'elfeed)
-
-    (setq elfeed-search-face-alist
-	  '((unread elfeed-search-unread-title-face)
-	    (mustread elfeed-must-read-face)
-	    (news elfeed-news-face)
-	    (emacs elfeed-emacs-face)))
-    )
-
-  (use-package youtube-dl
-    :tags '("REQUIRES_CONNECTION")
-    :config
-    (defface elfeed-youtube
-      '((t :foreground "#f9f"))
-      "Marks YouTube videos in Elfeed."
-      :group 'elfeed)
-
-    (push '(youtube elfeed-youtube) elfeed-search-face-alist))
 #+end_src
 *** Scrolling
 #+begin_src emacs-lisp
