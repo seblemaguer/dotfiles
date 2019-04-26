@@ -768,7 +768,6 @@ emacs. This has been proven useful, especially for java editing.
     :tags '("IDE")
     :pin MELPA
     :hook
-    (python-mode . lsp)
     (kotlin-mode . lsp)
     :init
     (setq lsp-before-save-edits t
@@ -2366,15 +2365,12 @@ enough to be on melpa so I use quelpa.
 *** Lsp (with microsoft language server)
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-python-ms
-    :ensure quelpa
-    :quelpa (lsp-python-ms :repo "andrew-christianson/lsp-python-ms" :fetcher github)
+    :ensure t
     :tags '("LANGUAGE")
-    :after lsp-mode
     :hook (python-mode . lsp)
     :config
-    (require 'lsp-python-ms) ;; FIXME: why?!
-    (setq lsp-python-ms-executable
-          "/usr/bin/mspyls"))
+    (setq lsp-python-ms-dir "/usr/lib"
+          lsp-python-ms-executable "/usr/bin/mspyls"))
 #+END_SRC
 *** Pipenv
 #+begin_src emacs-lisp
