@@ -1063,30 +1063,30 @@ Prescient helps to sort candidates by last used first and then sorting by length
 
     ;; Todo part
     (setq org-todo-keywords '(;; Baseline sequence
-                              (sequence "NEW(n)" "TODO(t)" "DELEGATED(e)" "WAITING(w)" "PLANNED(p)" "|" "DONE(d)" "CANCELLED(c@/!)" "POSTPONED(o@/!)")
+                              (sequence "TODO(t)" "DELEGATED(e)" "WAITING(w)"  "MEETING(M)" "|" "DONE(d)" "CANCELLED(c@/!)" "POSTPONED(o@/!)")
 
                               ;; Specific "to complete"
-                              (sequence "REVIEW(r)" "MAIL(m)" "|")
+                              (sequence "REVIEW(r)" "RELEASE(R)" "MAIL(m)" "|")
 
                               ;; Note information
-                              (sequence "|" "NOTE(N)" "RELEASE(R)" "EVENT(E)")))
+                              (sequence "|" "NOTE(N)" "EVENT(E)"))
 
-    org-todo-state-tags-triggers '(("CANCELLED" ("CANCELLED" . t))
-                                   ("WAITING"   ("WAITING"   . t))
-                                   ("POSTPONED" ("POSTPONED" . t)))
+          org-todo-state-tags-triggers '(("CANCELLED" ("CANCELLED" . t))
+                                         ("WAITING"   ("WAITING"   . t))
+                                         ("POSTPONED" ("POSTPONED" . t)))
 
-    ;; Priority definition
-    (setq org-highest-priority ?A
+          ;; Priority definition
+          org-highest-priority ?A
           org-lowest-priority ?E
-          org-default-priority ?C)
+          org-default-priority ?C
 
-    ;; Archiving
-    (setq org-archive-mark-done t
+          ;; Archiving
+          org-archive-mark-done t
           org-log-done 'time
-          org-archive-location "%s_archive::* Archived Tasks")
+          org-archive-location "%s_archive::* Archived Tasks"
 
-    ;; Refiling
-    (setq org-refile-targets '((org-agenda-files . (:maxlevel . 6)))
+          ;; Refiling
+          org-refile-targets '((org-agenda-files . (:maxlevel . 6)))
           org-completion-use-ido nil
           org-refile-use-outline-path 'file
           org-outline-path-complete-in-steps nil
@@ -1179,6 +1179,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 
     :bind
     (([f12] . org-agenda)
+
      :map org-agenda-mode-map
      ("v"  . hydra-org-agenda-view/body))
 
@@ -1202,6 +1203,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     (setq org-agenda-include-diary nil
           org-deadline-warning-days 7
           org-timeline-show-empty-dates t
+          org-agenda-span 'day
           org-agenda-category-icon-alist
           `(
             ;; Tools / utils
@@ -1302,19 +1304,34 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package org-super-agenda
     :ensure t
     :tags '("ORG")
-    :disabled t
     :config
     (org-super-agenda-mode)
     (setq org-super-agenda-groups
-          '(
-            (:name "Today"  ; Optionally specify section name
+          '((:name "Today"  ; Optionally specify section name
                    :time-grid t  ; Items that appear on the time grid
-                   :todo "TODAY")  ; Items that have this TODO keyword
-            (:name "Important tasks "
-                   :priority "A")
-            (:name "SynSIG" :tag "SynSIG")
-            (:auto-category t)
-            )))
+                   :scheduled today
+                   :discard (:category "Release"))
+            (:name "Overdue"
+                   :deadline past
+                   :order 1)
+            (:name "Due Today"
+                   :deadline today
+                   :order 2)
+            (:name "Due Soon"
+                   :deadline future
+                   :order 8)
+            (:name "Psst"
+                   :scheduled past
+                   :order 7)
+            (:name "Important"
+                   :tag "Important"
+                   :priority "A"
+                   :order 6)
+            (:name "Releases"
+                   :category "Release"
+                   :order 10)
+            ))
+    )
 #+end_src
 ** Capturing
 *** Global
@@ -5397,9 +5414,8 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     :config
 
     (setq org-todo-keyword-faces
-          '(("NEW"       :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("TODO"      :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("PLANNED"   :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+          '(("TODO"      :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("MEETING"   :foreground "red1"                              :weight bold)
 
             ;; Specific helpers
             ("REVIEW"    :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
