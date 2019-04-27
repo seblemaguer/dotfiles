@@ -225,10 +225,13 @@ globalkeys = awful.util.table.join(
    awful.key({ modkey,           }, "l",      function () awful.spawn("xtrlock -b") end,
       {description = "lock", group="system"}),
    awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,                          {description = "shutdown", group="system"}),
+   
+   -- Screen part
+   awful.key({ modkey,           }, "n",      function () awful.screen.focus_relative(1) end,     {description = "Change the focus of the screen", group="Screen"}),
 
    -- Layout manipulation
-   awful.key({ modkey }, "Left", function () awful.client.swap.byidx(  1)    end,               {description = "swap with next client by index", group = "client"}),
-   awful.key({ modkey }, "Right", function () awful.client.swap.byidx( -1)    end,              {description = "swap with previous client by index", group = "client"}),
+   awful.key({ modkey },            "Left",  function () awful.client.swap.byidx(  1)    end,    {description = "swap with next client by index", group = "client"}),
+   awful.key({ modkey },            "Right", function () awful.client.swap.byidx( -1)    end,    {description = "swap with previous client by index", group = "client"}),
 
 
    -- Tag browsing
@@ -313,13 +316,9 @@ clientkeys = awful.util.table.join(
       {description = "close", group = "client"}),
    awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
       {description = "toggle floating", group = "client"}),
-   awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
-      {description = "move to master", group = "client"}),
-   awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
-      {description = "move to screen", group = "client"}),
    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end,
       {description = "toggle keep on top", group = "client"}),
-   awful.key({ modkey,           }, "n",
+   awful.key({ modkey, "Shift"   }, "m",
       function (c)
          -- The client currently has the input focus, so it cannot be
          -- minimized, since minimized clients can't have the focus.
@@ -331,7 +330,9 @@ clientkeys = awful.util.table.join(
          c.maximized = not c.maximized
          c:raise()
       end ,
-      {description = "maximize", group = "client"})
+      {description = "maximize", group = "client"}),
+   awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end, {description = "move to master", group = "screen"}),
+   awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end, {description = "move to screen", group = "screen"})
 )
 
 -- Bind all key numbers to tags.
