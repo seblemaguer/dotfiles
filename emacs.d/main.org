@@ -1269,28 +1269,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
              ,(format "%s/third_parties/icons/book.png" user-emacs-directory) nil nil :ascent center)
             ("[Pp]rojects?"
              ,(format "%s/third_parties/icons/project.png" user-emacs-directory) nil nil :ascent center)
-            (".*" '(space . (:width (16)))))
-
-          ;; Some commands
-          org-agenda-custom-commands
-          '(
-            ("D" todo "DONE")
-
-            ("w" "Work and administrative"
-             ((agenda)
-              (tags-todo "WORK")
-              (tags-todo "OFFICE")
-              (tags-todo "ADMIN")))
-
-            ("p" "personnal"
-             ((agenda)
-              (tags-todo "PERSONNAL")))
-
-            ("d" "Daily Action List"
-             ((agenda "" ((org-agenda-ndays 1)
-                          (org-agenda-sorting-strategy
-                           '((agenda time-up priority-down tag-up) ))
-                          (org-deadline-warning-days 0)))))))
+            (".*" '(space . (:width (16))))))
 
     (defun org-agenda-cts ()
       (let ((args (get-text-property
@@ -1309,8 +1288,9 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     (setq org-super-agenda-groups
           '((:name "Today"  ; Optionally specify section name
                    :time-grid t  ; Items that appear on the time grid
-                   :scheduled today
-                   :discard (:category "Release"))
+                   :scheduled today)
+
+            ;; Deadlines
             (:name "Overdue"
                    :deadline past
                    :order 1)
@@ -1319,16 +1299,30 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                    :order 2)
             (:name "Due Soon"
                    :deadline future
-                   :order 8)
-            (:name "Psst"
+                   :order 3)
+
+            ;; Schedule
+            (:name "Scheduled, past but opened"
                    :scheduled past
+                   :order 4)
+            (:name "Scheduled in the next couple of days"
+                   :scheduled future
+                   :order 5)
+
+            ;; Some standby thingy
+            (:name "In process"
+                   :todo "WAITING"
                    :order 7)
             (:name "Important"
                    :tag "Important"
                    :priority "A"
-                   :order 6)
+                   :order 8)
+
+
+            ;; CD part
             (:name "Releases"
-                   :category "Release"
+                   :todo "RELEASE"
+                   :scheduled future
                    :order 10)
             ))
     )
@@ -1523,12 +1517,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package ox-beamer
     :tags '("ORG")
-    :after ox
-    :config
-    (defun my-beamer-bold (contents backend info)
-      (when (eq backend 'beamer)
-        (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\textbf" contents)))
-    (add-to-list 'org-export-filter-bold-functions 'my-beamer-bold))
+    :after ox)
 #+end_src
 *** Docbook
 #+begin_src emacs-lisp
