@@ -225,7 +225,7 @@ globalkeys = awful.util.table.join(
    awful.key({ modkey,           }, "l",      function () awful.spawn("xtrlock -b") end,
       {description = "lock", group="system"}),
    awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,                          {description = "shutdown", group="system"}),
-   
+
    -- Screen part
    awful.key({ modkey,           }, "n",      function () awful.screen.focus_relative(1) end,     {description = "Change the focus of the screen", group="Screen"}),
 
@@ -287,8 +287,7 @@ globalkeys = awful.util.table.join(
    ),
 
    -- Prompt
-   awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,         {description = "run prompt", group = "launcher"}),
-
+   awful.key({ modkey }, "r", function () awful.util.spawn("gmrun") end,         {description = "run prompt", group = "launcher"}),
    awful.key({ modkey }, "x",
       function ()
          awful.prompt.run {
