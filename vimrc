@@ -101,6 +101,9 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'phleet/vim-mercenary'
 
+"Language"
+Plugin 'udalov/kotlin-vim'
+
 "Org mode"
 Plugin 'speeddating.vim'
 Plugin 'jceb/vim-orgmode.git'
