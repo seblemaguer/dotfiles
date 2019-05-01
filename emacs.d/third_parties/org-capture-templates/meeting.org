@@ -1,4 +1,4 @@
-* Meeting about %^{something}
+* MEETING Meeting about %^{something}
 SCHEDULED: %(org-insert-time-stamp (org-read-date t t) t)
 :LOGBOOK:
 - Added: %U
