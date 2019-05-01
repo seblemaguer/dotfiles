@@ -102,6 +102,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'phleet/vim-mercenary'
 
 "Language"
+Plugin 'rdolgushin/groovy.vim'
 Plugin 'udalov/kotlin-vim'
 
 "Org mode"
@@ -113,10 +114,9 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'vimwiki/vimwiki'
 
 "Theme "
-Plugin 'dracula/vim'
+Plugin 'john2x/flatui.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-
 
 call vundle#end()
 filetype plugin indent on
@@ -195,8 +195,8 @@ set listchars=nbsp:¬,eol:¶,tab:>-,extends:»,precedes:«,trail:•
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-syntax enable "Enable syntax hl
-:silent! color dracula
+syntax enable "Enable syntax hl"
+:silent! color flatui
 
 set t_Co=256
 
@@ -498,17 +498,6 @@ map <leader>u :TMiniBufExplorer<cr>
 """"""""""""""""""""""""""""""
 let g:vimwiki_list=[{'path':'~/.vim/vimwiki'}]
 
-
-""""""""""""""""""""""""""""""
-" => Git / Mercurial
-""""""""""""""""""""""""""""""
-
-""""""""""""""""""""""""""""""
-" => File tree
-""""""""""""""""""""""""""""""
-
-map <F2> <Esc>:NERDTreeToggle<CR>
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Omni complete functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -535,8 +524,6 @@ au BufNewFile,BufRead *.org set filetype=org
 """"""""""""""""""""""""""""""
 " => Gradle/groovy
 """"""""""""""""""""""""""""""
-Plugin 'rdolgushin/groovy.vim'
-
 au BufNewFile,BufRead *.gradle set filetype=groovy
 
 if exists("current_compiler")
