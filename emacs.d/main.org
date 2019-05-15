@@ -666,24 +666,6 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
       :auto-start t
       :kill-process-buffer-on-stop t)
 
-    (prodigy-define-service
-      :name "DFKI imap notify"
-      :command "imapnotify"
-      :args '("-c" "~/configuration/imapnotify/dfki.js")
-      :tags '(work mail)
-      :stop-signal 'sigterm
-      :auto-start t
-      :kill-process-buffer-on-stop t)
-
-    (prodigy-define-service
-      :name "MMCI imap notify"
-      :command "imapnotify"
-      :args '("-c" "~/configuration/imapnotify/mmci.js")
-      :tags '(work mail)
-      :stop-signal 'sigterm
-      :auto-start t
-      :kill-process-buffer-on-stop t)
-
     (prodigy-enable-auto-start)
     )
 #+end_src
@@ -4593,20 +4575,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                        587
                        "slemaguer@coli.uni-saarland.de"
                        starttls
-                       nil nil nil))
-              (mmci . ("lemaguer"
-                       "mail.mmci.uni-saarland.de"
-                       1025
-                       "lemaguer@mmci.uni-saarland.de"
-                       starttls
-                       nil nil nil))
-              )
+                       nil nil nil)))
 
             smtpmail-multi-associations
             '(("lemagues@tcd.ie" tcd)
               ("sebastien.lemaguer@adaptcentre.ie" adaptgmail)
               ("slemaguer@coli.uni-saarland.de" coli)
-              ("lemaguer@mmci.uni-saarland.de" mmci)
               ("seb.lemaguer@gmail.com" sebgmail))
 
             smtpmail-multi-default-account 'tcd

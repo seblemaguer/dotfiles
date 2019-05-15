@@ -169,60 +169,6 @@ Master :Saarland-remote:
 Slave :Saarland-local:
 Patterns "INBOX" *
 
-
-# ##########################################################################
-# # DFKI
-# ##########################################################################
-IMAPAccount DFKI
-Host imap.dfki.de
-User sele01
-PassCmd "python3 ~/.get_passwd.py 'imap.dfki.de' 'sele01'"
-Port 993
-SSLType IMAPS
-# CertificateFile /etc/ssl/certs/ca-bundle.crt
-
-IMAPStore DFKI-remote
-Account DFKI
-UseNamespace no
-
-MaildirStore DFKI-local
-Path ~/mail/DFKI/
-Inbox ~/mail/DFKI/INBOX
-SubFolders Legacy
-
-Channel DFKI
-Master :DFKI-remote:
-Slave :DFKI-local:
-Patterns "*"
-
-
-##########################################################################
-# MMCI
-##########################################################################
-IMAPAccount MMCI
-Host mail.mmci.uni-saarland.de
-User lemaguer
-PassCmd "python3 ~/.get_passwd.py 'mail.mmci.uni-saarland.de' 'lemaguer'"
-Port 993
-SSLType IMAPS
-# CertificateFile /etc/ssl/certs/ca-bundle.crt
-
-IMAPStore MMCI-remote
-Account MMCI
-UseNamespace yes
-
-MaildirStore MMCI-local
-Path ~/mail/MMCI/
-Inbox ~/mail/MMCI/INBOX
-SubFolders Legacy
-
-Channel MMCI
-Master :MMCI-remote:
-Slave :MMCI-local:
-Patterns "INBOX" *
-
-
-
 # ##########################################################################
 # # Irisa
 # ##########################################################################
