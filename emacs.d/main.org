@@ -4239,6 +4239,14 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :ensure t
     :tags '("OS"))
 #+end_src
+** Execute with shell environment
+https://github.com/purcell/exec-path-from-shell
+#+begin_src emacs-lisp
+  (use-package exec-path-from-shell
+    :ensure t
+    :config
+    (exec-path-from-shell-initialize))
+#+end_src
 ** COMMENT unison interaction
 #+begin_src emacs-lisp
   (use-package unison
@@ -5964,7 +5972,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 *** Buffers
 #+begin_src emacs-lisp
-  (global-set-key (kbd "M-g") 'goto-line)
   (global-set-key (kbd "M-G") 'what-line)
 #+end_src
 *** Windows
