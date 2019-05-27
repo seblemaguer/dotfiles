@@ -5771,12 +5771,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     )
 #+END_SRC
 * Keys/shortcuts
-** Mac adaptation
-#+begin_src emacs-lisp
-(setq mac-option-modifier nil
-      mac-command-modifier 'meta)
-#+end_src
-** Main entry
+** Main Helper
 #+begin_src emacs-lisp
     (defhydra hydra-main (:color teal :hint nil)
   "
