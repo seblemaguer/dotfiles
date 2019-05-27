@@ -343,13 +343,21 @@ I defined this helper to as I like to align equations based on the equal sign.
    (interactive "r")
    (align-regexp begin end "\\(\\s-*\\)=" 1 1 ))
 #+end_src
-** goto-line-preview
+** Goto
+*** Preview
 #+BEGIN_SRC emacs-lisp
   (use-package goto-line-preview
     :ensure t
     :commands (goto-line-preview-goto-line)
     :bind
     (("M-g" . goto-line-preview-goto-line)))
+#+END_SRC
+*** Remember last jump
+#+BEGIN_SRC emacs-lisp
+(use-package goto-last-point
+  :ensure t
+  :bind ("C-<" . goto-last-point)
+  :config (goto-last-point-mode))
 #+END_SRC
 ** Recent file
 Opening recent files is always an easy and fast shortcut. Some files should be ignored though. That
