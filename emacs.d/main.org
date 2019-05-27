@@ -1994,7 +1994,9 @@ enough to be on melpa so I use quelpa.
 
     :bind
     (:map bibtex-mode-map
-          ("C-c f" . bibclean-format)))
+          ("C-c f" . bibclean-format))
+    :config
+    (setq bibclean-format-args '("--max-width" "0" "--align-equal")))
 #+END_SRC
 *** Completion
 #+begin_src emacs-lisp
