@@ -3128,6 +3128,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package magit-todos
     :ensure t
+    :disabled t
     :tags '("VC")
     :commands (magit-todos-mode)
     :hook (magit-mode . magit-todos-mode)
