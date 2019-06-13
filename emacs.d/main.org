@@ -4792,6 +4792,7 @@ https://github.com/purcell/exec-path-from-shell
 
                                      ;; Folder
                                      (:key "p" :name "Saarland inbox" :query "folder:Saarland/INBOX")
+                                     (:key "h" :name "HikoGmail inbox" :query "folder:HikoGmail/INBOX")
                                      (:key "s" :name "SebGmail inbox" :query "folder:SebGmail/INBOX")
                                      (:key "T" :name "TCD inbox" :query "folder:TCD/INBOX")
                                      (:key "A" :name "Adapt inbox" :query "folder:AdaptGmail/INBOX")
