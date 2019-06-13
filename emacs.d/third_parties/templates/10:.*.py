@@ -43,6 +43,8 @@ if __name__ == '__main__':
         parser = argparse.ArgumentParser(description="")
 
         # Add options
+        parser.add_argument("-l", "--log_file", default=None,
+                            help="Logger file")
         parser.add_argument("-v", "--verbosity", action="count", default=0,
                             help="increase output verbosity")
 
@@ -53,18 +55,32 @@ if __name__ == '__main__':
         # Parsing arguments
         args = parser.parse_args()
 
+        # create logger and formatter
+        logger = logging.getLogger()
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
         # Verbose level => logging level
         log_level = args.verbosity
         if (args.verbosity >= len(LEVEL)):
             log_level = len(LEVEL) - 1
-            logging.basicConfig(level=LEVEL[log_level])
+            logger.setLevel(log_level)
             logging.warning("verbosity level is too high, I'm gonna assume you're taking the highest (%d)" % log_level)
         else:
-            logging.basicConfig(level=LEVEL[log_level])
+            logger.setLevel(LEVEL[log_level])
+
+        # create console handler
+        ch = logging.StreamHandler()
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)
+
+        # create file handler
+        if args.log_file is not None:
+            fh = logging.FileHandler(args.log_file)
+            logger.addHandler(fh)
 
         # Debug time
         start_time = time.time()
-        logging.info("start time = " + time.asctime())
+        logger.info("start time = " + time.asctime())
 
         # Running main function <=> run application
         main()
@@ -78,7 +94,7 @@ if __name__ == '__main__':
         sys.exit(0)
     except KeyboardInterrupt as e:  # Ctrl-C
         raise e
-    except SystemExit as e:  # sys.exit()
+    except SystemExit:  # sys.exit()
         pass
     except Exception as e:
         logging.error('ERROR, UNEXPECTED EXCEPTION')
