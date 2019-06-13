@@ -12,13 +12,21 @@ LICENSE
     Created: `(format-time-string "%e %B %Y")`
 """
 
+# System/default
 import sys
 import os
-import traceback
+
+# Arguments
 import argparse
+
+# Messaging/logging
+import traceback
 import time
 import logging
 
+###############################################################################
+# global constants
+###############################################################################
 LEVEL = [logging.WARNING, logging.INFO, logging.DEBUG]
 
 ###############################################################################
