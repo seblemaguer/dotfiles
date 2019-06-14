@@ -5620,7 +5620,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (use-package emojify
     :ensure t
     :tags '("VISUAL")
-    :defer t
+    :hook (circe-chat-mode . emojify-mode)
     :config
 
     (setq emojify-user-emojis
