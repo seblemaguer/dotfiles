@@ -4780,22 +4780,22 @@ https://github.com/purcell/exec-path-from-shell
       ;; Research
       (setq notmuch-saved-searches '(
                                      ;; Quick helpers
-                                     (:key "u" :name "unread" :query "tag:unread")
-                                     (:key "t" :name "today" :query "date:today")
-                                     (:key "f" :name "flagged" :query "tag:flagged")
-                                     (:key "D" :name "Deleted" :query "tag:deleted")
+                                     (:key "u" :name "unread" :query "tag:unread" :search-type tree)
+                                     (:key "t" :name "today" :query "date:today" :search-type tree)
+                                     (:key "f" :name "flagged" :query "tag:flagged" :search-type tree)
+                                     (:key "D" :name "Deleted" :query "tag:deleted" :search-type tree)
 
                                      ;; Classic box
-                                     (:key "i" :name "inbox" :query "tag:inbox")
-                                     (:key "e" :name "sent" :query "tag:sent")
-                                     (:key "d" :name "drafts" :query "tag:draft")
+                                     (:key "i" :name "inbox" :query "tag:inbox" :search-type tree)
+                                     (:key "e" :name "sent" :query "tag:sent" :search-type tree)
+                                     (:key "d" :name "drafts" :query "tag:draft" :search-type tree)
 
                                      ;; Folder
-                                     (:key "p" :name "Saarland inbox" :query "folder:Saarland/INBOX")
-                                     (:key "h" :name "HikoGmail inbox" :query "folder:HikoGmail/INBOX")
-                                     (:key "s" :name "SebGmail inbox" :query "folder:SebGmail/INBOX")
-                                     (:key "T" :name "TCD inbox" :query "folder:TCD/INBOX")
-                                     (:key "A" :name "Adapt inbox" :query "folder:AdaptGmail/INBOX")
+                                     (:key "p" :name "Saarland inbox" :query "folder:Saarland/INBOX" :search-type tree)
+                                     (:key "h" :name "HikoGmail inbox" :query "folder:HikoGmail/INBOX" :search-type tree)
+                                     (:key "s" :name "SebGmail inbox" :query "folder:SebGmail/INBOX" :search-type tree)
+                                     (:key "T" :name "TCD inbox" :query "folder:TCD/INBOX" :search-type tree)
+                                     (:key "A" :name "Adapt inbox" :query "folder:AdaptGmail/INBOX" :search-type tree)
                                      ))
 
     (defun my-count-query (query)
