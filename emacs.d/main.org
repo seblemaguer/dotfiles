@@ -4757,6 +4757,23 @@ https://github.com/purcell/exec-path-from-shell
             (notmuch-search-tag '("-unread"))
           (notmuch-search-tag '("+unread")))))
 
+    ;; Tree shortcuts
+    (define-key notmuch-tree-mode-map "d"
+      (lambda ()
+        "toggle deleted tag for thread"
+        (interactive)
+        (if (member "deleted" (notmuch-tree-get-tags))
+            (notmuch-tree-tag '("-deleted"))
+          (notmuch-tree-tag '("+deleted" "-inbox" "-unread")))))
+
+    (define-key notmuch-tree-mode-map "!"
+      (lambda ()
+        "toggle unread tag for thread"
+        (interactive)
+        (if (member "unread" (notmuch-tree-get-tags))
+            (notmuch-tree-tag '("-unread"))
+          (notmuch-tree-tag '("+unread")))))
+
     (define-key notmuch-show-mode-map "d"
       (lambda ()
         "toggle deleted tag for message"
