@@ -1112,7 +1112,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     "Delete all item that have with prefix DONE."
     (interactive)
     (save-excursion
-      (outmine-show-all)
+      (outline-show-all)
       (goto-char (point-min))
       (if (search-forward-regexp "^[\\*]+ \\(DONE\\|CANCELLED\\)" nil t)
           (progn
@@ -1318,7 +1318,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                    ;; the time-grid.  Yes, this is confusing.  :)
                    (not (eql it 'time))))))
 
-    (org-super-agenda-mode)
+    ;; Create groups
     (setq org-super-agenda-groups
           '((:name "Today"  ; Optionally specify section name
                    :personal-time-grid t  ; Items that appear on the time grid
@@ -1360,6 +1360,10 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                    :scheduled today
                    :order 10)
             ))
+
+
+    ;; Activate mode
+    (org-super-agenda-mode)
     )
 #+end_src
 ** Capturing
