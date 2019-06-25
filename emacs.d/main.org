@@ -5332,13 +5332,79 @@ As I write papers, it is useful to have some helper to start to have the inspira
     :tags '("CONNECTED"))
 #+end_src
 * Visual
-** Global theme
-#+begin_src emacs-lisp
-  (use-package flucui-themes
+** Mode line
+*** Fancy battery
+#+BEGIN_SRC emacs-lisp
+  (use-package fancy-battery
     :ensure t
     :tags '("VISUAL")
     :config
-    (flucui-themes-load-style 'light))
+    (fancy-battery-mode))
+#+END_SRC
+*** Anzu
+#+BEGIN_SRC emacs-lisp
+  (use-package anzu
+    :ensure t
+    :tags '("VISUAL")
+    :config
+    (global-anzu-mode +1))
+#+END_SRC
+*** Minor mode menu
+#+BEGIN_SRC emacs-lisp
+  (use-package minions
+    :ensure t
+    :tags '("VISUAL")
+    :config (minions-mode 1))
+#+END_SRC
+*** Doom modeline
+#+BEGIN_SRC emacs-lisp
+  (use-package doom-modeline
+    :ensure t
+    :tags '("VISUAL")
+    :hook (after-init . doom-modeline-mode)
+
+    :init
+    (setq doom-modeline-icon t
+          doom-modeline-major-mode-icon t
+          doom-modeline-buffer-file-name-style 'truncate-upto-project
+          doom-modeline-persp-name t
+          doom-modeline-checker-simple-format t
+
+          ;; Whether display environment version or not
+          doom-modeline-env-version t
+
+          ;; Or for individual languages
+          doom-modeline-env-enable-python t
+          doom-modeline-env-enable-ruby t
+          doom-modeline-env-enable-perl t
+          doom-modeline-env-enable-go t
+          doom-modeline-env-enable-elixir t
+          doom-modeline-env-enable-rust t
+
+          ;; Change the executables to use for the language version string
+          doom-modeline-env-python-executable "python"
+          doom-modeline-env-ruby-executable "ruby"
+          doom-modeline-env-perl-executable "perl"
+          doom-modeline-env-go-executable "go"
+          doom-modeline-env-elixir-executable "iex"
+          doom-modeline-env-rust-executable "rustc"
+
+          ;; Whether display irc notifications or not. Requires `circe' package.
+          doom-modeline-irc t
+          doom-modeline-irc-stylize 'identity
+
+          ;;
+          doom-modeline-checker-simple-format t)
+    )
+#+END_SRC
+** Global theme
+#+begin_src emacs-lisp
+  (use-package flatfluc-theme
+    :ensure quelpa
+    :quelpa (flatfluc-theme :fetcher github :repo "seblemaguer/flatfluc-theme")
+    :tags '("VISUAL")
+    :config
+    (load-theme 'flatfluc t))
 #+end_src
 ** Frame
 *** Title
@@ -5552,7 +5618,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 
     :config
     (global-diff-hl-mode)
-    (fringe-mode 5))
+    (fringe-mode 10))
 #+end_src
 *** Faces/Colors
 **** COMMENT Terminal
@@ -5705,71 +5771,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
       (add-hook 'after-make-frame-functions #'load-fonts)
     (load-default-fonts))
 #+end_src
-** Mode line
-*** Fancy battery
-#+BEGIN_SRC emacs-lisp
-  (use-package fancy-battery
-    :ensure t
-    :tags '("VISUAL")
-    :config
-    (fancy-battery-mode))
-#+END_SRC
-*** Anzu
-#+BEGIN_SRC emacs-lisp
-  (use-package anzu
-    :ensure t
-    :tags '("VISUAL")
-    :config
-    (global-anzu-mode +1))
-#+END_SRC
-*** Minor mode menu
-#+BEGIN_SRC emacs-lisp
-  (use-package minions
-    :ensure t
-    :tags '("VISUAL")
-    :config (minions-mode 1))
-#+END_SRC
-*** Doom modeline
-#+BEGIN_SRC emacs-lisp
-  (use-package doom-modeline
-    :ensure t
-    :tags '("VISUAL")
-    :hook (after-init . doom-modeline-mode)
-
-    :init
-    (setq doom-modeline-icon t
-          doom-modeline-major-mode-icon t
-          doom-modeline-buffer-file-name-style 'truncate-upto-project
-          doom-modeline-persp-name t
-          doom-modeline-checker-simple-format t
-
-          ;; Whether display environment version or not
-          doom-modeline-env-version t
-
-          ;; Or for individual languages
-          doom-modeline-env-enable-python t
-          doom-modeline-env-enable-ruby t
-          doom-modeline-env-enable-perl t
-          doom-modeline-env-enable-go t
-          doom-modeline-env-enable-elixir t
-          doom-modeline-env-enable-rust t
-
-          ;; Change the executables to use for the language version string
-          doom-modeline-env-python-executable "python"
-          doom-modeline-env-ruby-executable "ruby"
-          doom-modeline-env-perl-executable "perl"
-          doom-modeline-env-go-executable "go"
-          doom-modeline-env-elixir-executable "iex"
-          doom-modeline-env-rust-executable "rustc"
-
-          ;; Whether display irc notifications or not. Requires `circe' package.
-          doom-modeline-irc t
-          doom-modeline-irc-stylize 'identity
-
-          ;;
-          doom-modeline-checker-simple-format t)
-    )
-#+END_SRC
 * Keys/shortcuts
 ** Main Helper
 #+begin_src emacs-lisp
