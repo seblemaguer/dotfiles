@@ -4235,6 +4235,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :ensure t
     :tags '("OS"))
 #+end_src
+** Slurm
+#+BEGIN_SRC emacs-lisp
+ (use-package slurm-mode
+    :ensure quelpa
+    :quelpa (slurm :repo "ffevotte/slurm.el" :fetcher github))
+#+END_SRC
 ** Monitoring
 #+begin_src emacs-lisp
   (use-package symon
