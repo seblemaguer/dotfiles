@@ -1140,9 +1140,9 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :hook
     (org-agenda-finalize . (lambda ()
                              (save-excursion
-                               (color-org-header "me_and_myself:" "ivory")
-                               (color-org-header "adapat_events:" "PaleGreen1")
-                               (color-org-header "Release:" "RosyBrown1"))))
+                               (color-org-header "me_and_myself:" "RosyBrown1")
+                               (color-org-header "adapt_events:" "PaleGreen1"))))
+
     :hydra
     (hydra-org-agenda-view (:color blue :hint none)
                            "
@@ -1201,13 +1201,13 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     ;; Agenda files
     (setq org-agenda-files '())
     (when (file-exists-p "~/shared/Dropbox/org/todo/todo.org")
-      (add-to-list 'org-agenda-files '("~/shared/Dropbox/org/todo/todo.org")))
+      (add-to-list 'org-agenda-files "~/shared/Dropbox/org/todo/todo.org"))
 
     (when (file-exists-p "~/shared/Dropbox/org/organisation/bookmarks.org")
-      (add-to-list 'org-agenda-files '("~/shared/Dropbox/org/organisation/bookmarks.org")))
+      (add-to-list 'org-agenda-files "~/shared/Dropbox/org/organisation/bookmarks.org"))
 
     (when (file-exists-p "~/Calendars")
-      (add-to-list 'org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$")))
+      (setq org-agenda-files (append org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$"))))
 
     ;; Deadline management
     (setq org-agenda-include-diary nil
