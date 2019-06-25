@@ -177,16 +177,6 @@ else
     #############################################################################################################
     export VIMRUNTIME=`vim -e -T dumb --cmd 'exe "set t_cm=\<C-M>" | echo $VIMRUNTIME | quit' | tr -d '\015' `
 
-    # Common profile stuff
-    source ~/.profile
-
-    # Private stuffs
-    if [ -e ~/.private_variables ]
-    then
-        source ~/.private_variables
-    fi
-
-
     #############################################################################################################
     #### Aliases / Helpers
     #############################################################################################################
@@ -226,11 +216,6 @@ fi
 #############################################################################################################
 #### Machine specific
 #############################################################################################################
-# Gradle part (move home for word cluster)
-if [ `hostname | grep -c "\(falken\|jones\)-"` -ge 1 ]
-then
-    export GRADLE_USER_HOME=/local/slemaguer/conf/gradle/
-fi
 
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!

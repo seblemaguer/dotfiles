@@ -6,10 +6,6 @@
 #############################################################################################################
 export VIMRUNTIME=`vim -e -T dumb --cmd 'exe "set t_cm=\<C-M>"|echo $VIMRUNTIME|quit' | tr -d '\015' `
 
-# Include profile variables
-source ~/.profile
-
-
 if ! type "emacs" > /dev/null; then
     export EDITOR=vim
 else
