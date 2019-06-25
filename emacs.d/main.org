@@ -1790,15 +1790,14 @@ enough to be on melpa so I use quelpa.
     :ensure t
     :pin MELPA
     :tags '("LANGUAGE")
-    :after lsp
     :hook
     (java-mode . lsp)
 
     :config
     (setq lsp-java-save-action-organize-imports nil))
 
-  (use-package dap-java :after (lsp-java))
-  (use-package lsp-java-treemacs :after (treemacs))
+  (use-package dap-java)
+  (use-package lsp-java-treemacs)
 #+end_src
 *** Snippets
 #+begin_src emacs-lisp
