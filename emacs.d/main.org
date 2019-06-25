@@ -1128,15 +1128,30 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package org-agenda
     :tags '("ORG")
     :commands (org-agenda)
+    :init
+    (defun color-org-header (tag backcolor)
+      "Highlight the line in org-agenda in the given BACKCOLOR if TAG is present on the line."
+      (interactive)
+      (goto-char (point-min))
+      (while (re-search-forward tag nil t)
+        (add-text-properties (match-beginning 0) (+ (line-end-position) 1)
+                             `(face (:background, backcolor)))))
+
+    :hook
+    (org-agenda-finalize . (lambda ()
+                             (save-excursion
+                               (color-org-header "me_and_myself:" "ivory")
+                               (color-org-header "adapat_events:" "PaleGreen1")
+                               (color-org-header "Release:" "RosyBrown1"))))
     :hydra
     (hydra-org-agenda-view (:color blue :hint none)
                            "
-        _d_: ?d? day        _g_: time grid=?g? _a_: arch-trees
-        _w_: ?w? week       _[_: inactive      _A_: arch-files
-        _t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?
-        _m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?
-        _y_: ?y? year       _q_: quit          _L__l__c_: ?l?
-           "
+          _d_: ?d? day        _g_: time grid=?g? _a_: arch-trees
+          _w_: ?w? week       _[_: inactive      _A_: arch-files
+          _t_: ?t? fortnight  _f_: follow=?f?    _r_: report=?r?
+          _m_: ?m? month      _e_: entry =?e?    _D_: diary=?D?
+          _y_: ?y? year       _q_: quit          _L__l__c_: ?l?
+             "
 
                            ("SPC" org-agenda-reset-view)
                            ("d" org-agenda-day-view
@@ -1360,7 +1375,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
              (file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory)))
 
             ("P" "Personnal calendar" entry
-             (file "~/Calendars/Calendar-Personal.org")
+             (file "~/Calendars/me_and_myself.org")
              (file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory)))
 
             ("r" "RSS" entry
