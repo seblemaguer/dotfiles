@@ -2214,7 +2214,7 @@ enough to be on melpa so I use quelpa.
               (:map pdf-view-mode-map
                     ("/" . hydra-pdftools/body)
                     ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
-                    ((kbd "C-s") . isearch-forward
+                    ("<C-s>" . isearch-forward)
                     ("g"  . pdf-view-first-page)
                     ("G"  . pdf-view-last-page)
                     ("l"  . image-forward-hscroll)
@@ -2428,7 +2428,7 @@ enough to be on melpa so I use quelpa.
   (use-package sphinx-doc
     :ensure t
     :tags '("LANGUAGE")
-    :hool
+    :hook
     (python-mode . (lambda () (sphinx-doc-mode t))))
 #+end_src
 ** R
@@ -2817,7 +2817,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 
     :bind
     (:map eshell-mode-map
-          ((kbd "M-p") . helm-eshell-history))
+          ("<M-p>" . helm-eshell-history))
 
     :config
     (defmacro with-face (STR &rest PROPS)
