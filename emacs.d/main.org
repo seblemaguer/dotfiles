@@ -1294,16 +1294,46 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :ensure t
     :tags '("ORG")
     :config
+
+    ;; Define a dedicated time-gid
+    (org-super-agenda--defgroup personal-time-grid
+      "Group items that appear on a time grid.
+    This matches the `dotime' text-property, which, if NOT set to
+    `time' (I know, this gets confusing), means it WILL appear in the
+    agenda time-grid. "
+      :section-name "Timed items"  ; Note: this does not mean the item has a "SCHEDULED:" line
+      :test (and
+             ;; Exclude Release which are not tagged!
+             (or (not (string= (org-super-agenda--get-category item) "Release"))
+                 (org-find-text-property-in-string 'todo-state item))
+             (or (--when-let (org-find-text-property-in-string 'time item)
+                   ;; This property is a string; if empty, it doesn't match
+                   (not (string-empty-p it)))
+                 ;; This property is nil if it doesn't match
+                 (org-find-text-property-in-string 'time-of-day item)
+                 (--when-let (org-find-text-property-in-string 'dotime item)
+                   ;; For this to match, the 'dotime property must be set, and
+                   ;; it must not be equal to 'time.  If it is not set, or if
+                   ;; it is set and is equal to 'time, the item is not part of
+                   ;; the time-grid.  Yes, this is confusing.  :)
+                   (not (eql it 'time))))))
+
     (org-super-agenda-mode)
     (setq org-super-agenda-groups
           '((:name "Today"  ; Optionally specify section name
-                   :time-grid t  ; Items that appear on the time grid
+                   :personal-time-grid t  ; Items that appear on the time grid
                    :scheduled today)
+
+            ;; Important thing
+            (:name "Important"
+                   :tag "Important"
+                   :priority "A"
+                   :order 1)
 
             ;; Deadlines
             (:name "Overdue"
                    :deadline past
-                   :order 1)
+                   :order 2)
             (:name "Due Today"
                    :deadline today
                    :order 2)
@@ -1323,16 +1353,11 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
             (:name "In process"
                    :todo "WAITING"
                    :order 7)
-            (:name "Important"
-                   :tag "Important"
-                   :priority "A"
-                   :order 8)
-
 
             ;; CD part
             (:name "Releases"
-                   :todo "RELEASE"
-                   :scheduled future
+                   :category "Release"
+                   :scheduled today
                    :order 10)
             ))
     )
