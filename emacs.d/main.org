@@ -162,11 +162,11 @@ This section focus on defining some variables/helpers needed to have a more glob
 
   ;; Silence!!!!!!
   (setq save-abbrevs 'silently
-        ad-redefinition-action 'accept
+	ad-redefinition-action 'accept
 
-        ;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
-        gc-cons-threshold 50000000
-        large-file-warning-threshold 100000000)
+	;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
+	gc-cons-threshold 50000000
+	large-file-warning-threshold 100000000)
 #+END_SRC
 ** Dealing with tangling this file
 This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
@@ -175,7 +175,7 @@ This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org
     "Tangles main.org and byte compiles ~/.emacs.d/"
     (interactive)
     (when (equal (buffer-name)
-                 (concat "main.org"))
+		 (concat "main.org"))
 
       ;; Recompile plugins
       (byte-recompile-directory (expand-file-name slm~plugin-dir) 0)
@@ -1183,19 +1183,16 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 
     :config
 
-    ;; Todo part
+    ;; Agenda files
     (setq org-agenda-files '())
     (when (file-exists-p "~/shared/Dropbox/org/todo/todo.org")
-      (setq org-agenda-files
-            (append org-agenda-files '("~/shared/Dropbox/org/todo/todo.org"))))
+      (add-to-list 'org-agenda-files '("~/shared/Dropbox/org/todo/todo.org")))
 
     (when (file-exists-p "~/shared/Dropbox/org/organisation/bookmarks.org")
-      (setq org-agenda-files
-            (append org-agenda-files '("~/shared/Dropbox/org/organisation/bookmarks.org"))))
+      (add-to-list 'org-agenda-files '("~/shared/Dropbox/org/organisation/bookmarks.org")))
 
     (when (file-exists-p "~/Calendars")
-      (setq org-agenda-files
-            (append org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$"))))
+      (add-to-list 'org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$")))
 
     ;; Deadline management
     (setq org-agenda-include-diary nil
