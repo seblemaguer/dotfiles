@@ -2180,6 +2180,7 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package poly-markdown
     :ensure t
+    :disabled t
     :tags '("LANGUAGE"))
 #+end_src
 ** PDF
