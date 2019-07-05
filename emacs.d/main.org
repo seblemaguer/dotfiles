@@ -3895,6 +3895,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                       (mode . mail-mode)
                       (mode . notmuch-show-mode)
                       (mode . notmuch-search-mode)
+                      (mode . notmuch-tree-mode)
                       (mode . notmuch-hello-mode)
                       (name . "^\.bbdb$")
                       (name . "^\.newsrc-dribble")))
@@ -4667,6 +4668,7 @@ https://github.com/purcell/exec-path-from-shell
           message-citation-line-function 'message-insert-formatted-citation-line
           message-citation-line-format  "\n\n-----------------------\nOn %a, %b %d %Y (%-H:%M %Z), %N wrote:\n"
           message-sendmail-f-is-evil nil
+          message-kill-buffer-on-exit t
           message-signature-file (format "%s/third_parties/mail/signature" user-emacs-directory)
           message-fill-column 100)
     )
