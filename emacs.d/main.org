@@ -2469,6 +2469,7 @@ enough to be on melpa so I use quelpa.
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-python-ms
     :ensure t
+    :demand
     :tags '("LANGUAGE" "IDE")
     :hook (python-mode . lsp)
     :config
