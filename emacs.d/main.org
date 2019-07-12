@@ -1140,8 +1140,8 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :hook
     (org-agenda-finalize . (lambda ()
                              (save-excursion
-                               (color-org-header "me_and_myself:" "RosyBrown1")
-                               (color-org-header "adapt_events:" "PaleGreen1"))))
+                               (color-org-header "CalendarMe:" "RosyBrown1")
+                               (color-org-header "CalendarAdapt:" "PaleGreen1"))))
 
     :hydra
     (hydra-org-agenda-view (:color blue :hint none)
@@ -1465,7 +1465,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
              (file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory)))
 
             ("P" "Personnal calendar" entry
-             (file "~/Calendars/me_and_myself.org")
+             (file "~/Calendars/CalendarMe.org")
              (file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory)))
 
             ("r" "RSS" entry
