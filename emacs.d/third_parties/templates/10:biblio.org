@@ -1,0 +1,16 @@
+#+TITLE: Bibliography for the project "${1:project_name}"
+#+AUTHOR: `user-full-name`
+#+EMAIL: `user-mail-address`
+#+DATE: `(format-time-string "%e %B %Y")`
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  fr
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/default.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
+
+$0
+
+* COMMENT some extra configuration
