@@ -5630,25 +5630,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 *** Column/line
 #+begin_src emacs-lisp
-  (use-package nlinum
-    :ensure t
-    :tags '("VISUAL")
-    :disabled t
-    :config
-    (line-number-mode t)
-    (column-number-mode t)
-    (global-nlinum-mode t)
-    (size-indication-mode t))
-
-  (use-package nlinum-hl
-    :ensure t
-    :tags '("VISUAL")
-    :after nlinum
-    :disabled t
-    :hook
-    (nlinum-mode . (lambda () (setq nlinum-highlight-current-line t))))
-
-
   (use-package fill-column-indicator
     :ensure t
     :tags '("VISUAL")
@@ -5659,6 +5640,10 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
       global-fci-mode fci-mode
       (lambda ()
         (fci-mode 1))))
+
+  ;; See column-number
+  (column-number-mode t)
+  (size-indication-mode t)
 #+end_src
 
 *** Paging
