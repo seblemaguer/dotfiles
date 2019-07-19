@@ -3015,8 +3015,8 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
   (use-package eshell-fringe-status
     :ensure t
     :tags '("SHELL")
-    :config
-    (add-hook 'eshell-mode-hook 'eshell-fringe-status-mode))
+    :hook
+    (eshell-mode . eshell-fringe-status-mode))
 #+end_src
 ** Fish completion
 #+begin_src emacs-lisp
@@ -3026,30 +3026,6 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     :ensure-system-package fish
     :config
     (global-fish-completion-mode))
-#+end_src
-** Some helpers
-#+begin_src emacs-lisp
-  (defun eshell/clear ()
-    "Clear the eshell buffer."
-    (let ((inhibit-read-only t))
-      (erase-buffer)
-      (eshell-send-input)))
-
-  (defun clipboard/set (astring)
-    "Copy a string to clipboard"
-    (with-temp-buffer
-      (insert astring)
-      (clipboard-kill-region (point-min) (point-max))))
-
-  (defun eshell/copy-pwd ()
-    "Copy current directory to clipboard "
-    (clipboard/set (eshell/pwd)))
-
-  (defun eshell/copy-fpath (fname)
-    "Copy file name with full path to clipboard "
-    (let ((fpath (concat (eshell/pwd) "/" fname)))
-      (clipboard/set fpath)
-      (concat "Copied path: " fpath)))
 #+end_src
 ** Some toggling
 #+BEGIN_SRC emacs-lisp
@@ -3065,7 +3041,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     (eshell-toggle-init-function #'eshell-toggle-init-eshell)
 
     :bind
-    ("<f3>" . eshell-toggle))
+    ("<f6>" . eshell-toggle))
 #+END_SRC
 * Project management
 ** Configuration projectile
@@ -6035,40 +6011,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     ("t"   show-my-travis-projects)
     ("q"   nil "cancel" :color blue))
   (global-set-key (kbd "<f4>") 'hydra-project/body)
-#+end_src
-** Shell/terminal
-#+begin_src emacs-lisp
-  ;; Function coming from here: http://www.howardism.org/Technical/Emacs/eshell-fun.html
-  (defun eshell-here ()
-    "Opens up a new shell in the directory associated with the
-  current buffer's file. The eshell is renamed to match that
-  directory to make multiple eshell windows easier."
-    (interactive)
-    (let* ((parent (if (buffer-file-name)
-                       (file-name-directory (buffer-file-name))
-                     default-directory))
-           (height (/ (window-total-height) 3))
-           (name   (car (last (split-string parent "/" t)))))
-      (split-window-vertically (- height))
-      (other-window 1)
-      (if (get-buffer (concat "*eshell: " name "*"))
-          (switch-to-buffer (concat "*eshell: " name "*"))
-        (progn (eshell "new") (rename-buffer (concat "*eshell: " name "*"))))
-      ))
-
-  (defhydra hydra-shell (:color teal :hint nil)
-    "
-       Shell
-
-  ------------------------------------------------------------------------------------------
-  _p_: start (projectile)
-  _h_: start (here)
-  "
-    ("p"      projectile-run-eshell)
-    ("h"      eshell-here)
-    ("<ESC>"  nil "quit" :color blue)
-    ("q"      nil "cancel" :color blue))
-  (global-set-key (kbd "<f6>") 'hydra-shell/body)
 #+end_src
 ** Global keys
 *** Compilation
