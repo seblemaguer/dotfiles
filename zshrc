@@ -151,7 +151,7 @@ else
         $'████ ▏' $'████▎▏' $'████▍▏' $'████▌▏' $'████▋▏' $'████▊▏' $'████▉▏' $'█████▏'
     )
 
-    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=('status' 'background_jobs' 'root_indicator' 'dir' 'vcs')
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=('status' 'background_jobs' 'context' 'dir' 'vcs')
     POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=('load' 'ram' 'battery' 'history' 'todo' 'time')
 
     # Distro specific
@@ -193,7 +193,7 @@ else
     # Network
     alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
 
-    # Keyboard switch
+    # Keyboard switch french/bulgarian
     setxkbmap -layout "fr,bg" -variant ",phonetic" -option "grp:ctrls_toggle"
 
     #############################################################################################################
