@@ -3189,8 +3189,32 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
       :ensure t
       :tags '("VC")
       :commands (magit)
-      :hook
-      (magit-mode . (lambda () (local-set-key (kbd "o") 'magit-open-repo)))
+      :hydra
+      (hydra-magit (:color teal :hint nil)
+
+                   "
+              Magit: %(magit-get \"remote\" \"origin\" \"url\")
+
+         Status/Info      Remote          Operations
+        ------------------------------------------------------------------------------------------
+        _s_: Status      _f_: Pull       _c_: commit
+        _l_: Log all     _p_: Push
+        _d_: Diff
+        _t_: timeline
+        "
+                   ("<ESC>" nil "quit")
+                   ("<" hydra-project/body "back")
+                   ("f" magit-pull-branch)
+                   ("p" magit-push-other)
+                   ("c" magit-commit-create)
+                   ("d" magit-diff-range)
+                   ("l" magit-log-all)
+                   ("s" magit-status)
+                   ("t" git-timeline)
+                   ("q"   nil "cancel" :color blue))
+      :bind
+      (:map magit-mode-map
+            ("o" . magit-open-repo))
 
       :config
 
@@ -3272,7 +3296,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
           (progn
             (browse-url (parse-url url))
             (message "opening repo %s" url))))
-  )
+      )
 #+end_src
 **** Diff
 #+begin_src emacs-lisp
@@ -5973,28 +5997,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 ** Project/Version control
 #+begin_src emacs-lisp
-  (defhydra hydra-magit (:color teal :hint nil)
-    "
-          Magit: %(magit-get \"remote\" \"origin\" \"url\")
-
-     Status/Info      Remote          Operations
-    ------------------------------------------------------------------------------------------
-    _s_: Status      _f_: Pull       _c_: commit
-    _l_: Log all     _p_: Push
-    _d_: Diff
-    _t_: timeline
-    "
-    ("<ESC>" nil "quit")
-    ("<" hydra-project/body "back")
-    ("f" magit-pull-branch)
-    ("p" magit-push-other)
-    ("c" magit-commit-create)
-    ("d" magit-diff-range)
-    ("l" magit-log-all)
-    ("s" magit-status)
-    ("t" git-timeline)
-    ("q"   nil "cancel" :color blue))
-
   (defhydra hydra-flycheck (:pre (progn (setq hydra-lv t) (flycheck-list-errors))
                                  :post (progn (setq hydra-lv nil) (quit-windows-on "*Flycheck errors*"))
                                  :color teal
