@@ -624,6 +624,14 @@ fill-column for example.
   ;; Redefine fill-column as my screen is not 80 chars :D
   (setq-default fill-column 100)
 #+end_src
+
+*** format-all
+#+begin_src emacs-lisp
+  (use-package format-all
+    :ensure t
+    :defer t)
+#+end_src
+
 ** Process management
 I want to have some services and processes managed directly in emacs. This services/processes are
 closely related to my emacs use and there have to be shutdown when emacs is stopping.
