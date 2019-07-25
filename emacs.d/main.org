@@ -142,6 +142,7 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
   (use-package auto-package-update
     :ensure t
     :tags '("CORE")
+    :disabled t
     :config
     (setq auto-package-update-delete-old-versions t
           auto-package-update-hide-results t)
