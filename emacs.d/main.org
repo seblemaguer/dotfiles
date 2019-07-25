@@ -1929,7 +1929,7 @@ enough to be on melpa so I use quelpa.
     (setq lsp-java-save-action-organize-imports nil))
 
   (use-package dap-java)
-  (use-package lsp-java-treemacs)
+  (use-package lsp-java-treemacs :disabled t)
 #+end_src
 *** Snippets
 #+begin_src emacs-lisp
@@ -2937,7 +2937,6 @@ Extracted from https://github.com/zakame/emacs-for-javascript
             ,(format "%s/local/man" user-emacs-directory) ;; Private environment
             )))
 #+end_src
-
 * Shell
 ** Global
 The key configuration is mainly coming from https://github.com/jcf/emacs.d the rest is coming from http://www.modernemacs.com/post/custom-eshell/ with some adaptation
