@@ -3133,12 +3133,50 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
           org-agenda-files
           (append org-agenda-files (org-projectile-todo-files))))
 #+end_src
-** COMMENT Completion
+** Completion
 #+begin_src emacs-lisp
   (use-package counsel-projectile
     :ensure t
     :tags '("PROJECT")
-    :after projectile)
+    :after projectile
+    :hydra
+    (hydra-projectile (:color teal :hint nil)
+                      "
+         PROJECTILE: %(projectile-project-root)
+
+         Find File            Search/Tags          Buffers                Cache
+    ------------------------------------------------------------------------------------------
+    _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache clear
+     _ff_: file dwim       _g_: update gtags      _b_: switch to buffer  _x_: remove known project
+     _fd_: file curr dir   _o_: multi-occur     _s-k_: Kill all buffers  _X_: cleanup non-existing
+      _r_: recent file                                               ^^^^_z_: cache current
+      _d_: dir
+
+    "
+                      ("<ESC>" nil "quit")
+                      ("<" hydra-project/body "back")
+                      ("a"   counsel-projectile-ag)
+                      ("b"   counsel-projectile-switch-to-buffer)
+                      ("c"   counsel-projectile-invalidate-cache)
+                      ("d"   counsel-projectile-find-dir)
+                      ("s-f" counsel-projectile-find-file)
+                      ("ff"  counsel-projectile-find-file-dwim)
+                      ("fd"  counsel-projectile-find-file-in-directory)
+                      ("g"   ggtags-update-tags)
+                      ("s-g" ggtags-update-tags)
+                      ("i"   counsel-projectile-ibuffer)
+                      ("K"   counsel-projectile-kill-buffers)
+                      ("s-k" counsel-projectile-kill-buffers)
+                      ("m"   counsel-projectile-multi-occur)
+                      ("o"   counsel-projectile-multi-occur)
+                      ("s-p" counsel-projectile-switch-project "switch project")
+                      ("p"   counsel-projectile-switch-project)
+                      ("s"   counsel-projectile-switch-project)
+                      ("r"   counsel-projectile-recentf)
+                      ("x"   counsel-projectile-remove-known-project)
+                      ("X"   counsel-projectile-cleanup-known-projects)
+                      ("z"   counsel-projectile-cache-current-file)
+                      ("q"   nil "cancel" :color blue)))
 #+end_src
 * Version control
 ** Git
@@ -5935,64 +5973,17 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 ** Project/Version control
 #+begin_src emacs-lisp
-  (defhydra hydra-projectile-other-window (:color teal)
-    "projectile-other-window"
-    ("f"  projectile-find-file-other-window        "file")
-    ("g"  projectile-find-file-dwim-other-window   "file dwim")
-    ("d"  projectile-find-dir-other-window         "dir")
-    ("b"  projectile-switch-to-buffer-other-window "buffer")
-    ("q"  nil                                      "cancel" :color blue))
-
-  (defhydra hydra-projectile (:color teal :hint nil)
-    "
-       PROJECTILE: %(projectile-project-root)
-
-       Find File            Search/Tags          Buffers                Cache
-  ------------------------------------------------------------------------------------------
-  _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache clear
-   _ff_: file dwim       _g_: update gtags      _b_: switch to buffer  _x_: remove known project
-   _fd_: file curr dir   _o_: multi-occur     _s-k_: Kill all buffers  _X_: cleanup non-existing
-    _r_: recent file                                               ^^^^_z_: cache current
-    _d_: dir
-
-  "
-    ("<ESC>" nil "quit")
-    ("<" hydra-project/body "back")
-    ("a"   projectile-ag)
-    ("b"   projectile-switch-to-buffer)
-    ("c"   projectile-invalidate-cache)
-    ("d"   projectile-find-dir)
-    ("s-f" projectile-find-file)
-    ("ff"  projectile-find-file-dwim)
-    ("fd"  projectile-find-file-in-directory)
-    ("g"   ggtags-update-tags)
-    ("s-g" ggtags-update-tags)
-    ("i"   projectile-ibuffer)
-    ("K"   projectile-kill-buffers)
-    ("s-k" projectile-kill-buffers)
-    ("m"   projectile-multi-occur)
-    ("o"   projectile-multi-occur)
-    ("s-p" projectile-switch-project "switch project")
-    ("p"   projectile-switch-project)
-    ("s"   projectile-switch-project)
-    ("r"   projectile-recentf)
-    ("x"   projectile-remove-known-project)
-    ("X"   projectile-cleanup-known-projects)
-    ("z"   projectile-cache-current-file)
-    ("`"   hydra-projectile-other-window/body "other window" :color blue)
-    ("q"   nil "cancel" :color blue))
-
   (defhydra hydra-magit (:color teal :hint nil)
     "
-        Magit: %(magit-get \"remote\" \"origin\" \"url\")
+          Magit: %(magit-get \"remote\" \"origin\" \"url\")
 
-   Status/Info      Remote          Operations
-  ------------------------------------------------------------------------------------------
-  _s_: Status      _f_: Pull       _c_: commit
-  _l_: Log all     _p_: Push
-  _d_: Diff
-  _t_: timeline
-  "
+     Status/Info      Remote          Operations
+    ------------------------------------------------------------------------------------------
+    _s_: Status      _f_: Pull       _c_: commit
+    _l_: Log all     _p_: Push
+    _d_: Diff
+    _t_: timeline
+    "
     ("<ESC>" nil "quit")
     ("<" hydra-project/body "back")
     ("f" magit-pull-branch)
@@ -6020,14 +6011,14 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 
   (defhydra hydra-project (:color teal :hint nil)
     "
-       Project/Source management
+         Project/Source management
 
-   Projects              Version control        On-the-fly
-  ------------------------------------------------------------------------------------------
-  _d_: dash projects     _m_: magit             _f_: fixme listing
-  _p_: projectile        _t_: travis status     _F_: flycheck
+     Projects              Version control        On-the-fly
+    ------------------------------------------------------------------------------------------
+    _d_: dash projects     _m_: magit             _f_: fixme listing
+    _p_: projectile        _t_: travis status     _F_: flycheck
 
-  "
+    "
     ("<ESC>" nil "quit")
     ("d"   org-dashboard-display)
     ("p"   hydra-projectile/body)
