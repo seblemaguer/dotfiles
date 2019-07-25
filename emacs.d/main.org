@@ -632,6 +632,39 @@ fill-column for example.
     :defer t)
 #+end_src
 
+** Searching
+#+BEGIN_SRC emacs-lisp
+  (use-package double-saber
+    :ensure t
+    :config
+    (with-eval-after-load "ripgrep"
+      (add-hook 'ripgrep-search-mode-hook
+                (lambda ()
+                  (double-saber-mode)
+                  (setq-local double-saber-start-line 5)
+                  (setq-local double-saber-end-text "Ripgrep finished"))))
+
+    (with-eval-after-load "grep"
+      (add-hook 'grep-mode-hook
+                (lambda ()
+                  (double-saber-mode)
+                  (setq-local double-saber-start-line 5)
+                  (setq-local double-saber-end-text "Grep finished"))))
+
+    (with-eval-after-load "ggtags"
+      (add-hook 'ggtags-global-mode-hook
+                (lambda ()
+                  (double-saber-mode)
+                  (setq-local double-saber-start-line 5)
+                  (setq-local double-saber-end-text "Global found")))))
+
+  (with-eval-after-load "ivy"
+    (add-hook 'ivy-occur-grep-mode-hook
+              (lambda ()
+                (double-saber-mode)
+                (setq-local double-saber-start-line 5))))
+#+END_SRC
+
 ** Process management
 I want to have some services and processes managed directly in emacs. This services/processes are
 closely related to my emacs use and there have to be shutdown when emacs is stopping.
