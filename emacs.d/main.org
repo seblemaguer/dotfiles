@@ -6093,6 +6093,14 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (global-set-key (kbd "<home>") 'move-beginning-of-line)
 #+END_SRC
 * Finalization
+** Load private part
+#+begin_src emacs-lisp
+  (defvar private-file "~/.emacs.d/private-variables.el"
+    "Path to the file which stores my configuration.")
+
+  (when (file-exists-p private-file)
+    (load private-file))
+#+end_src
 ** Startup
 #+begin_src emacs-lisp
   (setq inhibit-startup-message t)
