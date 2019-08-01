@@ -61,9 +61,10 @@ Normally it should be a temporary part
     :quelpa (use-package-tags :fetcher github :repo "seblemaguer/use-package-tags")
     :config
     (setq use-package-tags-enabled
-	  `(("lemagues-laptop" . ("!REQUIRES_CONNECTION"))
-	    ("stb067" . ("ALL"))
-	    (,use-package-tags-default-host . ("CORE" "!USER")))))
+          `(("lemagues-laptop" . ("!REQUIRES_CONNECTION"))
+            ("stb067" . ("ALL"))
+            ("mackenzie" . ("!MAIL" "!RSS"))
+            (,use-package-tags-default-host . ("CORE" "!USER")))))
 #+END_SRC
 ** System package dependency interaction
 Adapt the system package manager (for archlinux tool trizen) + enable use-package-ensure-system-package.
@@ -676,7 +677,7 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
   (use-package prodigy
     :ensure quelpa
     :quelpa (prodigy :fetcher github :repo "seblemaguer/prodigy.el" :branch "auto-start")
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
 
     (prodigy-define-service
@@ -4737,7 +4738,7 @@ https://github.com/purcell/exec-path-from-shell
 *** Message composition
 #+begin_src emacs-lisp
   (use-package message
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "MAIL")
     :hook
     (message-mode . flyspell-mode)
     (message-mode . disable-global-facilities)
@@ -4757,7 +4758,7 @@ https://github.com/purcell/exec-path-from-shell
   #+begin_src emacs-lisp
     (use-package smtpmail-multi
       :ensure t
-      :tags '("REQUIRES_CONNECTION")
+      :tags '("REQUIRES_CONNECTION" "MAIL")
       ;; :ensure-system-package msmtp
       :config
 
@@ -4861,7 +4862,7 @@ https://github.com/purcell/exec-path-from-shell
 #+begin_src emacs-lisp
   (use-package notmuch
     :ensure t
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "MAIL")
     :commands (notmuch)
     :ensure-system-package notmuch
     :ensure-system-package isync
@@ -4971,7 +4972,7 @@ https://github.com/purcell/exec-path-from-shell
 ***** Use-package start
 #+begin_src emacs-lisp
   (use-package notmuch-hello
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
 
     (setq notmuch-hello-thousands-separator "." ;; Add a thousand separator
@@ -5136,7 +5137,7 @@ https://github.com/purcell/exec-path-from-shell
   (use-package sauron-notmuch
     :ensure quelpa
     :quelpa (sauron-notmuch :repo "seblemaguer/sauron-notmuch" :fetcher github)
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "MAIL")
     :after (sauron notmuch)
     :config
 
@@ -5149,12 +5150,12 @@ https://github.com/purcell/exec-path-from-shell
 **** Integration with org-mode
 #+begin_src emacs-lisp
   (use-package org-notmuch
-    :tags '("REQUIRES_CONNECTION"))
+    :tags '("REQUIRES_CONNECTION" "MAIL"))
 #+end_src
 **** Reply/citation
 #+begin_src emacs-lisp
   (use-package notmuch-mua
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
     (setq notmuch-mua-cite-function #'message-cite-original-without-signature)
   )
@@ -5163,14 +5164,14 @@ https://github.com/purcell/exec-path-from-shell
 #+begin_src emacs-lisp
   (use-package counsel-notmuch
     :ensure t
-    :tags '("REQUIRES_CONNECTION"))
+    :tags '("REQUIRES_CONNECTION" "MAIL"))
 #+end_src
 ** RSS
 *** Global
 #+begin_src emacs-lisp
   (use-package elfeed
     :ensure t
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "RSS")
     :commands (elfeed)
     :bind (([f9] . elfeed))
 
@@ -5185,7 +5186,7 @@ https://github.com/purcell/exec-path-from-shell
 #+begin_src emacs-lisp
   (use-package elfeed-org
     :ensure t
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "RSS")
     :config
     (when (file-exists-p "~/shared/Dropbox/org/organisation/rss.org")
       (progn
@@ -5199,7 +5200,7 @@ https://github.com/purcell/exec-path-from-shell
 #+BEGIN_SRC emacs-lisp
   (use-package elfeed-goodies
     :ensure t
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "RSS")
     :config
     (elfeed-goodies/setup))
 #+END_SRC
