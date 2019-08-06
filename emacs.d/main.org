@@ -5500,8 +5500,6 @@ organize read papers or "to read" papers. This is mainly based on https://codear
   (use-package org-ref
     :ensure t
     :tags '("ORG")
-    :chords
-    (("uu"  . org-ref-cite-hydra/body))
     :hook
     (org-export-before-parsing . orcp-citeproc)
     :init
