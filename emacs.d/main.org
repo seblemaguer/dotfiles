@@ -4300,34 +4300,80 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :ensure t
     :tags '("NOTIFICATION")
     :after sauron
+    :bind
+    (("<f7>"   . sauron-mode-line-toggle-hide-show)
+     ("C-<f7>" . sauron-mode-line-clear))
+
+    :init
+
+    (defvar sauron-mode-line-current-level 0
+      "The current level associated with the modeline higlight alert.")
+
+    (defvar sauron-mode-line-threshold 1
+      "The mode coloring highlight threshold. If current level is
+      below, mode-line is sticking to its current state.")
+
+    (defface sauron-mode-line-backup-face nil
+      "The face which store the backup default mode."
+      :group 'alert)
+
+    (defun sauron-mode-line-clear ()
+      "Helper to clear the content of the sauron log and reset the mode-line status."
+      (interactive)
+      (progn
+        (when (> sauron-mode-line-current-level sauron-mode-line-threshold)
+          (progn
+            (copy-face 'sauron-mode-line-face 'mode-line)
+            (setq sauron-mode-line-current-level 0)))
+        (sauron-clear)))
+
+    (defun sauron-mode-line-toggle-hide-show ()
+      "Helper to show/hide the sauron part and reset the mode-line status."
+      (interactive)
+      (progn
+        (sauron-toggle-hide-show)
+        (when (> sauron-mode-line-current-level sauron-mode-line-threshold)
+          (progn
+            (copy-face 'backup-mode-line-face 'mode-line)
+            (setq sauron-mode-line-current-level 0)))))
+
     :config
 
-    (defcustom alert-highlight-priorities
-      '((urgent . 5)
-        (high . 4)
+    ;; ==============================================================================================================
+
+    (defcustom sauron-mode-line-priorities
+      '((urgent   . 5)
+        (high     . 4)
         (moderate . 3)
-        (normal . 2)
-        (low . 1)
-        (trivial . 0))
+        (normal   . 2)
+        (low      . 1)
+        (trivial  . 0))
       "A mapping of alert severities onto Growl priority values."
       :type '(alist :key-type symbol :value-type integer)
       :group 'alert)
 
-    (defvar alert-highlight-current-level 0)
-    (defvar alert-highlight-threshold 1)
 
-    (defun alert-adapt-mode-line (info)
+    (defun alert-sauron-notify (info)
+      (sauron-add-event (if (plist-get info :category)
+                          (plist-get info :category)
+                          'unknown)
+                        (cdr (assq (plist-get info :severity) sauron-mode-line-priorities))
+                        (plist-get info :message)
+                        nil)
+      )
 
+
+    (alert-define-style 'sauron :title "Use sauron as a backend for alert"
+                        :notifier #'alert-sauron-notify
+                        )
+
+    ;; ==============================================================================================================
+
+    (defun sauron-mode-line-notifier (info)
+      "Alert mode-line flashing style notifier."
       ;; First time => copy the current mode line face
       (when (<= alert-highlight-current-level alert-highlight-threshold)
         (copy-face 'mode-line 'backup-mode-line-face))
-
-      ;; (message (format "%d >= (%d, %d, %s)"
-      ;; 		     (cdr (assq (plist-get info :severity) alert-highlight-priorities))
-      ;; 		     alert-highlight-current-level
-      ;; 		     alert-highlight-threshold
-      ;; 		     (cdr (assq (plist-get info :severity)
-      ;; 				alert-severity-colors))))
 
       ;; Change the policy
       (when (and (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
