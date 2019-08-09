@@ -154,9 +154,9 @@ This section focus on defining some variables/helpers needed to have a more glob
 ** Define some important variables
 #+BEGIN_SRC emacs-lisp
   ;; Define root directory and add the plugins
-  (defvar slm~plugin-dir (format "%s/plugins" user-emacs-directory)
+  (defvar default-plugin-dir (format "%s/plugins" user-emacs-directory)
     "The plugins directory")
-  (add-to-list 'load-path slm~plugin-dir)
+  (add-to-list 'load-path default-plugin-dir)
 
   ;; Don't screw up my files with custom
   (setq custom-file (format "%s/custom.el" user-emacs-directory))
@@ -173,14 +173,14 @@ This section focus on defining some variables/helpers needed to have a more glob
 ** Dealing with tangling this file
 This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
 #+BEGIN_SRC emacs-lisp
-  (defun slm~tangle-byte-compile-org ()
+  (defun compile-main-org ()
     "Tangles main.org and byte compiles ~/.emacs.d/"
     (interactive)
     (when (equal (buffer-name)
 		 (concat "main.org"))
 
       ;; Recompile plugins
-      (byte-recompile-directory (expand-file-name slm~plugin-dir) 0)
+      (byte-recompile-directory (expand-file-name default-plugin-dir) 0)
 
       ;; Tangle to init.el
       (org-babel-tangle)
@@ -190,7 +190,7 @@ This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org
 
       ))
 
-  ;; (add-hook 'after-save-hook #'slm~tangle-byte-compile-org)
+  ;; (add-hook 'after-save-hook #'compile-main-org)
 #+END_SRC
 ** Identification helper
 Easy use wrapper around auth-* authentification emacs utils
