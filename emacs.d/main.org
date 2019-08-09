@@ -118,6 +118,13 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
 
   (use-package use-package-hydra
     :ensure t
+    :functions
+    (hydra-default-pre
+     hydra-keyboard-quit
+     hydra--call-interactively-remap-maybe
+     hydra-show-hint
+     hydra-set-transient-map)
+
     :tags '("CORE"))
 #+END_SRC
 ** General
@@ -185,11 +192,12 @@ This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org
       ;; Tangle to init.el
       (org-babel-tangle)
 
-      ;; ;; Recompile init file (FIXME: commented as long as org-mode and matlab problem remains!)
-      ;; (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)
-
+      ;; Recompile init file
+      (byte-compile-disable-warning  'make-local) ;; FIXME: apparently people says this warning is simply wrong, so ignore it!
+      (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)
       ))
 
+  ;; TODO Find a way to make it less "time consuming" for user
   ;; (add-hook 'after-save-hook #'compile-main-org)
 #+END_SRC
 ** Identification helper
@@ -298,6 +306,15 @@ https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
     (origami-fold-replacement-face ((t (:inherit magit-diff-context-highlight))))
     (origami-fold-fringe-face ((t (:inherit magit-diff-context-highlight))))
 
+    :functions
+    (origami-recursively-toggle-node
+     origami-toggle-all-nodes
+     origami-toggle-node
+     origami-show-only-node
+     origami-undo
+     origami-redo
+     origami-reset)
+
     :hydra
     (origami-hydra (:color blue :hint none)
                    "
@@ -350,16 +367,17 @@ I defined this helper to as I like to align equations based on the equal sign.
 #+BEGIN_SRC emacs-lisp
   (use-package goto-line-preview
     :ensure t
-    :commands (goto-line-preview-goto-line)
+    :commands (goto-line-preview)
     :bind
-    (("M-g" . goto-line-preview-goto-line)))
+    (("M-g" . goto-line-preview)))
 #+END_SRC
 *** Remember last jump
 #+BEGIN_SRC emacs-lisp
-(use-package goto-last-point
-  :ensure t
-  :bind ("C-<" . goto-last-point)
-  :config (goto-last-point-mode))
+  (use-package goto-last-point
+    :ensure t
+    :functions (goto-last-point-mode)
+    :bind ("C-<" . goto-last-point)
+    :config (goto-last-point-mode))
 #+END_SRC
 ** Recent file
 Opening recent files is always an easy and fast shortcut. Some files should be ignored though. That
@@ -632,7 +650,15 @@ fill-column for example.
     :ensure t
     :defer t)
 #+end_src
-
+*** Specific mode cleaning helper
+#+begin_src emacs-lisp
+  (defun disable-global-facilities ()
+    "Function to disable some utilities globally activated for current buffer"
+    (interactive)
+    (smartparens-mode 0)
+    ;; (nlinum-mode 0)
+    )
+#+end_src
 ** Searching
 #+BEGIN_SRC emacs-lisp
   (use-package double-saber
@@ -872,7 +898,7 @@ I do prefer vertical completion, which is why I use extensively Ivy and extensio
     :ensure t
     :config
     (ivy-rich-mode 1)
-    (setq ivy-format-function #'ivy-format-function-line))
+    (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 #+end_src
 ** Company
 In order to have inline completion, really important for coding, I use company. However I adapted
@@ -919,6 +945,7 @@ configuration here.
   (use-package helm
     :ensure t
     :tags '("COMPLETION")
+    :functions helm-show-completion-default-display-function
     :config
     (setq helm-scroll-amount 4 ; scroll 4 lines other window using M-<next>/M-<prior>
           helm-quick-update t ; do not display invisible candidates
@@ -1614,6 +1641,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package ox-html
     :after ox
     :requires (htmlize)
+    :functions (endless/export-audio-link endless/export-video-link)
     :tags '("ORG")
     :config
     (setq org-html-xml-declaration '(("html" . "")
@@ -1731,6 +1759,10 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   ;; org-export-in-background t
   ;; org-export-async-debug t
   ;; org-export-async-init-file (expand-file-name (format "%s/org-export.el" user-emacs-directory)))
+#+end_src
+** Dashboard
+#+begin_src emacs-lisp
+  (use-package org-dashboard :ensure t)
 #+end_src
 * Emacs Lisp
 #+begin_src emacs-lisp
@@ -2294,6 +2326,7 @@ enough to be on melpa so I use quelpa.
     :ensure matlab-mode
     :tags '("LANGUAGE")
     :defines (matlab-shell-command-switches mlint-programs)
+    :no-require t
     :mode ("\\.m$" . matlab-mode)
     :commands (matlab-shell)
 
@@ -2333,111 +2366,127 @@ enough to be on melpa so I use quelpa.
 ** PDF
 *** Global
   #+begin_src emacs-lisp
-            (use-package pdf-tools
-              :ensure t
-              :pin MELPA
-              :tags '("DOCUMENT")
-              :hook
-              (pdf-view-mode . (lambda ()
-                                 (pdf-misc-size-indication-minor-mode)
-                                 (pdf-links-minor-mode)
-                                 (pdf-isearch-minor-mode)
-                                 (cua-mode 0)))
-              :bind
-              (:map pdf-view-mode-map
-                    ("/" . hydra-pdftools/body)
-                    ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
-                    ("<C-s>" . isearch-forward)
-                    ("g"  . pdf-view-first-page)
-                    ("G"  . pdf-view-last-page)
-                    ("l"  . image-forward-hscroll)
-                    ("h"  . image-backward-hscroll)
-                    ("j"  . pdf-view-next-page)
-                    ("k"  . pdf-view-previous-page)
-                    ("e"  . pdf-view-goto-page)
-                    ("u"  . pdf-view-revert-buffer)
-                    ("al" . pdf-annot-list-annotations)
-                    ("ad" . pdf-annot-delete)
-                    ("aa" . pdf-annot-attachment-dired)
-                    ("am" . pdf-annot-add-markup-annotation)
-                    ("at" . pdf-annot-add-text-annotation)
-                    ("y"  . pdf-view-kill-ring-save)
-                    ("i"  . pdf-misc-display-metadata)
-                    ("s"  . pdf-occur)
-                    ("b"  . pdf-view-set-slice-from-bounding-box)
-                    ("r"  . pdf-view-reset-slice))
+    (use-package pdf-tools
+      :ensure t
+      :pin MELPA
+      :tags '("DOCUMENT")
+      :functions
+      (pdf-history-backward
+       pdf-history-forward
+       pdf-links-action-perfom
+       pdf-links-isearch-link
+       pdf-view-enlarge
+       pdf-view-shrink
+       pdf-view-scale-reset
+       pdf-view-fit-height-to-window
+       pdf-view-fit-width-to-window
+       pdf-view-fit-page-to-window
+       pdf-view-next-page-command
+       pdf-view-previous-page-command
+       pdf-view-dark-minor-mode)
 
-              :hydra
-              (hydra-pdftools (:color blue :hint nil)
-                              "
-                    PDF tools
 
-                 Move  History   Scale/Fit                  Annotations     Search/Link     Do
-              ------------------------------------------------------------------------------------------------
-                   ^^_g_^^      _B_    ^↧^    _+_    ^ ^     _al_: list    _s_: search    _u_: revert buffer
-                   ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤   _am_: markup  _o_: outline   _i_: info
-                   ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^     _at_: text    _F_: link      _d_: dark mode
-                   ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   _ad_: delete  _f_: search link
-              _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_     _aa_: dired
-                   ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   _y_:  yank
-                   ^^_n_^^      ^ ^  _r_eset slice box
-                   ^^^↓^^^
-                   ^^_G_^^
-              "
-                              ("\\" hydra-master/body "back")
-                              ("<ESC>" nil "quit")
-                              ("al" pdf-annot-list-annotations)
-                              ("ad" pdf-annot-delete)
-                              ("aa" pdf-annot-attachment-dired)
-                              ("am" pdf-annot-add-markup-annotation)
-                              ("at" pdf-annot-add-text-annotation)
-                              ("y"  pdf-view-kill-ring-save)
-                              ("+" pdf-view-enlarge :color red)
-                              ("-" pdf-view-shrink :color red)
-                              ("0" pdf-view-scale-reset)
-                              ("H" pdf-view-fit-height-to-window)
-                              ("W" pdf-view-fit-width-to-window)
-                              ("P" pdf-view-fit-page-to-window)
-                              ("n" pdf-view-next-page-command :color red)
-                              ("p" pdf-view-previous-page-command :color red)
-                              ("d" pdf-view-dark-minor-mode)
-                              ("b" pdf-view-set-slice-from-bounding-box)
-                              ("r" pdf-view-reset-slice)
-                              ("g" pdf-view-first-page)
-                              ("G" pdf-view-last-page)
-                              ("e" pdf-view-goto-page)
-                              ("o" pdf-outline)
-                              ("s" pdf-occur)
-                              ("i" pdf-misc-display-metadata)
-                              ("u" pdf-view-revert-buffer)
-                              ("F" pdf-links-action-perfom)
-                              ("f" pdf-links-isearch-link)
-                              ("B" pdf-history-backward :color red)
-                              ("N" pdf-history-forward :color red)
-                              ("l" image-forward-hscroll :color red)
-                              ("h" image-backward-hscroll :color red))
+      :hook
+      (pdf-view-mode . (lambda ()
+                         (pdf-misc-size-indication-minor-mode)
+                         (pdf-links-minor-mode)
+                         (pdf-isearch-minor-mode)
+                         (cua-mode 0)))
 
-              :magic ("%PDF" . pdf-view-mode)
+      :bind
+      (:map pdf-view-mode-map
+            ("/" . hydra-pdftools/body)
+            ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
+            ("<C-s>" . isearch-forward)
+            ("g"  . pdf-view-first-page)
+            ("G"  . pdf-view-last-page)
+            ("l"  . image-forward-hscroll)
+            ("h"  . image-backward-hscroll)
+            ("j"  . pdf-view-next-page)
+            ("k"  . pdf-view-previous-page)
+            ("e"  . pdf-view-goto-page)
+            ("u"  . pdf-view-revert-buffer)
+            ("al" . pdf-annot-list-annotations)
+            ("ad" . pdf-annot-delete)
+            ("aa" . pdf-annot-attachment-dired)
+            ("am" . pdf-annot-add-markup-annotation)
+            ("at" . pdf-annot-add-text-annotation)
+            ("y"  . pdf-view-kill-ring-save)
+            ("i"  . pdf-misc-display-metadata)
+            ("s"  . pdf-occur)
+            ("b"  . pdf-view-set-slice-from-bounding-box)
+            ("r"  . pdf-view-reset-slice))
 
-              :config
-              ;; Install what need to be installed !
-              (pdf-tools-install t t t)
+      :hydra
+      (hydra-pdftools (:color blue :hint nil)
+                      "
+                PDF tools
 
-              ;; open pdfs scaled to fit page
-              (setq-default pdf-view-display-size 'fit-page)
+             Move  History   Scale/Fit                  Annotations     Search/Link     Do
+          ------------------------------------------------------------------------------------------------
+               ^^_g_^^      _B_    ^↧^    _+_    ^ ^     _al_: list    _s_: search    _u_: revert buffer
+               ^^^↑^^^      ^↑^    _H_    ^↑^  ↦ _W_ ↤   _am_: markup  _o_: outline   _i_: info
+               ^^_p_^^      ^ ^    ^↥^    _0_    ^ ^     _at_: text    _F_: link      _d_: dark mode
+               ^^^↑^^^      ^↓^  ╭─^─^─┐  ^↓^  ╭─^ ^─┐   _ad_: delete  _f_: search link
+          _h_ ←pag_e_→ _l_  _N_  │ _P_ │  _-_    _b_     _aa_: dired
+               ^^^↓^^^      ^ ^  ╰─^─^─╯  ^ ^  ╰─^ ^─╯   _y_:  yank
+               ^^_n_^^      ^ ^  _r_eset slice box
+               ^^^↓^^^
+               ^^_G_^^
+          "
+                      ("<ESC>" nil "quit")
+                      ("al" pdf-annot-list-annotations)
+                      ("ad" pdf-annot-delete)
+                      ("aa" pdf-annot-attachment-dired)
+                      ("am" pdf-annot-add-markup-annotation)
+                      ("at" pdf-annot-add-text-annotation)
+                      ("y"  pdf-view-kill-ring-save)
+                      ("+" pdf-view-enlarge :color red)
+                      ("-" pdf-view-shrink :color red)
+                      ("0" pdf-view-scale-reset)
+                      ("H" pdf-view-fit-height-to-window)
+                      ("W" pdf-view-fit-width-to-window)
+                      ("P" pdf-view-fit-page-to-window)
+                      ("n" pdf-view-next-page-command :color red)
+                      ("p" pdf-view-previous-page-command :color red)
+                      ("d" pdf-view-dark-minor-mode)
+                      ("b" pdf-view-set-slice-from-bounding-box)
+                      ("r" pdf-view-reset-slice)
+                      ("g" pdf-view-first-page)
+                      ("G" pdf-view-last-page)
+                      ("e" pdf-view-goto-page)
+                      ("o" pdf-outline)
+                      ("s" pdf-occur)
+                      ("i" pdf-misc-display-metadata)
+                      ("u" pdf-view-revert-buffer)
+                      ("F" pdf-links-action-perfom)
+                      ("f" pdf-links-isearch-link)
+                      ("B" pdf-history-backward :color red)
+                      ("N" pdf-history-forward :color red)
+                      ("l" image-forward-hscroll :color red)
+                      ("h" image-backward-hscroll :color red))
 
-              ;; automatically annotate highlights
-              (setq pdf-annot-activate-created-annotations t)
+      :magic ("%PDF" . pdf-view-mode)
 
-              ;; more fine-grained zooming
-              (setq pdf-view-resize-factor 1.1))
+      :config
+      ;; Install what need to be installed !
+      (pdf-tools-install t t t)
 
-            (use-package pdf-view-restore
-              :ensure t
-              :after pdf-tools
-              :tags '("DOCUMENT")
-              :hook
-              (pdf-view-mode-hook . pdf-view-restore-mode))
+      ;; open pdfs scaled to fit page
+      (setq-default pdf-view-display-size 'fit-page)
+
+      ;; automatically annotate highlights
+      (setq pdf-annot-activate-created-annotations t)
+
+      ;; more fine-grained zooming
+      (setq pdf-view-resize-factor 1.1))
+
+    (use-package pdf-view-restore
+      :ensure t
+      :after pdf-tools
+      :tags '("DOCUMENT")
+      :hook
+      (pdf-view-mode-hook . pdf-view-restore-mode))
   #+end_src
 *** Grepping
 #+BEGIN_SRC emacs-lisp
@@ -2544,18 +2593,11 @@ enough to be on melpa so I use quelpa.
     :tags '("LANGUAGE")
     :config
 
-    (setq ein:complete-on-dot -1)
-
     (cond
      ((eq system-type 'darwin) (setq ein:console-args '("--gui=osx" "--matplotlib=osx" "--colors=Linux")))
      ((eq system-type 'gnu/linux) (setq ein:console-args '("--gui=gtk3" "--matplotlib=gtk3" "--colors=Linux"))))
 
-    (setq ein:query-timeout 1000)
-
-    (defun load-ein ()
-      (interactive)
-      (ein:notebooklist-load)
-      (ein:notebooklist-open)))
+    (setq ein:query-timeout 1000))
 #+end_src
 *** Sphinx documentation
 #+begin_src emacs-lisp
@@ -2948,6 +2990,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     (eshell-mode . (lambda () (eshell/export "NODE_NO_READLINE=1")))
     (eshell-exit . (lambda () (setq esh-prompt-num 0)))
 
+    :functions (eshell/pwd)
     :bind
     (:map eshell-mode-map
           ("<M-p>" . helm-eshell-history))
@@ -3076,6 +3119,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     :quelpa
     (eshell-toggle :repo "4DA/eshell-toggle" :fetcher github :version original)
 
+    :functions (eshell-toggle-init-eshell)
     :custom
     (eshell-toggle-size-fraction 3)
     (eshell-toggle-use-projectile-root t)
@@ -3140,6 +3184,19 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :ensure t
     :tags '("PROJECT")
     :after projectile
+    :functions
+    (counsel-projectile-find-file-in-directory
+     counsel-projectile-ibuffer
+     counsel-projectile-kill-buffers
+     counsel-projectile-multi-occur
+     counsel-projectile-recentf
+     counsel-projectile-remove-known-project
+     counsel-projectile-cleanup-known-projects
+     counsel-projectile-cache-current-file
+     counsel-projectile-invalidate-cache
+     ggtags-update-tags ;; FIXME: a require should be put somewhere maybe
+     )
+
     :hydra
     (hydra-projectile (:color teal :hint nil)
                       "
@@ -3201,7 +3258,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
         _s_: Status      _f_: Pull       _c_: commit
         _l_: Log all     _p_: Push
         _d_: Diff
-        _t_: timeline
+        _t_: timemachine
         "
                    ("<ESC>" nil "quit")
                    ("<" hydra-project/body "back")
@@ -3211,7 +3268,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                    ("d" magit-diff-range)
                    ("l" magit-log-all)
                    ("s" magit-status)
-                   ("t" git-timeline)
+                   ("t" git-timemachine) ;; FIXME: works only if git-timemachine installed
                    ("q"   nil "cancel" :color blue))
       :bind
       (:map magit-mode-map
@@ -3494,9 +3551,8 @@ https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
   (defun emms-clear-playlist-if-any ()
     "Clear emms playlist (coming from: https://www.emacswiki.org/emacs/SimpleEmmsUserInterface )."
     (when emms-playlist-buffer
-      (save-excursion
-        (set-buffer emms-playlist-buffer)
-        (emms-playlist-clear))))
+      (with-current-buffer emms-playlist-buffer)
+        (emms-playlist-clear)))
 
   (defun file-audio-or-video-p (file-path)
     "Detect if the FILE-PATH is pointing to a video/audio file or not."
@@ -3530,6 +3586,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package dired
     :tags '("FILE_MANAGEMENT")
+    :functions
+    (diredp-hide-subdir-nomove
+     diredp-ediff
+     dired-ediff-files
+     dired-do-ispell
+     diredp-compress-this-file)
     :hydra
     (hydra-dired (:hint nil :color pink)
                  "
@@ -3538,7 +3600,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     _D_elete           _o_pen other     _u_nmark           _l_ redisplay      _w_ kill-subdir    C-c C-c : commit
     _R_ename           _M_ chmod        _t_oggle           _g_ revert buf     _e_ ediff          C-c ESC : abort
     _Y_ rel symlink    _G_ chgrp        _E_xtension mark   _s_ort             _=_ pdiff
-    _S_ymlink          ^ ^              _F_ind marked      _._ toggle hydra   \\ flyspell
+    _S_ymlink          ^ ^              _F_ind marked      _._ toggle hydra   \\ ispell
     _r_sync            ^ ^              ^ ^                ^ ^                _?_ summary
     _z_ compress-file  _A_ find regexp
     _Z_ compress       _Q_ repl regexp
@@ -3568,7 +3630,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                  ("o" dired-find-file-other-window)
                  ("Q" dired-do-find-regexp-and-replace)
                  ("R" dired-do-rename)
-                 ("r" dired-do-rsynch)
+                 ("r" dired-do-rsync)
                  ("S" dired-do-symlink)
                  ("s" dired-sort-toggle-or-edit)
                  ("t" dired-toggle-marks)
@@ -3756,6 +3818,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package dired-rsync
     :ensure t
     :tags '("FILE_MANAGEMENT")
+    :functions dired-do-rsync
     :config
     (bind-key "C-c C-r" 'dired-rsync dired-mode-map))
 #+end_src
@@ -3882,7 +3945,9 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :ensure t
     :tags '("FILE_MANAGEMENT")
     :bind (:map global-map
-                ([f8]        . treemacs-toggle))
+                ([f8]        . treemacs))
+    :functions (treemacs-follow-mode treemacs-filewatch-mode)
+
     :config
     (setq treemacs-follow-after-init          t
           treemacs-width                      35
@@ -3905,6 +3970,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package treemacs-projectile
     :ensure t
     :tags '("FILE_MANAGEMENT")
+    :functions treemacs-projectile-create-header
     :after treemacs projectile
     :config
     (setq treemacs-header-function #'treemacs-projectile-create-header))
@@ -3920,7 +3986,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package treemacs-icons-dired
     :tags '("FILE_MANAGEMENT")
-    :after treemacs dired
     :ensure t
     :config (treemacs-icons-dired-mode))
 #+end_src
@@ -4071,6 +4136,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package ibuffer
     :tags '("IBUFFER")
+    :functions ibuffer-quit
     :hook
     (ibuffer-mode . (lambda ()
                       (my-own-ibuffer-hook)
@@ -4364,22 +4430,21 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
 
     (alert-define-style 'sauron :title "Use sauron as a backend for alert"
-                        :notifier #'alert-sauron-notify
-                        )
+                        :notifier #'alert-sauron-notify)
 
     ;; ==============================================================================================================
 
     (defun sauron-mode-line-notifier (info)
       "Alert mode-line flashing style notifier."
       ;; First time => copy the current mode line face
-      (when (<= alert-highlight-current-level alert-highlight-threshold)
+      (when (<= sauron-mode-line-current-level sauron-mode-line-threshold)
         (copy-face 'mode-line 'backup-mode-line-face))
 
       ;; Change the policy
-      (when (and (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
-                    alert-highlight-threshold)
-                 (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
-                    alert-highlight-current-level))
+      (when (and (> (cdr (assq (plist-get info :severity) sauron-mode-line-priorities))
+                    sauron-mode-line-threshold)
+                 (> (cdr (assq (plist-get info :severity) sauron-mode-line-priorities))
+                    sauron-mode-line-current-level))
         (progn
           (set-face-attribute 'mode-line nil
                               :background (cdr (assq (plist-get info :severity)
@@ -4387,10 +4452,10 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           ))
 
       ;; Change current level if this one is upper
-      (when (> (cdr (assq (plist-get info :severity) alert-highlight-priorities))
-               alert-highlight-current-level)
-        (setq alert-highlight-current-level (cdr (assq (plist-get info :severity)
-                                                       alert-highlight-priorities))))
+      (when (> (cdr (assq (plist-get info :severity) sauron-mode-line-priorities))
+               sauron-mode-line-current-level)
+        (setq sauron-mode-line-current-level (cdr (assq (plist-get info :severity)
+                                                       sauron-mode-line-priorities))))
 
       ;; Print the message everytime !
       (alert-message-notify info)
@@ -4400,38 +4465,11 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       :remover  #'alert-message-remove)
 
     (alert-define-style
-     'mode-line-alert
-     :title "Mode-line alert"
-     :notifier 'alert-adapt-mode-line)
+     'sauron-mode-line-style
+     :title "Sauron/flashing mode line style"
+     :notifier 'sauron-mode-line-notifier)
 
-    (setq alert-default-style 'mode-line-alert)
-
-    ;; Link with sauron
-    (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)
-
-    ;; Shortcuts part
-    (defun sauron-alert-clear ()
-      (interactive)
-      (progn
-        (when (> alert-highlight-current-level alert-highlight-threshold)
-          (progn
-            (copy-face 'backup-mode-line-face 'mode-line)
-            (setq alert-highlight-current-level 0)))
-        (sauron-clear)))
-
-    (defun sauron-alert-toggle-hide-show ()
-      (interactive)
-      (progn
-        (sauron-toggle-hide-show)
-        (when (> alert-highlight-current-level alert-highlight-threshold)
-          (progn
-            (copy-face 'backup-mode-line-face 'mode-line)
-            (setq alert-highlight-current-level 0)))))
-
-
-    ;; Shortcuts
-    (global-set-key (kbd "<f7>") 'sauron-alert-toggle-hide-show)
-    (global-set-key (kbd "C-<f7>") 'sauron-alert-clear))
+    (setq alert-default-style 'sauron-mode-line-style))
 #+end_src
 * System
 ** Docker
@@ -4656,7 +4694,6 @@ https://github.com/purcell/exec-path-from-shell
 #+begin_src emacs-lisp
   (use-package lui-autopaste
     :tags '("CONNECTED")
-    :after circe
     :config
     (add-hook 'circe-channel-mode-hook 'enable-lui-autopaste)
     (defvar lui-autopaste-service-gist-url nil
@@ -4674,7 +4711,7 @@ https://github.com/purcell/exec-path-from-shell
                        (when (eq lui-autopaste-service-gist-url
                                  'waiting)
                          (setq lui-autopaste-service-gist-url
-                               (oref gist :html-url))))))
+                               (oref gist :html-url)))))) ;; FIXME: this provokes a Warning: Unknown slot ‘:html-url’
       (let ((wait 0))
         (while (and (< wait 10)
                     (eq lui-autopaste-service-gist-url
@@ -4715,40 +4752,16 @@ https://github.com/purcell/exec-path-from-shell
     :ensure t
     :tags '("CONNECTED")
     :commands (slack-start)
-    :hydra
-    (slack-hydra (:color blue :hint none)
-      "
-        team                       channel                   message              Entry
-        ------------------------------------------------------------------------------------------------
-        _c_: change current team   _s_: select channel       _i_: select im       _S_: start slack
-        _r_: register team         _l_: channel list update  _u_: im list update  _C_: close connections
-                                                                                  _q_: quit hydra
-        "
-      ;; Team
-      ("c" slack-change-current-team)
-      ("r" slack-register-team)
-
-      ;; Channel
-      ("s" slack-channel-select)
-      ("l" slack-channel-list-update)
-
-      ;; Message
-      ("i" slack-im-select)
-      ("u" slack-im-list-update)
-
-      ;; Entry
-      ("S" slack-start)
-      ("C" slack-ws-close)
-
-      ("q"  nil                    "cancel"     :color blue))
-
+    :no-require t
+    :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
     :init
     (setq slack-buffer-emojify t)
 
     :config
 
     ;; Adaptcentre
-    (setq adapt-client-id (replace-regexp-in-string "\\^.*$" "" (my:auth-source-get-user :host "adaptcentre")))
+    (defvar adapt-client-id (replace-regexp-in-string "\\^.*$" "" (my:auth-source-get-user :host "adaptcentre"))
+      "ID for the adapt slack team.")
     (slack-register-team
      :name "adaptcentre"
      :default t
@@ -4759,7 +4772,8 @@ https://github.com/purcell/exec-path-from-shell
      :full-and-display-names t)
 
     ;; Stack b
-    (setq stackb-client-id (replace-regexp-in-string "\\^.*$" "" (my:auth-source-get-user :host "stack-b")))
+    (defvar stackb-client-id (replace-regexp-in-string "\\^.*$" "" (my:auth-source-get-user :host "stack-b"))
+          "ID for the stack-b slack team")
     (slack-register-team
      :name "stack-b"
      :client-id stackb-client-id
@@ -5079,6 +5093,7 @@ https://github.com/purcell/exec-path-from-shell
     :ensure t
     :tags '("REQUIRES_CONNECTION" "RSS")
     :commands (elfeed)
+    :no-require t
     :bind (([f9] . elfeed))
 
     :config
@@ -5093,6 +5108,7 @@ https://github.com/purcell/exec-path-from-shell
   (use-package elfeed-org
     :ensure t
     :tags '("REQUIRES_CONNECTION" "RSS")
+    :no-require t
     :config
     (when (file-exists-p "~/shared/Dropbox/org/organisation/rss.org")
       (progn
@@ -5164,18 +5180,12 @@ https://github.com/purcell/exec-path-from-shell
                   (puthash (car feed) 3 sauron-elfeed-prio-hash))))
 
 #+end_src
-*** Helpers
-#+begin_src emacs-lisp
-(defun elfeed-mark-all-as-read ()
-      (interactive)
-      (mark-whole-buffer)
-      (elfeed-search-untag-all-unread))
-#+end_src
 ** Stackexchange
 #+begin_src emacs-lisp
   (use-package sx
     :ensure t
     :tags '("CONNECTED")
+    :functions (sx-open-link)
     :config
     (bind-keys :prefix "C-c s"
                :prefix-map my-sx-map
@@ -5649,6 +5659,10 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
       (lambda ()
         (fci-mode 1))))
 
+  (use-package visual-fill-column
+    :tags '("VISUAL")
+    :ensure t)
+
   ;; See column-number
   (column-number-mode t)
   (size-indication-mode t)
@@ -5776,37 +5790,29 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 *** Emoji
 #+begin_src emacs-lisp
-  (use-package emojify
-    :ensure t
-    :tags '("VISUAL")
-    :hook (circe-chat-mode . emojify-mode)
-    :config
+    (use-package emojify
+      :ensure t
+      :tags '("VISUAL")
+      :functions (emojify-set-emoji-data)
+      :hook (circe-chat-mode . emojify-mode)
+      :config
 
-    (setq emojify-user-emojis
-          '(("(heart)" . (("name" . "Heart")
-                          ("image" . "~/.emacs.d/emojis/emojione-v2.2.6-22/2665.png")
-                          ("style" . "github")))))
+      (setq emojify-user-emojis
+            '(("(heart)" . (("name" . "Heart")
+                            ("image" . "~/.emacs.d/emojis/emojione-v2.2.6-22/2665.png")
+                            ("style" . "github")))))
 
-    ;; If emojify is already loaded refresh emoji data
-    (when (featurep 'emojify)
-      (emojify-set-emoji-data)))
+      ;; If emojify is already loaded refresh emoji data
+      (when (featurep 'emojify)
+        (emojify-set-emoji-data)))
 
-  (use-package company-emoji
-    :ensure t
-    :tags '("VISUAL"))
+    (use-package company-emoji
+      :ensure t
+      :tags '("VISUAL"))
 
-  (use-package flycheck-status-emoji
-    :ensure t
-    :tags '("VISUAL"))
-#+end_src
-*** Specific mode cleaning helper
-#+begin_src emacs-lisp
-  (defun disable-global-facilities ()
-    "Function to disable some utilities globally activated for current buffer"
-    (interactive)
-    (smartparens-mode 0)
-    ;; (nlinum-mode 0)
-    )
+    (use-package flycheck-status-emoji
+      :ensure t
+      :tags '("VISUAL"))
 #+end_src
 ** Icons
 #+begin_src emacs-lisp
@@ -5903,8 +5909,8 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 ** Project/Version control
 #+begin_src emacs-lisp
-  (defhydra hydra-flycheck (:pre (progn (setq hydra-lv t) (flycheck-list-errors))
-                                 :post (progn (setq hydra-lv nil) (quit-windows-on "*Flycheck errors*"))
+  (defhydra hydra-flycheck (:pre (progn (setq hydra-hint-display-type t) (flycheck-list-errors))
+                                 :post (progn (setq hydra-hint-display-type nil) (quit-windows-on "*Flycheck errors*"))
                                  :color teal
                                  :hint nil)
     "Errors"
