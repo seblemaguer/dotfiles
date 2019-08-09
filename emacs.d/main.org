@@ -177,7 +177,7 @@ This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org
     "Tangles main.org and byte compiles ~/.emacs.d/"
     (interactive)
     (when (equal (buffer-name)
-		 (concat "main.org"))
+                 (concat "main.org"))
 
       ;; Recompile plugins
       (byte-recompile-directory (expand-file-name default-plugin-dir) 0)
@@ -4893,7 +4893,7 @@ https://github.com/purcell/exec-path-from-shell
     )
 #+end_src
 **** Context (mailboxes separation)
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package mu4e-context
     :config
     (setq mu4e-context-policy 'pick-first
@@ -5046,7 +5046,7 @@ https://github.com/purcell/exec-path-from-shell
     )
 #+end_src
 **** Maildir extension part
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package mu4e-maildirs-extension
     :ensure t
     :tags '("REQUIRES_CONNECTION" "MAIL")
