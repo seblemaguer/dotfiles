@@ -4421,19 +4421,17 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       :type '(alist :key-type symbol :value-type integer)
       :group 'alert)
 
-
     (defun alert-sauron-notify (info)
       (sauron-add-event (if (plist-get info :category)
-                          (plist-get info :category)
+                            (plist-get info :category)
                           'unknown)
                         (cdr (assq (plist-get info :severity) sauron-mode-line-priorities))
-                        (plist-get info :message)
-                        nil)
-      )
-
+                        (plist-get info :message)))
 
     (alert-define-style 'sauron :title "Use sauron as a backend for alert"
-                        :notifier #'alert-sauron-notify)
+                        :notifier #'alert-sauron-notify
+                        :continue t
+                        :remover #'alert-message-remove)
 
     ;; ==============================================================================================================
 
@@ -4458,20 +4456,18 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       (when (> (cdr (assq (plist-get info :severity) sauron-mode-line-priorities))
                sauron-mode-line-current-level)
         (setq sauron-mode-line-current-level (cdr (assq (plist-get info :severity)
-                                                       sauron-mode-line-priorities))))
-
+                                                        sauron-mode-line-priorities))))
       ;; Print the message everytime !
-      (alert-message-notify info)
-
-      ;; Removers are optional.  Their job is to remove
-      ;; the visual or auditory effect of the alert.
-      :remover  #'alert-message-remove)
+      (alert-sauron-notify info))
 
     (alert-define-style
      'sauron-mode-line-style
      :title "Sauron/flashing mode line style"
-     :notifier 'sauron-mode-line-notifier)
+     :notifier 'sauron-mode-line-notifier
+     :continue t
+     :remover #'alert-message-remove)
 
+    (setq sauron-min-priority sauron-mode-line-threshold)
     (setq alert-default-style 'sauron-mode-line-style))
 #+end_src
 * System
