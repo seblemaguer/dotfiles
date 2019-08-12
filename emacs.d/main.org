@@ -1276,8 +1276,8 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     (when (file-exists-p "~/shared/Dropbox/org/todo/todo.org")
       (add-to-list 'org-agenda-files "~/shared/Dropbox/org/todo/todo.org"))
 
-    (when (file-exists-p "~/shared/Dropbox/org/organisation/bookmarks.org")
-      (add-to-list 'org-agenda-files "~/shared/Dropbox/org/organisation/bookmarks.org"))
+    ;; (when (file-exists-p "~/shared/Dropbox/org/organisation/bookmarks.org")
+    ;;   (add-to-list 'org-agenda-files "~/shared/Dropbox/org/organisation/bookmarks.org"))
 
     (when (file-exists-p "~/Calendars")
       (setq org-agenda-files (append org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$"))))
