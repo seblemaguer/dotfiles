@@ -3,10 +3,9 @@
 # key: bib_entry
 # --
 
-`(make-string (+ (org-current-level) 1) ?*)` TODO <To fill>
+`(make-string (+ (org-current-level) 1) ?*)` TODO $1
 :PROPERTIES:
-:INTERLEAVE_PDF: ${1:$$(file-relative-name (read-file-name "pdf file path"))}
-:CATEGORY: BIBLIOGRAPHY
+:INTERLEAVE_PDF: ${2:$$(unless yas-modified-p (file-relative-name (read-file-name "pdf file path")))}
 :END:
 
 `(make-string (+ (org-current-level) 2) ?*)` Reference
