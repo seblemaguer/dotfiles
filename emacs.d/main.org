@@ -1109,6 +1109,7 @@ Prescient helps to sort candidates by last used first and then sorting by length
 
     ;; Global
     (setq org-startup-indented t
+          org-startup-folded nil
           org-enforce-todo-dependencies t
           org-cycle-separator-lines 2
           org-blank-before-new-entry '((heading) (plain-list-item . auto))
