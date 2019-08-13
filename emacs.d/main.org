@@ -839,7 +839,8 @@ emacs. This has been proven useful, especially for java editing.
     :tags '("IDE")
     :pin MELPA
     :hook
-    (kotlin-mode . lsp)
+    (kotlin-mode . lsp-deferred)
+    :commands (lsp lsp-deferred)
     :init
     (setq lsp-before-save-edits t
           lsp-inhibit-message t
@@ -849,15 +850,19 @@ emacs. This has been proven useful, especially for java editing.
   (use-package company-lsp
     :ensure t
     :tags '("IDE")
+    :after company lsp-mode
+    :commands company-lsp
+    :init
+    (push 'company-lsp company-backends)
     :config
     (setq company-lsp-enable-snippet t
-          company-lsp-cache-candidates 'auto)
-
-    (push 'company-lsp company-backends))
+          company-lsp-cache-candidates 'auto))
 
   (use-package lsp-ui
     :ensure t
     :tags '("IDE")
+    :after lsp-mode
+    :commands lsp-ui-mode
     :config
     (setq lsp-ui-sideline-enable t
           lsp-ui-sideline-show-symbol t
@@ -868,7 +873,6 @@ emacs. This has been proven useful, especially for java editing.
   (use-package dap-mode
     :ensure t
     :tags '("IDE")
-    :defer t
     :commands dap-debug
     :after lsp-mode
     :init
@@ -1597,7 +1601,8 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package jupyter
     :ensure t
     :tags '("ORG" "USER")
-    :config
+    :defer t
+    :init
     (org-babel-do-load-languages 'org-babel-load-languages
                                  '((jupyter . t))))
 
@@ -1965,7 +1970,7 @@ enough to be on melpa so I use quelpa.
     :config
     (setq lsp-java-save-action-organize-imports nil))
 
-  (use-package dap-java)
+  (use-package dap-java :disabled t)
   (use-package lsp-java-treemacs :disabled t)
 #+end_src
 *** Snippets
@@ -2231,6 +2236,7 @@ enough to be on melpa so I use quelpa.
   (use-package auctex-latexmk
     :ensure t
     :tags '("LANGUAGE")
+    :after (tex latex)
     :config
     (setq auctex-latexmk-inherit-TeX-PDF-mode t)
     (auctex-latexmk-setup))
@@ -2243,14 +2249,14 @@ enough to be on melpa so I use quelpa.
     \\{TeX-output-mode-map} "
     :syntax-table nil
     (set (make-local-variable 'revert-buffer-function)
-	 #'TeX-output-revert-buffer)
+         #'TeX-output-revert-buffer)
 
     (set (make-local-variable 'font-lock-defaults)
-	 '((("^!.*" . font-lock-warning-face) ; LaTeX error
-	    ("^-+$" . font-lock-builtin-face) ; latexmk divider
-	    ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-builtin-face)
-	    ;; .....
-	    )))
+         '((("^!.*" . font-lock-warning-face) ; LaTeX error
+            ("^-+$" . font-lock-builtin-face) ; latexmk divider
+            ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-builtin-face)
+            ;; .....
+            )))
 
     ;; special-mode makes it read-only which prevents input from TeX.
     (setq buffer-read-only nil))
@@ -2567,8 +2573,8 @@ enough to be on melpa so I use quelpa.
     :ensure t
     :demand
     :tags '("LANGUAGE" "IDE")
-    :hook (python-mode . lsp)
-    :config
+    :hook (python-mode . lsp-deferred)  ; or lsp-deferred
+    :init
     (setq lsp-python-ms-dir "/usr/lib"
           lsp-python-ms-executable "/usr/bin/mspyls"))
 #+END_SRC
@@ -2630,6 +2636,7 @@ enough to be on melpa so I use quelpa.
   (use-package ess-view
     :ensure t
     :tags '("LANGUAGE")
+    :commands (ess-view-mode)
     :after ess)
 #+end_src
 *** Support drag & drop
@@ -2744,116 +2751,121 @@ enough to be on melpa so I use quelpa.
 *** Javascript
 **** Global
 #+begin_src emacs-lisp
-    (use-package js2-mode
-      :ensure t
-      :tags '("LANGUAGE")
-      :mode
-      ("\\.js\\'")
-      :hook
-      (js2-mode . js2-imenu-extras-mode))
+  (use-package js2-mode
+    :ensure t
+    :tags '("LANGUAGE")
+    :mode
+    ("\\.js\\'")
+    :hook
+    (js2-mode . js2-imenu-extras-mode))
 
-    (use-package js2-refactor
-      :ensure t
-      :tags '("LANGUAGE")
-      :hook
-      (js2-mode . js2-refactor-mode)
+  (use-package js2-refactor
+    :ensure t
+    :tags '("LANGUAGE")
+    :hook
+    (js2-mode . js2-refactor-mode)
 
-      :hydra
-      (js2-refactor-hydra (:color blue :hint nil)
-                          "
-          Javascript
+    :commands (js2-refactor-mode js2-refactor-hydra/body)
+    :hydra
+    (js2-refactor-hydra (:color blue :hint nil)
+                        "
+        Javascript
 
-      ^Functions^                    ^Variables^               ^Buffer^                      ^sexp^               ^Debugging^
-      ------------------------------------------------------------------------------------------------------------------------------
-      _lp_: Localize Parameter      _ev_: Extract variable   _wi_: Wrap buffer in IIFE    _k_:  js2 kill      _lt_: log this
-      _ef_: Extract function        _iv_: Inline variable    _ig_: Inject global in IIFE  _ss_: split string  _dt_: debug this
-      _ip_: Introduce parameter     _rv_: Rename variable    _ee_: Expand node at point   _sl_: forward slurp
-      _em_: Extract method          _vt_: Var to this        _cc_: Contract node at point _ba_: forward barf
-      _ao_: Arguments to object     _sv_: Split var decl.    _uw_: unwrap
-      _tf_: Toggle fun exp and decl _ag_: Add var to globals
-      _ta_: Toggle fun expr and =>  _ti_: Ternary to if
-    "
-                          ("ee" js2r-expand-node-at-point)
-                          ("cc" js2r-contract-node-at-point)
-                          ("ef" js2r-extract-function)
-                          ("em" js2r-extract-method)
-                          ("tf" js2r-toggle-function-expression-and-declaration)
-                          ("ta" js2r-toggle-arrow-function-and-expression)
-                          ("ip" js2r-introduce-parameter)
-                          ("lp" js2r-localize-parameter)
-                          ("wi" js2r-wrap-buffer-in-iife)
-                          ("ig" js2r-inject-global-in-iife)
-                          ("ag" js2r-add-to-globals-annotation)
-                          ("ev" js2r-extract-var)
-                          ("iv" js2r-inline-var)
-                          ("rv" js2r-rename-var)
-                          ("vt" js2r-var-to-this)
-                          ("ao" js2r-arguments-to-object)
-                          ("ti" js2r-ternary-to-if)
-                          ("sv" js2r-split-var-declaration)
-                          ("ss" js2r-split-string)
-                          ("uw" js2r-unwrap)
-                          ("lt" js2r-log-this)
-                          ("dt" js2r-debug-this)
-                          ("sl" js2r-forward-slurp)
-                          ("ba" js2r-forward-barf)
-                          ("k" js2r-kill)
-                          ("q" nil))
+    ^Functions^                    ^Variables^               ^Buffer^                      ^sexp^               ^Debugging^
+    ------------------------------------------------------------------------------------------------------------------------------
+    _lp_: Localize Parameter      _ev_: Extract variable   _wi_: Wrap buffer in IIFE    _k_:  js2 kill      _lt_: log this
+    _ef_: Extract function        _iv_: Inline variable    _ig_: Inject global in IIFE  _ss_: split string  _dt_: debug this
+    _ip_: Introduce parameter     _rv_: Rename variable    _ee_: Expand node at point   _sl_: forward slurp
+    _em_: Extract method          _vt_: Var to this        _cc_: Contract node at point _ba_: forward barf
+    _ao_: Arguments to object     _sv_: Split var decl.    _uw_: unwrap
+    _tf_: Toggle fun exp and decl _ag_: Add var to globals
+    _ta_: Toggle fun expr and =>  _ti_: Ternary to if
+  "
+                        ("ee" js2r-expand-node-at-point)
+                        ("cc" js2r-contract-node-at-point)
+                        ("ef" js2r-extract-function)
+                        ("em" js2r-extract-method)
+                        ("tf" js2r-toggle-function-expression-and-declaration)
+                        ("ta" js2r-toggle-arrow-function-and-expression)
+                        ("ip" js2r-introduce-parameter)
+                        ("lp" js2r-localize-parameter)
+                        ("wi" js2r-wrap-buffer-in-iife)
+                        ("ig" js2r-inject-global-in-iife)
+                        ("ag" js2r-add-to-globals-annotation)
+                        ("ev" js2r-extract-var)
+                        ("iv" js2r-inline-var)
+                        ("rv" js2r-rename-var)
+                        ("vt" js2r-var-to-this)
+                        ("ao" js2r-arguments-to-object)
+                        ("ti" js2r-ternary-to-if)
+                        ("sv" js2r-split-var-declaration)
+                        ("ss" js2r-split-string)
+                        ("uw" js2r-unwrap)
+                        ("lt" js2r-log-this)
+                        ("dt" js2r-debug-this)
+                        ("sl" js2r-forward-slurp)
+                        ("ba" js2r-forward-barf)
+                        ("k" js2r-kill)
+                        ("q" nil))
 
-      :config
-      (js2r-add-keybindings-with-prefix "C-c C-r")
-      (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
+    :config
+    (js2r-add-keybindings-with-prefix "C-c C-r")
+    (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
 
-      ;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
-      ;; unbind it.
-      (define-key js-mode-map (kbd "M-.") nil))
+    ;; js-mode (which js2 is based on) binds "M-." which conflicts with xref, so
+    ;; unbind it.
+    (define-key js-mode-map (kbd "M-.") nil))
 
-    (use-package xref-js2
-      :ensure t
-      :tags '("LANGUAGE")
-      :hook
-      (js2-mode . (lambda () (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
+  (use-package xref-js2
+    :ensure t
+    :tags '("LANGUAGE")
+    :disabled t
+    :hook
+    (js2-mode . (lambda () (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
 
-    (use-package indium
-      :ensure t
-      :tags '("LANGUAGE")
-      :diminish indium-interaction-mode
-      :init
-      (setq indium-update-script-on-save t))
-    ;; (setq indium-workspace-file (no-littering-expand-var-file-name "indium-workspaces.el"))))
+  (use-package indium
+    :ensure t
+    :tags '("LANGUAGE")
+    :diminish indium-interaction-mode
+    :defer t
+    :hook
+    (js2-mode . #'indium-interaction-mode)
+
+    :config
+    (setq indium-update-script-on-save t))
 
 
-    (use-package gulp-task-runner
-      :ensure t
-      :tags '("LANGUAGE")
-      :commands (gulp))
+  (use-package gulp-task-runner
+    :ensure t
+    :tags '("LANGUAGE")
+    :commands (gulp))
 
-    (use-package js-auto-beautify
-      :ensure t
-      :tags '("LANGUAGE"))
+  (use-package js-auto-beautify
+    :ensure t
+    :tags '("LANGUAGE"))
 
-    (use-package js-import
-      :ensure t
-      :tags '("LANGUAGE"))
+  (use-package js-import
+    :ensure t
+    :tags '("LANGUAGE"))
 
-    (use-package company-tern
-      :ensure t
-      :tags '("LANGUAGE")
-      :hook
-      (js2-mode . tern-mode)
-      (js2-mode . company-mode)
+  (use-package company-tern
+    :ensure t
+    :tags '("LANGUAGE")
+    :hook
+    (js2-mode . tern-mode)
+    (js2-mode . company-mode)
 
-      :config
-      (add-to-list 'company-backends 'company-tern)
+    :config
+    (add-to-list 'company-backends 'company-tern)
 
-      ;; Disable completion keybindings, as we use xref-js2 instead
-      (define-key tern-mode-keymap (kbd "M-.") nil)
-      (define-key tern-mode-keymap (kbd "M-,") nil)
+    ;; Disable completion keybindings, as we use xref-js2 instead
+    (define-key tern-mode-keymap (kbd "M-.") nil)
+    (define-key tern-mode-keymap (kbd "M-,") nil)
 
-      (setq company-tern-property-marker " <p>"
-            company-tern-property-marker nil
-            company-tern-meta-as-single-line t
-            company-tooltip-align-annotations t))
+    (setq company-tern-property-marker " <p>"
+          company-tern-property-marker nil
+          company-tern-meta-as-single-line t
+          company-tooltip-align-annotations t))
 #+END_SRC
 **** JSON
 #+begin_src emacs-lisp
@@ -3247,118 +3259,118 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 - Pretty configuration is adapted from https://ekaschalk.github.io/post/pretty-magit/
 **** Global
 #+begin_src emacs-lisp
-    (use-package magit
-      :ensure t
-      :tags '("VC")
-      :commands (magit)
-      :hydra
-      (hydra-magit (:color teal :hint nil)
+  (use-package magit
+    :ensure t
+    :tags '("VC")
+    :commands (magit hydra-magit/body)
+    :hydra
+    (hydra-magit (:color teal :hint nil)
 
-                   "
-              Magit: %(magit-get \"remote\" \"origin\" \"url\")
+                 "
+            Magit: %(magit-get \"remote\" \"origin\" \"url\")
 
-         Status/Info      Remote          Operations
-        ------------------------------------------------------------------------------------------
-        _s_: Status      _f_: Pull       _c_: commit
-        _l_: Log all     _p_: Push
-        _d_: Diff
-        _t_: timemachine
-        "
-                   ("<ESC>" nil "quit")
-                   ("<" hydra-project/body "back")
-                   ("f" magit-pull-branch)
-                   ("p" magit-push-other)
-                   ("c" magit-commit-create)
-                   ("d" magit-diff-range)
-                   ("l" magit-log-all)
-                   ("s" magit-status)
-                   ("t" git-timemachine) ;; FIXME: works only if git-timemachine installed
-                   ("q"   nil "cancel" :color blue))
-      :bind
-      (:map magit-mode-map
-            ("o" . magit-open-repo))
+       Status/Info      Remote          Operations
+      ------------------------------------------------------------------------------------------
+      _s_: Status      _f_: Pull       _c_: commit
+      _l_: Log all     _p_: Push
+      _d_: Diff
+      _t_: timemachine
+      "
+                 ("<ESC>" nil "quit")
+                 ("<" hydra-project/body "back")
+                 ("f" magit-pull-branch)
+                 ("p" magit-push-other)
+                 ("c" magit-commit-create)
+                 ("d" magit-diff-range)
+                 ("l" magit-log-all)
+                 ("s" magit-status)
+                 ("t" git-timemachine) ;; FIXME: works only if git-timemachine installed
+                 ("q"   nil "cancel" :color blue))
+    :bind
+    (:map magit-mode-map
+          ("o" . magit-open-repo))
 
-      :config
+    :config
 
-      ;; Ignore recent commit
-      (setq magit-status-sections-hook
-            '(magit-insert-status-headers
-              magit-insert-merge-log
-              magit-insert-rebase-sequence
-              magit-insert-am-sequence
-              magit-insert-sequencer-sequence
-              magit-insert-bisect-output
-              magit-insert-bisect-rest
-              magit-insert-bisect-log
-              magit-insert-untracked-files
-              magit-insert-unstaged-changes
-              magit-insert-staged-changes
-              magit-insert-stashes
-              magit-insert-unpulled-from-upstream
-              magit-insert-unpulled-from-pushremote
-              magit-insert-unpushed-to-upstream
-              magit-insert-unpushed-to-pushremote))
-
-
-      ;; Update visualization
-      (setq pretty-magit-alist nil
-            pretty-magit-prompt nil)
-
-      (defmacro pretty-magit (WORD ICON PROPS &optional NO-PROMPT?)
-        "Replace sanitized WORD with ICON, PROPS and by default add to prompts."
-        `(prog1
-             (add-to-list 'pretty-magit-alist
-                          (list (rx bow (group ,WORD (eval (if ,NO-PROMPT? "" ":"))))
-                                ,ICON ',PROPS))
-           (unless ,NO-PROMPT?
-             (add-to-list 'pretty-magit-prompt (concat ,WORD ": ")))))
-
-      ;; Operations
-      (pretty-magit "add"   ? (:foreground "#375E97" :height 1.2) pretty-magit-prompt)
-      (pretty-magit "fix"   ? (:foreground "#FB6542" :height 1.2) pretty-magit-prompt)
-      (pretty-magit "clean" ? (:foreground "#FFBB00" :height 1.2) pretty-magit-prompt)
-      (pretty-magit "doc."  ? (:foreground "#3F681C" :height 1.2) pretty-magit-prompt)
-
-      ;; Meta information
-      (pretty-magit "master"  ? (:box nil :height 1.2) t)
-      (pretty-magit "origin"  ? (:box nil :height 1.2) t)
-      (pretty-magit "upstream"  ? (:box nil :height 1.2) t)
-
-      (defun add-magit-faces ()
-        "Add face properties and compose symbols for buffer from pretty-magit."
-        (interactive)
-        (with-silent-modifications
-          (--each pretty-magit-alist
-            (-let (((rgx icon props) it))
-              (save-excursion
-                (goto-char (point-min))
-                (while (search-forward-regexp rgx nil t)
-                  (compose-region
-                   (match-beginning 1) (match-end 1) icon)
-                  (when props
-                    (add-face-text-property
-                     (match-beginning 1) (match-end 1) props))))))))
-
-      (advice-add 'magit-status :after 'add-magit-faces)
-      (advice-add 'magit-refresh-buffer :after 'add-magit-faces)
+    ;; Ignore recent commit
+    (setq magit-status-sections-hook
+          '(magit-insert-status-headers
+            magit-insert-merge-log
+            magit-insert-rebase-sequence
+            magit-insert-am-sequence
+            magit-insert-sequencer-sequence
+            magit-insert-bisect-output
+            magit-insert-bisect-rest
+            magit-insert-bisect-log
+            magit-insert-untracked-files
+            magit-insert-unstaged-changes
+            magit-insert-staged-changes
+            magit-insert-stashes
+            magit-insert-unpulled-from-upstream
+            magit-insert-unpulled-from-pushremote
+            magit-insert-unpushed-to-upstream
+            magit-insert-unpushed-to-pushremote))
 
 
-      ;; Opening repo externally
-      (defun parse-url (url)
-        "convert a git remote location as a HTTP URL"
-        (if (string-match "^http" url)
-            url
-          (replace-regexp-in-string "\\(.*\\)@\\(.*\\):\\(.*\\)\\(\\.git?\\)"
-                                    "https://\\2/\\3"
-                                    url)))
-      (defun magit-open-repo ()
-        "open remote repo URL"
-        (interactive)
-        (let ((url (magit-get "remote" "origin" "url")))
-          (progn
-            (browse-url (parse-url url))
-            (message "opening repo %s" url))))
-      )
+    ;; Update visualization
+    (setq pretty-magit-alist nil
+          pretty-magit-prompt nil)
+
+    (defmacro pretty-magit (WORD ICON PROPS &optional NO-PROMPT?)
+      "Replace sanitized WORD with ICON, PROPS and by default add to prompts."
+      `(prog1
+           (add-to-list 'pretty-magit-alist
+                        (list (rx bow (group ,WORD (eval (if ,NO-PROMPT? "" ":"))))
+                              ,ICON ',PROPS))
+         (unless ,NO-PROMPT?
+           (add-to-list 'pretty-magit-prompt (concat ,WORD ": ")))))
+
+    ;; Operations
+    (pretty-magit "add"   ? (:foreground "#375E97" :height 1.2) pretty-magit-prompt)
+    (pretty-magit "fix"   ? (:foreground "#FB6542" :height 1.2) pretty-magit-prompt)
+    (pretty-magit "clean" ? (:foreground "#FFBB00" :height 1.2) pretty-magit-prompt)
+    (pretty-magit "doc."  ? (:foreground "#3F681C" :height 1.2) pretty-magit-prompt)
+
+    ;; Meta information
+    (pretty-magit "master"  ? (:box nil :height 1.2) t)
+    (pretty-magit "origin"  ? (:box nil :height 1.2) t)
+    (pretty-magit "upstream"  ? (:box nil :height 1.2) t)
+
+    (defun add-magit-faces ()
+      "Add face properties and compose symbols for buffer from pretty-magit."
+      (interactive)
+      (with-silent-modifications
+        (--each pretty-magit-alist
+          (-let (((rgx icon props) it))
+            (save-excursion
+              (goto-char (point-min))
+              (while (search-forward-regexp rgx nil t)
+                (compose-region
+                 (match-beginning 1) (match-end 1) icon)
+                (when props
+                  (add-face-text-property
+                   (match-beginning 1) (match-end 1) props))))))))
+
+    (advice-add 'magit-status :after 'add-magit-faces)
+    (advice-add 'magit-refresh-buffer :after 'add-magit-faces)
+
+
+    ;; Opening repo externally
+    (defun parse-url (url)
+      "convert a git remote location as a HTTP URL"
+      (if (string-match "^http" url)
+          url
+        (replace-regexp-in-string "\\(.*\\)@\\(.*\\):\\(.*\\)\\(\\.git?\\)"
+                                  "https://\\2/\\3"
+                                  url)))
+    (defun magit-open-repo ()
+      "open remote repo URL"
+      (interactive)
+      (let ((url (magit-get "remote" "origin" "url")))
+        (progn
+          (browse-url (parse-url url))
+          (message "opening repo %s" url))))
+    )
 #+end_src
 **** Diff
 #+begin_src emacs-lisp
@@ -3401,10 +3413,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+end_src
 *** Helpers for edition
 #+begin_src emacs-lisp
-  (use-package git-commit
-    :ensure t
-    :tags '("VC"))
-
   (use-package gitattributes-mode
     :ensure t
     :tags '("VC"))
@@ -3474,6 +3482,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   ;; Search on github
   (use-package github-search
     :ensure t
+    :commands (github-search-clone-repo github-search-user-clone-repo)
     :tags '("VC"))
 
   ;; Mapping github with magit
@@ -3512,6 +3521,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   (use-package travis
     :ensure t
     :tags '("VC")
+    :commands (show-my-travis-projects)
     :config
 
     (require 'travis-utils)
@@ -4476,6 +4486,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+begin_src emacs-lisp
   (use-package docker
     :ensure t
+    :commands (docker)
     :tags '("OS"))
 
   (use-package docker-api
@@ -4524,6 +4535,7 @@ https://github.com/purcell/exec-path-from-shell
   (use-package exec-path-from-shell
     :ensure t
     :config
+    (setq exec-path-from-shell-arguments nil)
     (exec-path-from-shell-initialize))
 #+end_src
 ** COMMENT unison interaction
@@ -4909,6 +4921,7 @@ https://github.com/purcell/exec-path-from-shell
 **** Context (mailboxes separation)
 #+begin_src emacs-lisp
   (use-package mu4e-context
+    :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
     (setq mu4e-context-policy 'pick-first
           ;; mu4e-compose-context-policy nil
@@ -5078,8 +5091,7 @@ https://github.com/purcell/exec-path-from-shell
     (mu4e-alert-set-default-style 'sauron-mode-line-style)
 
     (mu4e-alert-enable-notifications)
-    (mu4e-alert-enable-mode-line-display)
-    )
+    (mu4e-alert-enable-mode-line-display))
 #+end_src
 **** Integration with org-mode
 #+begin_src emacs-lisp
@@ -5261,7 +5273,11 @@ https://github.com/purcell/exec-path-from-shell
   (use-package emms
     :ensure t
     :tags '("MULTIMEDIA")
-    :commands (emms)
+    :commands (emms emms-browse-by-artist)
+    :bind
+    (("<f5>"   . emms-browse-by-artist)
+     ("S-<f5>" . emms-playlist-mode-go))
+
     :config
 
     (emms-all)
@@ -5326,11 +5342,7 @@ https://github.com/purcell/exec-path-from-shell
                                    (/ emms-playing-time 60) (% emms-playing-time 60)
                                    (/ total-playing-time 60) (% total-playing-time 60))
           (sit-for 2))))
-    (add-hook 'emms-player-seeked-functions #'emms-indicate-seek 'append)
-
-    ;; Some shortcuts
-    (global-set-key (kbd "<f5>") 'emms-browse-by-artist)
-    (global-set-key (kbd "S-<f5>") 'emms-playlist-mode-go))
+    (add-hook 'emms-player-seeked-functions #'emms-indicate-seek 'append))
 
   (use-package emms-info-libtag
     :after emms
@@ -5344,7 +5356,10 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+begin_src emacs-lisp
   (use-package emms-mark-ext
     :ensure t
-    :tags '("MULTIMEDIA"))
+    :tags '("MULTIMEDIA")
+    :hook
+    (emms-playlist-mode . emms-mark-ext-hook)
+    :commands (emms-mark-ext-hook))
 #+end_src
 ** Browser
 #+begin_src emacs-lisp
