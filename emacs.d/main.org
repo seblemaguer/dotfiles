@@ -4751,13 +4751,12 @@ https://github.com/purcell/exec-path-from-shell
 #+end_src
 *** Notification
 #+begin_src emacs-lisp
-  (use-package sauron-circe
-    :ensure quelpa
-    :quelpa (sauron-circe :repo "seblemaguer/sauron-circe" :fetcher github)
-    :tags '("CONNECTED")
-    :after sauron
-    :config
-    (sauron-circe-start))
+  (use-package circe-notifications
+    :ensure t
+    :commands (enable-circe-notifications)
+    :custom (circe-notifications-alert-style 'sauron-mode-line-style)
+    :hook
+    (circe-server-connected . enable-circe-notifications))
 #+end_src
 ** Slack
 #+BEGIN_SRC emacs-lisp
