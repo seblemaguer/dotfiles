@@ -20,6 +20,7 @@ configurations, at this repository: https://github.com/seblemaguer/dotfiles
 
   (setq package-enable-at-startup nil
         package-check-signature nil
+        gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"
         package-archives '(("GNU ELPA"     . "https://elpa.gnu.org/packages/")
                            ("MELPA Stable" . "https://stable.melpa.org/packages/")
                            ("MELPA"        . "https://melpa.org/packages/")
