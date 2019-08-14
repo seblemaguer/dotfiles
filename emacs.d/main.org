@@ -5529,6 +5529,22 @@ As I write papers, it is useful to have some helper to start to have the inspira
 
           ;;
           doom-modeline-checker-simple-format t)
+
+    (defface egoge-display-time
+      '((((type x w32 mac))
+         ;; #060525 is the background colour of my default face.
+         (:foreground "#060525" :inherit bold))
+        (((type tty))
+         (:foreground "blue")))
+      "Face used to display the time in the mode line.")
+
+    ;; This causes the current time in the mode line to be displayed in
+    ;; `egoge-display-time-face' to make it stand out visually.
+    (setq display-time-string-forms
+          '((propertize (concat "[" 24-hours ":" minutes "] ")
+                        'face 'egoge-display-time)))
+
+    (display-time)
     )
 #+END_SRC
 ** Global theme
