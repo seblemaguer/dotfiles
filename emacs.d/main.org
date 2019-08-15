@@ -4931,7 +4931,7 @@ https://github.com/purcell/exec-path-from-shell
                             :enter-func (lambda () (mu4e-message "Entering TCD context"))
                             :leave-func (lambda () (mu4e-message "Leaving TCD context"))
 
-                            ;; Match the propoer maildir
+                            ;; Match the proper maildir
                             :match-func (lambda (msg)
                                           (when msg
                                             (string-match-p "^/TCD" (mu4e-message-field msg :maildir))))
@@ -5076,7 +5076,7 @@ https://github.com/purcell/exec-path-from-shell
   (use-package mu4e-maildirs-extension
     :ensure t
     :tags '("REQUIRES_CONNECTION" "MAIL")
-    :disabled t
+    :pin MELPA
     :config
     (mu4e-maildirs-extension))
 #+end_src
