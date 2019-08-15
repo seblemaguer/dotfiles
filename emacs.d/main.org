@@ -5134,6 +5134,7 @@ https://github.com/purcell/exec-path-from-shell
   (use-package elfeed-goodies
     :ensure t
     :tags '("REQUIRES_CONNECTION" "RSS")
+    :disabled t
     :config
     (elfeed-goodies/setup))
 #+END_SRC
