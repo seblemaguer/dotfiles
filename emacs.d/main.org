@@ -4002,7 +4002,9 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package treemacs-icons-dired
     :tags '("FILE_MANAGEMENT")
     :ensure t
-    :config (treemacs-icons-dired-mode))
+    :commands (treemacs-icons-dired-mode)
+    :hook
+    (dired-mode . treemacs-icons-dired-mode))
 #+end_src
 * Ibuffer
 ** Filter
