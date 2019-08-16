@@ -4372,7 +4372,11 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (setq sauron-separate-frame nil ;; The notification is on the same window ?
           sauron-sticky-frame t
           sauron-max-line-length nil ;; No max. length for the line
-          sauron-modules '(sauron-org sauron-elfeed)) ;; reduced the default modules
+          sauron-modules '(sauron-org sauron-elfeed) ;; reduced the default modules
+          sauron-column-alist '( ( timestamp  .  20)
+                                 ( origin     .  20)
+                                 ( priority   .   4)
+                                 ( message    . nil)))
     (sauron-start-hidden))
 #+end_src
 ** Alert
@@ -4434,9 +4438,15 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
       :group 'alert)
 
     (defun alert-sauron-notify (info)
-      (sauron-add-event (if (plist-get info :category)
-                            (plist-get info :category)
-                          'unknown)
+      (sauron-add-event (if (plist-get info :title)
+                            (if (symbolp (plist-get info :title))
+                                (plist-get info :title)
+                              (intern (plist-get info :title)))
+                          (if (plist-get info :category)
+                            (if (symbolp (plist-get info :category))
+                                (plist-get info :category)
+                              (intern (plist-get info :category)))
+                            'unknown))
                         (cdr (assq (plist-get info :severity) sauron-mode-line-priorities))
                         (plist-get info :message)))
 
@@ -5087,8 +5097,13 @@ https://github.com/purcell/exec-path-from-shell
     :after alert
     :tags '("REQUIRES_CONNECTION" "MAIL" "NOTIFICATION")
     :config
+    ;; Just notify the counting
+    (setq mu4e-alert-email-notification-types '(count))
+
+    ;; Set the style to sauron
     (mu4e-alert-set-default-style 'sauron-mode-line-style)
 
+    ;; Enable everything!
     (mu4e-alert-enable-notifications)
     (mu4e-alert-enable-mode-line-display))
 #+end_src
