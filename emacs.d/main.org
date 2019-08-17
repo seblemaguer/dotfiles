@@ -812,7 +812,8 @@ emacs. This has been proven useful, especially for java editing.
     (setq lsp-before-save-edits t
           lsp-inhibit-message t
           lsp-eldoc-render-all nil
-          lsp-highlight-symbol-at-point nil))
+          lsp-highlight-symbol-at-point nil
+          lsp-prefer-flymake nil))
 
   (use-package company-lsp
     :ensure t
@@ -834,6 +835,7 @@ emacs. This has been proven useful, especially for java editing.
     (setq lsp-ui-sideline-enable t
           lsp-ui-sideline-show-symbol t
           lsp-ui-sideline-show-hover t
+          lsp-ui-flycheck-enable t
           lsp-ui-sideline-show-code-actions t
           lsp-ui-sideline-update-mode 'point))
 
@@ -1997,7 +1999,6 @@ enough to be on melpa so I use quelpa.
     :tags '("LANGUAGE"))
 #+end_src
 ** Kotlin
-*** Global mode
 #+begin_src emacs-lisp
   (use-package kotlin-mode
     :ensure t
@@ -2005,14 +2006,6 @@ enough to be on melpa so I use quelpa.
     :mode "\\.kts?\\'"
     :config
     (setq kotlin-tab-width 4))
-#+end_src
-*** Syntax checking
-#+begin_src emacs-lisp
-  (use-package flycheck-kotlin
-    :ensure t
-    :tags '("LANGUAGE")
-    :config
-    (flycheck-kotlin-setup))
 #+end_src
 ** Latex
 *** Global
