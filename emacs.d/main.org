@@ -2958,13 +2958,17 @@ Extracted from https://github.com/zakame/emacs-for-javascript
         (indent-region begin end))))
 #+END_SRC
 * Documentation
-** Help
+** Emacs
+*** Key binding
 #+begin_src emacs-lisp
-  (use-package helpful
+  (use-package helm-descbinds
     :ensure t
-    :tags '("DOCUMENTATION"))
+    :tags '("DOCUMENTATION")
+    :commands (helm-descbinds)
+    :bind
+    ("C-h b" . helm-descbinds))
 #+end_src
-** Apropos
+*** Apropos
 #+begin_src emacs-lisp
   (use-package apropos-fn+var
     :ensure t
@@ -2973,7 +2977,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
     :config
     (setq apropos-do-all t))
 #+end_src
-** Info
+*** Info
 #+begin_src emacs-lisp
   (use-package info-buffer
     :ensure t
@@ -2984,7 +2988,14 @@ Extracted from https://github.com/zakame/emacs-for-javascript
     :tags '("DOCUMENTATION")
     :disabled t)
 #+end_src
-** Man
+*** Help
+#+begin_src emacs-lisp
+  (use-package helpful
+    :ensure t
+    :tags '("DOCUMENTATION"))
+#+end_src
+** System
+*** Man
 #+begin_src emacs-lisp
   (use-package man
     :ensure t
