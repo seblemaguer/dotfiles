@@ -1029,6 +1029,20 @@ Prescient helps to sort candidates by last used first and then sorting by length
   ;; Disable checking doc
   (use-package flycheck
     :tags '("CORE")
+    :commands (flycheck-error-list-set-filter flycheck-next-error flycheck-previous-error flycheck-first-error)
+    :hydra
+    (hydra-flycheck (:pre (progn (setq hydra-hint-display-type t) (flycheck-list-errors))
+                     :post (progn (setq hydra-hint-display-type nil) (quit-windows-on "*Flycheck errors*"))
+                     :color teal :hint nil)
+                    "Errors"
+                    ("f"  flycheck-error-list-set-filter                            "Filter")
+                    ("j"  flycheck-next-error                                       "Next")
+                    ("k"  flycheck-previous-error                                   "Previous")
+                    ("gg" flycheck-first-error                                      "First")
+                    ("G"  (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
+                    ("<" hydra-project/body "back")
+                    ("q"   nil "cancel" :color blue))
+
     :config
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
 
@@ -5939,20 +5953,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 ** Project/Version control
 #+begin_src emacs-lisp
-  (defhydra hydra-flycheck (:pre (progn (setq hydra-hint-display-type t) (flycheck-list-errors))
-                                 :post (progn (setq hydra-hint-display-type nil) (quit-windows-on "*Flycheck errors*"))
-                                 :color teal
-                                 :hint nil)
-    "Errors"
-    ("f"  flycheck-error-list-set-filter                            "Filter")
-    ("j"  flycheck-next-error                                       "Next")
-    ("k"  flycheck-previous-error                                   "Previous")
-    ("gg" flycheck-first-error                                      "First")
-    ("G"  (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
-    ("<" hydra-project/body "back")
-    ("q"   nil "cancel" :color blue))
-
-
   (defhydra hydra-project (:color teal :hint nil)
     "
          Project/Source management
