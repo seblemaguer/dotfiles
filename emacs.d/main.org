@@ -1869,7 +1869,11 @@ enough to be on melpa so I use quelpa.
   (use-package yaml-mode
     :ensure t
     :tags '("LANGUAGE")
-    :mode (".yaml$"))
+    :mode (".yaml$")
+    :hook
+    (yaml-mode . (lambda ()
+                   (outline-minor-mode)
+                   (setq outline-regexp "^ *\\([-] \\)?\\([\"][^\"]*[\"]\\|[a-zA-Z0-9_-]*\\): *\\([>|]\\|&[a-zA-Z0-9_-]*\\)?$"))))
 
   (use-package yaml-tomato
     :ensure t
