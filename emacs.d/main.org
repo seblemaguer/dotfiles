@@ -539,6 +539,9 @@ Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
     (setq-default ispell-program-name "aspell")
     (setq-default ispell-list-command "--list")
 
+    ;; Some skipping
+    (add-to-list 'ispell-skip-region-alist '("^#+begin_src" . "^#+end_src"))
+
     ;; Refresh flyspell after directory change
     (defun flyspell-buffer-after-pdict-save (&rest _)
       (flyspell-buffer))
@@ -1105,6 +1108,9 @@ Prescient helps to sort candidates by last used first and then sorting by length
   (use-package org
     :ensure org-plus-contrib
     :tags '("ORG")
+    :hook
+    (org-mode . flyspell-mode)
+
     :config
 
     ;; Global
@@ -1126,20 +1132,12 @@ Prescient helps to sort candidates by last used first and then sorting by length
           org-cycle-include-plain-lists t
           org-src-fontify-natively t
           org-src-tab-acts-natively t
-          org-hide-emphasis-markers t)
+          org-hide-emphasis-markers t
+          org-global-properties '(("Effort_ALL" . "0:15 0:30 0:45 1:00 2:00 3:00 4:00 5:00 6:00 0:00")
+                                  ("STYLE_ALL" . "habit"))
 
-    ;; Activate spelling
-    (add-hook 'org-mode 'flyspell-mode)
-    (add-to-list 'ispell-skip-region-alist '("^#+begin_src" . "^#+end_src"))
-
-    ;; FIXME: to sort !
-    (use-package org-checklist)
-    (use-package ob-exp)
-    (use-package ox-bibtex)
-    (use-package org-protocol)
-
-    ;; Todo part
-    (setq org-todo-keywords '(;; Baseline sequence
+          ;; Todo part
+          org-todo-keywords '(;; Baseline sequence
                               (sequence "TODO(t)" "DELEGATED(e)" "WAITING(w)"  "MEETING(M)" "|" "DONE(d)" "CANCELLED(c@/!)" "POSTPONED(o@/!)")
 
                               ;; Specific "to complete"
@@ -1168,6 +1166,14 @@ Prescient helps to sort candidates by last used first and then sorting by length
           org-refile-use-outline-path 'file
           org-outline-path-complete-in-steps nil
           org-refile-allow-creating-parent-nodes 'confirm))
+
+
+
+    ;; FIXME: to sort !
+    (use-package org-checklist)
+    (use-package ob-exp)
+    (use-package ox-bibtex)
+    (use-package org-protocol)
 #+end_src
 ** Todo management - some helpers
 Extracted from https://www.emacswiki.org/emacs/org-extension.el
