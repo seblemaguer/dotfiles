@@ -293,51 +293,15 @@ this information per buffer.
 #+end_src
 
 ** Folding
-In order to have a unify folding support, I use origami in couple with hydra. The advantage of hydra
-is to see all the alternatives more easily. Also inspire from
-https://github.com/Schnouki/dotfiles/blob/master/emacs/init-20-dev.el
+For the folding, I am relying on outline-minor mode and more specifically outline-magic.
 #+begin_src emacs-lisp
-  (use-package origami
+  (use-package outshine
     :ensure quelpa
-    :quelpa (origami :repo "seblemaguer/origami.el" :fetcher github)
-    :tags '("CORE")
-    :commands (origami-mode)
-
-    :custom
-    (origami-show-fold-header t)
-
-    :custom-face
-    (origami-fold-replacement-face ((t (:inherit magit-diff-context-highlight))))
-    (origami-fold-fringe-face ((t (:inherit magit-diff-context-highlight))))
-
-    :functions
-    (origami-recursively-toggle-node
-     origami-toggle-all-nodes
-     origami-toggle-node
-     origami-show-only-node
-     origami-undo
-     origami-redo
-     origami-reset)
-
-    :hydra
-    (origami-hydra (:color blue :hint none)
-                   "
-        _:_: recursively toggle node       _a_: toggle all nodes    _t_: toggle node
-        _o_: show only current node        _u_: undo                _r_: redo
-        _R_: reset
-        "
-                   (":" origami-recursively-toggle-node)
-                   ("a" origami-toggle-all-nodes)
-                   ("t" origami-toggle-node)
-                   ("o" origami-show-only-node)
-                   ("u" origami-undo)
-                   ("r" origami-redo)
-                   ("R" origami-reset))
-
-    :bind (:map origami-mode-map
-                ("C-:" . origami-hydra/body))
-    :config
-    (face-spec-reset-face 'origami-fold-header-face))
+    :quelpa (outshine :fetcher github :repo "alphapapa/outshine")
+    :commands (outshine-cycle)
+    :bind
+    (:map outline-minor-mode-map
+          ("<C-tab>"  . outshine-cycle)))
 #+end_src
 ** Edition
 This section is dedicated to hacks and helpers to facilitate global edition.
