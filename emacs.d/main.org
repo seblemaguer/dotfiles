@@ -5303,8 +5303,12 @@ https://github.com/purcell/exec-path-from-shell
     :tags '("MULTIMEDIA")
     :commands (emms emms-browse-by-artist)
     :bind
-    (("<f5>"   . emms-browse-by-artist)
-     ("S-<f5>" . emms-playlist-mode-go))
+    (("<f5>"            . emms-browse-by-artist)
+     ("S-<f5>"          . emms-playlist-mode-go)
+     ("<XF86AudioPlay>" . emms-pause)
+     ("<XF86AudioStop>" . emms-stop)
+     ("<XF86AudioPrev>" . emms-previous)
+     ("<XF86AudioNext>" . emms-next))
 
     :config
 
@@ -6050,13 +6054,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (global-set-key [(control c) ?1] 'find-name-dired)
   (global-set-key [(control c) ?2] 'find-grep-dired)
   (global-set-key [(control c) ?3] 'grep-find)
-#+end_src
-*** Multimedia
-#+begin_src emacs-lisp
-  (global-set-key (kbd "<XF86AudioPlay>") 'emms-pause)
-  (global-set-key (kbd "<XF86AudioStop>") 'emms-stop)
-  (global-set-key (kbd "<XF86AudioPrev>") 'emms-previous)
-  (global-set-key (kbd "<XF86AudioNext>") 'emms-next)
 #+end_src
 *** Mac key remapping
 #+begin_src emacs-lisp
