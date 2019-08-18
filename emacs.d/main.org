@@ -2368,6 +2368,14 @@ enough to be on melpa so I use quelpa.
     :disabled t
     :tags '("LANGUAGE"))
 #+end_src
+*** Visualize GFM rendering
+#+begin_src emacs-lisp
+  (use-package grip-mode
+    :ensure t
+    :commands (grip-mode)
+    :bind (:map markdown-mode-command-map
+           ("g" . grip-mode)))
+#+end_src
 ** PDF
 *** Global
   #+begin_src emacs-lisp
