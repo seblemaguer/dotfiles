@@ -5737,9 +5737,13 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 *** Indentation
 #+begin_src emacs-lisp
-  (use-package indent-guide
+  (use-package highlight-indent-guides
     :ensure t
-    :tags '("VISUAL"))
+    :commands (highlight-indent-guides-mode)
+    :hook
+    (prog-mode . highlight-indent-guides-mode)
+    :config
+    (setq highlight-indent-guides-method 'column))
 #+end_src
 *** Column/line
 #+begin_src emacs-lisp
