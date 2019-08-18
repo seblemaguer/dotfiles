@@ -1764,7 +1764,16 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package org-dashboard :ensure t)
 #+end_src
+** Querying
+It is useful to find some items in org files based on a query.
+#+begin_src emacs-lisp
+  (use-package org-ql
+    :ensure t
+    :pin MELPA)
+#+end_src
+
 * Emacs Lisp
+** Buffer content
 #+begin_src emacs-lisp
   ;; Package lint
   (use-package package-lint
@@ -1776,6 +1785,12 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :ensure t
       :tags '("LANGUAGE"))
 #+end_src
+** ELPL
+#+BEGIN_SRC emacs-lisp
+  (use-package elpl
+    :ensure t
+    :commands (elpl))
+#+END_SRC
 * Filetype
 Now that we have achieved the global configuration, I am going to focus on the language specific
 configuration.
@@ -4543,6 +4558,11 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :ensure quelpa
     :quelpa (slurm :repo "ffevotte/slurm.el" :fetcher github))
 #+END_SRC
+** Cron
+#+BEGIN_SRC emacs-lisp :tangle yes
+  (use-package crontab-mode
+    :ensure t)
+#+END_SRC
 ** Monitoring
 #+begin_src emacs-lisp
   (use-package symon
@@ -4563,6 +4583,16 @@ https://github.com/purcell/exec-path-from-shell
     :config
     (setq exec-path-from-shell-arguments nil)
     (exec-path-from-shell-initialize))
+#+end_src
+** systctl
+#+begin_src emacs-lisp
+  (use-package sysctl :ensure t :commands (sysctl))
+#+end_src
+** Locate
+#+begin_src emacs-lisp
+  (use-package ellocate
+    :ensure t
+    :commands (ellocate))
 #+end_src
 ** COMMENT unison interaction
 #+begin_src emacs-lisp
