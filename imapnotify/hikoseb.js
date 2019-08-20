@@ -11,5 +11,6 @@ exports.tls = true;
 exports.tlsOptions = { "rejectUnauthorized": false };
 exports.username = "hikoseb@gmail.com";
 exports.password = getStdout("python3 ~/.get_passwd.py 'imap.gmail.com' 'hikoseb@gmail.com'");
-exports.onNewMail = "syncmail HikoGmail";
+exports.onNewMail = "mbsync -q HikoGmail";
+exports.onNewMailPost = "mu index -m ~/mail/HikoGmail";
 exports.boxes = [ "INBOX" ];

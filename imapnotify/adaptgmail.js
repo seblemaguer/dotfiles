@@ -11,5 +11,6 @@ exports.tls = true;
 exports.tlsOptions = { "rejectUnauthorized": false };
 exports.username = "sebastien.lemaguer@adaptcentre.ie";
 exports.password = getStdout("python3 ~/.get_passwd.py 'imap.gmail.com' 'sebastien.lemaguer@adaptcentre.ie'");
-exports.onNewMail = "syncmail AdaptGmail";
+exports.onNewMail = "mbsync -q AdaptGmail";
+exports.onNewMailPost = "emacsclient  -e '(mu4e-update-index)'";
 exports.boxes = [ "INBOX" ];
