@@ -3291,7 +3291,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
   (use-package magit
     :ensure t
     :tags '("VC")
-    :commands (magit hydra-magit/body)
+    :commands (magit hydra-magit/body magit-get-current-branch)
     :hydra
     (hydra-magit (:color teal :hint nil)
 
