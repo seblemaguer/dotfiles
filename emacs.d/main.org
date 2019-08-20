@@ -5832,6 +5832,13 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (fringe-mode 10))
 #+end_src
 *** Faces/Colors
+**** Rainbow
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :ensure t
+  :commands (rainbow-mode))
+#+end_src
+
 **** COMMENT Terminal
 #+begin_src emacs-lisp
   (set-face-foreground 'term-color-black "#4d4d4d")
