@@ -4948,8 +4948,8 @@ https://github.com/purcell/exec-path-from-shell
           mu4e-change-filenames-when-moving t    ;;
           mu4e-compose-dont-reply-to-self t      ;; Don't reply to myself
           mu4e-attachment-dir "~/Downloads"
-
-          ;; User interface
+          mu4e-update-interval nil
+          mu4e-use-fancy-chars t
           mu4e-view-use-gnus t                   ;; Use gnus buffer view
           mu4e-view-show-images t                ;; Show images in the html rendering
           mu4e-view-show-addresses t             ;; Show the URL
@@ -5119,7 +5119,11 @@ https://github.com/purcell/exec-path-from-shell
                           ;;   )
                           )
 
-
+          mu4e-user-mail-address-list (delq nil
+                                            (mapcar (lambda (context)
+                                                      (when (mu4e-context-vars context)
+                                                        (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
+                                                    mu4e-contexts)))
           ;; compose with the current context is no context matches;
           ;; default is to ask
           ;;
