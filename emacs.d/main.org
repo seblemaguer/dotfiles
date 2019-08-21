@@ -1122,7 +1122,7 @@ Prescient helps to sort candidates by last used first and then sorting by length
 
           ;; Todo part
           org-todo-keywords '(;; Baseline sequence
-                              (sequence "TODO(t)" "DELEGATED(e)" "WAITING(w)"  "MEETING(M)" "|" "DONE(d)" "CANCELLED(c@/!)" "POSTPONED(o@/!)")
+                              (sequence "TODO(t)" "DELEGATED(e)"  "MEETING(M)" "|" "WAITING(w)" "DONE(d)" "CANCELLED(c@/!)" "POSTPONED(o@/!)")
 
                               ;; Specific "to complete"
                               (sequence "REVIEW(r)" "RELEASE(R)" "MAIL(m)" "|")
