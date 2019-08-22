@@ -4951,18 +4951,26 @@ https://github.com/purcell/exec-path-from-shell
     :hook
     (mu4e-compose-mode . format-hook-message)
 
+    :custom
+    ;; File management
+    (mu4e-maildir "~/mail")
+    (mu4e-attachment-dir "~/Downloads")
+    (mu4e-change-filenames-when-moving t)
+
+    ;; User interaction
+    (mu4e-hide-index-messages t)
+    (mu4e-compose-context-policy 'ask-if-none)
+    (mu4e-confirm-quit nil)
+    (mu4e-compose-dont-reply-to-self t)
+    (mu4e-update-interval nil)
+
+    ;; Gui
+    (mu4e-view-show-addresses t)
+    (mu4e-view-show-images t)
+    (mu4e-view-use-gnus t)
+    (mu4e-use-fancy-chars t)
+
     :config
-    (setq mu4e-maildir "~/mail"                  ;; Directory of my mails
-          mu4e-change-filenames-when-moving t    ;;
-          mu4e-compose-dont-reply-to-self t      ;; Don't reply to myself
-          mu4e-attachment-dir "~/Downloads"
-          mu4e-update-interval nil
-          mu4e-use-fancy-chars t
-          mu4e-view-use-gnus t                   ;; Use gnus buffer view
-          mu4e-view-show-images t                ;; Show images in the html rendering
-          mu4e-view-show-addresses t             ;; Show the URL
-          mu4e-confirm-quit nil                  ;; Do not ask to quit !
-          )
 
     (add-to-list 'mu4e-view-actions
                  '("ViewInBrowser" . mu4e-action-view-in-browser) t)
@@ -5144,6 +5152,8 @@ https://github.com/purcell/exec-path-from-shell
     :ensure t
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :pin MELPA
+    :init
+    (setq mu4e-maildirs-extension-hide-empty-maildirs t)
     :config
     (mu4e-maildirs-extension))
 #+end_src
