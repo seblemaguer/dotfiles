@@ -3962,14 +3962,14 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 ** Tramp
 #+begin_src emacs-lisp
   (use-package tramp
+    :defer t
     :tags '("FILE_MANAGEMENT")
-    :init
-    (setq tramp-default-method "ssh"
-          password-cache-expiry 60
-          tramp-auto-save-directory temporary-file-directory)
-
+    :custom (tramp-default-method "ssh"
+             password-cache-expiry 60
+             tramp-verbose 1
+             tramp-auto-save-directory temporary-file-directory)
           ;; ;; Debug
-          ;; tramp-verbose 9)
+          ;; tramp-verbose 9
           ;; tramp-debug-buffer t)
   )
 #+end_src
