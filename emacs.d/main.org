@@ -1574,6 +1574,14 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
       :config
       (org-clock-persistence-insinuate))
 #+end_src
+*** Webpage overview
+#+begin_src emacs-lisp
+  (use-package org-analyzer
+    :ensure t
+    :custom (org-analyzer-org-directory  "~/shared/Dropbox/org/todo")
+    :commands (org-analyzer-start))
+#+end_src
+
 ** Editing
 *** Global
 #+begin_src emacs-lisp
