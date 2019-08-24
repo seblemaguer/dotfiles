@@ -72,7 +72,7 @@ Normally it should be a temporary part
             (,use-package-tags-default-host . ("CORE" "!USER")))))
 #+END_SRC
 ** System package dependency interaction
-Adapt the system package manager (for archlinux tool trizen) + enable use-package-ensure-system-package.
+Adapt the system package manager (for archlinux tool trizen)
 #+begin_src emacs-lisp
   (use-package system-packages
       :ensure t
@@ -103,9 +103,6 @@ Adapt the system package manager (for archlinux tool trizen) + enable use-packag
             system-packages-use-sudo nil
             system-packages-package-manager 'trizen)
       )
-
-  (use-package use-package-ensure-system-package
-    :ensure t)
 #+end_src
 ** Add keychord support
 #+BEGIN_SRC emacs-lisp
@@ -3161,7 +3158,6 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
   (use-package fish-completion
     :ensure t
     :tags '("SHELL")
-    :ensure-system-package fish
     :config
     (global-fish-completion-mode))
 #+end_src
@@ -4893,7 +4889,6 @@ https://github.com/purcell/exec-path-from-shell
     (use-package smtpmail-multi
       :ensure t
       :tags '("REQUIRES_CONNECTION" "MAIL")
-      ;; :ensure-system-package msmtp
       :config
 
       (setq user-full-name "Sébastien Le Maguer"
