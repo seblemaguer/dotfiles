@@ -68,7 +68,7 @@ Normally it should be a temporary part
     (setq use-package-tags-enabled
           `(("lemagues-laptop" . ("!REQUIRES_CONNECTION"))
             ("stb067" . ("ALL"))
-            ("mackenzie" . ("!MAIL" "!RSS" "!USER"))
+            ("mackenzie" . ("!MAIL" "!RSS" "!USER" "!GUI"))
             (,use-package-tags-default-host . ("CORE" "!USER")))))
 #+END_SRC
 ** System package dependency interaction
@@ -2393,6 +2393,7 @@ enough to be on melpa so I use quelpa.
   (use-package grip-mode
     :ensure t
     :commands (grip-mode)
+    :tags '("GUI")
     :bind (:map markdown-mode-command-map
            ("g" . grip-mode)))
 #+end_src
@@ -2402,7 +2403,7 @@ enough to be on melpa so I use quelpa.
     (use-package pdf-tools
       :ensure t
       :pin MELPA
-      :tags '("DOCUMENT")
+      :tags '("DOCUMENT" "GUI")
       :functions
       (pdf-history-backward
        pdf-history-forward
@@ -2517,7 +2518,7 @@ enough to be on melpa so I use quelpa.
     (use-package pdf-view-restore
       :ensure t
       :after pdf-tools
-      :tags '("DOCUMENT")
+      :tags '("DOCUMENT" "GUI")
       :hook
       (pdf-view-mode-hook . pdf-view-restore-mode))
   #+end_src
@@ -2525,7 +2526,7 @@ enough to be on melpa so I use quelpa.
 #+BEGIN_SRC emacs-lisp
   (use-package pdfgrep
     :ensure t
-      :tags '("DOCUMENT")
+      :tags '("DOCUMENT" "GUI")
     :config
     (pdfgrep-mode))
 #+END_SRC
@@ -2533,7 +2534,7 @@ enough to be on melpa so I use quelpa.
   #+begin_src emacs-lisp
     (use-package org-pdfview
       :ensure t
-      :tags '("LANGUAGE")
+      :tags '("LANGUAGE" "GUI")
       :config
 
       (add-to-list 'org-file-apps
@@ -5262,7 +5263,7 @@ https://github.com/purcell/exec-path-from-shell
 *** Notification part
 #+begin_src emacs-lisp
   (use-package sauron-elfeed
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "RSS")
     :config
     (cl-loop for feed in elfeed-feeds
              do (when (member 'mustread (cdr feed))
