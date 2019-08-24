@@ -68,7 +68,7 @@ Normally it should be a temporary part
     (setq use-package-tags-enabled
           `(("lemagues-laptop" . ("!REQUIRES_CONNECTION"))
             ("stb067" . ("ALL"))
-            ("mackenzie" . ("!MAIL" "!RSS"))
+            ("mackenzie" . ("!MAIL" "!RSS" "!USER"))
             (,use-package-tags-default-host . ("CORE" "!USER")))))
 #+END_SRC
 ** System package dependency interaction
