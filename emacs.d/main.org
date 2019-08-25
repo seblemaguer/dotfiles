@@ -6244,15 +6244,19 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
 #+end_src
 *** Commenting
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c C-;") 'comment-region)
-  (global-set-key (kbd "C-c C-:") 'uncomment-region)
-
   (use-package cc-mode
-    :config
-    (dolist (map (list c-mode-base-map c++-mode-map))
-      (define-key map (kbd "C-c C-;") 'comment-region))
-    (dolist (map (list c-mode-base-map c++-mode-map))
-      (define-key map (kbd "C-c C-:") 'uncomment-region)))
+    :bind
+    (;; Global
+     ("C-c C-;" .  comment-region)
+     ("C-c C-:" .  uncomment-region)
+
+     :map c-mode-base-map
+          ("C-c C-;" .  comment-region)
+          ("C-c C-:" .  uncomment-region)
+     :map c++-mode-map
+          ("C-c C-;" .  comment-region)
+          ("C-c C-:" .  uncomment-region))
+  )
 #+end_src
 *** Buffers
 #+begin_src emacs-lisp
