@@ -1230,7 +1230,8 @@ helpful when I develop for MaryTTS.
           org-archive-location "%s_archive::* Archived Tasks"
 
           ;; Refiling
-          org-refile-targets '((org-agenda-files . (:maxlevel . 6)))
+          org-refile-targets '((nil . (:maxlevel . 6))
+                               (org-agenda-files . (:maxlevel . 6)))
           org-completion-use-ido nil
           org-refile-use-outline-path 'file
           org-outline-path-complete-in-steps nil
