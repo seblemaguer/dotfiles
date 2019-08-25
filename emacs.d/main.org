@@ -1150,11 +1150,6 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
                 (message) line-end))
       :modes (text-mode markdown-mode gfm-mode org-mode))
     )
-
-  (use-package flycheck-stack
-    :ensure t
-    :tags '("COMPILATION")
-    :after flycheck)
 #+end_src
 
 ** Gradle global support
@@ -1677,10 +1672,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
         org-babel-results-keyword "results" ;; Display images directly in the buffer
         org-confirm-babel-evaluate nil
         org-startup-with-inline-images t)
-
-  (use-package org-notebook
-    :ensure t
-    :tags '("ORG"))
 
   ;; Add languages
   (use-package jupyter
