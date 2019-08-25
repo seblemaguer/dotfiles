@@ -2706,12 +2706,6 @@ enough to be on melpa so I use quelpa.
     (setq pipenv-projectile-after-switch-function
           #'pipenv-projectile-after-switch-extended))
 #+end_src
-*** Virtual environment
-#+begin_src emacs-lisp
-  (use-package pyvenv
-    :ensure t
-    :tags '("LANGUAGE"))
-#+end_src
 *** Interpreter configuration
 #+begin_src emacs-lisp
   (use-package ein
