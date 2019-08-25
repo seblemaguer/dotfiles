@@ -89,11 +89,6 @@ I am using tags to condition the use of packages based on the computer hostname.
 I use hydra a lot so it is easier to add its support directly in the use-package configuration part.
 
 #+BEGIN_SRC emacs-lisp
-  ;; FIXME: why needed?
-  (use-package lv
-    :ensure t
-    :tags '("CORE"))
-
   (use-package use-package-hydra
     :ensure t
     :functions
@@ -141,8 +136,12 @@ I was using auto update, but I think I will remove it soon.
     (auto-package-update-maybe))
 #+end_src
 * Configuration helpers
-This section focus on defining some variables/helpers needed to have a more global configuration
+I need to define some helpers to be able to facilitate the configuration. This mainly introduce
+tangling and user/password management.
+
 ** Define some important variables
+This section focus on defining some variables/helpers needed to have a more global configuration
+
 #+BEGIN_SRC emacs-lisp
   ;; Define root directory and add the plugins
   (defvar default-plugin-dir (format "%s/plugins" user-emacs-directory)
@@ -161,8 +160,10 @@ This section focus on defining some variables/helpers needed to have a more glob
 	gc-cons-threshold 50000000
 	large-file-warning-threshold 100000000)
 #+END_SRC
+
 ** Dealing with tangling this file
 This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
+
 #+BEGIN_SRC emacs-lisp
   (defun tangle-main-org ()
     "Tangle ~/.emacs.d/main.org to ~/.emacs.d/init.el."
@@ -182,13 +183,15 @@ This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org
     (interactive)
     (when (equal (buffer-name)
                  (concat "main.org"))
-      ;; ;; Recompile init file
-      ;; (byte-compile-disable-warning  'make-local) ;; FIXME: apparently people says this warning is simply wrong, so ignore it!
-      ;; (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)
+      ;; Recompile init file
+      (byte-compile-disable-warning  'make-local) ;; FIXME: apparently people says this warning is simply wrong, so ignore it!
+      (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)
       ))
 #+END_SRC
+
 ** Identification helper
-Easy use wrapper around auth-* authentification emacs utils
+Easy use wrapper around auth-* authentification emacs utils.
+
 #+begin_src emacs-lisp
   (cl-defun my:auth-source-get-user (&rest spec &allow-other-keys)
     "Helper to get the user given the SPEC from authsource."
@@ -202,16 +205,23 @@ Easy use wrapper around auth-* authentification emacs utils
       (when founds
         (funcall (plist-get (nth 0 founds) :secret)))))
 #+end_src
+
 * Daemon mode
 Now that we are ready to actually configure emacs properly, let's first start the server!
+
 #+begin_src emacs-lisp
   (server-start)
 #+end_src
+
 * Global
 This section is about configuring global emacs helpers which are not specific to a dedicated
 language (or filetype) but are useful for any edition use-case in emacs.
-** Undo
-In order to have a better and more visual control of undoing, I use undo-tree.
+
+** TODO Undo
+In order to have a better and more visual control of undoing, I use undo-propose for now. I used to
+use undo-tree but corruption was a problem. However, having the navigation tree might be
+easier. Therefore the section is still in *todo* status.
+
 #+begin_src emacs-lisp
   (use-package undo-propose
     :ensure t
@@ -219,18 +229,23 @@ In order to have a better and more visual control of undoing, I use undo-tree.
     :commands (undo-propose)
     :bind ("C-x u" . undo-propose))
 #+end_src
+
 ** Minor-mode activation
 I use some minor modes based on some filetypes. This package is an helper which facilitates these
 activations.
+
 #+begin_src emacs-lisp
   (use-package auto-minor-mode
     :ensure t
     :tags '("CORE"))
 #+end_src
+
 ** Helpers
 I define here some global helpers used either in the rest of the file, either available to use at runtime
+
 *** Editing as root
 Defining a simple helper to edit file as root using tramp
+
 #+begin_src emacs-lisp
   (defun edit-current-file-as-root ()
     "Edit the file that is associated with the current buffer as root"
@@ -239,13 +254,11 @@ Defining a simple helper to edit file as root using tramp
         (find-file (concat "/sudo:localhost:" (buffer-file-name)))
       (message "Current buffer does not have an associated file.")))
 #+end_src
-** TODO Accent problem
-#+begin_src emacs-lisp
-(load-library "iso-transl")
-#+end_src
+
 ** TODO Message buffer
 The main idea here is to add a timestamp to the messages as it helps to understand the sequence of
 problems. For now the advice is not activated as it causes some problems.
+
 #+begin_src emacs-lisp
   (defvar debug-messages nil)
 
@@ -266,17 +279,20 @@ problems. For now the advice is not activated as it causes some problems.
             (ad-set-arg 0 (concat (format-time-string "[%Y-%m-%d %T %Z] ") "<<%S>>:\n" (ad-get-arg 0)))
             (ad-set-args 1 (cons trace (ad-get-args 1)))))))
 #+end_src
+
 ** Encoding
 Define the global encoding as utf-8 english US related. Of course, it is possible de locally change
 this information per buffer.
+
 #+begin_src emacs-lisp
-(setq system-time-locale "en_US.utf8")
-(prefer-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
+  (setq system-time-locale "en_US.utf8")
+  (prefer-coding-system 'utf-8)
+  (set-selection-coding-system 'utf-8)
 #+end_src
 
 ** Folding
-For the folding, I am relying on outline-minor mode and more specifically outline-magic.
+For the folding, I am relying on outline-minor mode and more specifically outline-shine.
+
 #+begin_src emacs-lisp
   (use-package outshine
     :ensure quelpa
@@ -286,10 +302,13 @@ For the folding, I am relying on outline-minor mode and more specifically outlin
     (:map outline-minor-mode-map
           ("<C-tab>"  . outshine-cycle)))
 #+end_src
+
 ** Edition
 This section is dedicated to hacks and helpers to facilitate global edition.
+
 *** Edit simultanously multiple region
 Sometimes it can be useful to edit multiple region at once. To do that, I use iedit.
+
 #+begin_src emacs-lisp
   (use-package iedit
     :ensure t
@@ -297,24 +316,34 @@ Sometimes it can be useful to edit multiple region at once. To do that, I use ie
     :config
     (delete-selection-mode t))
 #+end_src
-*** Surrounding helper
-I use siege-mode to surround a string by delimiters more complicated than brackets and xml tags.
+
+*** TODO Surrounding helper
+I use siege-mode to surround a string by delimiters more complicated than brackets and xml tags. For
+now it is disabled so in *TODO* state.
+
 #+begin_src emacs-lisp
   (use-package siege-mode
     :disabled t
     :ensure t
     :tags '("CORE"))
 #+end_src
+
 *** Alignment
 I defined this helper to as I like to align equations based on the equal sign.
+
 #+begin_src emacs-lisp
 (defun align-to-equals (begin end)
   "Align region to equal signs"
    (interactive "r")
    (align-regexp begin end "\\(\\s-*\\)=" 1 1 ))
 #+end_src
-** Goto
+
+** Goto/Jumping
+Jumping to a specific line is part of the day to day use case of an editor. Here, we are defining some helpers.
+
 *** Preview
+First, instead of jumping we simply can preview the jump.
+
 #+BEGIN_SRC emacs-lisp
   (use-package goto-line-preview
     :ensure t
@@ -322,7 +351,11 @@ I defined this helper to as I like to align equations based on the equal sign.
     :bind
     (("M-g" . goto-line-preview)))
 #+END_SRC
+
 *** Remember last jump
+Also, I tend to jump a lot for quick modification. So remembering the jump is absolute crucial in my
+workflow.
+
 #+BEGIN_SRC emacs-lisp
   (use-package goto-last-point
     :ensure t
@@ -330,9 +363,11 @@ I defined this helper to as I like to align equations based on the equal sign.
     :bind ("C-<" . goto-last-point)
     :config (goto-last-point-mode))
 #+END_SRC
+
 ** Recent file
 Opening recent files is always an easy and fast shortcut. Some files should be ignored though. That
 leads to this configuration
+
 #+begin_src emacs-lisp
   (use-package recentf
     :tags '("CORE")
@@ -366,12 +401,16 @@ leads to this configuration
     ;; Maildir
     (add-to-list 'recentf-exclude (format "%s/maildir.*" (getenv "HOME"))))
 #+end_src
+
 ** Backup files
 This section is dedicated to deal with backups. The main logic is to exlude some specific files
 (either because of they are sensitive, either because they are just results of a process). For the
 other ones, I want to have an easy way to navigate in it.
+
 *** Global backup configuration
-This the global backup configuration. For that I adapted a little bit the wonderful snapshot-timemachine package.
+This the global backup configuration. For that I adapted a little bit the wonderful
+snapshot-timemachine package.
+
 #+begin_src emacs-lisp
   (use-package snapshot-timemachine
     :ensure t
@@ -427,9 +466,11 @@ This the global backup configuration. For that I adapted a little bit the wonder
 
     (setq snapshot-timemachine-snapshot-finder #'snapshot-timemachine-backup-finder))
 #+end_src
+
 *** Sensitive mode
 There are some files which are not desired to be backed up. This part goal is to setup this
 "avoiding saving" spécificities.
+
 #+begin_src emacs-lisp
   (define-minor-mode sensitive-mode
     "For sensitive files like password lists.
@@ -464,18 +505,23 @@ There are some files which are not desired to be backed up. This part goal is to
   (add-to-list 'auto-minor-mode-alist '("Calendars/.*.org\\'" . sensitive-mode))
   (add-to-list 'auto-minor-mode-alist '("\\.gpg\\'" . sensitive-mode))
 #+end_src
+
 ** Copy/Pasted
-Baseline configuration for copy/pasting
+Baseline configuration for copy/pasting, nothing fancy.
+
 #+begin_src emacs-lisp
   (setq mouse-drag-copy-region nil
         select-enable-primary nil
         select-enable-clipboard t
         select-active-regions t)
 #+end_src
+
 ** Language checking
 Writing a text is difficult enough, having some helpers to check and correct the language is necessary for me.
+
 *** Spelling
 Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
+
 #+begin_src emacs-lisp
   (use-package flyspell
     :ensure t
@@ -536,7 +582,11 @@ Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
          (advice-add 'flyspell-emacs-popup :around #'flyspell-emacs-popup-choose)))
     )
 #+end_src
+
 *** English checking
+lang-tool is actually supported by emacs through a dedicated mode which allows to have syntax and
+typography checking.
+
 #+BEGIN_SRC emacs-lisp
   (use-package langtool
     :ensure quelpa
@@ -545,9 +595,11 @@ Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
     :init
     (setq langtool-language-tool-server-jar "~/work/tools/src/languagetool/languagetool/languagetool-server.jar"))
 #+END_SRC
+
 ** Fixme
 To deal with the fixme, I relie on two part: fic-mode for the highlighting and occur for the
 listing.
+
 #+begin_src emacs-lisp
   (use-package fic-mode
     :ensure t
@@ -561,8 +613,10 @@ listing.
       (interactive)
       (occur "\\<\\(FIXME\\|WRITEME\\|WRITEME!\\|TODO\\|BUG\\):?")))
 #+end_src
+
 ** Minibuffer
 Minibuffer configuration part. Nothing really outstanding, just the classical stuff.
+
 #+begin_src emacs-lisp
   (use-package minibuffer
     :tags '("CORE")
@@ -575,9 +629,11 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
 
     (file-name-shadow-mode 1))
 #+end_src
+
 ** Buffers
 Some buffer specificities configuration like how to deal with trailing whitespaces or the
 fill-column for example.
+
 #+begin_src emacs-lisp
   ;; Open Large file
   (use-package vlf
@@ -599,12 +655,18 @@ fill-column for example.
 #+end_src
 
 *** format-all
+We can globally reformat the buffer relying on external tool. =format-all= is here for this.
+
 #+begin_src emacs-lisp
   (use-package format-all
     :ensure t
-    :defer t)
+    :commands (format-all-buffer format-all-mode))
 #+end_src
+
 *** Specific mode cleaning helper
+I define a facilities for some specific buffers. For now, it disables only the smartparens but it
+could be modified to be more general.
+
 #+begin_src emacs-lisp
   (defun disable-global-facilities ()
     "Function to disable some utilities globally activated for current buffer"
@@ -613,7 +675,10 @@ fill-column for example.
     ;; (nlinum-mode 0)
     )
 #+end_src
+
 ** Searching
+Double-saber is really helpful to reduce the result of a search after the search itself.
+
 #+BEGIN_SRC emacs-lisp
   (use-package double-saber
     :ensure t
@@ -649,10 +714,12 @@ fill-column for example.
 ** Process management
 I want to have some services and processes managed directly in emacs. This services/processes are
 closely related to my emacs use and there have to be shutdown when emacs is stopping.
+
 *** Services
 The main use case (actually the only for now) is the imap notification system. To do so I use the
 couple prodigy (to start the process in emacs) and imapnotify to actually activate the push
 service. Internally, imapnotify is going to call emacsclient to notify the user about a new mail.
+
 #+begin_src emacs-lisp
   (use-package prodigy
     :ensure quelpa
@@ -708,15 +775,19 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
     (prodigy-enable-auto-start)
     )
 #+end_src
+
 *** System daemons
 With this package I can also manage my system services (tested on archlinux).
+
 #+begin_src emacs-lisp
   (use-package daemons
     :ensure t
     :tags '("CORE"))
 #+end_src
+
 *** Background process configuration
 Starting process in background is really nice to avoid being spammed. So let's make it available
+
 #+begin_src emacs-lisp
   (use-package bpr
     :ensure t
@@ -741,8 +812,10 @@ Starting process in background is really nice to avoid being spammed. So let's m
           bpr-window-creator #'split-window-vertically
           bpr-on-start 'my-bpr-on-start))
 #+end_src
+
 *** Paging support for comint
 In order to monitor each process started via comint, I use bifocal which splits the window accordingly.
+
 #+begin_src emacs-lisp
   (use-package bifocal
     :ensure t
@@ -754,10 +827,13 @@ In order to monitor each process started via comint, I use bifocal which splits 
     :config
     (bifocal-global-mode 1))
 #+end_src
+
 ** Environment control helpers
 I prefer to control some hardware using emacs directly. For now the keyboard, the screen and the sound.
+
 *** desktop environment
 Thanks to desktop environement, I can control the keyboard and the screen brightness.
+
 #+begin_src emacs-lisp
   (use-package desktop-environment
     :ensure t
@@ -771,8 +847,10 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
           desktop-environment-brightness-set-command "xbacklight")
     (desktop-environment-mode))
 #+end_src
+
 *** pulseaudio
 Thanks to pulseaudio-control, I can control my soundcard.
+
 #+begin_src emacs-lisp
   (use-package pulseaudio-control
     :ensure t
@@ -780,9 +858,12 @@ Thanks to pulseaudio-control, I can control my soundcard.
     :config
     (setq pulseaudio-control--current-sink "@DEFAULT_SINK@"))
 #+end_src
+
 ** Language interaction (LSP)
 LSP is a set of helper to interact with external "ide" tools and provide their functionalities into
-emacs. This has been proven useful, especially for java editing.
+emacs. It is the baseline of my configuration for java, kotlin and also python. I suspect I am going
+to extend it even further in the feature.
+
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
@@ -831,11 +912,14 @@ emacs. This has been proven useful, especially for java editing.
     (dap-mode t)
     (dap-ui-mode t))
 #+end_src
+
 * Completion
 This part focuses on completion configuration. Language specific configurations are not done here
 but in the dedicate language configuration part. This section is just for global configuration.
+
 ** Ivy/swipper/counsel
 I do prefer vertical completion, which is why I use extensively Ivy and extensions.
+
 #+begin_src emacs-lisp
   (use-package ivy
     :ensure t
@@ -860,10 +944,12 @@ I do prefer vertical completion, which is why I use extensively Ivy and extensio
     (ivy-rich-mode 1)
     (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
 #+end_src
+
 ** Company
 In order to have inline completion, really important for coding, I use company. However I adapted
 some facing attributes. Each language is also adding its backend when needed. Therefore, only global
 configuration here.
+
 #+begin_src emacs-lisp
   (use-package company
     :ensure t
@@ -900,7 +986,10 @@ configuration here.
     :config
     (company-quickhelp-mode 1))
 #+end_src
+
 ** Helm
+I use Helm for some specific cases which requires an important visibility space completion.
+
 #+begin_src emacs-lisp
   (use-package helm
     :ensure t
@@ -919,11 +1008,14 @@ configuration here.
           )
     )
 #+end_src
+
 ** Templating
 I use templates for 2 use cases: the buffer edition and the file specific templates. Both are relying on *yasnippet*.
+
 *** Edition templates
 The default configuration of yasnippet consists of activating it and plugging it with company.
 Ivy-yasnippet is used for snippet discovery.
+
 #+begin_src emacs-lisp
   (use-package yasnippet
     :ensure t
@@ -958,9 +1050,11 @@ Ivy-yasnippet is used for snippet discovery.
     :ensure t
     :tags '("COMPLETION"))
 #+end_src
+
 *** Filetype templates
 This part is using yatemplate (an over-layer of yasnippet) coupled with auto-insert to have a set of
 file type dedicated templates. The templates are available in =third_parties/templates= directory.
+
 #+begin_src emacs-lisp
   (use-package yatemplate
     :ensure t
@@ -977,8 +1071,10 @@ file type dedicated templates. The templates are available in =third_parties/tem
     ;; (add-hook 'find-file-hook 'auto-insert)
     )
 #+end_src
+
 ** Prescient
 Prescient helps to sort candidates by last used first and then sorting by length.
+
 #+begin_src emacs-lisp
   (use-package prescient
     :ensure t
@@ -995,22 +1091,38 @@ Prescient helps to sort candidates by last used first and then sorting by length
     :tags '("COMPLETION")
     :config (company-prescient-mode))
 #+end_src
+
 * Compilation
-** TODO some requires to check
+I develop with emacs, so compiling is actually a big part of my life. Therefore, I modified baseline
+compilation mechanisms as well as fly checking.
+
+** Baseline compilation
+I just modify a little bit the default compilation to be a little more "user friendly".
+
 #+begin_src emacs-lisp
-  (use-package compile-
-    :tags '("COMPILATION"))
-
   (use-package compile
-    :tags '("COMPILATION"))
+    :defines compilation-scroll-output
+    :defer t
+    :tags '("COMPILATION")
+    :init
+    (setq compilation-scroll-output t)
+    :hook
+    (compilation-filter . pd/colourise-compilation-buffer)
 
-  (use-package compile+
-    :tags '("COMPILATION"))
+    :config
+    (require 'ansi-color)
+    (defun pd/colourise-compilation-buffer ()
+      (when (eq major-mode 'compilation-mode)
+        (ansi-color-apply-on-region compilation-filter-start (point-max)))))
 #+end_src
+
 ** Flychecking
+For the fly checking, I use flycheck instead of flymake. So I adapted it for my needs by also adding proselint support.
+
 #+begin_src emacs-lisp
   ;; Disable checking doc
   (use-package flycheck
+    :ensure t
     :tags '("CORE")
     :commands (flycheck-error-list-set-filter flycheck-next-error flycheck-previous-error flycheck-first-error)
     :hydra
@@ -1044,7 +1156,11 @@ Prescient helps to sort candidates by last used first and then sorting by length
     :tags '("COMPILATION")
     :after flycheck)
 #+end_src
+
 ** Gradle global support
+I use my fork for gradle compilation. The mode still needs to be really improved but it is really
+helpful when I develop for MaryTTS.
+
 #+begin_src emacs-lisp
   (use-package gradle-mode
     :ensure quelpa
@@ -1053,16 +1169,6 @@ Prescient helps to sort candidates by last used first and then sorting by length
     :config
     (setq gradle-use-gradlew t)
     (gradle-mode))
-#+end_src
-
-** Compilation
-#+begin_src emacs-lisp
-  (use-package winnow
-    :ensure t
-    :tags '("COMPILATION")
-    :init
-    (add-hook 'compilation-mode-hook 'winnow-mode)
-    (add-hook 'ag-mode-hook 'winnow-mode))
 #+end_src
 
 * Org
