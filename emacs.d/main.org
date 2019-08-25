@@ -1235,10 +1235,10 @@ helpful when I develop for MaryTTS.
 
 
     ;; FIXME: to sort !
-    (use-package org-checklist)
-    (use-package ob-exp)
-    (use-package ox-bibtex)
-    (use-package org-protocol)
+    (use-package org-checklist :defer t)
+    (use-package ob-exp :defer t)
+    (use-package ox-bibtex :defer t)
+    (use-package org-protocol :defer t)
 #+end_src
 ** Todo management - some helpers
 Extracted from https://www.emacswiki.org/emacs/org-extension.el
@@ -1501,6 +1501,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package org-super-agenda
     :ensure t
     :tags '("ORG")
+    :commands (org-agenda)
     :config
 
     ;; Define a dedicated time-gid
@@ -1581,58 +1582,60 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 *** Global
 #+begin_src emacs-lisp
   (use-package org-capture
-    :tags '("ORG")
-    :config
+      :tags '("ORG")
+      :commands (org-capture)
 
-    ;; Capture
-    (setq org-capture-templates
-          `(("b" "Adding book" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To read")
-             (file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory)))
+      ;; Capture
+      :init
+      (setq org-capture-templates
+            `(("b" "Adding book" entry
+               (file+headline "~/shared/Dropbox/org/todo/todo.org" "To read")
+               (file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory)))
 
-            ("c" "CD" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "CD")
-             (file ,(format "%s/third_parties/org-capture-templates/cd.org" user-emacs-directory)))
+              ("c" "CD" entry
+               (file+headline "~/shared/Dropbox/org/todo/todo.org" "CD")
+               (file ,(format "%s/third_parties/org-capture-templates/cd.org" user-emacs-directory)))
 
-            ("C" "Concert" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Concert")
-             (file ,(format "%s/third_parties/org-capture-templates/concert.org" user-emacs-directory)))
+              ("C" "Concert" entry
+               (file+headline "~/shared/Dropbox/org/todo/todo.org" "Concert")
+               (file ,(format "%s/third_parties/org-capture-templates/concert.org" user-emacs-directory)))
 
-            ("f" "Reference" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Reference task")
-             (file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory)))
+              ("f" "Reference" entry
+               (file+headline "~/shared/Dropbox/org/todo/todo.org" "Reference task")
+               (file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory)))
 
-            ("L" "Bookmark" entry
-             (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
-             (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" user-emacs-directory)))
+              ("L" "Bookmark" entry
+               (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
+               (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" user-emacs-directory)))
 
-            ("m" "mail" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Mailing")
-             (file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory)))
+              ("m" "mail" entry
+               (file+headline "~/shared/Dropbox/org/todo/todo.org" "Mailing")
+               (file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory)))
 
-            ("M" "Meeting" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
-             (file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory)))
+              ("M" "Meeting" entry
+               (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
+               (file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory)))
 
-            ("P" "Personnal calendar" entry
-             (file "~/Calendars/CalendarMe.org")
-             (file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory)))
+              ("P" "Personnal calendar" entry
+               (file "~/Calendars/CalendarMe.org")
+               (file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory)))
 
-            ("r" "RSS" entry
-             (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "RSS")
-             (file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory)))
+              ("r" "RSS" entry
+               (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "RSS")
+               (file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory)))
 
-            ("t" "ToDo Entry" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
-             (file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory))
-             :empty-lines-before 1)))
-    )
+              ("t" "ToDo Entry" entry
+               (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
+               (file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory))
+               :empty-lines-before 1)))
+      )
 #+end_src
 *** Cooking
 #+begin_src emacs-lisp
   (use-package org-chef
     :ensure t
     :tags '("ORG")
+    :after (org-capture)
     :config
     (add-to-list 'org-capture-templates
                  '("c" "Cookbook" entry (file "~/shared/Dropbox/recipes/cookbook.org")
@@ -1642,18 +1645,19 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 ** Clocking
 #+begin_src emacs-lisp
   (use-package org-mru-clock
-      :ensure t
-      :tags '("ORG")
-      :bind* (("C-c C-x i" . org-mru-clock-in)
-              ("C-c C-x C-j" . org-mru-clock-select-recent-task))
-      :init
-      (setq org-mru-clock-how-many 100
-            org-mru-clock-keep-formatting t
-            org-mru-clock-completing-read #'ivy-completing-read
-            org-clock-persist t)
+    :ensure t
+    :commands (org-mru-clock-in org-mru-clock-select-recent-task)
+    :tags '("ORG")
+    :bind* (("C-c C-x i" . org-mru-clock-in)
+            ("C-c C-x C-j" . org-mru-clock-select-recent-task))
+    :init
+    (setq org-mru-clock-how-many 100
+          org-mru-clock-keep-formatting t
+          org-mru-clock-completing-read #'ivy-completing-read
+          org-clock-persist t)
 
-      :config
-      (org-clock-persistence-insinuate))
+    :config
+    (org-clock-persistence-insinuate))
 #+end_src
 *** Webpage overview
 #+begin_src emacs-lisp
@@ -1706,6 +1710,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package org-rich-yank
     :ensure t
     :tags '("ORG")
+    :commands (org-rich-yank)
     :bind (:map org-mode-map ("C-M-y" . org-rich-yank)))
 #+end_src
 
@@ -1714,6 +1719,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package org-id+
     :ensure quelpa
     :quelpa (org-id+ :repo "seblemaguer/org-id-plus" :fetcher github)
+    :commands (org-id+-add-ids-to-headlines-in-file)
     :tags '("ORG"))
 #+end_src
 ** Exporting
