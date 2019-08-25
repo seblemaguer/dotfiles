@@ -4331,14 +4331,14 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :hydra
     (hydra-ibuffer-main (:color pink :hint nil)
                         "
-         Ibuffer
+           Ibuffer
 
-   ^Navigation^     ^Mark^         ^Actions^          ^View^
-  ------------------------------------------------------------------------
-    _k_:    ʌ     _m_: mark       _D_: delete        _g_: refresh
-   _RET_: visit   _u_: unmark     _S_: save          _s_: sort
-    _j_:    v     _*_: specific   _a_: all actions   _/_: filter
-  "
+     ^Navigation^     ^Mark^         ^Actions^          ^View^
+    ------------------------------------------------------------------------
+      _k_:    ʌ     _m_: mark       _D_: delete        _g_: refresh
+     _RET_: visit   _u_: unmark     _S_: save          _s_: sort
+      _j_:    v     _*_: specific   _a_: all actions   _/_: filter
+    "
                         ("j" ibuffer-forward-line)
                         ("RET" ibuffer-visit-buffer :color blue)
                         ("k" ibuffer-backward-line)
@@ -4421,10 +4421,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                           ("b" hydra-ibuffer-main/body "back" :color blue))
 
     :bind
-    (:map ibuffer-mode-map
+    (;; Global
+     ("C-x C-b" . ibuffer)
+
+     ;; Mode specific
+     :map ibuffer-mode-map
           ("." . hydra-ibuffer-main/body))
-    (:map global-map
-          ("C-x C-b" . ibuffer))
 
     :config
 
