@@ -14,7 +14,13 @@ This is my emacs configuration file. It is under version control and available, 
 configurations, at this repository: https://github.com/seblemaguer/dotfiles
 
 * Package management
+The first part of the configuration is to prepare the package management. I am using =use-package= as
+the central tool to deal with configuration of the packages.
+
 ** Emacs package configuration
+In this section, we are configuring the repositories and emacs internal package management. The only
+specificity here is that the TLS algorithm is specific for 26.2.1.
+
 #+BEGIN_SRC emacs-lisp
   (require 'package)
 
@@ -37,7 +43,10 @@ configurations, at this repository: https://github.com/seblemaguer/dotfiles
 
   (package-initialize)
 #+END_SRC
+
 ** Load use-package
+Here, we are initializing =use-package= in the classic way.
+
 #+BEGIN_SRC emacs-lisp
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
@@ -49,17 +58,21 @@ configurations, at this repository: https://github.com/seblemaguer/dotfiles
   ;; (eval-when-compile
   ;;   (setq use-package-expand-minimally byte-compile-current-file))
 #+END_SRC
+
 ** Quelpa
  Quelpa is super useful for developer package management. Adding the adaptation for the use-package
  makes it configuration file proof.
+
  #+begin_src emacs-lisp
    (use-package quelpa-use-package
      :ensure t
      :init
      (setq quelpa-update-melpa-p nil))
  #+end_src
-** TODO Tagging
-Normally it should be a temporary part
+
+** Tagging
+I am using tags to condition the use of packages based on the computer hostname.
+
 #+BEGIN_SRC emacs-lisp
   (use-package use-package-tags
     :ensure quelpa
@@ -71,47 +84,10 @@ Normally it should be a temporary part
             ("mackenzie" . ("!MAIL" "!RSS" "!USER" "!GUI"))
             (,use-package-tags-default-host . ("CORE" "!USER")))))
 #+END_SRC
-** System package dependency interaction
-Adapt the system package manager (for archlinux tool trizen)
-#+begin_src emacs-lisp
-  (use-package system-packages
-      :ensure t
-      :tags '("CORE")
-      :config
-      (setq system-packages-supported-package-managers
-            '(
-              (trizen .
-                      ((default-sudo . nil)
-                       (install . "trizen -S --noconfirm")
-                       (search . "trizen -Ss")
-                       (uninstall . "trizen -Rns")
-                       (update . "trizen -Syu --noconfirm")
-                       (clean-cache . "trizen -Sc")
-                       (log . "cat /var/log/trizen.log")
-                       (get-info . "trizen -Qi")
-                       (get-info-remote . "trizen -Si")
-                       (list-files-provided-by . "trizen -Ql")
-                       (verify-all-packages . "trizen -Qkk")
-                       (verify-all-dependencies . "trizen -Dk")
-                       (remove-orphaned . "trizen -Rns $(trizen -Qtdq)")
-                       (list-installed-packages . "trizen -Qe")
-                       (list-installed-packages-all . "trizen -Q")
-                       (list-dependencies-of . "trizen -Qi")
-                       (noconfirm . "--noconfirm")))
-              )
 
-            system-packages-use-sudo nil
-            system-packages-package-manager 'trizen)
-      )
-#+end_src
-** Add keychord support
-#+BEGIN_SRC emacs-lisp
-  (use-package use-package-chords
-    :ensure t
-    :tags '("CORE")
-    :config (key-chord-mode 1))
-#+END_SRC
 ** Hydra
+I use hydra a lot so it is easier to add its support directly in the use-package configuration part.
+
 #+BEGIN_SRC emacs-lisp
   ;; FIXME: why needed?
   (use-package lv
@@ -129,7 +105,10 @@ Adapt the system package manager (for archlinux tool trizen)
 
     :tags '("CORE"))
 #+END_SRC
+
 ** General
+I introduce general to configure the key management. It is not really used yet, but it will be more and and more.
+
 #+BEGIN_SRC emacs-lisp
   (use-package general
     :ensure t
@@ -137,6 +116,8 @@ Adapt the system package manager (for archlinux tool trizen)
 #+END_SRC
 
 ** Paradox to enhance package list management
+Finally, I use paradox to enhance the package listing experience.
+
 #+begin_src emacs-lisp
   (use-package paradox
     :ensure t
@@ -147,12 +128,13 @@ Adapt the system package manager (for archlinux tool trizen)
           paradox-execute-asynchronously t
           paradox-github-token (my:auth-source-get-passwd :host "github.com" :user "seblemaguer^paradox")))
 #+end_src
-** Auto-update
+
+** COMMENT Auto-update
+I was using auto update, but I think I will remove it soon.
 #+begin_src emacs-lisp
   (use-package auto-package-update
     :ensure t
     :tags '("CORE")
-    :disabled t
     :config
     (setq auto-package-update-delete-old-versions t
           auto-package-update-hide-results t)
@@ -4604,6 +4586,38 @@ https://github.com/purcell/exec-path-from-shell
   (use-package unison
     :ensure t
     :tags '("OS"))
+#+end_src
+** System package
+#+begin_src emacs-lisp
+  (use-package system-packages
+      :ensure t
+      :tags '("CORE")
+      :config
+      (setq system-packages-supported-package-managers
+            '(
+              (trizen .
+                      ((default-sudo . nil)
+                       (install . "trizen -S --noconfirm")
+                       (search . "trizen -Ss")
+                       (uninstall . "trizen -Rns")
+                       (update . "trizen -Syu --noconfirm")
+                       (clean-cache . "trizen -Sc")
+                       (log . "cat /var/log/trizen.log")
+                       (get-info . "trizen -Qi")
+                       (get-info-remote . "trizen -Si")
+                       (list-files-provided-by . "trizen -Ql")
+                       (verify-all-packages . "trizen -Qkk")
+                       (verify-all-dependencies . "trizen -Dk")
+                       (remove-orphaned . "trizen -Rns $(trizen -Qtdq)")
+                       (list-installed-packages . "trizen -Qe")
+                       (list-installed-packages-all . "trizen -Q")
+                       (list-dependencies-of . "trizen -Qi")
+                       (noconfirm . "--noconfirm")))
+              )
+
+            system-packages-use-sudo nil
+            system-packages-package-manager 'trizen)
+      )
 #+end_src
 * Internet/network
 ** Globalize clickable url
