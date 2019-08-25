@@ -2129,7 +2129,13 @@ enough to be on melpa so I use quelpa.
 #+begin_src emacs-lisp
   (use-package flycheck-gradle
     :ensure t
-    :tags '("LANGUAGE"))
+    :commands (flycheck-gradle-setup)
+    :tags '("LANGUAGE")
+    :init
+    (mapc
+     (lambda (x)
+       (add-hook x #'flycheck-gradle-setup))
+     '(java-mode-hook kotlin-mode-hook groovy-mode-hook)))
 #+end_src
 ** Kotlin
 #+begin_src emacs-lisp
