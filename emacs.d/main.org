@@ -5310,6 +5310,24 @@ https://github.com/purcell/exec-path-from-shell
           ;; default is to ask
           ;;
           )
+
+    (add-to-list 'mu4e-bookmarks
+                 (make-mu4e-bookmark
+                  :name  "TCD"
+                  :query "maildir:/TCD/INBOX"
+                  :key ?T))
+
+    (add-to-list 'mu4e-bookmarks
+                 (make-mu4e-bookmark
+                  :name  "Adapt"
+                  :query "maildir:/AdaptGmail/INBOX"
+                  :key ?A))
+
+    (add-to-list 'mu4e-bookmarks
+                 (make-mu4e-bookmark
+                  :name  "Saarland"
+                  :query "maildir:/Saarland/INBOX"
+                  :key ?S))
     )
 #+end_src
 **** Maildir extension part
