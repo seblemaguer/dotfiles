@@ -14,6 +14,7 @@ fi
 bindkey -e
 
 export TERM="xterm-256color"
+
 #############################################################################################################
 #### Basics
 #############################################################################################################
@@ -221,3 +222,4 @@ AUTO_CD=true
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 [[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh"
+[ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source /opt/miniconda3/etc/profile.d/conda.sh
