@@ -3123,17 +3123,23 @@ Extracted from https://github.com/zakame/emacs-for-javascript
 The key configuration is mainly coming from https://github.com/jcf/emacs.d the rest is coming from http://www.modernemacs.com/post/custom-eshell/ with some adaptation
 #+begin_src emacs-lisp
   (use-package eshell
+    :demand
     :tags '("SHELL")
     :hook
-    (eshell-mode . (lambda () (eshell/export "NODE_NO_READLINE=1")))
+    (eshell-mode .  (lambda ()
+                      (define-key eshell-mode-map
+                        [remap eshell-pcomplete]
+                        'helm-esh-pcomplete)
+                      (define-key eshell-mode-map
+                        (kbd "M-p")
+                        'helm-eshell-history)
+                      (eshell/export "NODE_NO_READLINE=1")))
     (eshell-exit . (lambda () (setq esh-prompt-num 0)))
 
     :functions (eshell/pwd)
-    :bind
-    (:map eshell-mode-map
-          ("<M-p>" . helm-eshell-history))
 
     :config
+    ;; Define helpers for prompts
     (defmacro with-face (STR &rest PROPS)
       "Return STR propertized with PROPS."
       `(propertize ,STR 'face (list ,@PROPS)))
