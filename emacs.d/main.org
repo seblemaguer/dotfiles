@@ -5035,6 +5035,7 @@ https://github.com/purcell/exec-path-from-shell
   #+begin_src emacs-lisp
     (use-package starttls
       :tags '("CONNECTED")
+      :if (< emacs-major-version 27)
       :config
       (setq starttls-use-gnutls t
             starttls-gnutls-program "gnutls-cli"
