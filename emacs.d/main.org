@@ -5660,6 +5660,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :ensure quelpa
     :quelpa (ma2oa :fetcher github :repo "seblemaguer/ma2oa.el")
     :tags '("CONNECTED")
+    :commands (ma2oa-retrieve-next-releases)
     :config
     (add-to-list 'org-agenda-files "~/.emacs.d/ma-releases.org"))
 #+END_SRC
