@@ -122,7 +122,7 @@ Finally, I use paradox to enhance the package listing experience.
     :config
     (setq paradox-spinner-type 'progress-bar
           paradox-execute-asynchronously t
-          paradox-github-token (my:auth-source-get-passwd :host "github.com" :user "seblemaguer^paradox")))
+          paradox-github-token (my:auth-source-get-passwd :host "api.github.com" :user "seblemaguer^paradox")))
 #+end_src
 
 ** COMMENT Auto-update
