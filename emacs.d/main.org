@@ -5114,51 +5114,49 @@ https://github.com/purcell/exec-path-from-shell
 *** Mu4e
 **** Global
 #+begin_src emacs-lisp
-    (use-package mu4e
-      :tags '("REQUIRES_CONNECTION" "MAIL")
-      :commands (mu4e)
-      :bind (
-             ([f2] . mu4e)
-             )
-      :hook
-      (mu4e-compose-mode . format-hook-message)
+  (use-package mu4e
+    :tags '("REQUIRES_CONNECTION" "MAIL")
+    :commands (mu4e)
+    :bind (([f2] . mu4e))
+    :hook
+    (mu4e-compose-mode . format-hook-message)
 
-      :custom
-      ;; File management
-      (mu4e-maildir "~/mail")
-      (mu4e-attachment-dir "~/Downloads")
-      (mu4e-change-filenames-when-moving t)
+    :custom
+    ;; File management
+    (mu4e-maildir "~/mail")
+    (mu4e-attachment-dir "~/Downloads")
+    (mu4e-change-filenames-when-moving t)
 
-      ;; User interaction
-      (mu4e-hide-index-messages t)
-      (mu4e-compose-context-policy 'ask-if-none)
-      (mu4e-confirm-quit nil)
-      (mu4e-compose-dont-reply-to-self t)
-      (mu4e-update-interval nil)
+    ;; User interaction
+    (mu4e-hide-index-messages t)
+    (mu4e-compose-context-policy 'ask-if-none)
+    (mu4e-confirm-quit nil)
+    (mu4e-compose-dont-reply-to-self t)
+    (mu4e-update-interval nil)
 
-      ;; Gui
-      (mu4e-view-show-addresses t)
-      (mu4e-view-show-images t)
-      (mu4e-view-use-gnus t)
-      (mu4e-use-fancy-chars t)
+    ;; Gui
+    (mu4e-view-show-addresses t)
+    (mu4e-view-show-images t)
+    (mu4e-view-use-gnus t)
+    (mu4e-use-fancy-chars t)
 
-      :config
+    :config
 
-      (add-to-list 'mu4e-view-actions
-                   '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+    (add-to-list 'mu4e-view-actions
+                 '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
-      ;; use imagemagick, if available
-      (when (fboundp 'imagemagick-register-types)
-        (imagemagick-register-types))
+    ;; use imagemagick, if available
+    (when (fboundp 'imagemagick-register-types)
+      (imagemagick-register-types))
 
-      (defun format-hook-message ()
-        "Specify some formatting rules for email message writing."
-        (set-fill-column 100)
-        (auto-fill-mode 0)
-        (visual-fill-column-mode)
-        (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-        (visual-line-mode))
-      )
+    (defun format-hook-message ()
+      "Specify some formatting rules for email message writing."
+      (set-fill-column 100)
+      (auto-fill-mode 0)
+      (visual-fill-column-mode)
+      (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+      (visual-line-mode))
+    )
 #+end_src
 **** Context (mailboxes separation)
 #+begin_src emacs-lisp
