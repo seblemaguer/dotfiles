@@ -3261,6 +3261,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     :ensure quelpa
     :quelpa
     (eshell-toggle :repo "4DA/eshell-toggle" :fetcher github :version original)
+    :tags '("SHELL")
 
     :functions (eshell-toggle-init-eshell)
     :custom
