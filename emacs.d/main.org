@@ -3582,6 +3582,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 #+begin_src emacs-lisp
   (use-package monky
     :ensure t
+    :commands (monky-status monky-pull)
     :tags '("VC"))
 #+end_src
 *** Configuration
