@@ -89,6 +89,7 @@ I am using tags to condition the use of packages based on the computer hostname.
 I use hydra a lot so it is easier to add its support directly in the use-package configuration part.
 
 #+BEGIN_SRC emacs-lisp
+  (use-package hydra :ensure t)
   (use-package use-package-hydra
     :ensure t
     :functions
