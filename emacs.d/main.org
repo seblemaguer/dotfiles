@@ -5947,7 +5947,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (setq org-fancy-priorities-list
           '((?A . "❗") (?B . "⬆") (?C . "⬇") (?D . "☕")
             (?1 . "⚡") (?2 . "⮬") (?3 . "⮮") (?4 . "☕")
-            (?I . "Imaportant"))))
+            (?I . "Important"))))
 #+end_src
 *** Indentation
 #+begin_src emacs-lisp
