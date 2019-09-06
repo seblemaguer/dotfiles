@@ -1204,7 +1204,7 @@ helpful when I develop for MaryTTS.
 
           ;; Todo part
           org-todo-keywords '(;; Baseline sequence
-                              (sequence "TODO(t)" "DELEGATED(e)"  "MEETING(M)" "|" "WAITING(w)" "DONE(d)" "CANCELLED(c@/!)" "POSTPONED(o@/!)")
+                              (sequence "TODO(t)" "DELEGATED(e)" "IN PROCESS(s)"  "MEETING(M)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c@/!)" "POSTPONED(o@/!)")
 
                               ;; Specific "to complete"
                               (sequence "REVIEW(r)" "RELEASE(R)" "MAIL(m)" "|")
@@ -1503,62 +1503,11 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
   (use-package org-super-agenda
     :ensure t
     :tags '("ORG")
-    :commands (org-agenda)
     :config
-
-    ;; Define a dedicated time-gid
-    (org-super-agenda--defgroup personal-time-grid
-      "Group items that appear on a time grid.
-    This matches the `dotime' text-property, which, if NOT set to
-    `time' (I know, this gets confusing), means it WILL appear in the
-    agenda time-grid. "
-      :section-name "Timed items"  ; Note: this does not mean the item has a "SCHEDULED:" line
-      :test (and
-             ;; Exclude Release which are not tagged!
-             (or (not (string= (org-super-agenda--get-category item) "Release"))
-                 (org-find-text-property-in-string 'todo-state item))
-             (or (--when-let (org-find-text-property-in-string 'time item)
-                   ;; This property is a string; if empty, it doesn't match
-                   (not (string-empty-p it)))
-                 ;; This property is nil if it doesn't match
-                 (org-find-text-property-in-string 'time-of-day item)
-                 (--when-let (org-find-text-property-in-string 'dotime item)
-                   ;; For this to match, the 'dotime property must be set, and
-                   ;; it must not be equal to 'time.  If it is not set, or if
-                   ;; it is set and is equal to 'time, the item is not part of
-                   ;; the time-grid.  Yes, this is confusing.  :)
-                   (not (eql it 'time))))))
 
     ;; Create groups
     (setq org-super-agenda-groups
-          '((:name "Today"  ; Optionally specify section name
-                   :personal-time-grid t  ; Items that appear on the time grid
-                   :scheduled today)
-
-            ;; Important thing
-            (:name "Important"
-                   :and (:priority "A" :date t)
-                   :order 1)
-
-            ;; Deadlines
-            (:name "Overdue"
-                   :deadline past
-                   :order 2)
-            (:name "Due Today"
-                   :deadline today
-                   :order 2)
-            (:name "Due Soon"
-                   :deadline future
-                   :order 3)
-
-            ;; Schedule
-            (:name "Scheduled, past but opened"
-                   :and (:scheduled past :not (:todo "WAITING") :not (:todo "RELEASE"))
-                   :order 4)
-            (:name "Scheduled in the next couple of days"
-                   :and (:scheduled future :not (:todo "WAITING") :not (:todo "RELEASE"))
-                   :order 5)
-
+          '(
             ;; Some standby thingy
             (:name "In process"
                    :todo "WAITING"
@@ -1566,71 +1515,96 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 
             ;; CD part
             (:name "Interesting releases"
-                   :and (:todo "RELEASE" :date t)
-                   :order 9)
+                   :and (:todo "RELEASE" :date t )
+                   :order 8)
 
             (:name "Releases"
                    :category "Release"
-                   :scheduled today
-                   :order 10)
+                   :order 9)
+            ;; Important thing
+            (:name "Important"
+                   :and (:priority "A" :date t)
+                   :order 2)
+
+
+            ;; Deadlines
+            (:name "Overdue"
+                   :deadline past
+                   :order 3)
+            (:name "Due Today"
+                   :deadline today
+                   :order 3)
+            (:name "Due Soon"
+                   :deadline future
+                   :order 4)
+
+            ;; Schedule
+            (:name "Scheduled, past but opened"
+                   :and (:scheduled past :not (:todo "WAITING") :not (:todo "RELEASE"))
+                   :order 5)
+            (:name "Scheduled in the next couple of days"
+                   :and (:scheduled future :not (:todo "WAITING") :not (:todo "RELEASE"))
+                   :order 6)
+
+            (:name "Today"  ; Optionally specify section name
+                   :time-grid t  ; Items that appear on the time grid
+                   )
             ))
 
-
     ;; Activate mode
-    (org-super-agenda-mode)
+    (org-super-agenda-mode t)
+
     )
 #+end_src
 ** Capturing
 *** Global
 #+begin_src emacs-lisp
   (use-package org-capture
-      :tags '("ORG")
-      :commands (org-capture)
+    :tags '("ORG")
+    :commands (org-capture)
+    :init
+    (setq org-capture-templates
+          `(("b" "Adding book" entry
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To read")
+             (file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory)))
 
-      ;; Capture
-      :init
-      (setq org-capture-templates
-            `(("b" "Adding book" entry
-               (file+headline "~/shared/Dropbox/org/todo/todo.org" "To read")
-               (file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory)))
+            ("c" "CD" entry
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "CD")
+             (file ,(format "%s/third_parties/org-capture-templates/cd.org" user-emacs-directory)))
 
-              ("c" "CD" entry
-               (file+headline "~/shared/Dropbox/org/todo/todo.org" "CD")
-               (file ,(format "%s/third_parties/org-capture-templates/cd.org" user-emacs-directory)))
+            ("C" "Concert" entry
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Concert")
+             (file ,(format "%s/third_parties/org-capture-templates/concert.org" user-emacs-directory)))
 
-              ("C" "Concert" entry
-               (file+headline "~/shared/Dropbox/org/todo/todo.org" "Concert")
-               (file ,(format "%s/third_parties/org-capture-templates/concert.org" user-emacs-directory)))
+            ("f" "Reference" entry
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Reference task")
+             (file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory)))
 
-              ("f" "Reference" entry
-               (file+headline "~/shared/Dropbox/org/todo/todo.org" "Reference task")
-               (file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory)))
+            ("L" "Bookmark" entry
+             (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
+             (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" user-emacs-directory)))
 
-              ("L" "Bookmark" entry
-               (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
-               (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" user-emacs-directory)))
+            ("m" "mail" entry
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Mailing")
+             (file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory)))
 
-              ("m" "mail" entry
-               (file+headline "~/shared/Dropbox/org/todo/todo.org" "Mailing")
-               (file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory)))
+            ("M" "Meeting" entry
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
+             (file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory)))
 
-              ("M" "Meeting" entry
-               (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
-               (file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory)))
+            ("P" "Personnal calendar" entry
+             (file "~/Calendars/CalendarMe.org")
+             (file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory)))
 
-              ("P" "Personnal calendar" entry
-               (file "~/Calendars/CalendarMe.org")
-               (file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory)))
+            ("r" "RSS" entry
+             (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "RSS")
+             (file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory)))
 
-              ("r" "RSS" entry
-               (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "RSS")
-               (file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory)))
-
-              ("t" "ToDo Entry" entry
-               (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
-               (file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory))
-               :empty-lines-before 1)))
-      )
+            ("t" "ToDo Entry" entry
+             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
+             (file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory))
+             :empty-lines-before 1)))
+    )
 #+end_src
 *** Cooking
 #+begin_src emacs-lisp
@@ -1648,7 +1622,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package org-mru-clock
     :ensure t
-    :commands (org-mru-clock-in org-mru-clock-select-recent-task)
     :tags '("ORG")
     :bind* (("C-c C-x i" . org-mru-clock-in)
             ("C-c C-x C-j" . org-mru-clock-select-recent-task))
@@ -1657,6 +1630,26 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
           org-mru-clock-keep-formatting t
           org-mru-clock-completing-read #'ivy-completing-read
           org-clock-persist t)
+
+    (defun sacha/org-clock-in-if-starting ()
+      "Clock in when the task is marked IN PROCESS."
+      (when (and (string= org-state "IN PROCESS")
+                 (not (string= org-last-state org-state)))
+        (org-clock-in)))
+
+    (defadvice org-clock-in (after sacha activate)
+      "Set this task's status to 'IN PROCESS'."
+      (org-todo "IN PROCESS"))
+
+    (defun sacha/org-clock-out-if-waiting ()
+      "Clock in when the task is marked STARTED."
+      (when (and (string= org-state "WAITING")
+                 (not (string= org-last-state org-state)))
+        (org-clock-out)))
+
+    :hook
+    (org-after-todo-state-change . sacha/org-clock-out-if-waiting)
+    (org-after-todo-state-change . sacha/org-clock-in-if-starting)
 
     :config
     (org-clock-persistence-insinuate))
@@ -5898,28 +5891,29 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     :config
 
     (setq org-todo-keyword-faces
-          '(("TODO"      :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("MEETING"   :foreground "red1"                              :weight bold)
+          '(("TODO"       :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("IN PROCESS" :background "lightgray"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("MEETING"    :foreground "red1"                              :weight bold)
 
             ;; Specific helpers
-            ("REVIEW"    :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("MAIL"      :background "purple"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("REVIEW"     :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("MAIL"       :background "purple"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
 
             ;; I can't really do anything here!
-            ("WAITING"   :background "gold"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("DELEGATED" :background "gold"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("WAITING"    :background "gold"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("DELEGATED"  :background "gold"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
 
             ;; Done but not complete
-            ("CANCELLED" :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("POSTPONED" :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("CANCELLED"  :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("POSTPONED"  :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
 
             ;; Done and I don't care to be complete
-            ("EVENT"     :foreground "purple"                            :weight bold)
-            ("NOTE"      :foreground "purple"                            :weight bold)
-            ("RELEASE"   :foreground "purple"                            :weight bold)
+            ("EVENT"      :foreground "purple"                            :weight bold)
+            ("NOTE"       :foreground "purple"                            :weight bold)
+            ("RELEASE"    :foreground "purple"                            :weight bold)
 
             ;; Done and complete
-            ("DONE"      :background "forest green"                      :weight bold :box (:line-width 2 :style released-button))
+            ("DONE"       :background "forest green"                      :weight bold :box (:line-width 2 :style released-button))
             )
 
 
