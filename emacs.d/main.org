@@ -2701,6 +2701,25 @@ enough to be on melpa so I use quelpa.
     (setq pipenv-projectile-after-switch-function
           #'pipenv-projectile-after-switch-extended))
 #+end_src
+*** Conda
+#+begin_src emacs-lisp
+  (use-package conda
+    :ensure t
+    :init
+    (setq conda-anaconda-home (expand-file-name "~/.conda"))
+    :config
+    ;; If you want interactive shell support, include:
+    (conda-env-initialize-interactive-shells)
+    ;; If you want eshell support, include:
+    (conda-env-initialize-eshell)
+    ;; If you want auto-activation, include:
+    (conda-env-autoactivate-mode t)
+    ;; Activate the project/virtual env you want to use.
+    ;; Via M-x conda-env-activate RET analyticd-pysystemtrade
+    ;; or
+    ;; (conda-env-activate "analyticd-pysystemtrade")
+    )
+#+end_src
 *** Interpreter configuration
 #+begin_src emacs-lisp
   (use-package ein
