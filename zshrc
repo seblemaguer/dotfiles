@@ -109,10 +109,10 @@ POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR=''
 POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR=''
 
 POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="%F{blue}\u256D\u2500%F{white}"
-POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{blue}\u2570\uf460%F{white} "
+POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{blue}\u2570\uf105%F{white} "
 
 POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND="clear"
-POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND="yellow"
+POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND="blue"
 
 POWERLEVEL9K_VCS_MODIFIED_BACKGROUND="clear"
 POWERLEVEL9K_VCS_MODIFIED_FOREGROUND="yellow"
@@ -143,15 +143,15 @@ POWERLEVEL9K_TIME_BACKGROUND="clear"
 POWERLEVEL9K_TIME_FOREGROUND="cyan"
 POWERLEVEL9K_TIME_FORMAT="%D{\uf017 %H:%M \uf073 %d.%m.%y}"
 
-POWERLEVEL9K_ANACONDA_BACKGROUND=(clear)
+# Python:
+POWERLEVEL9K_PYTHON_ICON="\uf1c0"
+POWERLEVEL9K_ANACONDA_BACKGROUND='clear'
 
+POWERLEVEL9K_BATTERY_LOW_COLOR="red"
+POWERLEVEL9K_BATTERY_VERBOSE=false
 POWERLEVEL9K_BATTERY_LEVEL_BACKGROUND=(clear)
 POWERLEVEL9K_BATTERY_STAGES=(
-    $'▏    ' $'▎    ' $'▍    ' $'▌    ' $'▋    ' $'▊    ' $'▉    ' $'█    '
-    $'█▏   ' $'█▎   ' $'█▍   ' $'█▌   ' $'█▋   ' $'█▊   ' $'█▉   ' $'██   '
-    $'██   ' $'██▎  ' $'██▍  ' $'██▌  ' $'██▋  ' $'██▊  ' $'██▉  ' $'███  '
-    $'███  ' $'███▎ ' $'███▍ ' $'███▌ ' $'███▋ ' $'███▊ ' $'███▉ ' $'████ '
-    $'████ ' $'████▎' $'████▍' $'████▌' $'████▋' $'████▊' $'████▉' $'█████'
+    "\uf244 " "\uf243 " "\f242 " "\uf241 " "\uf240 "
 )
 
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND='clear'
@@ -160,7 +160,10 @@ POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='magenta'
 POWERLEVEL9K_BACKGROUND_JOBS_BACKGROUND='clear'
 POWERLEVEL9K_BACKGROUND_JOBS_FOREGROUND='green'
 
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status background_jobs dir vcs)
+POWERLEVEL9K_CONTEXT_DEFAULT_BACKGROUND='clear'
+POWERLEVEL9K_CONTEXT_DEFAULT_FOREGROUND='black'
+
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status background_jobs context  dir vcs)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(command_execution_time anaconda virtualenv battery time_joined)
 
 
