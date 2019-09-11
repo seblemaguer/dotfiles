@@ -1508,24 +1508,28 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     ;; Create groups
     (setq org-super-agenda-groups
           '(
-            ;; Some standby thingy
-            (:name "In process"
-                   :todo "WAITING"
-                   :order 7)
-
             ;; CD part
             (:name "Interesting releases"
                    :and (:todo "RELEASE" :date t )
                    :order 8)
 
             (:name "Releases"
-                   :category "Release"
+                   :and (:category "Release" :not (:todo "WAITING"))
                    :order 9)
+
+            (:name "Today"  ; Optionally specify section name
+                   :time-grid t  ; Items that appear on the time grid
+                   )
+
             ;; Important thing
             (:name "Important"
                    :and (:priority "A" :date t)
                    :order 2)
 
+            ;; Some standby thingy
+            (:name "In process"
+                   :todo "WAITING"
+                   :order 7)
 
             ;; Deadlines
             (:name "Overdue"
@@ -1545,10 +1549,6 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
             (:name "Scheduled in the next couple of days"
                    :and (:scheduled future :not (:todo "WAITING") :not (:todo "RELEASE"))
                    :order 6)
-
-            (:name "Today"  ; Optionally specify section name
-                   :time-grid t  ; Items that appear on the time grid
-                   )
             ))
 
     ;; Activate mode
