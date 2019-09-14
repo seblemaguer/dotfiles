@@ -390,10 +390,10 @@ leads to this configuration
 
     ;; elfeed
     (add-to-list 'recentf-exclude (format "%s/\\.elfeed/.*" (getenv "HOME")))
-    (add-to-list 'recentf-exclude (format "%s/shared/Dropbox/emacs/elfeed/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/shared/pCloudDrive/emacs/elfeed/.*" (getenv "HOME")))
 
     ;; Org-mode organisation
-    (add-to-list 'recentf-exclude (format "%s/shared/Dropbox/org/organisation/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/shared/pCloudDrive/org/organisation/.*" (getenv "HOME")))
 
     ;; Org/todo/calendars
     (add-to-list 'recentf-exclude ".*todo.org")
@@ -1401,11 +1401,11 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 
     ;; Agenda files
     (setq org-agenda-files '())
-    (when (file-exists-p "~/shared/Dropbox/org/todo/todo.org")
-      (add-to-list 'org-agenda-files "~/shared/Dropbox/org/todo/todo.org"))
+    (when (file-exists-p "~/shared/pCloudDrive/org/todo/todo.org")
+      (add-to-list 'org-agenda-files "~/shared/pCloudDrive/org/todo/todo.org"))
 
-    ;; (when (file-exists-p "~/shared/Dropbox/org/organisation/bookmarks.org")
-    ;;   (add-to-list 'org-agenda-files "~/shared/Dropbox/org/organisation/bookmarks.org"))
+    ;; (when (file-exists-p "~/shared/pCloudDrive/org/organisation/bookmarks.org")
+    ;;   (add-to-list 'org-agenda-files "~/shared/pCloudDrive/org/organisation/bookmarks.org"))
 
     (when (file-exists-p "~/Calendars")
       (setq org-agenda-files (append org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$"))))
@@ -1612,31 +1612,31 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :init
     (setq org-capture-templates
           `(("b" "Adding book" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To read")
+             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "To read")
              (file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory)))
 
             ("c" "CD" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "CD")
+             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "CD")
              (file ,(format "%s/third_parties/org-capture-templates/cd.org" user-emacs-directory)))
 
             ("C" "Concert" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Concert")
+             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "Concert")
              (file ,(format "%s/third_parties/org-capture-templates/concert.org" user-emacs-directory)))
 
             ("f" "Reference" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Reference task")
+             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "Reference task")
              (file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory)))
 
             ("L" "Bookmark" entry
-             (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "Bookmarks")
+             (file+olp "~/shared/pCloudDrive/org/todo/todo.org" "To review" "Bookmarks")
              (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" user-emacs-directory)))
 
             ("m" "mail" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "Mailing")
+             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "Mailing")
              (file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory)))
 
             ("M" "Meeting" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
+             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "To sort")
              (file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory)))
 
             ("P" "Personnal calendar" entry
@@ -1644,11 +1644,11 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
              (file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory)))
 
             ("r" "RSS" entry
-             (file+olp "~/shared/Dropbox/org/todo/todo.org" "To review" "RSS")
+             (file+olp "~/shared/pCloudDrive/org/todo/todo.org" "To review" "RSS")
              (file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory)))
 
             ("t" "ToDo Entry" entry
-             (file+headline "~/shared/Dropbox/org/todo/todo.org" "To sort")
+             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "To sort")
              (file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory))
              :empty-lines-before 1)))
     )
@@ -1661,7 +1661,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :after (org-capture)
     :config
     (add-to-list 'org-capture-templates
-                 '("c" "Cookbook" entry (file "~/shared/Dropbox/recipes/cookbook.org")
+                 '("c" "Cookbook" entry (file "~/shared/pCloudDrive/recipes/cookbook.org")
                    "%(org-chef-get-recipe-from-url)"
                    :empty-lines 1)))
 #+end_src
@@ -1705,7 +1705,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package org-analyzer
     :ensure t
-    :custom (org-analyzer-org-directory  "~/shared/Dropbox/org/todo")
+    :custom (org-analyzer-org-directory  "~/shared/pCloudDrive/org/todo")
     :commands (org-analyzer-start))
 #+end_src
 
@@ -5464,7 +5464,7 @@ https://github.com/purcell/exec-path-from-shell
 
     :config
     ;; Change the storage directory
-    (setq elfeed-db-directory "~/shared/Dropbox/emacs/elfeed")
+    (setq elfeed-db-directory "~/shared/pCloudDrive/emacs/elfeed")
 
     ;; Formatting dates
     (setq elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left)))
@@ -5476,10 +5476,10 @@ https://github.com/purcell/exec-path-from-shell
     :tags '("REQUIRES_CONNECTION" "RSS")
     :no-require t
     :config
-    (when (file-exists-p "~/shared/Dropbox/org/organisation/rss.org")
+    (when (file-exists-p "~/shared/pCloudDrive/org/organisation/rss.org")
       (progn
         (elfeed-org)
-        (setq rmh-elfeed-org-files (list "~/shared/Dropbox/org/organisation/rss.org"))
+        (setq rmh-elfeed-org-files (list "~/shared/pCloudDrive/org/organisation/rss.org"))
         (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
 
     (elfeed-update-background-start))
@@ -5781,11 +5781,11 @@ organize read papers or "to read" papers. This is mainly based on https://codear
     :ensure t
     :tags '("PRODUCTION")
     :config
-    (setq ivy-bibtex-bibliography "~/shared/Dropbox/org/work/biblio/index.bib" ;; where your references are stored
-          ivy-bibtex-library-path "~/shared/Dropbox/org/work/biblio/lib/" ;; where your pdfs etc are stored
-          ivy-bibtex-notes-path "~/shared/Dropbox/org/work/biblio/index.org" ;; where your notes are stored
-          bibtex-completion-bibliography "~/shared/Dropbox/org/work/biblio/index.bib" ;; writing completion
-          bibtex-completion-notes-path "~/shared/Dropbox/org/work/biblio/index.org"))
+    (setq ivy-bibtex-bibliography "~/shared/pCloudDrive/org/work/biblio/index.bib" ;; where your references are stored
+          ivy-bibtex-library-path "~/shared/pCloudDrive/org/work/biblio/lib/" ;; where your pdfs etc are stored
+          ivy-bibtex-notes-path "~/shared/pCloudDrive/org/work/biblio/index.org" ;; where your notes are stored
+          bibtex-completion-bibliography "~/shared/pCloudDrive/org/work/biblio/index.bib" ;; writing completion
+          bibtex-completion-notes-path "~/shared/pCloudDrive/org/work/biblio/index.org"))
 
   (use-package org-ref
     :ensure t
@@ -5794,10 +5794,10 @@ organize read papers or "to read" papers. This is mainly based on https://codear
     (org-export-before-parsing . orcp-citeproc)
     :init
     (setq org-ref-completion-library 'org-ref-ivy-cite
-          org-ref-notes-directory "~/shared/Dropbox/org/work/biblio"
-          org-ref-bibliography-notes "~/shared/Dropbox/org/work/biblio/index.org"
-          org-ref-default-bibliography '("~/shared/Dropbox/org/work/biblio/index.bib")
-          org-ref-pdf-directory "~/shared/Dropbox/org/work/biblio/lib/"))
+          org-ref-notes-directory "~/shared/pCloudDrive/org/work/biblio"
+          org-ref-bibliography-notes "~/shared/pCloudDrive/org/work/biblio/index.org"
+          org-ref-default-bibliography '("~/shared/pCloudDrive/org/work/biblio/index.bib")
+          org-ref-pdf-directory "~/shared/pCloudDrive/org/work/biblio/lib/"))
 
   (use-package org-noter
     :ensure t
