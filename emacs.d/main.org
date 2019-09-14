@@ -5886,6 +5886,9 @@ As I write papers, it is useful to have some helper to start to have the inspira
           doom-modeline-irc t
           doom-modeline-irc-stylize 'identity
 
+          ;; Versioning (github)
+          doom-modeline-github t
+
           ;;
           doom-modeline-checker-simple-format t)
 
