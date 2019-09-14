@@ -1180,7 +1180,7 @@ helpful when I develop for MaryTTS.
 
     ;; Global
     (setq org-startup-indented t
-          org-startup-folded nil
+          org-startup-folded t
           org-enforce-todo-dependencies t
           org-cycle-separator-lines 2
           org-blank-before-new-entry '((heading) (plain-list-item . auto))
