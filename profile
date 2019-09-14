@@ -45,3 +45,10 @@ export INFOPATH=$HOME/environment/local/share/info:$INFOPATH
 # Change the locale !
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+
+# Screen detection
+DP_CONNECTED=`xrandr | grep " connected" | grep "HDMI-1" | wc -l`
+if [ $DP_CONNECTED = 1 ]
+then
+    ~/.screenlayout/office.sh
+fi
