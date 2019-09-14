@@ -171,20 +171,19 @@ This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org
     "Tangle ~/.emacs.d/main.org to ~/.emacs.d/init.el."
     (interactive)
 
-    ;; byte-compile plugins
-    (byte-recompile-directory (expand-file-name default-plugin-dir) 0)
-
-
     ;; Tangle to init.el
     (with-current-buffer (find-file (concat user-emacs-directory "main.org"))
       (org-babel-tangle))
     )
 
+  ;; ;; byte-compile plugins
+  ;; (byte-recompile-directory (expand-file-name default-plugin-dir) 0)
+
   (defun compile-init ()
     "byte compiles ~/.emacs.d/init.el"
     (interactive)
     (when (equal (buffer-name)
-                 (concat "main.org"))
+		 (concat "main.org"))
       ;; Recompile init file
       (byte-compile-disable-warning  'make-local) ;; FIXME: apparently people says this warning is simply wrong, so ignore it!
       (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)
