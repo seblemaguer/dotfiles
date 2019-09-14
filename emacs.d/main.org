@@ -1242,6 +1242,56 @@ helpful when I develop for MaryTTS.
     (use-package ox-bibtex :defer t)
     (use-package org-protocol :defer t)
 #+end_src
+** Archiving
+I prefer to keep the architecture, so for the archiving I am based on the discussion here: https://gist.github.com/Fuco1/e86fb5e0a5bb71ceafccedb5ca22fcfb
+#+begin_src emacs-lisp
+  (use-package org-archive
+    :config
+    (setq org-archive-default-command 'org-archive-subtree)
+
+    (defadvice org-archive-subtree (around fix-hierarchy activate)
+      (let* ((fix-archive-p (and (not current-prefix-arg)
+                                 (not (use-region-p))))
+             (location (org-archive--compute-location org-archive-location))
+             (afile (car location))
+             (offset (if (= 0 (length (cdr location)))
+                         1
+                       (1+ (string-match "[^*]" (cdr location)))))
+             (buffer (or (find-buffer-visiting afile) (find-file-noselect afile))))
+        ad-do-it
+        (when fix-archive-p
+          (with-current-buffer buffer
+            (goto-char (point-max))
+            (while (> (org-current-level) offset) (org-up-heading-safe))
+            (let* ((olpath (org-entry-get (point) "ARCHIVE_OLPATH"))
+                   (path (and olpath (split-string olpath "/")))
+                   (level offset)
+                   tree-text)
+              (when olpath
+                (org-mark-subtree)
+                (setq tree-text (buffer-substring (region-beginning) (region-end)))
+                (let (this-command) (org-cut-subtree))
+                (goto-char (point-min))
+                (save-restriction
+                  (widen)
+                  (-each path
+                    (lambda (heading)
+                      (if (re-search-forward
+                           (rx-to-string
+                            `(: bol (repeat ,level "*") (1+ " ") ,heading)) nil t)
+                          (org-narrow-to-subtree)
+                        (goto-char (point-max))
+                        (unless (looking-at "^")
+                          (insert "\n"))
+                        (insert (make-string level ?*)
+                                " "
+                                heading
+                                "\n"))
+                      (cl-incf level)))
+                  (widen)
+                  (org-end-of-subtree t t)
+                  (org-paste-subtree level tree-text)))))))))
+#+end_src
 ** Todo management - some helpers
 Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
@@ -1552,9 +1602,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
             ))
 
     ;; Activate mode
-    (org-super-agenda-mode t)
-
-    )
+    (org-super-agenda-mode t))
 #+end_src
 ** Capturing
 *** Global
