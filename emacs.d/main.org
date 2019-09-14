@@ -5086,10 +5086,10 @@ https://github.com/purcell/exec-path-from-shell
     :commands (slack-start)
     :no-require t
     :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
-    :init
-    (setq slack-buffer-emojify t)
-
     :config
+    (setq slack-buffer-emojify t
+          lui-time-stamp-position 'right-margin
+          lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]")
 
     ;; Adaptcentre
     (defvar adapt-client-id (replace-regexp-in-string "\\^.*$" "" (my:auth-source-get-user :host "adaptcentre"))
