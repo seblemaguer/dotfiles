@@ -339,9 +339,28 @@ I defined this helper to as I like to align equations based on the equal sign.
    (align-regexp begin end "\\(\\s-*\\)=" 1 1 ))
 #+end_src
 
-** Goto/Jumping
-Jumping to a specific line is part of the day to day use case of an editor. Here, we are defining some helpers.
+** Navigation
+This part is dedicated to the configuration for buffer (even large) navigation.
+*** Scrolling (and fast please !)
+#+begin_src emacs-lisp
+  (use-package fast-scroll
+    :ensure t  (use-package fast-scroll
+    :ensure t
+    :hook
+    (fast-scroll-start      . (lambda () (flycheck-mode -1)))
+    (fast-scroll-end        . (lambda () (flycheck-mode 1)))
 
+    :config
+    (fast-scroll-config)
+    (fast-scroll-mode 1))
+    :hook
+    (fast-scroll-start      . (lambda () (flycheck-mode -1)))
+    (fast-scroll-end        . (lambda () (flycheck-mode 1)))
+
+    :config
+    (fast-scroll-config)
+    (fast-scroll-mode 1))
+#+end_src
 *** Preview
 First, instead of jumping we simply can preview the jump.
 
