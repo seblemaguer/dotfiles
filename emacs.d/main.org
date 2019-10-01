@@ -1172,20 +1172,15 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
     )
 #+end_src
 
-** Gradle global support
-I use my fork for gradle compilation. The mode still needs to be really improved but it is really
-helpful when I develop for MaryTTS.
-
+** Task runner
 #+begin_src emacs-lisp
-  (use-package gradle-mode
-    :ensure quelpa
-    :quelpa (gradle-mode :repo "seblemaguer/emacs-gradle-mode" :fetcher github)
-    :tags '("COMPILATION")
-    :config
-    (setq gradle-use-gradlew t)
-    (gradle-mode))
-#+end_src
+  (use-package taskrunner
+    :ensure t)
 
+  (use-package ivy-taskrunner
+    :ensure quelpa
+    :quelpa (ivy-taskrunner :fetcher "github" :repo "emacs-taskrunner/ivy-taskrunner")) ;; Melpa
+#+end_src
 * Org
 ** Global
 #+begin_src emacs-lisp
