@@ -1911,6 +1911,12 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package org-dashboard :ensure t)
 #+end_src
+** Sidebar
+#+begin_src emacs-lisp
+  (use-package org-sidebar
+    :ensure t
+    :commands (org-sidebar))
+#+end_src
 ** Querying
 It is useful to find some items in org files based on a query.
 #+begin_src emacs-lisp
