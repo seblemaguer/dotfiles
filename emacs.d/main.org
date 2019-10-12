@@ -342,15 +342,7 @@ This part is dedicated to the configuration for buffer (even large) navigation.
 *** Scrolling (and fast please !)
 #+begin_src emacs-lisp
   (use-package fast-scroll
-    :ensure t  (use-package fast-scroll
     :ensure t
-    :hook
-    (fast-scroll-start      . (lambda () (flycheck-mode -1)))
-    (fast-scroll-end        . (lambda () (flycheck-mode 1)))
-
-    :config
-    (fast-scroll-config)
-    (fast-scroll-mode 1))
     :hook
     (fast-scroll-start      . (lambda () (flycheck-mode -1)))
     (fast-scroll-end        . (lambda () (flycheck-mode 1)))
@@ -1935,7 +1927,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 It is useful to find some items in org files based on a query.
 #+begin_src emacs-lisp
   (use-package org-ql
-    :ensure t
+    :ensure t)
 #+end_src
 
 * Emacs Lisp
@@ -3195,7 +3187,7 @@ Extracted from https://github.com/zakame/emacs-for-javascript
     :ensure t
     :tags '("DOCUMENTATION"))
 #+end_src
-** System
+** Diverse
 *** Man
 #+begin_src emacs-lisp
   (use-package man
