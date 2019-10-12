@@ -1590,6 +1590,10 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                    :and (:todo "RELEASE" :date t )
                    :order 8)
 
+            (:name "Ordered Releases"
+                   :and (:category "Release" :todo "WAITING")
+                   :order 8)
+
             (:name "Releases"
                    :and (:category "Release" :not (:todo "WAITING"))
                    :order 9)
