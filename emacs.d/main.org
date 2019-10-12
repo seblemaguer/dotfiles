@@ -1120,20 +1120,34 @@ compilation mechanisms as well as fly checking.
 I just modify a little bit the default compilation to be a little more "user friendly".
 
 #+begin_src emacs-lisp
-  (use-package compile
-    :defines compilation-scroll-output
-    :defer t
-    :tags '("COMPILATION")
-    :init
-    (setq compilation-scroll-output t)
-    :hook
-    (compilation-filter . pd/colourise-compilation-buffer)
+    (defun my-compile-autoclose (buffer string)
+      "Auto close compile log if there are no errors"
+      (when (string-match "finished" string)
+            (delete-window (get-buffer-window buffer t))
+            (bury-buffer-internal buffer)))
 
-    :config
-    (require 'ansi-color)
-    (defun pd/colourise-compilation-buffer ()
-      (when (eq major-mode 'compilation-mode)
-        (ansi-color-apply-on-region compilation-filter-start (point-max)))))
+    (use-package compile
+      :defer
+      :diminish compilation-in-progress
+      :init
+      (setq compilation-scroll-output t)
+      :config
+      (defun my-colorize-compilation-buffer ()
+            (read-only-mode 'toggle)
+            (ansi-color-apply-on-region compilation-filter-start (point))
+            (read-only-mode 'toggle))
+      (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
+      (add-to-list 'compilation-finish-functions #'my-compile-autoclose)
+
+      (setq compilation-always-kill t)
+      (setq compilation-ask-about-save nil)
+      (setq compilation-scroll-output 'first-error)
+
+      ;; the next-error function weirdly stops at "In file included from
+      ;; config.cpp:14:0:". Stop that:
+      ;; http://stackoverflow.com/questions/15489319/how-can-i-skip-in-file-included-from-in-emacs-c-compilation-mode
+      (setcar (nthcdr 5 (assoc 'gcc-include compilation-error-regexp-alist-alist)) 0)
+      )
 #+end_src
 
 ** Flychecking
