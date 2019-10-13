@@ -3732,6 +3732,14 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                          ("q" nil "cancel" :color blue)))
 #+end_src
 ** Providers
+*** Forget
+#+begin_src emacs-lisp
+  (use-package forge
+    :ensure t
+    :demand t
+    :tags '("VC")
+    :after magit)
+#+end_src
 *** Github
 #+begin_src emacs-lisp
   ;; Github api
@@ -3750,15 +3758,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :ensure t
     :commands (github-search-clone-repo github-search-user-clone-repo)
     :tags '("VC"))
-
-  ;; Mapping github with magit
-  (use-package magithub
-    :ensure t
-    :tags '("VC")
-    :after (:all magit)
-    :config
-    (magithub-feature-autoinject t)
-    (setq magithub-clone-default-directory "~/tmp"))
 #+end_src
 *** Gist
 #+begin_src emacs-lisp
