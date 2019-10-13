@@ -949,6 +949,7 @@ I do prefer vertical completion, which is why I use extensively Ivy and extensio
 
   (use-package ivy-rich
     :ensure t
+    :tags '("COMPLETION")
     :config
     (ivy-rich-mode 1)
     (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line))
@@ -1109,34 +1110,35 @@ compilation mechanisms as well as fly checking.
 I just modify a little bit the default compilation to be a little more "user friendly".
 
 #+begin_src emacs-lisp
-    (defun my-compile-autoclose (buffer string)
-      "Auto close compile log if there are no errors"
-      (when (string-match "finished" string)
-            (delete-window (get-buffer-window buffer t))
-            (bury-buffer-internal buffer)))
+  (defun my-compile-autoclose (buffer string)
+    "Auto close compile log if there are no errors"
+    (when (string-match "finished" string)
+          (delete-window (get-buffer-window buffer t))
+          (bury-buffer-internal buffer)))
 
-    (use-package compile
-      :defer
-      :diminish compilation-in-progress
-      :init
-      (setq compilation-scroll-output t)
-      :config
-      (defun my-colorize-compilation-buffer ()
-            (read-only-mode 'toggle)
-            (ansi-color-apply-on-region compilation-filter-start (point))
-            (read-only-mode 'toggle))
-      (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
-      (add-to-list 'compilation-finish-functions #'my-compile-autoclose)
+  (use-package compile
+    :defer
+    :diminish compilation-in-progress
+    :tags '("COMPILATION")
+    :init
+    (setq compilation-scroll-output t)
+    :config
+    (defun my-colorize-compilation-buffer ()
+          (read-only-mode 'toggle)
+          (ansi-color-apply-on-region compilation-filter-start (point))
+          (read-only-mode 'toggle))
+    (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
+    (add-to-list 'compilation-finish-functions #'my-compile-autoclose)
 
-      (setq compilation-always-kill t)
-      (setq compilation-ask-about-save nil)
-      (setq compilation-scroll-output 'first-error)
+    (setq compilation-always-kill t)
+    (setq compilation-ask-about-save nil)
+    (setq compilation-scroll-output 'first-error)
 
-      ;; the next-error function weirdly stops at "In file included from
-      ;; config.cpp:14:0:". Stop that:
-      ;; http://stackoverflow.com/questions/15489319/how-can-i-skip-in-file-included-from-in-emacs-c-compilation-mode
-      (setcar (nthcdr 5 (assoc 'gcc-include compilation-error-regexp-alist-alist)) 0)
-      )
+    ;; the next-error function weirdly stops at "In file included from
+    ;; config.cpp:14:0:". Stop that:
+    ;; http://stackoverflow.com/questions/15489319/how-can-i-skip-in-file-included-from-in-emacs-c-compilation-mode
+    (setcar (nthcdr 5 (assoc 'gcc-include compilation-error-regexp-alist-alist)) 0)
+    )
 #+end_src
 
 ** Flychecking
@@ -1178,11 +1180,14 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
 ** Task runner
 #+begin_src emacs-lisp
   (use-package taskrunner
-    :ensure t)
+    :ensure t
+    :tags '("COMPILATION"))
 
   (use-package ivy-taskrunner
     :ensure quelpa
-    :quelpa (ivy-taskrunner :fetcher "github" :repo "emacs-taskrunner/ivy-taskrunner")) ;; Melpa
+    :quelpa (ivy-taskrunner :fetcher "github" :repo "emacs-taskrunner/ivy-taskrunner")
+    :tags '("COMPILATION")
+    :bind ("C-c C-g b" . ivy-taskrunner))
 #+end_src
 * Org
 ** Global
