@@ -2,7 +2,7 @@
 #-*- mode: sh; -*-
 
 # Main path variable
-export PATH=${HOME}/environment/local/bin:$PATH
+export PATH=${HOME}/bin:${HOME}/environment/local/bin:$PATH
 export PATH=$HOME/work/tools/local/bin/:$HOME/work/maintained_tools/local/bin/:$PATH
 export PATH=$HOME/work/tools/local/share/matlab/bin:$PATH
 export PATH=$HOME/.local/bin:$PATH
