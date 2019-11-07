@@ -77,10 +77,11 @@ I am using tags to condition the use of packages based on the computer hostname.
     :quelpa (use-package-tags :fetcher github :repo "seblemaguer/use-package-tags")
     :config
     (setq use-package-tags-enabled
-          `(("lemagues-laptop" . ("!REQUIRES_CONNECTION"))
-            ("stb067" . ("ALL"))
-            ("mackenzie" . ("!MAIL" "!RSS" "!USER" "!GUI"))
-            (,use-package-tags-default-host . ("CORE" "!USER")))))
+	  `(("lemagues-laptop" . ("!REQUIRES_CONNECTION"))
+	    ("lemagues-surface" . ("ALL"))
+	    ("stb067" . ("ALL"))
+	    ("mackenzie" . ("!MAIL" "!RSS" "!USER" "!GUI"))
+	    (,use-package-tags-default-host . ("CORE" "!USER")))))
 #+END_SRC
 
 ** Hydra
