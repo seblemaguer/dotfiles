@@ -3966,17 +3966,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     ;; Omitting
     (setq-default dired-omit-files "^\\.[^.]+"
                   dired-omit-mode t)
-
-    ;; Adapt ls lisp format
-    (if (boundp 'ls-lisp-ignore-case)
-        (setq ls-lisp-ignore-case t))
-    (if (boundp 'ls-lisp-dirs-first)
-        (setq ls-lisp-dirs-first t))
-    (if (boundp 'ls-lisp-use-localized-time-format)
-        (setq ls-lisp-use-localized-time-format t))
-    (if (boundp 'ls-lisp-format-time-list)
-        (setq ls-lisp-format-time-list '("%Y-%m-%d %H:%M" "%Y-%m-%d %H:%M")))
-
     (put 'dired-find-alternate-file 'disabled nil)
 
     (setq dired-dwim-target t
@@ -3992,6 +3981,18 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           dired-listing-switches "--group-directories-first -alh"
           dired-details-hidden-string "[...]")
     )
+
+  (use-package ls-lisp
+    :config
+      ;; Adapt ls lisp format
+    (if (boundp 'ls-lisp-ignore-case)
+        (setq ls-lisp-ignore-case t))
+    (if (boundp 'ls-lisp-dirs-first)
+        (setq ls-lisp-dirs-first t))
+    (if (boundp 'ls-lisp-use-localized-time-format)
+        (setq ls-lisp-use-localized-time-format t))
+    (if (boundp 'ls-lisp-format-time-list)
+        (setq ls-lisp-format-time-list '("%Y-%m-%d %H:%M" "%Y-%m-%d %H:%M"))))
 #+end_src
 *** peep-dired
 #+begin_src emacs-lisp
