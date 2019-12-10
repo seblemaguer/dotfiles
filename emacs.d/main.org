@@ -926,7 +926,10 @@ to extend it even further in the feature.
 * Completion
 This part focuses on completion configuration. Language specific configurations are not done here
 but in the dedicate language configuration part. This section is just for global configuration.
-
+** Compdef
+#+begin_src emacs-lisp
+(use-package compdef :ensure t)
+#+end_src
 ** Ivy/swipper/counsel
 I do prefer vertical completion, which is why I use extensively Ivy and extensions.
 
@@ -965,8 +968,6 @@ configuration here.
   (use-package company
     :ensure t
     :tags '("COMPLETION")
-    :hook
-    (emacs-lisp-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-elisp))))
     :config
 
     ;; Global
@@ -1031,12 +1032,10 @@ Ivy-yasnippet is used for snippet discovery.
   (use-package yasnippet
     :ensure t
     :tags '("COMPLETION")
+    :after company
+    :compdef yas-minor-mode
+    :company company-yasnippet
     :config
-
-    ;; Adding yasnippet support to company
-    (eval-after-load 'company
-      '(lambda ()
-         (add-to-list 'company-backends 'company-yasnippet)))
 
     ;; Add third parties snippets
     (defvar third-parties-snippet-dir (format "%s/third_parties/snippets" user-emacs-directory)
@@ -1990,12 +1989,14 @@ into company backend.
   (use-package company-irony
     :ensure t
     :tags '("LANGUAGE")
-    :hook (irony-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-irony)))))
+    :compdef irony-mode
+    :company company-irony)
 
   (use-package company-irony-c-headers
     :ensure t
     :tags '("LANGUAGE")
-    :hook (irony-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-irony-c-headers)))))
+    :compdef irony-mode
+    :company company-irony-c-headers)
 #+end_src
 *** Adapt compilation
 Sometimes, I don't want to have a makefile or any complicated project compilation. So I just use
@@ -2373,27 +2374,23 @@ enough to be on melpa so I use quelpa.
     :hook
     (latex-mode . (company-auctex-init)))
 
-
   (use-package company-bibtex
     :ensure t
     :tags '("LANGUAGE")
-    :hook
-    (latex-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-bibtex))))
-    (org-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-bibtex)))))
+    :compdef (latex-mode org-mode)
+    :company (company-bibtex))
 
   (use-package company-reftex
     :ensure t
     :tags '("LANGUAGE")
-    :hook
-    (latex-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-reftex-labels company-reftex-citations))))
-    (org-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-reftex-labels company-reftex-citations)))))
+    :compdef (latex-mode org-mode)
+    :company (company-reftex-labels company-reftex-citations))
 
   (use-package company-math
     :ensure t
     :tags '("LANGUAGE")
-    :hook
-    (latex-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-math-symbols-unicode))))
-    (org-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-math-symbols-unicode)))))
+    :compdef (latex-mode org-mode)
+    :company (company-math-symbols-unicode))
 #+end_src
 *** Compilation
 #+begin_src emacs-lisp
@@ -2860,10 +2857,8 @@ enough to be on melpa so I use quelpa.
   (use-package company-shell
     :ensure t
     :tags '("LANGUAGE")
-    :hook
-    (eshell-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-shell company-shell-env company-fish-shell))))
-    (sh-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-shell company-shell-env company-fish-shell))))
-    )
+    :compdef (sh-mode eshell-mode)
+    :company (company-shell company-shell-env company-fish-shell))
 #+end_src
 ** PlantUML
 #+begin_src emacs-lisp
@@ -2946,7 +2941,8 @@ enough to be on melpa so I use quelpa.
   (use-package company-web
     :ensure t
     :tags '("LANGUAGE")
-    :hook (web-mode . (lambda () (add-to-list (make-local-variable 'company-backends) '(company-web-html)))))
+    :compdef (web-mode)
+    :company (company-web-html))
 #+end_src
 *** Javascript
 **** Global
@@ -3051,12 +3047,12 @@ enough to be on melpa so I use quelpa.
   (use-package company-tern
     :ensure t
     :tags '("LANGUAGE")
+    :compdef (js2-mode)
+    :company (company-tern)
     :hook
     (js2-mode . tern-mode)
-    (js2-mode . company-mode)
 
     :config
-    (add-to-list 'company-backends 'company-tern)
 
     ;; Disable completion keybindings, as we use xref-js2 instead
     (define-key tern-mode-keymap (kbd "M-.") nil)
