@@ -5770,9 +5770,6 @@ https://github.com/purcell/exec-path-from-shell
           emms-mode-line-mode-line-function nil  ;; Don't want any info in the mode line
           emms-mode-line-titlebar-function 'emms-mode-line-playlist-current) ;; Put info in the titlebar
 
-    ;; Define a list of radio/streams/...
-    (add-to-list 'emms-stream-default-list '("Classic rock radio" "http://internetradio.salue.de:8000/classicrock.mp3" 1 url))
-
     ;; Visualisation activation/deactivation
     (emms-mode-line nil)
     ;; (emms-playing-time-disable-display)
