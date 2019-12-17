@@ -5125,7 +5125,9 @@ https://github.com/purcell/exec-path-from-shell
      :client-secret (my:auth-source-get-passwd :host "adaptcentre" :user (format "%s^secret" adapt-client-id))
      :token (my:auth-source-get-passwd :host "adaptcentre" :user (format "%s^token" adapt-client-id))
      :subscribed-channels '(general hpc-users location tools_and_kits)
-     :full-and-display-names t)
+     :full-and-display-names t
+     :disable-block-format t ;; FIXME: currently the only way of having non blank message
+     )
 
     ;; Stack b
     (defvar stackb-client-id (replace-regexp-in-string "\\^.*$" "" (my:auth-source-get-user :host "stack-b"))
@@ -5136,7 +5138,9 @@ https://github.com/purcell/exec-path-from-shell
      :client-secret (my:auth-source-get-passwd :host "stack-b" :user (format "%s^secret" stackb-client-id))
      :token (my:auth-source-get-passwd :host "stack-b" :user (format "%s^token" stackb-client-id))
      :subscribed-channels '(general random social)
-     :full-and-display-names t))
+     :full-and-display-names t
+     :disable-block-format t ;; FIXME: currently the only way of having non blank message
+     ))
 #+END_SRC
 ** Mail
 *** TTLS
