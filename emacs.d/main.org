@@ -3203,6 +3203,12 @@ Extracted from https://github.com/zakame/emacs-for-javascript
             ,(format "%s/local/man" user-emacs-directory) ;; Private environment
             )))
 #+end_src
+*** TODO emacs-howdoyou
+https://github.com/thanhvg/emacs-howdoyou
+#+begin_src emacs-lisp
+  (use-package howdoyou
+    :ensure t)
+#+end_src
 * Shell
 ** Global
 The key configuration is mainly coming from https://github.com/jcf/emacs.d the rest is coming from http://www.modernemacs.com/post/custom-eshell/ with some adaptation
