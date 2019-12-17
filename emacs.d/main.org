@@ -3663,6 +3663,11 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :ensure t
     :tags '("VC"))
 #+END_SRC
+*** TODO Reviewing
+#+BEGIN_SRC emacs-lisp
+  (use-package github-review
+    :ensure t)
+#+END_SRC
 ** Mercurial
 *** Monky
 #+begin_src emacs-lisp
