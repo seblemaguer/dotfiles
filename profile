@@ -52,3 +52,8 @@ if [ $DP_CONNECTED = 1 ]
 then
     ~/.screenlayout/office.sh
 fi
+DP_CONNECTED=`xrandr | grep " connected" | grep "DP-1-1" | wc -l`
+if [ $DP_CONNECTED = 1 ]
+then
+    ~/.screenlayout/office_dpi.sh
+fi
