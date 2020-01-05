@@ -163,3 +163,4 @@ __vcs_dir() {
 
 #THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
 [[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh"
+[ -f $HOME/environment/local/miniconda3/etc/profile.d/conda.sh ] && source $HOME/environment/local/miniconda3/etc/profile.d/conda.sh
