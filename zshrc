@@ -25,15 +25,14 @@ else
 fi
 
 # Load Antigen
-if [ ! -e ~/.cache/antigen.zsh ]
-then
-    curl -L git.io/antigen > ~/.cache/antigen.zsh
+export ANTIGEN="$HOME/.antigen/"
+if [[ ! -d $ANTIGEN ]]; then
+  git clone https://github.com/zsh-users/antigen.git $ANTIGEN
 fi
-source ~/.cache/antigen.zsh
+source $ANTIGEN/antigen.zsh
 
-# Load various lib files
+# oh-my-zsh
 antigen use oh-my-zsh
-# antigen bundle robbyrussell/oh-my-zsh lib/
 
 # VCS bundle
 antigen bundle git
@@ -84,7 +83,19 @@ antigen bundle gvm
 antigen theme bhilburn/powerlevel9k
 
 # Distro specific
-antigen bundle archlinux
+# OS specific plugins (comming from https://github.com/seagle0128/dotfiles/blob/master/.zshrc)
+if [[ $OSTYPE == darwin* ]]; then
+    antigen bundle brew
+    antigen bundle brew-cask
+    antigen bundle osx
+elif [[ $OSTYPE == linux* ]]; then
+    if command -v apt-get >/dev/null 2>&1; then
+        antigen bundle ubuntu
+        alias agua='aguu -y && agar -y && aga -y'
+    elif command -v pacman >/dev/null 2>&1; then
+        antigen bundle archlinux
+    fi
+fi
 
 # Highlighting
 antigen bundle HeroCC/LS_COLORS
@@ -216,10 +227,7 @@ HIST_SAVE_NO_DUPS=true
 AUTO_CD=true
 
 #############################################################################################################
-#### Machine specific
+#### Conda
 #############################################################################################################
-
-
-#THIS MUST BE AT THE END OF THE FILE FOR GVM TO WORK!!!
+[ -f $HOME/environment/local/miniconda3/etc/profile.d/conda.sh ] && source $HOME/environment/local/miniconda3/etc/profile.d/conda.sh
 [[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh"
-[ -f /opt/miniconda3/etc/profile.d/conda.sh ] && source /opt/miniconda3/etc/profile.d/conda.sh
