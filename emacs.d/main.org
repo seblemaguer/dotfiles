@@ -5347,8 +5347,16 @@ https://github.com/purcell/exec-path-from-shell
     (mu4e-view-use-gnus t)
     (mu4e-use-fancy-chars t)
 
-    :config
+    ;; headers
+    (mu4e-headers-date-format "%a %d %b %Y")
+    (mu4e-headers-time-format "%H:%M:%S")
+    (mu4e-headers-fields      '((:human-date    .  25)
+                                (:flags         .   6)
+                                (:mailing-list  . 10)
+                                (:from          .  22)
+                                (:subject       .  nil)))
 
+    :config
     (add-to-list 'mu4e-view-actions
                  '("ViewInBrowser" . mu4e-action-view-in-browser) t)
 
