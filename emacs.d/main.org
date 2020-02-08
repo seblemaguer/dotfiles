@@ -4297,6 +4297,8 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :ensure t
     :commands (treemacs-icons-dired-mode)
     :hook
+    (dired-mode . treemacs-icons-dired--enable-highlight-correction)
+    (dired-mode . treemacs--select-icon-set )
     (dired-mode . treemacs-icons-dired-mode))
 #+end_src
 * Ibuffer
