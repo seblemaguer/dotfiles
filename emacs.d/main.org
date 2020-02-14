@@ -3969,7 +3969,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
               insert-directory-program "/usr/local/bin/gls")))
 
     ;; Omitting
-    (setq-default dired-omit-files "^\\.[^.]+"
+    (setq-default dired-omit-files "^\\..*"
                   dired-omit-mode t)
     (put 'dired-find-alternate-file 'disabled nil)
 
