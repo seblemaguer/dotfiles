@@ -6064,9 +6064,10 @@ As I write papers, it is useful to have some helper to start to have the inspira
 #+end_src
 *** Remove unused part
 #+begin_src emacs-lisp
-  (tool-bar-mode -1)
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
+  (when (display-graphic-p)
+    (tool-bar-mode -1)
+    (menu-bar-mode -1)
+    (scroll-bar-mode -1))
 #+end_src
 ** Window
 e2wm is nice to provide (also temporarily) an IDE view functionnality.
@@ -6359,7 +6360,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     :ensure t
     :tags '("VISUAL"))
 #+end_src
-** Fonts
+** COMMENT Fonts
 #+begin_src emacs-lisp
   (defun set-icon-fonts (CODE-FONT-ALIST)
     "Utility to associate many unicode points with specified fonts."
