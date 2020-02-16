@@ -5,9 +5,8 @@ os:
   - osx
 
 env:
-  - EMACS_CI=emacs-24-1
-  - EMACS_CI=emacs-24-5
-  - EMACS_CI=emacs-25-3
+  - EMACS_CI=emacs-26-1
+  - EMACS_CI=emacs-26-2
   - EMACS_CI=emacs-26-3
   - EMACS_CI=emacs-snapshot
 
@@ -15,12 +14,4 @@ install:
   - bash <(curl https://raw.githubusercontent.com/purcell/nix-emacs-ci/master/travis-install)
 
 script:
-  - ln -s $PWD/emacs.d ~/.emacs.d
-  - /usr/bin/emacs --version
-  - emacs -Q --batch --eval "
-    (progn
-      (require 'ob-tangle)
-      (dolist (file command-line-args-left)
-        (with-current-buffer (find-file-noselect file)
-          (org-babel-tangle))))" "~/.emacs.d/main.org"
-  - /usr/bin/emacs --debug-init -nw -Q --batch -L ~/.emacs.d --eval "(require 'init)"
+  ./test_startup.sh
