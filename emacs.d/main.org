@@ -1769,7 +1769,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
                                  (plantuml . t)
                                  (latex . t)))
 
-  ; Define specific modes for specific tools
+                                          ; Define specific modes for specific tools
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (add-to-list 'org-src-lang-modes '("dot" . graphviz-dot))
 #+end_src
@@ -1789,6 +1789,14 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :quelpa (org-id+ :repo "seblemaguer/org-id-plus" :fetcher github)
     :commands (org-id+-add-ids-to-headlines-in-file)
     :tags '("ORG"))
+#+end_src
+*** Latex toggle fragment
+ #+begin_src emacs-lisp
+  (use-package org-fragtog
+    :ensure t
+    :tags '("ORG")
+    :hook
+    (org-mode . org-fragtog-mode))
 #+end_src
 ** Exporting
 *** HTML
