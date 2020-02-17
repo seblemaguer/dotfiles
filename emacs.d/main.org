@@ -5122,6 +5122,7 @@ https://github.com/purcell/exec-path-from-shell
     (circe-server-connected . enable-circe-notifications))
 #+end_src
 ** Slack
+*** Global
 #+BEGIN_SRC emacs-lisp
   (use-package slack
     :ensure t
@@ -5161,6 +5162,15 @@ https://github.com/purcell/exec-path-from-shell
      :disable-block-format t ;; FIXME: currently the only way of having non blank message
      ))
 #+END_SRC
+
+*** Helm-slack
+#+begin_src emacs-lisp
+  (use-package helm-slack
+    :ensure quelpa
+    :quelpa (helm-slack :fetcher "github" :repo "yuya373/helm-slack")
+    :tags '("CONNECTED")
+    :after (slack))
+#+end_src
 ** Mail
 *** TTLS
   #+begin_src emacs-lisp
