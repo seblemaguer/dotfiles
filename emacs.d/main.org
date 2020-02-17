@@ -6072,10 +6072,14 @@ As I write papers, it is useful to have some helper to start to have the inspira
 #+end_src
 *** Remove unused part
 #+begin_src emacs-lisp
-  (when (display-graphic-p)
+  (defun disable-frame-bars ()
     (tool-bar-mode -1)
     (menu-bar-mode -1)
     (scroll-bar-mode -1))
+
+  (if (display-graphic-p)
+      (disable-frame-bars)
+    (add-hook 'before-make-frame-hook 'disable-frame-bars))
 #+end_src
 ** Window
 e2wm is nice to provide (also temporarily) an IDE view functionnality.
@@ -6368,7 +6372,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     :ensure t
     :tags '("VISUAL"))
 #+end_src
-** COMMENT Fonts
+** Fonts
 #+begin_src emacs-lisp
   (defun set-icon-fonts (CODE-FONT-ALIST)
     "Utility to associate many unicode points with specified fonts."
@@ -6378,7 +6382,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
           (set-fontset-font t `(,it . ,it) font)))))
 
   (defun load-default-fonts ()
-
     (set-fontset-font "fontset-default" 'unicode "Dejavu Sans Mono")
     (set-face-font 'default "Inconsolata-11")
 
@@ -6407,9 +6410,10 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (select-frame frame)
     (load-default-fonts))
 
-  (if (daemonp)
-      (add-hook 'after-make-frame-functions #'load-fonts)
-    (load-default-fonts))
+  (when (boundp 'set-fontset-font)
+    (if (daemonp)
+        (add-hook 'after-make-frame-functions #'load-fonts)
+      (load-default-fonts)))
 #+end_src
 * Keys/shortcuts
 ** Main Helper
