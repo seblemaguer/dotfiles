@@ -5567,16 +5567,6 @@ https://github.com/purcell/exec-path-from-shell
                   :key ?S))
     )
 #+end_src
-**** Maildir extension part
-#+begin_src emacs-lisp
-  (use-package mu4e-maildirs-extension
-    :ensure t
-    :tags '("REQUIRES_CONNECTION" "MAIL")
-    :init
-    (setq mu4e-maildirs-extension-hide-empty-maildirs t)
-    :config
-    (mu4e-maildirs-extension))
-#+end_src
 **** Notification
 #+begin_src emacs-lisp
   (use-package mu4e-alert
