@@ -57,3 +57,7 @@ if [ $DP_CONNECTED = 1 ]
 then
     ~/.screenlayout/office_dpi.sh
 fi
+
+# Indicate that the profile is loaded 
+export PROFILE_LOADED=True
+

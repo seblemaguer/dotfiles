@@ -1,5 +1,11 @@
 #!/bin/zsh
 
+# Load profile
+if [[ "$PROFILE_LOADED" != "True" ]]
+then
+    source ~/.profile
+fi
+
 if [[ "$TERM" == "dumb" ]]
 then
     unsetopt zle
