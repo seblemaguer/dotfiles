@@ -1634,6 +1634,7 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
 #+begin_src emacs-lisp
   (use-package doct
     :ensure t
+    :tags '("ORG")
     :commands (doct))
 #+end_src
 *** Entry point
@@ -4365,6 +4366,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
   (use-package sbuffer
     :ensure quelpa
     :quelpa (sbuffer :fetcher github :repo "alphapapa/sbuffer.el")
+    :tags '("BUFFER")
     :bind ("C-x C-b" . sbuffer)
     :config
     (setf sbuffer-groups (sbuffer-defgroups
