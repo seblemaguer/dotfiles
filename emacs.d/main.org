@@ -1630,54 +1630,91 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     (org-super-agenda-mode t))
 #+end_src
 ** Capturing
-*** Global
+*** DOCT
+#+begin_src emacs-lisp
+  (use-package doct
+    :ensure t
+    :commands (doct))
+#+end_src
+*** Entry point
 #+begin_src emacs-lisp
   (use-package org-capture
     :tags '("ORG")
     :commands (org-capture)
     :init
     (setq org-capture-templates
-          `(("b" "Adding book" entry
-             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "To read")
-             (file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory)))
+          (doct
+           `(
+             ("Book"
+              :keys "p"
+              :type entry
+              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :headline "To read"
+              :template-file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory))
 
-            ("c" "CD" entry
-             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "CD")
-             (file ,(format "%s/third_parties/org-capture-templates/cd.org" user-emacs-directory)))
+             ("CD"
+              :keys "c"
+              :type entry
+              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :headline "CD"
+              :template-file ,(format "%s/third_parties/org-capture-templates/cd.org" user-emacs-directory))
 
-            ("C" "Concert" entry
-             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "Concert")
-             (file ,(format "%s/third_parties/org-capture-templates/concert.org" user-emacs-directory)))
+             ("Concert"
+              :keys "C"
+              :type entry
+              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :headline "Concert"
+              :template-file ,(format "%s/third_parties/org-capture-templates/concert.org" user-emacs-directory))
 
-            ("f" "Reference" entry
-             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "Reference task")
-             (file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory)))
+             ("Reference"
+              :keys "f"
+              :type entry
+              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :headline "Reference task"
+              :template-file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory))
 
-            ("L" "Bookmark" entry
-             (file+olp "~/shared/pCloudDrive/org/todo/todo.org" "To review" "Bookmarks")
-             (file ,(format "%s/third_parties/org-capture-templates/bookmark.org" user-emacs-directory)))
+             ("Bookmark"
+              :keys "L"
+              :type entry
+              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :olp ("To review" "Bookmarks")
+              :template-file ,(format "%s/third_parties/org-capture-templates/bookmark.org" user-emacs-directory))
 
-            ("m" "mail" entry
-             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "Mailing")
-             (file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory)))
+             ("Mail"
+              :keys "m"
+              :type entry
+              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :headline "Mailing"
+              :template-file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory))
 
-            ("M" "Meeting" entry
-             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "To sort")
-             (file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory)))
+             ("Meeting"
+              :keys "M"
+              :type entry
+              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :headline "To sort"
+              :template-file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory))
 
-            ("P" "Personnal calendar" entry
-             (file "~/Calendars/CalendarMe.org")
-             (file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory)))
+             ("Personnal calendar"
+              :keys "P"
+              :type entry
+              :file "~/Calendars/CalendarMe.org"
+              :template-file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory))
 
-            ("r" "RSS" entry
-             (file+olp "~/shared/pCloudDrive/org/todo/todo.org" "To review" "RSS")
-             (file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory)))
+             ("RSS"
+              :keys "r"
+              :type entry
+              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :olp ("To review" "RSS")
+              :template-file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory))
 
-            ("t" "ToDo Entry" entry
-             (file+headline "~/shared/pCloudDrive/org/todo/todo.org" "To sort")
-             (file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory))
-             :empty-lines-before 1)))
-    )
+             ("TODO"
+              :keys "t"
+              :type entry
+              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :headline "To sort"
+              :template-file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory)
+              :empty-lines-before 1)
+             ))))
 #+end_src
 *** Cooking
 #+begin_src emacs-lisp
@@ -1687,9 +1724,14 @@ Extracted from https://www.emacswiki.org/emacs/org-extension.el
     :after (org-capture)
     :config
     (add-to-list 'org-capture-templates
-                 '("c" "Cookbook" entry (file "~/shared/pCloudDrive/recipes/cookbook.org")
-                   "%(org-chef-get-recipe-from-url)"
-                   :empty-lines 1)))
+                 (doct '(
+                         ("Cookbook"
+                          :keys "c"
+                          :type entry
+                          :file "~/shared/pCloudDrive/recipes/cookbook.org"
+                          :template "%(org-chef-get-recipe-from-url)"
+                          :empty-lines 1)
+                         ))))
 #+end_src
 ** Clocking
 #+begin_src emacs-lisp
