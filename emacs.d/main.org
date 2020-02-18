@@ -3472,7 +3472,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
     :after projectile
     :functions
     (counsel-projectile-find-file-in-directory
-     counsel-projectile-ibuffer
      counsel-projectile-kill-buffers
      counsel-projectile-multi-occur
      counsel-projectile-recentf
@@ -3490,7 +3489,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
          Find File            Search/Tags          Buffers                Cache
     ------------------------------------------------------------------------------------------
-    _s-f_: file            _a_: ag                _i_: Ibuffer           _c_: cache clear
+    _s-f_: file            _a_: ag                                       _c_: cache clear
      _ff_: file dwim       _g_: update gtags      _b_: switch to buffer  _x_: remove known project
      _fd_: file curr dir   _o_: multi-occur     _s-k_: Kill all buffers  _X_: cleanup non-existing
       _r_: recent file                                               ^^^^_z_: cache current
@@ -3508,7 +3507,6 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
                       ("fd"  counsel-projectile-find-file-in-directory)
                       ("g"   ggtags-update-tags)
                       ("s-g" ggtags-update-tags)
-                      ("i"   counsel-projectile-ibuffer)
                       ("K"   counsel-projectile-kill-buffers)
                       ("s-k" counsel-projectile-kill-buffers)
                       ("m"   counsel-projectile-multi-occur)
@@ -4362,363 +4360,58 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (dired-mode . treemacs--select-icon-set )
     (dired-mode . treemacs-icons-dired-mode))
 #+end_src
-* Ibuffer
-** Filter
+* Sbuffer
 #+begin_src emacs-lisp
-  (defun my-own-ibuffer-hook ()
-    ""
-    (interactive)
-    (setq ibuffer-saved-filter-groups
-          (list
-           (cons "default"
-                 (append
-                  (quote
-                   (("Emacs"
-                     (or
-                      (name . "^[*]scratch[*]$")
-                      (name . "^[*]Messages[*]$")))
-
-                    ("Calendar"
-                     (or
-                      (name . "^[*]?[Cc]alendar.*$")
-                      (name . "^diary$")
-                      (mode . cfw:calendar-mode)
-                      (mode . muse-mode)))
-
-                    ("Todos"
-                     (filename . "/todo.org"))
-
-                    ("Emms"
-                     (or
-                      (mode . emms-mode)
-                      (mode . emms-browser-mode)
-                      (mode . emms-playlist-mode)))
-
-                    ("RSS/Podcast"
-                     (or
-                      (name . "rss.org")
-                      (name . "^[*]?[Ee]lfeed.*$")
-                      (derived-mode . elfeed-search-mode)
-                      (derived-mode . elfeed-show-mode)))
-
-                    ("Help"
-                     (or
-                      (derived-mode . apropos-mode)
-                      (derived-mode . help-mode)
-                      (derived-mode . Info-mode)))
-
-                    ("Mail"
-                     (or
-                      (derived-mode . message-mode)
-                      (mode . bbdb-mode)
-                      (mode . mail-mode)
-                      (mode . mu4e-main-mode)
-                      (mode . notmuch-headers-mode)
-                      (mode . notmuch-view-mode)
-                      (name . "^\.bbdb$")
-                      (name . "^\.newsrc-dribble")))
-                    ("Slack"
-                     (or
-                      (derived-mode . slack-mode)
-                      (name . "^[*]?[Ss]lack.*")))
-                    ))
-
-                  (ibuffer-circe-generate-filter-groups-by-server)
-                  (ibuffer-tramp-generate-filter-groups-by-tramp-connection)
-                  (ibuffer-vc-generate-filter-groups-by-vc-root)
-
-                  (quote
-                   (("Dired" (mode . dired-mode))
-
-                    ("Shell"
-                     (or
-                      (mode . sh-mode)))
-
-                    ("Editing"
-                     (or
-                      (mode . tex-mode)
-                      (mode . latex-mode)
-                      (mode . bibtex-mode)
-                      (mode . text-mode)))
-
-                    ("Mathematics/Statistics"
-                     (or
-                      (mode . matlab-mode)
-                      (name . "^[*]MATLAB[*]$")
-                      (mode . ess-mode)
-                      (mode . iESS)))
-
-
-                    ("Configuration"
-                     (or
-                      (derived-mode . conf-mode)))
-
-                    ("Web"
-                     (or
-                      (mode . php-mode)
-                      (mode . css-mode)
-                      (mode . html-mode)
-                      (mode . js2-mode)
-                      (mode . scss-mode)
-                      (mode . web-mode)))
-
-                    ("Programming"
-                     (or
-                      (mode . emacs-lisp-mode)
-                      (mode . c-mode)
-                      (mode . cperl-mode)
-                      (mode . python-mode)
-                      (mode . c++-mode)
-                      (mode . java-mode)
-                      (mode . jde-mode)))
-
-                    ("Compiling"
-                     (or
-                      (mode . groovy-mode)
-                      (derived-mode . makefile-mode)))
-
-                    ("Data"
-                     (or
-                      (mode . csv-mode)
-                      (mode . json-mode)
-                      (mode . nxml-mode)
-                      (mode . ledger-mode)
-                      ))
-
-                    ("Org"
-                     (or
-                      (mode . org-mode)))
-
-
-                    ("Term"
-                     (or
-                      (mode . comint-mode)
-                      (mode . eshell-mode)
-                      (mode . term-mode)))
-
-                    ("Prodigy"
-                     (or
-                      (name . "^[*]prodigy.*[*]$")))
-
-                    ("Temp"
-                     (or
-                      (name ."^[*].*[*]$")))
-                    )))))))
-#+end_src
-** Global
-#+begin_src emacs-lisp
-  (use-package ibuffer
-    :tags '("IBUFFER")
-    :functions ibuffer-quit
-    :hook
-    (ibuffer-mode . (lambda ()
-                      (my-own-ibuffer-hook)
-                      (ibuffer-switch-to-saved-filter-groups "default")
-                      (ibuffer-update nil t)))
-
-    :hydra
-    (hydra-ibuffer-main (:color pink :hint nil)
-                        "
-           Ibuffer
-
-     ^Navigation^     ^Mark^         ^Actions^          ^View^
-    ------------------------------------------------------------------------
-      _k_:    ʌ     _m_: mark       _D_: delete        _g_: refresh
-     _RET_: visit   _u_: unmark     _S_: save          _s_: sort
-      _j_:    v     _*_: specific   _a_: all actions   _/_: filter
-    "
-                        ("j" ibuffer-forward-line)
-                        ("RET" ibuffer-visit-buffer :color blue)
-                        ("k" ibuffer-backward-line)
-
-                        ("m" ibuffer-mark-forward)
-                        ("u" ibuffer-unmark-forward)
-                        ("*" hydra-ibuffer-mark/body :color blue)
-
-                        ("D" ibuffer-do-delete)
-                        ("S" ibuffer-do-save)
-                        ("a" hydra-ibuffer-action/body :color blue)
-
-                        ("g" ibuffer-update)
-                        ("s" hydra-ibuffer-sort/body :color blue)
-                        ("/" hydra-ibuffer-filter/body :color blue)
-
-                        ("o" ibuffer-visit-buffer-other-window "other window" :color blue)
-                        ("q" ibuffer-quit "quit ibuffer" :color blue)
-                        ("." nil "toggle hydra" :color blue))
-
-    (hydra-ibuffer-mark (:color teal :columns 5
-                                :after-exit (hydra-ibuffer-main/body))
-                        "Mark"
-                        ("*" ibuffer-unmark-all "unmark all")
-                        ("M" ibuffer-mark-by-mode "mode")
-                        ("m" ibuffer-mark-modified-buffers "modified")
-                        ("u" ibuffer-mark-unsaved-buffers "unsaved")
-                        ("s" ibuffer-mark-special-buffers "special")
-                        ("r" ibuffer-mark-read-only-buffers "read-only")
-                        ("/" ibuffer-mark-dired-buffers "dired")
-                        ("e" ibuffer-mark-dissociated-buffers "dissociated")
-                        ("h" ibuffer-mark-help-buffers "help")
-                        ("z" ibuffer-mark-compressed-file-buffers "compressed")
-                        ("b" hydra-ibuffer-main/body "back" :color blue))
-
-    (hydra-ibuffer-action (:color teal :columns 4
-                                  :after-exit
-                                  (if (eq major-mode 'ibuffer-mode)
-                                      (hydra-ibuffer-main/body)))
-                          "Action"
-                          ("A" ibuffer-do-view "view")
-                          ("E" ibuffer-do-eval "eval")
-                          ("F" ibuffer-do-shell-command-file "shell-command-file")
-                          ("I" ibuffer-do-query-replace-regexp "query-replace-regexp")
-                          ("H" ibuffer-do-view-other-frame "view-other-frame")
-                          ("N" ibuffer-do-shell-command-pipe-replace "shell-cmd-pipe-replace")
-                          ("M" ibuffer-do-toggle-modified "toggle-modified")
-                          ("O" ibuffer-do-occur "occur")
-                          ("P" ibuffer-do-print "print")
-                          ("Q" ibuffer-do-query-replace "query-replace")
-                          ("R" ibuffer-do-rename-uniquely "rename-uniquely")
-                          ("T" ibuffer-do-toggle-read-only "toggle-read-only")
-                          ("U" ibuffer-do-replace-regexp "replace-regexp")
-                          ("V" ibuffer-do-revert "revert")
-                          ("W" ibuffer-do-view-and-eval "view-and-eval")
-                          ("X" ibuffer-do-shell-command-pipe "shell-command-pipe")
-                          ("b" nil "back"))
-
-    (hydra-ibuffer-sort (:color amaranth :columns 3)
-                        "Sort"
-                        ("i" ibuffer-invert-sorting "invert")
-                        ("a" ibuffer-do-sort-by-alphabetic "alphabetic")
-                        ("v" ibuffer-do-sort-by-recency "recently used")
-                        ("s" ibuffer-do-sort-by-size "size")
-                        ("f" ibuffer-do-sort-by-filename/process "filename")
-                        ("m" ibuffer-do-sort-by-major-mode "mode")
-                        ("b" hydra-ibuffer-main/body "back" :color blue))
-
-    (hydra-ibuffer-filter (:color amaranth :columns 4)
-                          "Filter"
-                          ("m" ibuffer-filter-by-used-mode "mode")
-                          ("M" ibuffer-filter-by-derived-mode "derived mode")
-                          ("n" ibuffer-filter-by-name "name")
-                          ("c" ibuffer-filter-by-content "content")
-                          ("e" ibuffer-filter-by-predicate "predicate")
-                          ("f" ibuffer-filter-by-filename "filename")
-                          (">" ibuffer-filter-by-size-gt "size")
-                          ("<" ibuffer-filter-by-size-lt "size")
-                          ("/" ibuffer-filter-disable "disable")
-                          ("b" hydra-ibuffer-main/body "back" :color blue))
-
-    :bind
-    (;; Global
-     ("C-x C-b" . ibuffer)
-
-     ;; Mode specific
-     :map ibuffer-mode-map
-          ("." . hydra-ibuffer-main/body))
-
+  (use-package sbuffer
+    :ensure quelpa
+    :quelpa (sbuffer :fetcher github :repo "alphapapa/sbuffer.el")
+    :bind ("C-x C-b" . sbuffer)
     :config
+    (setf sbuffer-groups (sbuffer-defgroups
+                          (group (group-or "*Help/Info*"
+                                           (mode-match "*Help*" (rx bos "help-"))
+                                           (mode-match "*Info*" (rx bos "info-"))
+                                           (mode-match "*Apropos*" (rx bos "apropos-"))))
 
-    ;; Sub packages
-    (use-package ibuffer-git :ensure t)
-    (use-package ibuffer-tramp :ensure t)
-    (use-package ibuffer-vc :ensure t)
-    (use-package ibuffer-circe
-      :ensure quelpa
-      :quelpa (ibuffer-circe :repo "seblemaguer/ibuffer-circe" :fetcher github)
-      :after circe
-      :config (require 'circe))
+                          (group (mode-match "*Magit*" (rx bos "magit-"))
+                                 (auto-directory))
 
-    ;; Use human readable Size column instead of original one
-    (define-ibuffer-column size-h
-      (:name "Size" :inline t)
-      (cond
-       ((> (buffer-size) 1000000) (format "%7.3fM" (/ (buffer-size) 1000000.0)))
-       ((> (buffer-size) 1000) (format "%7.3fk" (/ (buffer-size) 1000.0)))
-       (t (format "%8d" (buffer-size)))))
+                          (group (group-or "Mail"
+                                           (mode-match "*Mu4e*" (rx bos "mu4e-"))))
 
+                          (group (mode-match "*EMMS*" (rx bos "emms-")))
 
-    ;; Modification time
-    (defun get-modification-time-buffer(b)
-      "Retrieve the savetime of the given buffer"
-      (if (buffer-file-name b)
-          (format-time-string "%Y-%m-%d %H:%M:%S"
-                              (nth 5 (file-attributes (buffer-file-name b))))
-        ""))
+                          (group (group-or "*RSS*"
+                                           (mode-match "*Elfeed*" (rx bos "elfeed-"))
+                                           (name-match "*Elfeed*" (rx bos "*elfeed"))
+                                           (name-match "rss.org" (rx bos "rss.org"))))
 
-    (define-ibuffer-column last-modification
-      (:name "Last modification time" )
-      (get-modification-time-buffer buffer))
+                          (group (group-or "Todo"
+                                           (name-match "Todo" (rx bos "todo.org"))))
 
-    ;; Ibuffer entry format
-    (setq ibuffer-formats
-          '((mark modified read-only
-                  (name 30 30 :left :elide) " "
-                  (size-h 9 -1 :right) " "
-                  (mode 20 20 :left :elide) " "
-                  ;; (eproject 16 16 :left :elide)      " "
-                  (git-status 8 8 :left)" "
-                  (last-modification 30 30 :left :elide)  " "
-                  filename-and-process)))
+                          (group (group-not "*Special*" (auto-file))
+                                 (mode-match "*Helm*" (rx bos "helm-"))
+                                 (name-match "*Calendar*" "^[*]?[Cc]alendar.*$")
 
-    ;; Update
-    (defadvice ibuffer-update (around ibuffer-preserve-prev-header activate)
-      "Preserve line-header used before Ibuffer if it doesn't set one"
-      (let ((prev-line-header header-line-format))
-        ad-do-it
-        (unless header-line-format
-          (setq header-line-format prev-line-header))))
+                                 (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*")))
+                                 (name-match "*Prodigy*" (rx bos "*prodigy-"))
+                                 (name-match "*Slack*" (rx bos "*Slack"))
+                                 (name-match "*Emacs*" (rx bos (or "*scratch*" "*Messages*")))
+                                 (auto-mode))
 
+                          (dir "~/.emacs.d")
 
-    (setq ibuffer-default-sorting-mode 'major-mode  ;; Sorting
-          ibuffer-show-empty-filter-groups nil      ;; Ignore empty groups
-          ibuffer-marked-char ?✓               ;; Change the marking symbol
-          )
+                          (group (dir (if (bound-and-true-p org-directory)
+                                          org-directory
+                                        "~/org"))
+                                 (group (auto-indirect)
+                                        (auto-file))
+                                 (group-not "*special*" (auto-file))
+                                 (auto-mode))
 
-    ;; Collapsing some buffer groups
-    (setq mp/ibuffer-collapsed-groups
-          (list "Calendar" "Todos" "Prodigy"
-                "Emms" "RSS/Podcast"
-                "Temp" "Help" "*Tramp*"))
-
-    (defadvice ibuffer (after collapse)
-      (dolist (group mp/ibuffer-collapsed-groups)
-        (progn
-          (goto-char 1)
-          (when (search-forward (concat "[ " group " ]") (point-max) t)
-            (progn
-              (move-beginning-of-line nil)
-              (ibuffer-toggle-filter-group)
-              )
-            )
-          )
-        )
-      (goto-char 1)
-      (search-forward "[ " (point-max) t)
-      )
-    (ad-activate 'ibuffer))
+                          (auto-directory)
+                          (auto-mode))))
 #+end_src
-** Helpers
-#+begin_src emacs-lisp
-  (defun ibuffer-clean ()
-    "Clean automatically created buffers"
-    (interactive)
-    (ibuffer-unmark-all ?*)
-    (ibuffer-mark-by-mode 'help-mode)
-    (ibuffer-mark-by-mode 'magit-mode)
-    (ibuffer-mark-by-mode 'occur-mode)
-    (ibuffer-mark-by-mode 'grep-mode)
-    (ibuffer-mark-by-mode 'dired-mode)
-    (ibuffer-mark-by-mode 'completion-list-mode)
-    (ibuffer-mark-by-mode 'compilation-mode)
-    (ibuffer-mark-by-mode 'Man-mode)
-    (ibuffer-mark-by-mode 'browse-kill-ring-mode)
-    (ibuffer-mark-by-name-regexp "*anything*")
-    (ibuffer-mark-by-name-regexp "*ESS*")
-    (ibuffer-mark-by-name-regexp "*Shell Command Output*")
-    (ibuffer-mark-by-name-regexp "*Compile-Log*")
-    (ibuffer-mark-by-name-regexp "*vc-diff*")
-    (ibuffer-do-delete))
-#+END_SRC
 * Notification
 ** Sauron
 #+begin_src emacs-lisp
