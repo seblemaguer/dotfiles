@@ -4043,28 +4043,36 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 *** dired-filter
 #+begin_src emacs-lisp
-  (use-package dired-filter
-    :ensure t
-    :tags '("FILE_MANAGEMENT")
-    :init
-    (add-hook 'dired-mode-hook 'dired-filter-group-mode)
+    (use-package dired-filter
+      :ensure t
+      :tags '("FILE_MANAGEMENT")
+      :hook
+      ((dired-mode . dired-filter-mode)
+       (dired-mode . dired-filter-group-mode))
 
-    :config
-    (setq dired-filter-group-saved-groups
-          '(("default"
-             ("Directories" (directory))
-             ("PDF"
-              (extension . "pdf"))
-             ("LaTeX"
-              (extension "tex" "bib"))
-             ("Org"
-              (extension . "org"))
-             ("Archives"
-              (extension "zip" "rar" "gz" "bz2" "tar"))
-             ("Multimedia"
-              (extension "ogg" "flv" "mpg" "avi" "mp4" "mp3" "mkv" "webm"))
-             )))
-    )
+      :init
+      (setq dired-filter-revert 'never
+            dired-filter-group-saved-groups
+            '(("default"
+               ("Git"
+                (directory . ".git")
+                (file . ".gitignore"))
+               ("Directory"
+                (directory))
+               ("PDF"
+                (extension . "pdf"))
+               ("LaTeX"
+                (extension "tex" "bib"))
+               ("Source"
+                (extension "c" "cpp" "hs" "rb" "py" "r" "cs" "el" "lisp" "html" "js" "css"))
+               ("Doc"
+                (extension "md" "rst" "txt"))
+               ("Org"
+                (extension . "org"))
+               ("Archives"
+                (extension "zip" "rar" "gz" "bz2" "tar"))
+               ("Images"
+                (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))))))
 #+end_src
 *** dired-subtree
 #+begin_src emacs-lisp
