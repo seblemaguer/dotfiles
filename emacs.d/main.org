@@ -206,6 +206,15 @@ Easy use wrapper around auth-* authentification emacs utils.
         (funcall (plist-get (nth 0 founds) :secret)))))
 #+end_src
 
+** Load private part
+#+begin_src emacs-lisp
+  (defvar private-file "~/.emacs.d/private-variables.el"
+    "Path to the file which stores my configuration.")
+
+  (when (file-exists-p private-file)
+    (load private-file))
+#+end_src
+
 * Daemon mode
 Now that we are ready to actually configure emacs properly, let's first start the server!
 
@@ -737,52 +746,10 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
     :quelpa (prodigy :fetcher github :repo "seblemaguer/prodigy.el" :branch "auto-start")
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
+    ;; Define services
+    (define-mail-services)
 
-    (prodigy-define-service
-      :name "ADAPT imap notify"
-      :command "imapnotify"
-      :args '("-c" "~/configuration/imapnotify/adaptgmail.js")
-      :tags '(work mail)
-      :stop-signal 'sigterm
-      :auto-start t
-      :kill-process-buffer-on-stop t)
-
-    (prodigy-define-service
-      :name "TCD imap notify"
-      :command "imapnotify"
-      :args '("-c" "~/configuration/imapnotify/tcd.js")
-      :tags '(work mail)
-      :stop-signal 'sigterm
-      :auto-start t
-      :kill-process-buffer-on-stop t)
-
-    (prodigy-define-service
-      :name "Saarland imap notify"
-      :command "imapnotify"
-      :args '("-c" "~/configuration/imapnotify/saarland.js")
-      :tags '(work mail)
-      :stop-signal 'sigterm
-      :auto-start t
-      :kill-process-buffer-on-stop t)
-
-    (prodigy-define-service
-      :name "hikoseb imap notify"
-      :command "imapnotify"
-      :args '("-c" "~/configuration/imapnotify/hikoseb.js")
-      :tags '(perso mail)
-      :stop-signal 'sigterm
-      :auto-start t
-      :kill-process-buffer-on-stop t)
-
-    (prodigy-define-service
-      :name "sebgmail imap notify"
-      :command "imapnotify"
-      :args '("-c" "~/configuration/imapnotify/sebgmail.js")
-      :tags '(perso mail)
-      :stop-signal 'sigterm
-      :auto-start t
-      :kill-process-buffer-on-stop t)
-
+    ;; Auto-start
     (prodigy-enable-auto-start)
     )
 #+end_src
@@ -4711,35 +4678,7 @@ https://github.com/purcell/exec-path-from-shell
     :config
 
     ;; Defining the networks
-    (setq circe-network-options
-          '(("bitlbee"
-             :nick "lemagues"
-             :server-buffer-name "⇄ bitlbee"
-             :nickserv-password my-irc-password
-             :nickserv-mask "\\(bitlbee\\|root\\)!\\(bitlbee\\|root\\)@"
-             :nickserv-identify-challenge "use the \x02identify\x02 command to identify yourself"
-             :nickserv-identify-command "PRIVMSG nickserv :identify {password}"
-             :nickserv-identify-confirmation "Password accepted, settings and accounts loaded"
-             :channels ("&bitlbee")
-             :host "localhost"
-             :service "6667")
-
-            ("Freenode"
-             :tls t
-             :nick "slemaguer"
-             :channels (:after-auth "#limsi")
-             :nickserv-password my-irc-password
-             :server-buffer-name "⇄ freenode")
-
-            ("gitter"
-             :tls t
-             :nick "seblemaguer"
-             :sasl-username "seblemaguer"
-             :sasl-password my-irc-password
-             :server-buffer-name "⇄ gitter"
-             :host"irc.gitter.im"
-             :service "6667")
-            ))
+    (set-circe-networks)
 
     ;; Completion
     (setq circe-use-cycle-completion t)
@@ -4750,14 +4689,6 @@ https://github.com/purcell/exec-path-from-shell
     ;; Tracking
     (setq lui-track-bar-behavior 'before-switch-to-buffer)
     (enable-lui-track-bar)
-
-    ;; spell checking
-    (add-hook 'circe-channel-mode-hook 'turn-on-flyspell)
-    (setq lui-max-buffer-size 30000
-          lui-flyspell-p t
-          lui-flyspell-alist '(("limsi" "francais")
-                               ("IvanaDidirkova" "francais")
-                               ("." "american")))
 
     ;; Formatting / Visual
     (enable-circe-color-nicks)
@@ -4803,7 +4734,6 @@ https://github.com/purcell/exec-path-from-shell
        (if (circe-network-connected-p "bitlbee")
            (switch-to-buffer "&bitlbee")
          (progn
-           ;; (circe-maybe-connect "Freenode")
            (circe-maybe-connect "bitlbee"))))
     )
 #+end_src
@@ -4872,43 +4802,19 @@ https://github.com/purcell/exec-path-from-shell
 ** Slack
 *** Global
 #+BEGIN_SRC emacs-lisp
-  (use-package slack
-    :ensure t
-    :tags '("CONNECTED")
-    :commands (slack-start)
-    :no-require t
-    :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
-    :config
-    (setq slack-buffer-emojify t
-          lui-time-stamp-position 'right-margin
-          lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]")
+    (use-package slack
+      :ensure t
+      :tags '("CONNECTED")
+      :commands (slack-start)
+      :no-require t
+      :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
+      :config
+      (setq slack-buffer-emojify t
+            lui-time-stamp-position 'right-margin
+            lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]")
 
-    ;; Adaptcentre
-    (defvar adapt-client-id (replace-regexp-in-string "\\^.*$" "" (my:auth-source-get-user :host "adaptcentre"))
-      "ID for the adapt slack team.")
-    (slack-register-team
-     :name "adaptcentre"
-     :default t
-     :client-id adapt-client-id
-     :client-secret (my:auth-source-get-passwd :host "adaptcentre" :user (format "%s^secret" adapt-client-id))
-     :token (my:auth-source-get-passwd :host "adaptcentre" :user (format "%s^token" adapt-client-id))
-     :subscribed-channels '(general hpc-users location tools_and_kits)
-     :full-and-display-names t
-     :disable-block-format t ;; FIXME: currently the only way of having non blank message
-     )
-
-    ;; Stack b
-    (defvar stackb-client-id (replace-regexp-in-string "\\^.*$" "" (my:auth-source-get-user :host "stack-b"))
-          "ID for the stack-b slack team")
-    (slack-register-team
-     :name "stack-b"
-     :client-id stackb-client-id
-     :client-secret (my:auth-source-get-passwd :host "stack-b" :user (format "%s^secret" stackb-client-id))
-     :token (my:auth-source-get-passwd :host "stack-b" :user (format "%s^token" stackb-client-id))
-     :subscribed-channels '(general random social)
-     :full-and-display-names t
-     :disable-block-format t ;; FIXME: currently the only way of having non blank message
-     ))
+      (slack-register-teams)
+  )
 #+END_SRC
 
 *** Helm-slack
@@ -4957,41 +4863,11 @@ https://github.com/purcell/exec-path-from-shell
       :ensure t
       :tags '("REQUIRES_CONNECTION" "MAIL")
       :config
+      ;; Get account informations from private file
+      (set-smtpmail-multi-accounts)
 
+      ;; Define default environment
       (setq user-full-name "Sébastien Le Maguer"
-            smtpmail-multi-accounts
-            '(
-              (tcd . ("lemagues@tcd.ie"
-                      "smtp.office365.com"
-                      587
-                      "lemagues@tcd.ie"
-                      starttls
-                      nil nil nil))
-              (adaptgmail . ("sebastien.lemaguer@adaptcentre.ie"
-                             "smtp.gmail.com"
-                             587
-                             "sebastien.lemaguer@adaptcentre.ie"
-                             starttls
-                             nil nil nil))
-              (sebgmail . ("seb.lemaguer@gmail.com"
-                           "smtp.gmail.com"
-                           587
-                           "seb.lemaguer@gmail.com"
-                           starttls
-                           nil nil nil))
-              (coli . ("slemaguer"
-                       "smtp.coli.uni-saarland.de"
-                       587
-                       "slemaguer@coli.uni-saarland.de"
-                       starttls
-                       nil nil nil)))
-
-            smtpmail-multi-associations
-            '(("lemagues@tcd.ie" tcd)
-              ("sebastien.lemaguer@adaptcentre.ie" adaptgmail)
-              ("slemaguer@coli.uni-saarland.de" coli)
-              ("seb.lemaguer@gmail.com" sebgmail))
-
             smtpmail-multi-default-account 'tcd
             message-send-mail-function 'smtpmail-multi-send-it
             mail-host-address "tcd.ie"
@@ -5132,7 +5008,7 @@ https://github.com/purcell/exec-path-from-shell
 
     (defun format-hook-message ()
       "Specify some formatting rules for email message writing."
-      (set-fill-column 100)
+      ;; (set-fill-column 100)
       (auto-fill-mode 0)
       (visual-fill-column-mode)
       (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
@@ -5144,176 +5020,18 @@ https://github.com/purcell/exec-path-from-shell
   (use-package mu4e-context
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
+    ;; Define the contexts based on private info
+    (set-mu4e-contexts)
+
+    ;; Adapt the environment
     (setq mu4e-context-policy 'pick-first
           ;; mu4e-compose-context-policy nil
-          mu4e-contexts `(
-
-                          ,(make-mu4e-context
-                            :name "TCD"
-                            :enter-func (lambda () (mu4e-message "Entering TCD context"))
-                            :leave-func (lambda () (mu4e-message "Leaving TCD context"))
-
-                            ;; Match the proper maildir
-                            :match-func (lambda (msg)
-                                          (when msg
-                                            (string-match-p "^/TCD" (mu4e-message-field msg :maildir))))
-
-                            ;; Define the proper directory architecture
-                            :vars '((user-mail-address  . "lemagues@tcd.ie")
-                                    (user-full-name     . "Sébastien Le Maguer")
-                                    (mu4e-sent-folder   . "/TCD/Sent Items")
-                                    (mu4e-draft-folder  . "/TCD/Drafts")
-                                    (mu4e-trash-folder  . "/TCD/Deleted Items")
-                                    (mu4e-refile-folder . "/TCD/Archive")
-                                    )
-                            )
-
-
-                          ;; FIXME: adapt everything properly
-                          ,(make-mu4e-context
-                            :name "AdaptGmail"
-                            :enter-func (lambda () (mu4e-message "Entering AdaptGmail context"))
-                            :leave-func (lambda () (mu4e-message "Leaving AdaptGmail context"))
-
-                            ;; Match the propoer maildir
-                            :match-func (lambda (msg)
-                                          (when msg
-                                            (string-match-p "^/AdaptGmail" (mu4e-message-field msg :maildir))))
-
-                            ;; Define the proper directory architecture
-                            :vars '((user-mail-address  . "sebastien.lemaguer@adaptcentre.ie")
-                                    (user-full-name     . "Sébastien Le Maguer")
-                                    (mu4e-sent-folder   . "/AdaptGmail/sent")
-                                    ;; (mu4e-draft-folder  . "/AdaptGmail/Drafts")
-                                    (mu4e-trash-folder  . "/AdaptGmail/trash")
-                                    )
-                            )
-
-                          ;; FIXME: adapt everything properly
-                          ,(make-mu4e-context
-                            :name "SebGmail"
-                            :enter-func (lambda () (mu4e-message "Entering SebGmail context"))
-                            :leave-func (lambda () (mu4e-message "Leaving SebGmail context"))
-
-                            ;; Match the propoer maildir
-                            :match-func (lambda (msg)
-                                          (when msg
-                                            (string-match-p "^/SebGmail" (mu4e-message-field msg :maildir))))
-
-                            ;; Define the proper directory architecture
-                            :vars '((user-mail-address  . "seb.lemaguer@gmail.com")
-                                    (user-full-name     . "Sébastien Le Maguer")
-                                    (mu4e-sent-folder   . "/SebGmail/sent")
-                                    ;; (mu4e-draft-folder  . "/SebGmail/Drafts")
-                                    (mu4e-trash-folder  . "/SebGmail/trash")
-                                    )
-                            )
-
-                          ;; FIXME: adapt everything properly
-                          ,(make-mu4e-context
-                            :name "HikoGmail"
-                            :enter-func (lambda () (mu4e-message "Entering HikoGmail context"))
-                            :leave-func (lambda () (mu4e-message "Leaving HikoGmail context"))
-
-                            ;; Match the propoer maildir
-                            :match-func (lambda (msg)
-                                          (when msg
-                                            (string-match-p "^/HikoGmail" (mu4e-message-field msg :maildir))))
-
-                            ;; Define the proper directory architecture
-                            :vars '((user-mail-address  . "hikoseb@gmail.com")
-                                    (user-full-name     . "Hiko")
-                                    (mu4e-sent-folder   . "/HikoGmail/sent")
-                                    ;; (mu4e-draft-folder  . "/HikoGmail/Drafts")
-                                    (mu4e-trash-folder  . "/HikoGmail/trash")
-                                    )
-                            )
-
-
-                          ,(make-mu4e-context
-                            :name "Saarland"
-                            :enter-func (lambda () (mu4e-message "Entering Saarland context"))
-                            :leave-func (lambda () (mu4e-message "Leaving Saarland context"))
-
-                            ;; Match the propoer maildir
-                            :match-func (lambda (msg)
-                                          (when msg
-                                            (string-match-p "^/Saarland" (mu4e-message-field msg :maildir))))
-
-                            ;; Define the proper directory architecture
-                            :vars '((user-mail-address  . "slemaguer@coli.uni-saarland.de")
-                                    (user-full-name     . "Sébastien Le Maguer")
-                                    (mu4e-sent-folder   . "/Saarland/INBOX.Sent")
-                                    (mu4e-draft-folder  . "/Saarland/INBOX.Drafts")
-                                    (mu4e-trash-folder  . "/Saarland/INBOX.Trash")
-                                    )
-                            )
-
-                          ;; ,(make-mu4e-context
-                          ;;   :name "Lille"
-                          ;;   :enter-func (lambda () (mu4e-message "Entering Lille context"))
-                          ;;   :leave-func (lambda () (mu4e-message "Leaving Lille context"))
-
-                          ;;   ;; Match the propoer maildir
-                          ;;   :match-func (lambda (msg)
-                          ;;                 (when msg
-                          ;;                   (string-match-p "^/Lille" (mu4e-message-field msg :maildir))))
-
-                          ;;   ;; Define the proper directory architecture
-                          ;;   :vars '(
-                          ;;           (mu4e-sent-folder   . "/Lille/Sent")
-                          ;;           (mu4e-draft-folder  . "/Lille/Drafts")
-                          ;;           (mu4e-trash-folder  . "/Lille/Trash")
-                          ;;           )
-                          ;;   )
-
-                          ;; ,(make-mu4e-context
-                          ;;   :name "Irisa"
-                          ;;   :enter-func (lambda () (mu4e-message "Entering Irisa context"))
-                          ;;   :leave-func (lambda () (mu4e-message "Leaving Irisa context"))
-
-                          ;;   ;; Match the propoer maildir
-                          ;;   :match-func (lambda (msg)
-                          ;;                 (when msg
-                          ;;                   (string-match-p "^/Irisa" (mu4e-message-field msg :maildir))))
-
-                          ;;   ;; Define the proper directory architecture
-                          ;;   :vars '(
-                          ;;           (mu4e-sent-folder   . "/Irisa/Sent")
-                          ;;           (mu4e-draft-folder  . "/Irisa/Drafts")
-                          ;;           (mu4e-trash-folder  . "/Irisa/Trash")
-                          ;;           )
-                          ;;   )
-                          )
 
           mu4e-user-mail-address-list (delq nil
                                             (mapcar (lambda (context)
                                                       (when (mu4e-context-vars context)
                                                         (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
-                                                    mu4e-contexts))
-          ;; compose with the current context is no context matches;
-          ;; default is to ask
-          ;;
-          )
-
-    (add-to-list 'mu4e-bookmarks
-                 (make-mu4e-bookmark
-                  :name  "TCD"
-                  :query "maildir:/TCD/INBOX"
-                  :key ?T))
-
-    (add-to-list 'mu4e-bookmarks
-                 (make-mu4e-bookmark
-                  :name  "Adapt"
-                  :query "maildir:/AdaptGmail/INBOX"
-                  :key ?A))
-
-    (add-to-list 'mu4e-bookmarks
-                 (make-mu4e-bookmark
-                  :name  "Saarland"
-                  :query "maildir:/Saarland/INBOX"
-                  :key ?S))
-    )
+                                                    mu4e-contexts))))
 #+end_src
 **** Notification
 #+begin_src emacs-lisp
@@ -6280,14 +5998,6 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (global-set-key (kbd "<home>") 'move-beginning-of-line)
 #+END_SRC
 * Finalization
-** Load private part
-#+begin_src emacs-lisp
-  (defvar private-file "~/.emacs.d/private-variables.el"
-    "Path to the file which stores my configuration.")
-
-  (when (file-exists-p private-file)
-    (load private-file))
-#+end_src
 ** Startup
 #+begin_src emacs-lisp
   (setq inhibit-startup-message t
