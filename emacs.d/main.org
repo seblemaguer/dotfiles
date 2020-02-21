@@ -747,7 +747,8 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
     ;; Define services
-    (define-mail-services)
+    (when (fboundp 'define-mail-services)
+      (define-mail-services))
 
     ;; Auto-start
     (prodigy-enable-auto-start)
@@ -4677,8 +4678,9 @@ https://github.com/purcell/exec-path-from-shell
 
     :config
 
-    ;; Defining the networks
-    (set-circe-networks)
+    ;; Defining the networks ()
+    (when (fboundp 'set-circe-networks)
+      (set-circe-networks))
 
     ;; Completion
     (setq circe-use-cycle-completion t)
@@ -4813,7 +4815,10 @@ https://github.com/purcell/exec-path-from-shell
             lui-time-stamp-position 'right-margin
             lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]")
 
-      (slack-register-teams)
+      ;; Register the teams (configuration defined in a private file)
+      (when (fboundp 'slack-register-teams)
+        (slack-register-teams))
+
   )
 #+END_SRC
 
@@ -4864,7 +4869,8 @@ https://github.com/purcell/exec-path-from-shell
       :tags '("REQUIRES_CONNECTION" "MAIL")
       :config
       ;; Get account informations from private file
-      (set-smtpmail-multi-accounts)
+      (when (fboundp 'set-smtpmail-multi-accounts)
+        (set-smtpmail-multi-accounts))
 
       ;; Define default environment
       (setq user-full-name "Sébastien Le Maguer"
@@ -5020,8 +5026,9 @@ https://github.com/purcell/exec-path-from-shell
   (use-package mu4e-context
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
-    ;; Define the contexts based on private info
-    (set-mu4e-contexts)
+    ;; Define the contexts (configuration defined in a private file)
+    (when (fboundp 'set-mu4e-contexts)
+      (set-mu4e-contexts))
 
     ;; Adapt the environment
     (setq mu4e-context-policy 'pick-first
@@ -5824,6 +5831,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
       :ensure t
       :tags '("VISUAL"))
 #+end_src
+
 ** Icons
 #+begin_src emacs-lisp
   (use-package all-the-icons
@@ -5838,6 +5846,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     :ensure t
     :tags '("VISUAL"))
 #+end_src
+
 ** Fonts
 #+begin_src emacs-lisp
   (defun set-icon-fonts (CODE-FONT-ALIST)
@@ -5876,7 +5885,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (select-frame frame)
     (load-default-fonts))
 
-  (when (boundp 'set-fontset-font)
+  (when (fboundp 'set-fontset-font)
     (if (daemonp)
         (add-hook 'after-make-frame-functions #'load-fonts)
       (load-default-fonts)))
@@ -6003,6 +6012,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
   (setq inhibit-startup-message t
         find-file-suppress-same-file-warnings t)
 #+end_src
+
 ** Scratch
 #+begin_src emacs-lisp
   (use-package scratch-ext
@@ -6015,6 +6025,7 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     (set-buffer (get-buffer-create "*scratch*"))
     (set (make-local-variable 'org-startup-folded) t))
 #+end_src
+
 ** Make travis happy
 #+BEGIN_SRC emacs-lisp
 (provide 'init)
