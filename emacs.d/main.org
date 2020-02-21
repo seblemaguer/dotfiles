@@ -536,85 +536,8 @@ Baseline configuration for copy/pasting, nothing fancy.
         select-active-regions t)
 #+end_src
 
-** Language checking
+** TODO Language checking
 Writing a text is difficult enough, having some helpers to check and correct the language is necessary for me.
-
-*** Spelling
-Configuration of the (fly) spelling for emacs. For spelling, I am using aspell.
-
-#+begin_src emacs-lisp
-  (use-package flyspell
-    :ensure t
-    :tags '("CORE")
-    :config
-
-    ;; Set programms
-    (setq-default ispell-program-name "aspell")
-    (setq-default ispell-list-command "--list")
-
-    ;; Some skipping
-    (add-to-list 'ispell-skip-region-alist '("^#+begin_src" . "^#+end_src"))
-
-    ;; Refresh flyspell after directory change
-    (defun flyspell-buffer-after-pdict-save (&rest _)
-      (flyspell-buffer))
-    (advice-add 'ispell-pdict-save :after #'flyspell-buffer-after-pdict-save)
-
-    ;; Popup
-    (defun flyspell-emacs-popup-textual (event poss word)
-      "A textual flyspell popup menu."
-      (require 'popup)
-      (let* ((corrects (if flyspell-sort-corrections
-                           (sort (car (cdr (cdr poss))) 'string<)
-                         (car (cdr (cdr poss)))))
-             (cor-menu (if (consp corrects)
-                           (mapcar (lambda (correct)
-                                     (list correct correct))
-                                   corrects)
-                         '()))
-             (affix (car (cdr (cdr (cdr poss)))))
-             show-affix-info
-             (base-menu  (let ((save (if (and (consp affix) show-affix-info)
-                                         (list
-                                          (list (concat "Save affix: " (car affix))
-                                                'save)
-                                          '("Accept (session)" session)
-                                          '("Accept (buffer)" buffer))
-                                       '(("Save word" save)
-                                         ("Accept (session)" session)
-                                         ("Accept (buffer)" buffer)))))
-                           (if (consp cor-menu)
-                               (append cor-menu (cons "" save))
-                             save)))
-             (menu (mapcar
-                    (lambda (arg) (if (consp arg) (car arg) arg))
-                    base-menu)))
-        (cadr (assoc (popup-menu* menu :scroll-bar t) base-menu))))
-
-
-    (defun flyspell-emacs-popup-choose (org-fun event poss word)
-      (if (window-system)
-          (funcall org-fun event poss word)
-        (flyspell-emacs-popup-textual event poss word)))
-
-    (eval-after-load "flyspell"
-      '(progn
-         (advice-add 'flyspell-emacs-popup :around #'flyspell-emacs-popup-choose)))
-    )
-#+end_src
-
-*** English checking
-lang-tool is actually supported by emacs through a dedicated mode which allows to have syntax and
-typography checking.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package langtool
-    :ensure quelpa
-    :quelpa (langtool :fetcher github :repo "mhayashi1120/Emacs-langtool")
-    :tags '("CORE")
-    :init
-    (setq langtool-language-tool-server-jar "~/work/tools/src/languagetool/languagetool/languagetool-server.jar"))
-#+END_SRC
 
 ** Fixme
 To deal with the fixme, I relie on two part: fic-mode for the highlighting and occur for the
@@ -1163,8 +1086,6 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
   (use-package org
     :ensure org-plus-contrib
     :tags '("ORG")
-    :hook
-    (org-mode . flyspell-mode)
 
     :config
 
@@ -2248,43 +2169,11 @@ enough to be on melpa so I use quelpa.
     :hook
     (LaTeX-mode . turn-off-auto-fill)
     (LaTeX-mode . (lambda () (TeX-fold-mode t)))
-    (LaTeX-mode . flyspell-mode)
     (LaTeX-mode . LaTeX-math-mode)
     (LaTeX-mode . outline-minor-mode)
     (LaTeX-mode . TeX-source-correlate-mode)
 
     :config
-
-    ;; Spelling
-    (setq ispell-tex-skip-alists
-          '((
-             ;;("%\\[" . "%\\]") ; AMStex block comment...
-             ;; All the standard LaTeX keywords from L. Lamport's guide:
-             ;; \cite, \hspace, \hspace*, \hyphenation, \include, \includeonly
-             ;; \input, \label, \nocite, \rule (in ispell - rest included here)
-             ("\\\\addcontentsline"              ispell-tex-arg-end 2)
-             ("\\\\add\\(tocontents\\|vspace\\)" ispell-tex-arg-end)
-             ("\\\\\\([aA]lph\\|arabic\\)"   ispell-tex-arg-end)
-             ("\\\\author"                         ispell-tex-arg-end)
-             ;; New regexps here --- kjh
-             ("\\\\\\(text\\|paren\\)cite" ispell-tex-arg-end)
-             ("\\\\cite\\(t\\|p\\|year\\|yearpar\\)" ispell-tex-arg-end)
-             ("\\\\bibliographystyle"                ispell-tex-arg-end)
-             ("\\\\makebox"                  ispell-tex-arg-end 0)
-             ("\\\\e?psfig"                  ispell-tex-arg-end)
-             ("\\\\document\\(class\\|style\\)" .
-              "\\\\begin[ \t\n]*{[ \t\n]*document[ \t\n]*}"))
-            (
-             ;; delimited with \begin.  In ispell: displaymath, eqnarray,
-             ;; eqnarray*, equation, minipage, picture, tabular,
-             ;; tabular* (ispell)
-             ("\\(figure\\|table\\)\\*?"     ispell-tex-arg-end 0)
-             ("\\(equation\\|eqnarray\\)\\*?"     ispell-tex-arg-end 0)
-             ("list"                                 ispell-tex-arg-end 2)
-             ("program" . "\\\\end[ \t\n]*{[ \t\n]*program[ \t\n]*}")
-             ("verbatim\\*?"."\\\\end[ \t\n]*{[ \t\n]*verbatim\\*?[ \t\n]*}")
-             ("lstlisting\\*?"."\\\\end[ \t\n]*{[ \t\n]*lstlisting\\*?[ \t\n]*}"))))
-
     ;; Pdf activated by default
     (TeX-global-PDF-mode 1)
 
@@ -3895,7 +3784,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (diredp-hide-subdir-nomove
      diredp-ediff
      dired-ediff-files
-     dired-do-ispell
      diredp-compress-this-file)
     :hydra
     (hydra-dired (:hint nil :color pink)
@@ -3905,14 +3793,13 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     _D_elete           _o_pen other     _u_nmark           _l_ redisplay      _w_ kill-subdir    C-c C-c : commit
     _R_ename           _M_ chmod        _t_oggle           _g_ revert buf     _e_ ediff          C-c ESC : abort
     _Y_ rel symlink    _G_ chgrp        _E_xtension mark   _s_ort             _=_ pdiff
-    _S_ymlink          ^ ^              _F_ind marked      _._ toggle hydra   \\ ispell
+    _S_ymlink          ^ ^              _F_ind marked      _._ toggle hydra
     _r_sync            ^ ^              ^ ^                ^ ^                _?_ summary
     _z_ compress-file  _A_ find regexp
     _Z_ compress       _Q_ repl regexp
 
     T - tag prefix
     "
-                 ("\\" dired-do-ispell)
                  ("(" dired-hide-details-mode)
                  (")" dired-omit-mode)
                  ("+" dired-create-directory)
@@ -4848,7 +4735,6 @@ https://github.com/purcell/exec-path-from-shell
   (use-package message
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :hook
-    (message-mode . flyspell-mode)
     (message-mode . disable-global-facilities)
     (message-setup . (lambda () (footnote-mode t)))
 
