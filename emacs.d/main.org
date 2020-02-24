@@ -761,66 +761,9 @@ Thanks to pulseaudio-control, I can control my soundcard.
     (setq pulseaudio-control--current-sink "@DEFAULT_SINK@"))
 #+end_src
 
-** Language interaction (LSP)
-LSP is a set of helper to interact with external "ide" tools and provide their functionalities into
-emacs. It is the baseline of my configuration for java, kotlin and also python. I suspect I am going
-to extend it even further in the feature.
-
-#+begin_src emacs-lisp
-  (use-package lsp-mode
-    :ensure t
-    :tags '("IDE")
-    :hook
-    (kotlin-mode . lsp-deferred)
-    :commands (lsp lsp-deferred)
-    :init
-    (setq lsp-before-save-edits t
-          lsp-inhibit-message t
-          lsp-eldoc-render-all nil
-          lsp-highlight-symbol-at-point nil
-          lsp-prefer-flymake nil))
-
-  (use-package company-lsp
-    :ensure t
-    :tags '("IDE")
-    :after company lsp-mode
-    :commands company-lsp
-    :init
-    (push 'company-lsp company-backends)
-    :config
-    (setq company-lsp-enable-snippet t
-          company-lsp-cache-candidates 'auto))
-
-  (use-package lsp-ui
-    :ensure t
-    :tags '("IDE")
-    :after lsp-mode
-    :commands lsp-ui-mode
-    :config
-    (setq lsp-ui-sideline-enable t
-          lsp-ui-sideline-show-symbol t
-          lsp-ui-sideline-show-hover t
-          lsp-ui-flycheck-enable t
-          lsp-ui-sideline-show-code-actions t
-          lsp-ui-sideline-update-mode 'point))
-
-  (use-package dap-mode
-    :ensure t
-    :tags '("IDE")
-    :commands dap-debug
-    :after lsp-mode
-    :init
-    (dap-mode t)
-    (dap-ui-mode t))
-#+end_src
-
 * Completion
 This part focuses on completion configuration. Language specific configurations are not done here
 but in the dedicate language configuration part. This section is just for global configuration.
-** Compdef
-#+begin_src emacs-lisp
-(use-package compdef :ensure t)
-#+end_src
 ** Ivy/swipper/counsel
 I do prefer vertical completion, which is why I use extensively Ivy and extensions.
 
@@ -859,8 +802,10 @@ configuration here.
   (use-package company
     :ensure t
     :tags '("COMPLETION")
-    :config
+    :init
+    (setq company-backends '(company-capf company-files))
 
+    :config
     ;; Global
     (setq company-idle-delay 1
           company-minimum-prefix-length 1
@@ -875,9 +820,6 @@ configuration here.
       (set-face-attribute 'company-preview-common nil :inherit 'company-preview :foreground "gray40")
       (set-face-attribute 'company-scrollbar-bg nil :inherit 'company-tooltip :background "gray20")
       (set-face-attribute 'company-scrollbar-fg nil :background "gray40"))
-
-    ;; Default backends
-    (setq company-backends '(company-capf company-files))
 
     ;; Activating globally
     (global-company-mode t))
@@ -912,6 +854,13 @@ I use Helm for some specific cases which requires an important visibility space 
     )
 #+end_src
 
+** Compdef
+The main problem here is I tend to "push" more than actually setting, I will have to refactor this!
+
+#+begin_src emacs-lisp
+(use-package compdef :ensure t :disabled t)
+#+end_src
+
 ** Templating
 I use templates for 2 use cases: the buffer edition and the file specific templates. Both are relying on *yasnippet*.
 
@@ -923,9 +872,6 @@ Ivy-yasnippet is used for snippet discovery.
   (use-package yasnippet
     :ensure t
     :tags '("COMPLETION")
-    :after company
-    :compdef yas-minor-mode
-    :company company-yasnippet
     :config
 
     ;; Add third parties snippets
@@ -991,6 +937,69 @@ Prescient helps to sort candidates by last used first and then sorting by length
     :ensure t
     :tags '("COMPLETION")
     :config (company-prescient-mode))
+#+end_src
+
+* Language interaction (LSP)
+LSP is a set of helper to interact with external "ide" tools and provide their functionalities into
+emacs. It is the baseline of my configuration for java, kotlin and also python. I suspect I am going
+to extend it even further in the feature.
+
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :ensure t
+    :tags '("IDE")
+    :hook
+    (kotlin-mode . lsp-deferred)
+    :commands (lsp lsp-deferred)
+    :init
+    (setq lsp-before-save-edits t
+          lsp-inhibit-message t
+          lsp-eldoc-render-all nil
+          lsp-highlight-symbol-at-point nil
+          lsp-prefer-flymake nil
+          lsp-idle-delay 0.500))
+
+  (use-package company-lsp
+    :ensure t
+    :tags '("IDE")
+    :after company lsp-mode
+    :commands company-lsp
+    ;; :compdef lsp-mode
+    ;; :company company-lsp
+    :hook
+    (lsp-mode . company-lsp-hook)
+
+    :init
+    (defun company-lsp-hook ()
+      (make-local-variable 'company-backends)
+      (setq company-backends (copy-tree company-backends))
+      (set 'company-backends (append '(company-lsp) company-backends)))
+
+    :config
+    (setq company-lsp-enable-snippet t
+          company-lsp-cache-candidates 'auto))
+
+  (use-package lsp-ui
+    :ensure t
+    :tags '("IDE")
+    :after lsp-mode
+    :commands lsp-ui-mode
+    :config
+    (setq lsp-ui-sideline-enable t
+          lsp-ui-sideline-show-symbol t
+          lsp-ui-sideline-show-hover t
+          lsp-ui-flycheck-enable t
+          lsp-ui-sideline-show-code-actions t
+          lsp-ui-sideline-update-mode 'point))
+
+  (use-package dap-mode
+    :ensure t
+    :tags '("IDE")
+    :commands dap-debug
+    :after lsp-mode
+    :init
+    (dap-mode t)
+    (dap-ui-mode t))
 #+end_src
 
 * Compilation
@@ -1931,14 +1940,28 @@ into company backend.
   (use-package company-irony
     :ensure t
     :tags '("LANGUAGE")
-    :compdef irony-mode
-    :company company-irony)
+    ;; :compdef irony-mode
+    ;; :company company-irony
+    :hook
+    (irony-mode . company-irony-hook)
+
+    :init
+    (defun company-irony-hook ()
+      (make-local-variable 'company-backends)
+      (set 'company-backends (append '(company-irony) company-backends))))
 
   (use-package company-irony-c-headers
     :ensure t
     :tags '("LANGUAGE")
-    :compdef irony-mode
-    :company company-irony-c-headers)
+    ;; :compdef irony-mode
+    ;; :company company-irony-c-headers
+    :hook
+    (irony-mode . company-irony-c-headers-hook)
+
+    :init
+    (defun company-irony-c-headers-hook ()
+      (make-local-variable 'company-backends)
+      (set 'company-backends (append '(company-irony-c-headers) company-backends))))
 #+end_src
 *** Adapt compilation
 Sometimes, I don't want to have a makefile or any complicated project compilation. So I just use
@@ -2273,6 +2296,43 @@ enough to be on melpa so I use quelpa.
     :config
     (setq bibclean-format-args '("--max-width" "0" "--align-equal")))
 #+END_SRC
+*** Reftex
+#+begin_src emacs-lisp
+  (use-package reftex
+    :tags '("LANGUAGE")
+    :hook
+    (LaTeX-mode . turn-on-reftex)   ; with AUCTeX LaTeX mode
+    :config
+    (setq reftex-save-parse-info t
+          reftex-enable-partial-scans t
+          reftex-use-multiple-selection-buffers t
+          reftex-plug-into-AUCTeX t
+          reftex-vref-is-default t
+          reftex-cite-format
+          '((?\C-m . "\\cite[]{%l}")
+            (?t . "\\textcite{%l}")
+            (?a . "\\autocite[]{%l}")
+            (?p . "\\parencite{%l}")
+            (?f . "\\footcite[][]{%l}")
+            (?F . "\\fullcite[]{%l}")
+            (?x . "[]{%l}")
+            (?X . "{%l}"))
+
+          font-latex-match-reference-keywords
+          '(("cite" "[{")
+            ("cites" "[{}]")
+            ("footcite" "[{")
+            ("footcites" "[{")
+            ("parencite" "[{")
+            ("textcite" "[{")
+            ("fullcite" "[{")
+            ("citetitle" "[{")
+            ("citetitles" "[{")
+            ("headlessfullcite" "[{"))
+
+          reftex-cite-prompt-optional-args nil
+          reftex-cite-cleanup-optional-args t))
+#+end_src
 *** Completion
 #+begin_src emacs-lisp
   ;; Completion
@@ -2282,25 +2342,41 @@ enough to be on melpa so I use quelpa.
     :ensure t
     :tags '("LANGUAGE")
     :hook
-    (latex-mode . (company-auctex-init)))
+    (LaTeX-mode . company-auctex-hook)
 
-  (use-package company-bibtex
-    :ensure t
-    :tags '("LANGUAGE")
-    :compdef (latex-mode org-mode)
-    :company (company-bibtex))
+    :init
+    (defun company-auctex-hook ()
+      (make-local-variable 'company-backends)
+      (company-auctex-init)))
 
   (use-package company-reftex
     :ensure t
     :tags '("LANGUAGE")
-    :compdef (latex-mode org-mode)
-    :company (company-reftex-labels company-reftex-citations))
+    ;; :compdef (latex-mode org-mode)
+    ;; :company (company-reftex-labels company-reftex-citations)
+    :hook
+    (LaTeX-mode . company-reftex-hook)
+    (org-mode   . company-reftex-hook)
+
+    :init
+    (defun company-reftex-hook ()
+      (make-local-variable 'company-backends)
+      (set 'company-backends (append '(company-reftex-labels company-reftex-citations) company-backends))))
 
   (use-package company-math
     :ensure t
     :tags '("LANGUAGE")
-    :compdef (latex-mode org-mode)
-    :company (company-math-symbols-unicode))
+    :disabled t
+    ;; :compdef (latex-mode org-mode)
+    ;; :company company-math-symbols-unicode
+    :hook
+    (LaTeX-mode . company-math-hook)
+    (org-mode   . company-math-hook)
+
+    :init
+    (defun company-math-hook ()
+      (make-local-variable 'company-backends)
+      (set 'company-backends (append '(company-math-symbols-unicode) company-backends))))
 #+end_src
 *** Compilation
 #+begin_src emacs-lisp
@@ -2347,43 +2423,6 @@ enough to be on melpa so I use quelpa.
     ;; special-mode makes it read-only which prevents input from TeX.
     (setq buffer-read-only nil))
 #+end_src
-*** Reftex
-#+begin_src emacs-lisp
-  (use-package reftex
-    :tags '("LANGUAGE")
-    :init
-    (add-hook 'LaTeX-mode-hook 'turn-on-reftex)   ; with AUCTeX LaTeX mode
-    :config
-    (setq reftex-save-parse-info t
-          reftex-enable-partial-scans t
-          reftex-use-multiple-selection-buffers t
-          reftex-plug-into-AUCTeX t
-          reftex-vref-is-default t
-          reftex-cite-format
-          '((?\C-m . "\\cite[]{%l}")
-            (?t . "\\textcite{%l}")
-            (?a . "\\autocite[]{%l}")
-            (?p . "\\parencite{%l}")
-            (?f . "\\footcite[][]{%l}")
-            (?F . "\\fullcite[]{%l}")
-            (?x . "[]{%l}")
-            (?X . "{%l}"))
-
-          font-latex-match-reference-keywords
-          '(("cite" "[{")
-            ("cites" "[{}]")
-            ("footcite" "[{")
-            ("footcites" "[{")
-            ("parencite" "[{")
-            ("textcite" "[{")
-            ("fullcite" "[{")
-            ("citetitle" "[{")
-            ("citetitles" "[{")
-            ("headlessfullcite" "[{"))
-
-          reftex-cite-prompt-optional-args nil
-          reftex-cite-cleanup-optional-args t))
-#+end_src
 *** Preview
 #+begin_src emacs-lisp
   (use-package latex-math-preview
@@ -2409,10 +2448,6 @@ enough to be on melpa so I use quelpa.
 ** Lua
 #+begin_src emacs-lisp
   (use-package lua-mode
-    :ensure t
-    :tags '("LANGUAGE"))
-
-  (use-package company-lua
     :ensure t
     :tags '("LANGUAGE"))
 #+end_src
@@ -2757,21 +2792,20 @@ enough to be on melpa so I use quelpa.
     :config
     (extend-dnd-activate))
 #+end_src
-*** Completing
-#+begin_src emacs-lisp
-  (use-package company-statistics
-    :ensure t
-    :tags '("LANGUAGE")
-    :after company
-    :hook (after-init . company-statistics-mode))
-#+end_src
 ** Shell
 #+begin_src emacs-lisp
   (use-package company-shell
     :ensure t
     :tags '("LANGUAGE")
-    :compdef (sh-mode eshell-mode)
-    :company (company-shell company-shell-env company-fish-shell))
+    ;; :compdef (sh-mode eshell-mode)
+    ;; :company (company-shell company-shell-env company-fish-shell)
+    :hook
+    (shell-mode . company-shell-hook)
+
+    :init
+    (defun company-shell-hook ()
+      (make-local-variable 'company-backends)
+      (set 'company-backends (append '(company-shell company-shell-env company-fish-shell) company-backends))))
 #+end_src
 ** PlantUML
 #+begin_src emacs-lisp
@@ -2854,8 +2888,15 @@ enough to be on melpa so I use quelpa.
   (use-package company-web
     :ensure t
     :tags '("LANGUAGE")
-    :compdef (web-mode)
-    :company (company-web-html))
+    ;; :compdef web-mode
+    ;; :company company-web-html
+    :hook
+    (web-mode . company-web-hook)
+
+    :init
+    (defun company-web-hook ()
+      (make-local-variable 'company-backends)
+      (set 'company-backends (append '(company-web-html) company-backends))))
 #+end_src
 *** Javascript
 **** Global
@@ -2956,25 +2997,6 @@ enough to be on melpa so I use quelpa.
   (use-package js-import
     :ensure t
     :tags '("LANGUAGE"))
-
-  (use-package company-tern
-    :ensure t
-    :tags '("LANGUAGE")
-    :compdef (js2-mode)
-    :company (company-tern)
-    :hook
-    (js2-mode . tern-mode)
-
-    :config
-
-    ;; Disable completion keybindings, as we use xref-js2 instead
-    (define-key tern-mode-keymap (kbd "M-.") nil)
-    (define-key tern-mode-keymap (kbd "M-,") nil)
-
-    (setq company-tern-property-marker " <p>"
-          company-tern-property-marker nil
-          company-tern-meta-as-single-line t
-          company-tooltip-align-annotations t))
 #+END_SRC
 **** JSON
 #+begin_src emacs-lisp
@@ -5696,7 +5718,7 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
     :general ([remap scroll-up-command] #'scrollkeeper-contents-up
               [remap scroll-down-command] #'scrollkeeper-contents-down))
 #+end_src
-*** Emoji
+*** TODO Emoji
 #+begin_src emacs-lisp
     (use-package emojify
       :ensure t
