@@ -5523,7 +5523,8 @@ e2wm is nice to provide (also temporarily) an IDE view functionnality.
     :hook
     (org-mode . (lambda () (org-bullets-mode 1))))
 #+end_src
-**** Fancy priority
+**** TODO Fancy priority
+Disabled as for now it is creating a conflict with emacs 27 daemon
 #+begin_src emacs-lisp
   (use-package org-fancy-priorities
     :ensure t
