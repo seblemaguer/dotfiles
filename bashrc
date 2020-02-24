@@ -45,16 +45,15 @@ alias cim='vim'
 alias root='sudo su'
 alias dfh='df -h'
 
-
 # = adding colors Color
 alias ls='ls -Ch --color=auto'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-alias gcc=colorgcc.pl
-alias g++=colorgcc.pl
-alias diff=colordiff
 alias less="$VIMRUNTIME/macros/less.sh"
+
+# Cluster aliases
+alias msqueue='squeue -o "%.8i %.9P %.20j %.8u %.8T %.10M %.12l %.8C %.15b %.15R"'
 
 #############################################################################################################
 #### Prompt
