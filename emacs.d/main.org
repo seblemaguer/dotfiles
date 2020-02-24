@@ -1003,7 +1003,8 @@ I just modify a little bit the default compilation to be a little more "user fri
 #+begin_src emacs-lisp
   (defun my-compile-autoclose (buffer string)
     "Auto close compile log if there are no errors"
-    (when (string-match "finished" string)
+    (when (and (string-match-p (buffer-name buffer) "*grep*")
+               (string-match "finished" string))
           (delete-window (get-buffer-window buffer t))
           (bury-buffer-internal buffer)))
 
@@ -1011,6 +1012,8 @@ I just modify a little bit the default compilation to be a little more "user fri
     :defer
     :diminish compilation-in-progress
     :tags '("COMPILATION")
+    :hook
+    (compilation-filter-hook . my-colorize-compilation-buffer)
     :init
     (setq compilation-scroll-output t)
     :config
@@ -1018,12 +1021,11 @@ I just modify a little bit the default compilation to be a little more "user fri
           (read-only-mode 'toggle)
           (ansi-color-apply-on-region compilation-filter-start (point))
           (read-only-mode 'toggle))
-    (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
     (add-to-list 'compilation-finish-functions #'my-compile-autoclose)
 
-    (setq compilation-always-kill t)
-    (setq compilation-ask-about-save nil)
-    (setq compilation-scroll-output 'first-error)
+    (setq compilation-always-kill t
+          compilation-ask-about-save nil
+          compilation-scroll-output 'first-error)
 
     ;; the next-error function weirdly stops at "In file included from
     ;; config.cpp:14:0:". Stop that:
