@@ -2659,7 +2659,9 @@ enough to be on melpa so I use quelpa.
     (setq-default indent-tabs-mode nil)
 
     :config
-    (setq python-indent-offset 4))
+    (setq python-indent-offset 4
+          python-shell-interpreter "ipython"
+          python-shell-interpreter-args "--simple-prompt -i"))
 #+end_src
 *** Lsp (with microsoft language server)
 #+BEGIN_SRC emacs-lisp
