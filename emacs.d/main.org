@@ -3815,7 +3815,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (hydra-dired (:hint nil :color pink)
                  "
     _+_ mkdir          _v_iew           _m_ark             _(_ details        _i_nsert-subdir    wdired
-    _C_opy             _O_ view other   _U_nmark all       _)_ omit-mode      _$_ hide-subdir    C-x C-q : edit
+    _C_opy             _O_ view other   _U_nmark all       _)_ show git info  _$_ hide-subdir    C-x C-q : edit
     _D_elete           _o_pen other     _u_nmark           _l_ redisplay      _w_ kill-subdir    C-c C-c : commit
     _R_ename           _M_ chmod        _t_oggle           _g_ revert buf     _e_ ediff          C-c ESC : abort
     _Y_ rel symlink    _G_ chgrp        _E_xtension mark   _s_ort             _=_ pdiff
@@ -3827,7 +3827,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     T - tag prefix
     "
                  ("(" dired-hide-details-mode)
-                 (")" dired-omit-mode)
+                 (")" dired-git-info-mode)
                  ("+" dired-create-directory)
                  ("=" diredp-ediff)         ;; smart diff
                  ("?" dired-summary)
@@ -3868,7 +3868,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           ("e" . dired-open-externally)
           ("p" . dired-emms-play)
           ("E" . ora-ediff-files)
-          ("." . hydra-dired/body))
+          ("?" . hydra-dired/body))
 
     :init
     (defun ora-ediff-files ()
