@@ -28,7 +28,7 @@ fi
 #############################################################################################################
 export VIMRUNTIME=`vim -e -T dumb --cmd 'exe "set t_cm=\<C-M>"|echo $VIMRUNTIME|quit' | tr -d '\015' `
 
-if ! type "emacs" > /dev/null; then
+if [[ `which emacs` = "" ]]; then
     export EDITOR=vim
 else
     export EDITOR=emacs
@@ -57,6 +57,7 @@ alias less="$VIMRUNTIME/macros/less.sh"
 
 # Cluster aliases
 alias msqueue='squeue -o "%.8i %.9P %.20j %.8u %.8T %.10M %.12l %.8C %.15b %.15R"'
+alias check_queue="msqueue | sed 's/[ \t]\+/ /g' | cut -d' ' -f5,6,10 | sed 's/:.*//g' | sort | uniq -c | grep -v 'USER STATE' | sed 's/^[ ]*//g' | sort -h"
 
 #############################################################################################################
 #### Prompt
@@ -70,16 +71,24 @@ BBLUE='\[\033[1;34m\]'
 BLUE='\[\033[0;34m\]'
 NORMAL='\[\033[00m\]'
 TIME=$(date +%H:%M)
-PS1="${GREEN}[\A]${NORMAL}\u@${RED}\w ${BLUE}: ${NORMAL}"
+
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ];
+then
+    PS1="${GREEN}[\A] ${NORMAL}\u:${BLUE}\h@${RED}\w ${BLUE}: ${NORMAL}"
+else
+    PS1="${GREEN}[\A] ${NORMAL}\u@${RED}\w ${BLUE}: ${NORMAL}"
+fi
 
 #############################################################################################################
 #### History
 #############################################################################################################
-bind '"\M-w"':"\"\C-k\C-ahistory | grep '^ *[0-9]* *\C-e.'\C-m\""
-bind '"\e[A"':history-search-backward
-bind '"\e[B"':history-search-forward
 export HISTCONTROL=erasedups:ignorespace
 export HISTIGNORE="cd:ls:[bf]g:clear"
+if [[ "$(set -o | grep 'emacs\|\bvi\b' | cut -f2 | tr '\n' ':')" != 'off:off:' ]]; then
+    bind '"\M-w"':"\"\C-k\C-ahistory | grep '^ *[0-9]* *\C-e.'\C-m\""
+    bind '"\e[A"':history-search-backward
+    bind '"\e[B"':history-search-forward
+fi
 
 #############################################################################################################
 #### Titles

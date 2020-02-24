@@ -43,21 +43,24 @@ export MANPATH=$HOME/environment/local/share/man:$HOME/work/tools/local/share/ma
 export INFOPATH=$HOME/environment/local/share/info:$INFOPATH
 
 # Change the locale !
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+cur_locale=`locale -a | grep utf8 | head -n 1`
+export LC_ALL=$cur_locale
+export LANG=$cur_locale
 
 # Screen detection
-DP_CONNECTED=`xrandr | grep " connected" | grep "HDMI-1" | wc -l`
-if [ $DP_CONNECTED = 1 ]
+if [[ `which xrandr` != "" ]]
 then
-    ~/.screenlayout/office.sh
-fi
-DP_CONNECTED=`xrandr | grep " connected" | grep "DP-1-1" | wc -l`
-if [ $DP_CONNECTED = 1 ]
-then
-    ~/.screenlayout/office_dpi.sh
+    DP_CONNECTED=`xrandr | grep " connected" | grep "HDMI-1" | wc -l`
+    if [ $DP_CONNECTED = 1 ]
+    then
+        ~/.screenlayout/office.sh
+    fi
+    DP_CONNECTED=`xrandr | grep " connected" | grep "DP-1-1" | wc -l`
+    if [ $DP_CONNECTED = 1 ]
+    then
+        ~/.screenlayout/office_dpi.sh
+    fi
 fi
 
-# Indicate that the profile is loaded 
+# Indicate that the profile is loaded
 export PROFILE_LOADED=True
-
