@@ -158,7 +158,7 @@ This section focus on defining some variables/helpers needed to have a more glob
 	ad-redefinition-action 'accept
 
 	;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
-	gc-cons-threshold 50000000
+	gc-cons-threshold 100000000
 	large-file-warning-threshold 100000000)
 #+END_SRC
 
