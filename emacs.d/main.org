@@ -4242,58 +4242,63 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (dired-mode . treemacs--select-icon-set )
     (dired-mode . treemacs-icons-dired-mode))
 #+end_src
-* Sbuffer
+* Bufler
 #+begin_src emacs-lisp
-  (use-package sbuffer
+  (use-package bufler
     :ensure quelpa
-    :quelpa (sbuffer :fetcher github :repo "alphapapa/sbuffer.el")
+    :quelpa (bufler :fetcher github :repo "alphapapa/bufler.el")
     :tags '("BUFFER")
-    :bind ("C-x C-b" . sbuffer)
-    :config
-    (setf sbuffer-groups (sbuffer-defgroups
-                          (group (group-or "*Help/Info*"
-                                           (mode-match "*Help*" (rx bos "help-"))
-                                           (mode-match "*Info*" (rx bos "info-"))
-                                           (mode-match "*Apropos*" (rx bos "apropos-"))))
+    :bind ("C-x C-b" . bufler)
+    :custom
+    (bufler-groups (bufler-defgroups
+                      (group (group-or "*Help/Info*"
+                                       (mode-match "*Help*" (rx bos "help-"))
+                                       (mode-match "*Info*" (rx bos "info-"))
+                                       (mode-match "*Apropos*" (rx bos "apropos-"))))
 
-                          (group (mode-match "*Magit*" (rx bos "magit-"))
-                                 (auto-directory))
+                      (group (mode-match "*Magit*" (rx bos "magit-"))
+                             (auto-directory))
 
-                          (group (group-or "Mail"
-                                           (mode-match "*Mu4e*" (rx bos "mu4e-"))))
+                      (group (group-or "Mail"
+                                       (mode-match "*Mu4e*" (rx bos "mu4e-"))))
 
-                          (group (mode-match "*EMMS*" (rx bos "emms-")))
+                      (group (mode-match "*EMMS*" (rx bos "emms-")))
 
-                          (group (group-or "*RSS*"
-                                           (mode-match "*Elfeed*" (rx bos "elfeed-"))
-                                           (name-match "*Elfeed*" (rx bos "*elfeed"))
-                                           (name-match "rss.org" (rx bos "rss.org"))))
+                      (group (group-or "*RSS*"
+                                       (mode-match "*Elfeed*" (rx bos "elfeed-"))
+                                       (name-match "*Elfeed*" (rx bos "*elfeed"))
+                                       (name-match "rss.org" (rx bos "rss.org"))))
 
-                          (group (group-or "Todo"
-                                           (name-match "Todo" (rx bos "todo.org"))))
+                      (group (group-or "Todo"
+                                       (name-match "Todo" (rx bos "todo.org"))))
 
-                          (group (group-not "*Special*" (auto-file))
-                                 (mode-match "*Helm*" (rx bos "helm-"))
-                                 (name-match "*Calendar*" "^[*]?[Cc]alendar.*$")
+                      (group (group-not "*Special*" (auto-file))
+                             (mode-match "*Helm*" (rx bos "helm-"))
+                             (name-match "*Calendar*" "^[*]?[Cc]alendar.*$")
 
-                                 (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*")))
-                                 (name-match "*Prodigy*" (rx bos "*prodigy-"))
-                                 (name-match "*Slack*" (rx bos "*Slack"))
-                                 (name-match "*Emacs*" (rx bos (or "*scratch*" "*Messages*")))
-                                 (auto-mode))
+                             (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*")))
+                             (name-match "*Prodigy*" (rx bos "*prodigy-"))
+                             (name-match "*Slack*" (rx bos "*Slack"))
+                             (name-match "*Emacs*" (rx bos (or "*scratch*" "*Messages*")))
+                             (auto-mode))
 
-                          (dir "~/.emacs.d")
+                      (dir "~/.emacs.d")
 
-                          (group (dir (if (bound-and-true-p org-directory)
-                                          org-directory
-                                        "~/org"))
-                                 (group (auto-indirect)
-                                        (auto-file))
-                                 (group-not "*special*" (auto-file))
-                                 (auto-mode))
+                      (group (dir (if (bound-and-true-p org-directory)
+                                      org-directory
+                                    "~/org"))
+                             (group (auto-indirect)
+                                    (auto-file))
+                             (group-not "*special*" (auto-file))
+                             (auto-mode))
 
-                          (auto-directory)
-                          (auto-mode))))
+                      (auto-tramp)
+                      (auto-directory)
+                      (auto-mode)))
+    (bufler-reverse nil)
+    (bufler-face-prefix "prism-level-")
+    (bufler-vc-state)
+    (bufler-initial-face-depth 1))
 #+end_src
 * Notification
 ** Sauron
