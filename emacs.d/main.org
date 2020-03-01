@@ -4288,7 +4288,8 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                       (auto-mode)))
     (bufler-reverse nil)
     (bufler-face-prefix "prism-level-")
-    (bufler-vc-state)
+    (bufler-vc-state t)
+    (bufler-list-group-separators '((0 . "\n")))
     (bufler-initial-face-depth 1))
 #+end_src
 * Notification
