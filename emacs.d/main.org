@@ -619,6 +619,22 @@ could be modified to be more general.
     )
 #+end_src
 
+*** Diff at point
+#+begin_src emacs-lisp
+  (use-package diff-at-point
+    :ensure t
+    :bind
+    ("<C-M-return>" . diff-at-point-toggle)
+    :tags '("HELPER")
+    :config
+    (defun diff-at-point-toggle ()
+      (interactive)
+      (cond
+       ((string= major-mode "diff-mode")
+        (diff-at-point-goto-source-and-close))
+       (t
+        (diff-at-point-open-and-goto-hunk)))))
+#+end_src
 ** Searching
 Double-saber is really helpful to reduce the result of a search after the search itself.
 
