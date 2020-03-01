@@ -5966,7 +5966,7 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
     :ensure t
     :tags '("HELPER")
     :hook (after-init . remind-bindings-initialise)
-    :bind (("C-x C-d" . 'remind-bindings-togglebuffer)   ;; toggle buffer
+    :bind (;; ("C-x C-d" . 'remind-bindings-togglebuffer)   ;; toggle buffer
            ("C-c M-d" . 'remind-bindings-specific-mode))) ;; buffer-specific only
 #+end_src
 
