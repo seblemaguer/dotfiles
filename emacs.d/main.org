@@ -5688,6 +5688,29 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
     (dired-rainbow-define log (:inherit default :italic t) ".*\\.log")
     )
 #+end_src
+**** Prism
+#+begin_src emacs-lisp
+  (use-package prism
+    :ensure quelpa
+    :quelpa (prism :fetcher github :repo "alphapapa/prism.el")
+    :config
+
+    (prism-set-colors :num 16
+      :desaturations (cl-loop for i from 0 below 16
+                              collect (* i 2.5))
+      :lightens (cl-loop for i from 0 below 16
+                         collect (* i 2.5))
+      :colors (list "#C0392B" "#3498DB" "#16A085")
+
+      :comments-fn
+      (lambda (color)
+        (prism-blend color
+          (face-attribute 'font-lock-comment-face :foreground) 0.25))
+
+      :strings-fn
+      (lambda (color)
+        (prism-blend color "white" 0.5))))
+#+end_src
 *** Scrolling
 #+begin_src emacs-lisp
   (use-package scrollkeeper
