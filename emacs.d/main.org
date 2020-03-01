@@ -5350,21 +5350,37 @@ organize read papers or "to read" papers. This is mainly based on https://codear
 
   (use-package gscholar-bibtex
     :ensure t
-    :tags '("CONNECTED")
+    :tags '("WRITING" "CONNECTED")
     :commands (gscholar-bibtex)
     )
 #+end_src
+
 ** Paper
 As I write papers, it is useful to have some helper to start to have the inspiration.
 #+begin_src emacs-lisp
   (use-package academic-phrases
     :ensure t
-    :tags '("CONNECTED"))
+    :tags '("WRITING" "CONNECTED"))
 
   (use-package powerthesaurus
     :ensure t
-    :tags '("CONNECTED"))
+    :tags '("WRITING" "CONNECTED"))
 #+end_src
+
+** Grammar checking
+*** For english
+#+begin_src emacs-lisp
+  (use-package grammarly
+    :ensure t
+    :tags '("WRITING" "CONNECTED"))
+#+end_src
+*** For french
+#+begin_src emacs-lisp
+  (use-package flycheck-grammalecte
+    :ensure t
+    :tags '("WRITING"))
+#+end_src
+
 * Visual
 ** Mode line
 *** Fancy battery
