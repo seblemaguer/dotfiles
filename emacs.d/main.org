@@ -4425,6 +4425,12 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (setq alert-default-style 'sauron-mode-line-style))
 #+end_src
 * System
+** TODO Bluetooth
+#+begin_src emacs-lisp
+  (use-package bluetooth
+    :ensure t
+    :tags '("SYSTEM"))
+#+end_src
 ** Docker
 #+begin_src emacs-lisp
   (use-package docker
