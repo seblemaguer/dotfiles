@@ -536,9 +536,6 @@ Baseline configuration for copy/pasting, nothing fancy.
         select-active-regions t)
 #+end_src
 
-** TODO Language checking
-Writing a text is difficult enough, having some helpers to check and correct the language is necessary for me.
-
 ** Fixme
 To deal with the fixme, I relie on two part: fic-mode for the highlighting and occur for the
 listing.
