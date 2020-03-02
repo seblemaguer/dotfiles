@@ -2285,6 +2285,12 @@ enough to be on melpa so I use quelpa.
           bibtex-autokey-titleword-length 100
           bibtex-autokey-titlewords 1))
 #+end_src
+**** TODO Utilities
+#+begin_src emacs-lisp
+  (defvar bibtex-plugin-dir (concat default-plugin-dir "/bibtex-utils")
+    "Directory containing some bibtex helpers")
+  (add-to-list 'load-path bibtex-plugin-dir)
+#+end_src
 **** Formatting
 #+BEGIN_SRC emacs-lisp
   (use-package bibclean-format
