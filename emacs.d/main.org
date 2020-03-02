@@ -4255,20 +4255,22 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :bind ("C-x C-b" . bufler)
     :custom
     (bufler-groups (bufler-defgroups
-                      (group (group-or "*Help/Info*"
-                                       (mode-match "*Help*" (rx bos "help-"))
-                                       (mode-match "*Info*" (rx bos "info-"))
-                                       (mode-match "*Apropos*" (rx bos "apropos-"))))
-
-                      (group (mode-match "*Magit*" (rx bos "magit-"))
-                             (auto-directory))
+                     (group (group-or "Help/Info"
+                                      (mode-match "*Help*" (rx bos "help-"))
+                                      (mode-match "*Info*" (rx bos "info-"))
+                                      (mode-match "*Apropos*" (rx bos "apropos-"))))
 
                       (group (group-or "Mail"
                                        (mode-match "*Mu4e*" (rx bos "mu4e-"))))
 
-                      (group (mode-match "*EMMS*" (rx bos "emms-")))
+                      (group (group-or "Chatty"
+                                       (mode-match "*Circe*" (rx bos "circe-"))
+                                       (name-match "*Slack*" (rx bos "*Slack")))
+                             (auto-mode))
 
-                      (group (group-or "*RSS*"
+                      (group (mode-match "EMMS" (rx bos "emms-")))
+
+                      (group (group-or "RSS"
                                        (mode-match "*Elfeed*" (rx bos "elfeed-"))
                                        (name-match "*Elfeed*" (rx bos "*elfeed"))
                                        (name-match "rss.org" (rx bos "rss.org"))))
@@ -4276,34 +4278,52 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                       (group (group-or "Todo"
                                        (name-match "Todo" (rx bos "todo.org"))))
 
-                      (group (group-not "*Special*" (auto-file))
-                             (mode-match "*Helm*" (rx bos "helm-"))
-                             (name-match "*Calendar*" "^[*]?[Cc]alendar.*$")
+                      (group
+                       ;; Subgroup collecting all special buffers (i.e. ones that are not
+                       ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
+                       ;; through to other groups, so they end up grouped with their project buffers).
+                       (group-and "*Special*"
+                                  (lambda (buffer)
+                                    (unless (or (funcall (mode-match "Magit" (rx bos "magit-status"))
+                                                         buffer)
+                                                (funcall (mode-match "Dired" (rx bos "dired"))
+                                                         buffer)
+                                                (funcall (auto-file) buffer))
+                                      "*Special*")))
 
-                             (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*")))
-                             (name-match "*Prodigy*" (rx bos "*prodigy-"))
-                             (name-match "*Slack*" (rx bos "*Slack"))
-                             (name-match "*Emacs*" (rx bos (or "*scratch*" "*Messages*")))
-                             (auto-mode))
+                       (group
+                        ;; Subgroup collecting these "special special" buffers
+                        ;; separately for convenience.
+                        (name-match "**Special**"
+                                    (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*")))
 
-                      (dir "~/.emacs.d")
+                       ;; For my- calendars
+                       (group (name-match "*Calendar*" "^[*]?[Cc]alendar.*$"))
 
-                      (group (dir (if (bound-and-true-p org-directory)
-                                      org-directory
-                                    "~/org"))
-                             (group (auto-indirect)
-                                    (auto-file))
-                             (group-not "*special*" (auto-file))
-                             (auto-mode))
+                       ;; Package management
+                       (group (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*"))))
+
+                       ;; Processes in background
+                       (group (name-match "*Prodigy*" (rx bos "*prodigy-")))
+
+
+                       ;; Subgroup collecting all other Magit buffers, grouped by directory.
+                       (group
+                        (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
+                        (auto-directory))
+                       ;; Subgroup for Helm buffers.
+                       (mode-match "*Helm*" (rx bos "helm-"))
+                       ;; Remaining special buffers are grouped automatically by mode.
+                       (auto-mode))
 
                       (auto-tramp)
-                      (auto-directory)
-                      (auto-mode)))
-    (bufler-reverse nil)
-    (bufler-face-prefix "prism-level-")
-    (bufler-vc-state t)
-    (bufler-list-group-separators '((0 . "\n")))
-    (bufler-initial-face-depth 1))
+                      (auto-project)
+                      (auto-directory)))
+                   (bufler-reverse nil)
+                   (bufler-face-prefix "prism-level-")
+                   (bufler-vc-state t)
+                   (bufler-list-group-separators '((0 . "\n")))
+                   (bufler-initial-face-depth 1))
 #+end_src
 * Notification
 ** Sauron
