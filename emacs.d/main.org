@@ -5781,29 +5781,29 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
 #+end_src
 *** TODO Emoji
 #+begin_src emacs-lisp
-    (use-package emojify
-      :ensure t
-      :tags '("VISUAL")
-      :functions (emojify-set-emoji-data)
-      :hook (circe-chat-mode . emojify-mode)
-      :config
+  (use-package emojify
+    :ensure t
+    :tags '("VISUAL")
+    :functions (emojify-set-emoji-data)
+    :hook (circe-chat-mode . emojify-mode)
+    :config
 
-      (setq emojify-user-emojis
-            '(("(heart)" . (("name" . "Heart")
-                            ("image" . "~/.emacs.d/emojis/emojione-v2.2.6-22/2665.png")
-                            ("style" . "github")))))
+    (setq emojify-user-emojis
+          '(("(heart)" . (("name" . "Heart")
+                          ("image" . "~/.emacs.d/emojis/emojione-v2.2.6-22/2665.png")
+                          ("style" . "github")))))
 
-      ;; If emojify is already loaded refresh emoji data
-      (when (featurep 'emojify)
-        (emojify-set-emoji-data)))
+    ;; If emojify is already loaded refresh emoji data
+    (when (featurep 'emojify)
+      (emojify-set-emoji-data)))
 
-    (use-package company-emoji
-      :ensure t
-      :tags '("VISUAL"))
+  (use-package company-emoji
+    :ensure t
+    :tags '("VISUAL"))
 
-    (use-package flycheck-status-emoji
-      :ensure t
-      :tags '("VISUAL"))
+  (use-package flycheck-status-emoji
+    :ensure t
+    :tags '("VISUAL"))
 #+end_src
 
 ** Icons
