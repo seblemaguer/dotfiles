@@ -3213,10 +3213,6 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
                  (magit-get-current-branch)
                  '(:foreground "red"))
 
-    (esh-section esh-python
-                 "\xe928"  ;  (python icon)
-                 pyvenv-virtual-env-name)
-
     (esh-section esh-clock
                  "\xf017"  ;  (clock icon)
                  (format-time-string "%H:%M" (current-time))
@@ -3242,7 +3238,7 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
           eshell-prompt-regexp "[^└]└─> "
           eshell-prompt-string "└─> "
 
-          eshell-funcs (list esh-dir esh-git esh-python esh-clock esh-num) ;; Choose which eshell-funcs to enable
+          eshell-funcs (list esh-dir esh-git esh-clock esh-num) ;; Choose which eshell-funcs to enable
           eshell-prompt-function 'esh-prompt-func ;; Enable the new eshell prompt
           )
 
