@@ -3912,7 +3912,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
               insert-directory-program "/usr/local/bin/gls")))
 
     ;; Omitting
-    (setq-default dired-omit-files "^\\..*"
+    (setq-default dired-omit-files "^\\.[a-zA-Z0-9]*$"
                   dired-omit-mode t)
     (put 'dired-find-alternate-file 'disabled nil)
 
@@ -3978,36 +3978,38 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 #+end_src
 *** dired-filter
 #+begin_src emacs-lisp
-    (use-package dired-filter
-      :ensure t
-      :tags '("FILE_MANAGEMENT")
-      :hook
-      ((dired-mode . dired-filter-mode)
-       (dired-mode . dired-filter-group-mode))
+  (use-package dired-filter
+    :ensure t
+    :tags '("FILE_MANAGEMENT")
+    :hook
+    ((dired-mode . dired-filter-mode)
+     (dired-mode . dired-filter-group-mode))
 
-      :init
-      (setq dired-filter-revert 'never
-            dired-filter-group-saved-groups
-            '(("default"
-               ("Git"
-                (directory . ".git")
-                (file . ".gitignore"))
-               ("Directory"
-                (directory))
-               ("PDF"
-                (extension . "pdf"))
-               ("LaTeX"
-                (extension "tex" "bib"))
-               ("Source"
-                (extension "c" "cpp" "hs" "rb" "py" "r" "cs" "el" "lisp" "html" "js" "css"))
-               ("Doc"
-                (extension "md" "rst" "txt"))
-               ("Org"
-                (extension . "org"))
-               ("Archives"
-                (extension "zip" "rar" "gz" "bz2" "tar"))
-               ("Images"
-                (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))))))
+    :init
+    (setq dired-filter-revert 'never
+          dired-filter-group-saved-groups
+          '(("default"
+             ("previous"
+              (regexp . "^\\.\\.$"))
+             ("Directory"
+              (directory))
+             ("Git"
+              (directory . ".git")
+              (file . ".gitignore"))
+             ("PDF"
+              (extension . "pdf"))
+             ("LaTeX"
+              (extension "tex" "bib"))
+             ("Source"
+              (extension "c" "cpp" "hs" "rb" "py" "r" "cs" "el" "lisp" "html" "js" "css"))
+             ("Doc"
+              (extension "md" "rst" "txt"))
+             ("Org"
+              (extension . "org"))
+             ("Archives"
+              (extension "zip" "rar" "gz" "bz2" "tar"))
+             ("Images"
+              (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))))))
 #+end_src
 *** dired-subtree
 #+begin_src emacs-lisp
