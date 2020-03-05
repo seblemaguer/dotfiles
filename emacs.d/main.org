@@ -569,7 +569,32 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
 
     (file-name-shadow-mode 1))
 #+end_src
+*** Maple minibuffer
+#+begin_src emacs-lisp
+  (use-package maple-minibuffer
+    :ensure quelpa
+    :quelpa (maple-minibuffer :fetcher github :repo "honmaple/emacs-maple-minibuffer")
+    :tags '("CORE")
+    :hook
+    (after-init . maple-minibuffer-mode)
 
+    :custom
+    (maple-minibuffer:position-type 'frame-center)
+    (maple-minibuffer:width 0.7)
+    (maple-minibuffer:action '(read-from-minibuffer read-string))
+    (maple-minibuffer:ignore-action '(evil-ex eval-expression org-schedule))
+    (maple-minibuffer:ignore-regexp '("^helm-"))
+
+    :config
+    ;; more custom parameters for frame
+    (defun maple-minibuffer:parameters ()
+      "Maple minibuffer parameters."
+      `((height . ,(or maple-minibuffer:height 10))
+        (width . ,(or maple-minibuffer:width (window-pixel-width)))
+        (left-fringe . 5)
+        (right-fringe . 5))))
+
+#+end_src
 ** Buffers
 Some buffer specificities configuration like how to deal with trailing whitespaces or the
 fill-column for example.
