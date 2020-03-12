@@ -221,6 +221,20 @@ Now that we are ready to actually configure emacs properly, let's first start th
 #+begin_src emacs-lisp
   (server-start)
 #+end_src
+** Shutting down
+:PROPERTIES:
+:FROM: https://github.com/munen/emacs.d
+:END:
+
+Helper to shutdown properly the server
+
+#+begin_src emacs-lisp
+(defun server-shutdown ()
+  "Save buffers, Quit, and Shutdown (kill) server"
+  (interactive)
+  (save-some-buffers)
+  (kill-emacs))
+#+end_src
 
 * Global
 This section is about configuring global emacs helpers which are not specific to a dedicated
