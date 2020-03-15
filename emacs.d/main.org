@@ -397,7 +397,21 @@ workflow.
     :bind ("C-<" . goto-last-point)
     :config (goto-last-point-mode))
 #+END_SRC
+*** Reload file at saved position
+:PROPERTIES:
+:FROM:     https://github.com/munen/emacs.d
+:END:
+Remember the cursor position of files when reopening them
 
+#+begin_src emacs-lisp
+  (use-package saveplace
+    :ensure t
+    :tags '("CORE")
+    :init
+    (setq save-place-file "~/.emacs.d/saveplace")
+    :config
+    (save-place-mode 1))
+#+end_src
 ** Recent file
 Opening recent files is always an easy and fast shortcut. Some files should be ignored though. That
 leads to this configuration
