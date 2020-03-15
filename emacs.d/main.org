@@ -732,17 +732,41 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
 
 #+begin_src emacs-lisp
   (use-package prodigy
-    :ensure quelpa
-    :quelpa (prodigy :fetcher github :repo "seblemaguer/prodigy.el" :branch "auto-start")
+    :ensure t
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
     ;; Define services
     (when (fboundp 'define-mail-services)
       (define-mail-services))
-
-    ;; Auto-start
-    (prodigy-enable-auto-start)
     )
+
+  (use-package elcontext
+    :ensure t
+    :config
+
+    (defun elcontext-start-prodigy (name)
+      "Helper to start properly the prodigy service NAME via elcontext."
+      (prodigy-start-service
+          (prodigy-find-service name)))
+
+    (when (fboundp 'list-mail-services)
+      (dolist (name (list-mail-services))
+        (setq elcontext--context-id name
+              elcontext--context-current (ht (:name name)
+                                             (:time (ht))
+                                             (:action `(elcontext-start-prodigy ,name))
+                                             (:location (ht))
+                                             (:directory (expand-file-name "~"))))
+        (elcontext-add-context elcontext--context-id elcontext--context-current)))
+
+
+    ;; Reinit everything
+    (setq elcontext--context-id nil
+          elcontext--context-current (ht (:name nil)
+                                         (:time (ht))
+                                         (:action nil)
+                                         (:location (ht))))
+    (elcontext-global-mode))
 #+end_src
 
 *** System daemons
