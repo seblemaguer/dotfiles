@@ -5207,6 +5207,39 @@ Thanks to @branch14 of 200ok fame for the function!
                   (puthash (car feed) 3 sauron-elfeed-prio-hash))))
 
 #+end_src
+** Calendar
+ #+begin_src emacs-lisp
+   (use-package excorporate
+     :ensure t
+     :tags '("CALENDAR" "REQUIRES_CONNECTION")
+     :hook
+     (org-agenda-cleanup-fancy-diary-hook . ab/agenda-update-diary)
+
+     :config
+     (setq excorporate-configuration '("lemagues@tcd.ie" . "https://outlook.office365.com/EWS/Exchange.asmx")
+           excorporate-calendar-show-day-function 'exco-calfw-show-day
+           org-agenda-include-diary t) ;; FIXME: move this?
+
+
+     (defun ab/agenda-update-diary ()
+       "call excorporate to update the diary for today"
+       (exco-diary-diary-advice (calendar-current-date) (calendar-current-date) #'message "diary updated"))
+
+     ;; activate excorporate and request user/password to start connection
+     (excorporate)
+     (excorporate-diary-enable))
+ #+end_src
+*** Helpers
+#+begin_src emacs-lisp
+  (defun calendar-insert-date ()
+    "Capture the date at point, exit the Calendar, insert the date."
+    (interactive)
+    (seq-let (month day year) (save-match-data (calendar-cursor-to-date))
+      (calendar-exit)
+      (insert (format "%02d-%02d-%02d" year month day))))
+
+  (define-key calendar-mode-map (kbd "RET") 'calendar-insert-date)
+#+end_src
 ** Stackexchange
 #+begin_src emacs-lisp
   (use-package sx
