@@ -1684,6 +1684,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
      diredp-ediff
      dired-ediff-files
      diredp-compress-this-file)
+
     :hydra
     (hydra-dired (:hint nil :color pink)
                  "
@@ -1734,6 +1735,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                  ("Z" dired-do-compress)
                  ("q" nil)
                  ("." nil :color blue))
+
     :bind
     (:map dired-mode-map
           ("C-o" . dired-omit-mode)
@@ -1764,6 +1766,9 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
                           (set-window-configuration wnd))))
           (error "no more than 2 files should be marked"))))
 
+      (setq-default dired-omit-files "^\\.\\([a-zA-Z0-9].*\\)?$"
+                    dired-omit-mode t)
+
     :config
 
     ;; Adapt ls for mac
@@ -1775,8 +1780,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
               insert-directory-program "/usr/local/bin/gls")))
 
     ;; Omitting
-    (setq-default dired-omit-files "^\\.[a-zA-Z0-9]*$"
-                  dired-omit-mode t)
     (put 'dired-find-alternate-file 'disabled nil)
 
     (setq dired-dwim-target t
@@ -1850,8 +1853,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :ensure t
     :tags '("FILE_MANAGEMENT")
     :hook
-    ((dired-mode . dired-filter-mode)
-     (dired-mode . dired-filter-group-mode))
+    (dired-mode . dired-filter-group-mode)
 
     :init
     (setq dired-filter-revert 'never
