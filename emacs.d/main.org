@@ -602,6 +602,7 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
   (use-package maple-minibuffer
     :ensure quelpa
     :quelpa (maple-minibuffer :fetcher github :repo "honmaple/emacs-maple-minibuffer")
+    :disabled t
     :tags '("CORE")
     :hook
     (after-init . maple-minibuffer-mode)
