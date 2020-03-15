@@ -4618,6 +4618,21 @@ https://github.com/purcell/exec-path-from-shell
     :ensure t
     :commands (ellocate))
 #+end_src
+** Password generation
+:PROPERTIES:
+:FROM:     https://github.com/munen/emacs.d
+:END:
+Through pwgen.
+
+Thanks to @branch14 of 200ok fame for the function!
+#+begin_src emacs-lisp :tangle yes
+(defun generate-password ()
+  "Generates and inserts a new password"
+  (interactive)
+  (insert
+   (shell-command-to-string
+    (concat "pwgen -A " (read-string "Length: " "24") " 1"))))
+#+end_src
 ** COMMENT unison interaction
 #+begin_src emacs-lisp
   (use-package unison
