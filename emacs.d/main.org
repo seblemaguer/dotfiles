@@ -117,7 +117,7 @@ Finally, I use paradox to enhance the package listing experience.
   (use-package paradox
     :ensure t
     :tags '("CORE")
-    :commands (paradox-list-packages)
+    :commands (paradox-upgrade-packages paradox-list-packages)
     :custom (paradox-automatically-star t)
     :config
     (setq paradox-spinner-type 'progress-bar
