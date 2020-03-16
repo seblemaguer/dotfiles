@@ -1112,8 +1112,7 @@ Sometimes I just want to ignore everything except the current document. Darkroom
 ** Buffer listing
 #+begin_src emacs-lisp
   (use-package bufler
-    :ensure quelpa
-    :quelpa (bufler :fetcher github :repo "alphapapa/bufler.el")
+    :ensure t
     :tags '("BUFFER")
     :bind ("C-x C-b" . bufler)
     :custom
