@@ -2970,8 +2970,17 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
     :tags '("COMPILATION")
     :bind ("C-c C-g b" . ivy-taskrunner))
 #+end_src
+*** Dealing with comment
+**** Separedit
+#+begin_src emacs-lisp :tangle yes
+  (use-package separedit
+    :ensure t
+    :bind ("C-c '" . separedit)
+    :config
+    (setq separedit-default-mode 'markdown-mode)) ;; or org-mode
+#+end_src
 
-*** Fixme keywords management
+**** Fixme keywords management
 To deal with the fixme, I relie on two part: fic-mode for the highlighting and occur for the
 listing.
 
@@ -3739,6 +3748,7 @@ enough to be on melpa so I use quelpa.
     :ensure t
     :tags '("ORG" "USER")
     :defer t
+    :disabled t
     :init
     (org-babel-do-load-languages 'org-babel-load-languages
                                  '((jupyter . t))))
