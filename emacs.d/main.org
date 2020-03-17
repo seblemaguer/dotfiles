@@ -4749,6 +4749,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
     (mu4e-change-filenames-when-moving t)
 
     ;; User interaction
+    (mu4e-compose-forward-as-attachment t)
     (mu4e-hide-index-messages t)
     (mu4e-compose-context-policy 'ask-if-none)
     (mu4e-confirm-quit nil)
