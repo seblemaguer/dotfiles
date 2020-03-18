@@ -1178,7 +1178,7 @@ Sometimes I just want to ignore everything except the current document. Darkroom
                        (auto-mode))
 
                       (auto-tramp)
-                      (auto-project)
+                      (auto-projectile)
                       (auto-directory)))
                    (bufler-reverse nil)
                    (bufler-face-prefix "prism-level-")
