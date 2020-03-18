@@ -637,6 +637,28 @@ format. This is really useful to homogeneise documentation.
     :tags '("CONNECTED"))
 #+end_src
 
+** Internal documentation
+*** Key bindinds
+#+begin_src emacs-lisp
+  (use-package helm-descbinds
+    :ensure t
+    :tags '("DOCUMENTATION")
+    :commands (helm-descbinds)
+    :bind
+    ("C-h b" . helm-descbinds))
+#+end_src
+
+*** Help
+#+begin_src emacs-lisp
+  (use-package helpful
+    :ensure t
+    :tags '("DOCUMENTATION")
+    :commands (helpful-key helpful-symbol helpful-at-point)
+    :bind (("C-h k" . helpful-key)
+           ("C-h a" . helpful-symbol)
+           ("C-h h" . helpful-at-point)))
+#+end_src
+
 ** Visual
 *** Mode line
 **** Fancy battery
@@ -1230,7 +1252,6 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
         (right-fringe . 5))))
 
 #+end_src
-
 * Editor
 ** Global emacs edition configuration
 #+begin_src emacs-lisp
@@ -3006,6 +3027,17 @@ We can globally reformat the buffer relying on external tool. =format-all= is he
   (use-package format-all
     :ensure t
     :commands (format-all-buffer format-all-mode))
+#+end_src
+*** Documentation
+#+begin_src emacs-lisp
+  (use-package man
+    :ensure t
+    :tags '("DOCUMENTATION")
+    :config
+    (setq Man-notify-method 'pushy
+          woman-manpath `("/usr/share/man/" "/usr/local/man/" ;; System
+                          ,(format "%s/local/man" user-emacs-directory) ;; Private environment
+                          )))
 #+end_src
 
 ** Programming language specific configurations
