@@ -4732,6 +4732,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
 ***** Context (mailboxes separation)
 #+begin_src emacs-lisp
   (use-package mu4e-context
+    :after mu4e
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
     ;; Define the contexts (configuration defined in a private file)
@@ -4770,6 +4771,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
 ***** Integration with org-mode
 #+begin_src emacs-lisp
   (use-package org-mu4e
+    :after mu4e
     :tags '("REQUIRES_CONNECTION" "MAIL"))
 #+end_src
 
