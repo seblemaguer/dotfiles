@@ -1042,7 +1042,9 @@ Sometimes I just want to ignore everything except the current document. Darkroom
   (use-package bufler
     :ensure t
     :tags '("BUFFER")
-    :bind ("C-x C-b" . bufler)
+    :bind (("C-x C-b" . bufler)
+           ("C-x b"   . bufler-switch-buffer))
+
     :custom
     (bufler-groups (bufler-defgroups
                      (group (group-or "Help/Info"
