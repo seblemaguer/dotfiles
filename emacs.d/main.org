@@ -2993,7 +2993,7 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
 #+end_src
 *** Dealing with comment
 **** Separedit
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package separedit
     :ensure t
     :bind ("C-c '" . separedit)
@@ -6091,7 +6091,7 @@ Through pwgen.
 
 Thanks to @branch14 of 200ok fame for the function!
 
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
 (defun generate-password ()
   "Generates and inserts a new password"
   (interactive)
