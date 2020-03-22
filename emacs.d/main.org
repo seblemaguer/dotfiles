@@ -4779,159 +4779,125 @@ As I write papers, it is useful to have some helper to start to have the inspira
 **** IRC
 ***** Global
 #+begin_src emacs-lisp
-  (use-package circe
+  (use-package erc
     :ensure t
-    :tags '("CONNECTED")
-    :bind ("<S-f2>" . circe-init)
+    :tags '("CONNECTED" "CHAT" "ERC")
+    :commands (erc-start-or-switch)
+    :bind ("<S-f2>" . erc-start-or-switch)
+    :hook
+    (erc-mode . erc-format-buffer)
+
+    :preface
+    (defun my-irc-password (server)
+      "Return the password for the `SERVER'."
+      (my:auth-source-get-passwd :host server))
+
+    (defun erc-format-buffer ()
+      "Function to be hooked with any erc buffer to apply a dedicated format"
+                               (erc-truncate-mode t)
+                               (erc-fill-disable)
+                               (set (make-local-variable 'scroll-conservatively) 1000)
+                               (visual-line-mode))
+
+    :custom
+    (erc-autojoin-channels-alist '(
+                                   ("freenode.net" "#emacs" "#latex" "#org-mode" "#python")
+                                   ("gitter.im"
+                                    "#linux-surface/support" "#linux-surface/community"
+                                    "#magit/magit" "#scimax/community" "#emacs-lsp/lsp-mode")))
+    (erc-autojoin-timing 'ident)
+    (erc-prompt-for-nickserv-password nil)
+
+    ;; Reconnection
+    (erc-server-reconnect-attempts 5)
+    (erc-server-reconnect-timeout 3)
+    (erc-lurker-threshold-time 43200)
+
+    ;; Exclusion
+    (erc-hide-list '("JOIN" "PART" "QUIT"))
+    (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
+    (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
+                               "324" "329" "332" "333" "353" "477"))
+
+    ;; Formatting
+    (erc-interpret-mirc-color t)
+    (erc-timestamp-format "[%H:%M] ")
+    (erc-fill-prefix "      ")
+    (erc-insert-timestamp-function 'erc-insert-timestamp-left)
 
     :config
-
-    ;; Defining the networks ()
-    (when (fboundp 'set-circe-networks)
-      (set-circe-networks))
-
-    ;; Completion
-    (setq circe-use-cycle-completion t)
-
-    ;; Spam information reduction
-    (setq circe-reduce-lurker-spam t)
-
-    ;; Tracking
-    (setq lui-track-bar-behavior 'before-switch-to-buffer)
-    (enable-lui-track-bar)
-
-    ;; Formatting / Visual
-    (enable-circe-color-nicks)
-    (setq lui-time-stamp-position 'right-margin
-          lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]"
-          lui-fill-type nil)
-    (enable-circe-display-images)
-
-    (defun my-lui-setup ()
-      (setq
-       fringes-outside-margins t
-       right-margin-width 21
-       word-wrap t
-       wrap-prefix "    "))
-    (add-hook 'lui-mode-hook 'my-lui-setup)
-
-    ;; Connection
-    (defun circe-network-connected-p (network)
-      "Return non-nil if there's any Circe server-buffer whose
-    `circe-netwok' is NETWORK."
-      (catch 'return
-        (dolist (buffer (circe-server-buffers))
-          (with-current-buffer buffer
-            (if (string= network circe-network)
-                (throw 'return t))))))
-
-     (defun circe-maybe-connect (network)
-       "Connect to NETWORK, but ask user for confirmation if it's
-    already been connected to."
-       (interactive "sNetwork: ")
-       (if (or (not (circe-network-connected-p network))
-               (y-or-n-p (format "Already connected to %s, reconnect?" network)))
-           (circe network)))
-
-     (defun my-irc-password (server)
-       "Return the password for the `SERVER'."
-       (my:auth-source-get-passwd :host server))
-
-     ;; Shortcut
-     (defun circe-init ()
-       "Connect to IRC"
-       (interactive)
-       (if (circe-network-connected-p "bitlbee")
-           (switch-to-buffer "&bitlbee")
-         (progn
-           (circe-maybe-connect "bitlbee"))))
+    (erc-track-minor-mode 1)
+    (erc-track-mode 1)
+    (erc-services-mode 1)
     )
 #+end_src
 
-***** Logging
+***** Some useful plugins
 #+begin_src emacs-lisp
-  (use-package lui-logging
-    :tags '("CONNECTED")
-    :commands (enable-lui-logging))
-
-#+end_src
-
-***** Autopasting
-#+begin_src emacs-lisp
-  (use-package lui-autopaste
-    :tags '("CONNECTED")
+  (use-package erc-gitter
+    :ensure quelpa
+    :quelpa (erc-gitter :fetcher "github" :repo "jleechpe/erc-gitter")
+    :tags '("CONNECTED" "CHAT" "ERC")
+    :requires erc
     :config
-    (add-hook 'circe-channel-mode-hook 'enable-lui-autopaste)
-    (defvar lui-autopaste-service-gist-url nil
-      "The URL for the last gist.")
+    (add-to-list 'erc-modules 'gitter)
+    (erc-update-modules))
 
-    (defun lui-autopaste-service-gist (text)
-      "Paste TEXT to github using gist.el."
-      ;; It's so great gist works with callbacks! It's so much fun to
-      ;; work around that!
-      (setq lui-autopaste-service-gist-url 'waiting)
-      (with-temp-buffer
-        (insert text)
-        (gist-region (point-min) (point-max) nil
-                     (lambda (gist)
-                       (when (eq lui-autopaste-service-gist-url
-                                 'waiting)
-                         (setq lui-autopaste-service-gist-url
-                               (oref gist :html-url)))))) ;; FIXME: this provokes a Warning: Unknown slot ‘:html-url’
-      (let ((wait 0))
-        (while (and (< wait 10)
-                    (eq lui-autopaste-service-gist-url
-                        'waiting))
-          (sit-for 0.1 )
-          (setq wait (1+ wait))))
-      (if (eq lui-autopaste-service-gist-url 'waiting)
-          (progn
-            (setq lui-autopaste-service-gist-url nil)
-            (error "Couldn't create gist"))
-        (prog1 lui-autopaste-service-gist-url
-          (setq lui-autopaste-service-gist-url nil))))
-
-    (setq lui-autopaste-function 'lui-autopaste-service-gist))
-#+end_src
-
-***** Some coloring
-#+begin_src emacs-lisp
-  (use-package lui-irc-colors
-    :tags '("CONNECTED")
-    :after circe
-    :config
-    (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
-#+end_src
-
-***** Notification
-#+begin_src emacs-lisp
-  (use-package circe-notifications
+  (use-package erc-colorize
     :ensure t
-    :commands (enable-circe-notifications)
-    :custom (circe-notifications-alert-style 'sauron-mode-line-style)
-    :hook
-    (circe-server-connected . enable-circe-notifications))
+    :tags '("CONNECTED" "CHAT" "ERC")
+    :after erc
+    :commands (erc-start-or-switch))
+
+  (use-package erc-hl-nicks
+    :ensure t
+    :tags '("CONNECTED" "CHAT" "ERC")
+    :after erc
+    :commands (erc-start-or-switch))
+
+  (use-package erc-youtube
+    :ensure t
+    :tags '("CONNECTED" "CHAT" "ERC")
+    :after erc
+    :commands (erc-start-or-switch))
+
+  (use-package erc-image
+    :ensure t
+    :tags '("CONNECTED" "CHAT" "ERC")
+    :after erc
+    :commands (erc-start-or-switch))
+
+  (use-package sauron-erc
+    :ensure sauron
+    :tags '("CONNECT" "CHAT" "ERC" "NOTIFICATION")
+    :requires (erc sauron)
+    :commands (erc-start-or-switch)
+    :config
+    (sauron-erc-start))
 #+end_src
 
 **** Slack
 ***** Global
 #+begin_src emacs-lisp
-    (use-package slack
-      :ensure t
-      :tags '("CONNECTED")
-      :commands (slack-start)
-      :no-require t
-      :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
-      :config
-      (setq slack-buffer-emojify t
-            lui-time-stamp-position 'right-margin
-            lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]")
+  (use-package slack
+    :ensure t
+    :tags '("CONNECTED")
+    :commands (slack-start)
+    :no-require t
+    :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
+    :config
+    (setq slack-buffer-emojify t
+          lui-time-stamp-position 'right-margin
+          lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]")
 
-      ;; Register the teams (configuration defined in a private file)
-      (when (fboundp 'slack-register-teams)
-        (slack-register-teams))
+    ;; Register the teams (configuration defined in a private file)
+    (when (fboundp 'slack-register-teams)
+      (slack-register-teams))
 
-  )
+    (setq lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]"
+          lui-time-stamp-only-when-changed-p t
+          lui-time-stamp-position 'right)
+    )
 #+end_src
 
 ***** Helm-slack
