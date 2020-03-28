@@ -4765,7 +4765,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
   (use-package erc
     :ensure t
     :tags '("CONNECTED" "CHAT" "ERC")
-    :commands (erc-start-or-switch)
+    :commands (erc)
     :bind ("<S-f2>" . erc-start-or-switch)
     :hook
     (erc-mode . erc-format-buffer)
@@ -4777,14 +4777,14 @@ As I write papers, it is useful to have some helper to start to have the inspira
 
     (defun erc-format-buffer ()
       "Function to be hooked with any erc buffer to apply a dedicated format"
-                               (erc-truncate-mode t)
-                               (erc-fill-disable)
-                               (set (make-local-variable 'scroll-conservatively) 1000)
-                               (visual-line-mode))
+      (erc-truncate-mode t)
+      (erc-fill-disable)
+      (set (make-local-variable 'scroll-conservatively) 1000)
+      (visual-line-mode))
 
     :custom
     (erc-autojoin-channels-alist '(
-                                   ("freenode.net" "#emacs" "#latex" "#org-mode" "#python")
+                                   ;; ("freenode.net" "#emacs" "#latex" "#org-mode")
                                    ("gitter.im"
                                     "#linux-surface/support" "#linux-surface/community"
                                     "#magit/magit" "#scimax/community" "#emacs-lsp/lsp-mode")))
@@ -4812,6 +4812,12 @@ As I write papers, it is useful to have some helper to start to have the inspira
     (erc-track-minor-mode 1)
     (erc-track-mode 1)
     (erc-services-mode 1)
+
+    ;; Reload plugins
+    (add-to-list 'erc-modules 'gitter)
+    (add-to-list 'erc-modules 'image)
+    (add-to-list 'erc-modules 'hl-nicks)
+    (erc-update-modules)
     )
 #+end_src
 
@@ -4820,43 +4826,40 @@ As I write papers, it is useful to have some helper to start to have the inspira
   (use-package erc-gitter
     :ensure quelpa
     :quelpa (erc-gitter :fetcher "github" :repo "jleechpe/erc-gitter")
-    :tags '("CONNECTED" "CHAT" "ERC")
-    :requires erc
-    :config
-    (add-to-list 'erc-modules 'gitter)
-    (erc-update-modules))
+    :tags '("CONNECTED" "CHAT" "ERC"))
 
   (use-package erc-colorize
     :ensure t
-    :tags '("CONNECTED" "CHAT" "ERC")
-    :after erc
-    :commands (erc-start-or-switch))
+    :tags '("CONNECTED" "CHAT" "ERC"))
 
   (use-package erc-hl-nicks
     :ensure t
-    :tags '("CONNECTED" "CHAT" "ERC")
-    :after erc
-    :commands (erc-start-or-switch))
+    :tags '("CONNECTED" "CHAT" "ERC"))
 
   (use-package erc-youtube
     :ensure t
-    :tags '("CONNECTED" "CHAT" "ERC")
-    :after erc
-    :commands (erc-start-or-switch))
+    :tags '("CONNECTED" "CHAT" "ERC"))
 
   (use-package erc-image
     :ensure t
-    :tags '("CONNECTED" "CHAT" "ERC")
-    :after erc
-    :commands (erc-start-or-switch))
+    :tags '("CONNECTED" "CHAT" "ERC"))
+#+end_src
 
+***** Notification activation
+#+begin_src emacs-lisp
   (use-package sauron-erc
     :ensure sauron
     :tags '("CONNECT" "CHAT" "ERC" "NOTIFICATION")
     :requires (erc sauron)
-    :commands (erc-start-or-switch)
-    :config
-    (sauron-erc-start))
+    :commands (sauron-erc-start)
+    :custom
+    (sauron-prio-erc-default           1)
+    (sauron-prio-erc-privmsg-root      1)
+    (sauron-prio-erc-privmsg-default   1)
+    (sauron-prio-erc-privmsg-for-me    2)
+    (sauron-prio-erc-privmsg-mentioned 2)
+
+    :hook (after-init . sauron-erc-start))
 #+end_src
 
 **** Slack
