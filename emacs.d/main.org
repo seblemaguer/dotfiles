@@ -262,15 +262,14 @@ activations.
     (setq sauron-separate-frame nil ;; The notification is on the same window ?
           sauron-sticky-frame t
           sauron-max-line-length nil ;; No max. length for the line
-          sauron-modules '(sauron-org sauron-elfeed) ;; reduced the default modules
+          sauron-modules '(sauron-org) ;; reduced the default modules
           sauron-column-alist '( ( timestamp  .  20)
                                  ( origin     .  20)
                                  ( priority   .   4)
-                                 ( message    . nil)))
-    (sauron-start-hidden))
+                                 ( message    . nil))))
 #+end_src
 
-*** Alert
+*** COMMENT Alert
 #+begin_src emacs-lisp
   (use-package alert
     :ensure t
@@ -281,12 +280,16 @@ activations.
 #+begin_src emacs-lisp
   (use-package sauron-mode-line
     :tags '("NOTIFICATION")
+    :requires (sauron)
+    :commands (sauron-start-hidden)
+    :hook (after-init . sauron-start-hidden)
+    :custom (sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron)
     :bind
     (("<f7>"   . sauron-mode-line-toggle-hide-show)
      ("C-<f7>" . sauron-mode-line-clear))
 
     :config
-    (setq sauron-min-priority sauron-mode-line-threshold
+    (setq sauron-min-priority (+ sauron-mode-line-threshold 1)
           alert-default-style 'sauron-mode-line-style))
 #+end_src
 
@@ -5129,6 +5132,8 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (use-package sauron-elfeed
     :ensure sauron
     :tags '("REQUIRES_CONNECTION" "RSS")
+    :commands (elfeed-update-background-start sauron-elfeed-start)
+    :hook (after-init . sauron-elfeed-start)
     :config
     (cl-loop for feed in elfeed-feeds
              do (when (member 'mustread (cdr feed))
