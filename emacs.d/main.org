@@ -2641,26 +2641,6 @@ to extend it even further in the feature.
     :after magit)
 #+end_src
 
-***** Github
-#+begin_src emacs-lisp
-  ;; Github api
-  (use-package gh
-    :ensure t
-    :defer t
-    :tags '("VC"))
-
-  (use-package gh-md
-    :ensure t
-    :defer t
-    :tags '("VC"))
-
-  ;; Search on github
-  (use-package github-search
-    :ensure t
-    :commands (github-search-clone-repo github-search-user-clone-repo)
-    :tags '("VC"))
-#+end_src
-
 ***** Gist
 #+begin_src emacs-lisp
   (use-package gist
