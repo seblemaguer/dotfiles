@@ -256,41 +256,30 @@ activations.
   (use-package sauron
     :ensure t
     :tags '("NOTIFICATION")
+    :commands (sauron-start-hidden)
     :config
-
-    ;;
     (setq sauron-separate-frame nil ;; The notification is on the same window ?
           sauron-sticky-frame t
           sauron-max-line-length nil ;; No max. length for the line
           sauron-modules '(sauron-org) ;; reduced the default modules
-          sauron-column-alist '( ( timestamp  .  20)
-                                 ( origin     .  20)
-                                 ( priority   .   4)
-                                 ( message    . nil))))
-#+end_src
-
-*** COMMENT Alert
-#+begin_src emacs-lisp
-  (use-package alert
-    :ensure t
-    :tags '("NOTIFICATION"))
+          sauron-column-alist '(( timestamp  .  20)
+                                ( origin     .  20)
+                                ( priority   .   4)
+                                ( message    . nil))))
 #+end_src
 
 *** Sauron/Alert/Modeline integration
 #+begin_src emacs-lisp
   (use-package sauron-mode-line
     :tags '("NOTIFICATION")
-    :requires (sauron)
-    :commands (sauron-start-hidden)
-    :hook (after-init . sauron-start-hidden)
-    :custom (sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron)
+    :custom
+    (sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron)
+
+    :commands (sauron-mode-line-start-hidden)
+    :hook (after-init . sauron-mode-line-start-hidden)
     :bind
     (("<f7>"   . sauron-mode-line-toggle-hide-show)
-     ("C-<f7>" . sauron-mode-line-clear))
-
-    :config
-    (setq sauron-min-priority (+ sauron-mode-line-threshold 1)
-          alert-default-style 'sauron-mode-line-style))
+     ("C-<f7>" . sauron-mode-line-clear)))
 #+end_src
 
 ** Global keys
@@ -4851,16 +4840,13 @@ As I write papers, it is useful to have some helper to start to have the inspira
   (use-package sauron-erc
     :ensure sauron
     :tags '("CONNECT" "CHAT" "ERC" "NOTIFICATION")
-    :requires (erc sauron)
     :commands (sauron-erc-start)
     :custom
     (sauron-prio-erc-default           1)
     (sauron-prio-erc-privmsg-root      1)
     (sauron-prio-erc-privmsg-default   1)
     (sauron-prio-erc-privmsg-for-me    2)
-    (sauron-prio-erc-privmsg-mentioned 2)
-
-    :hook (after-init . sauron-erc-start))
+    (sauron-prio-erc-privmsg-mentioned 2))
 #+end_src
 
 **** Slack
@@ -5027,7 +5013,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (use-package elfeed
     :ensure t
     :tags '("REQUIRES_CONNECTION" "RSS")
-    :commands (elfeed elfeed-update-background-start)
+    :commands (elfeed elfeed-update)
     :no-require t
     :bind (([f9] . elfeed))
 

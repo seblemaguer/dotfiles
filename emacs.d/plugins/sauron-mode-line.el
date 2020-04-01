@@ -5,7 +5,7 @@
 
 ;; Author: Sébastien Le Maguer <lemagues@tcd.ie>
 
-;; Package-Requires: ((emacs "25.2"))
+;; Package-Requires: ((emacs "25.2") (sauron) (alert))
 ;; Keywords:
 ;; Homepage:
 
@@ -28,7 +28,7 @@
 ;;; Code:
 
 ;;; alert-sauron.el ends here
-
+(require 'sauron)
 (require 'alert)
 
 (defvar sauron-mode-line-current-level 0
@@ -75,8 +75,8 @@
   :type '(alist :key-type symbol :value-type integer)
   :group 'alert)
 
-(defun alert-sauron-notify (info)
-  "Handler to create a sauron event using INFO which is emitted by alert."
+(defun alert2sauron (info)
+  "Spawn a sauron event from the INFO given by the alert event."
   (sauron-add-event (if (plist-get info :category)
                         (if (symbolp (plist-get info :category))
                             (plist-get info :category)
@@ -87,13 +87,9 @@
                             (intern (plist-get info :title)))
                         'unknown))
                     (cdr (assq (plist-get info :severity) sauron-mode-line-priorities))
-                    (plist-get info :message)))
-
-(alert-define-style 'sauron
-                    :title "Use sauron as a backend for alert"
-                    :notifier #'alert-sauron-notify
-                    :continue t
-                    :remover #'alert-message-remove)
+                    (plist-get info :message)
+                    nil
+                    `(:from-alert t)))
 
 ;; ==============================================================================================================
 
@@ -119,14 +115,14 @@
     (setq sauron-mode-line-current-level (cdr (assq (plist-get info :severity)
                                                     sauron-mode-line-priorities))))
 
-  ;; Print the message everytime !
-  (alert-sauron-notify info))
+  ;; Spawn the sauron event
+  (alert2sauron info))
 
 
 (defun sauron-mode-line-notifier-from-sauron (origin prio msg props)
   "Alert mode-line flashing style notifier."
 
-  ;; First time => copy the current mode line faceq
+  ;; First time => copy the current mode line face
   (when (<= sauron-mode-line-current-level sauron-mode-line-threshold)
     (copy-face 'mode-line 'backup-mode-line-face))
 
@@ -141,13 +137,22 @@
   (when (> prio sauron-mode-line-current-level)
     (setq sauron-mode-line-current-level prio))
 
-  (unless props
-    (message "%S: %S" origin msg)))
+  (unless (plist-get props :from-alert)
+    (progn
+      (set-text-properties 0 (length msg) nil msg)
+      (message "%S: %s" origin msg))))
 
 (alert-define-style 'sauron-mode-line-style
                      :title "Sauron/flashing mode line style"
                      :notifier 'sauron-mode-line-notifier
                      :continue t
                      :remover #'alert-message-remove)
+
+;;;###autoload
+(defun sauron-mode-line-start-hidden ()
+  "Set some connecting variables, start sauron, but don't show the window."
+  (setq sauron-min-priority (+ sauron-mode-line-threshold 1)
+        alert-default-style 'sauron-mode-line-style)
+  (sauron-start-hidden))
 
 (provide 'sauron-mode-line)
