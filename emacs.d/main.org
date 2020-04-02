@@ -2859,6 +2859,13 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
                 (message) line-end))
       :modes (text-mode markdown-mode gfm-mode org-mode))
     )
+
+  (use-package flycheck-posframe
+    :ensure t
+    :after flycheck
+    :hook (flycheck-mode . flycheck-posframe-mode)
+    :config
+    (setq flycheck-posframe-warning-prefix "\u26a0 "))
 #+end_src
 
 **** Task runner
@@ -4015,7 +4022,7 @@ It is useful to find some items in org files based on a query.
 #+begin_src emacs-lisp
   (use-package lsp-python-ms
     :ensure t
-    :demand
+    :commands (lsp lsp-deferred)
     :tags '("LANGUAGE" "IDE")
     :hook (python-mode . lsp-deferred)  ; or lsp-deferred
     )
