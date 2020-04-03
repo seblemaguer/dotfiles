@@ -261,10 +261,21 @@ activations.
 *** Sauron
 #+begin_src emacs-lisp
   (use-package sauron
-    :ensure t
+    :straight (sauron :type git :host github :repo "djcb/sauron"
+                      :fork (:host github
+                                   :repo "seblemaguer/sauron"
+                                   :branch "ignore"))
     :tags '("NOTIFICATION")
-    :commands (sauron-start-hidden)
+    :commands
+    (sauron-start-hidden)
+
     :config
+    (defun sauron-keep-priority (msg props)
+      "Function to define which event should keep the same priority
+    and not be raised even if it is recent. The criterion is based on
+    MSG and PROPS."
+      (string= (plist-get props :sender) "root"))
+
     (setq sauron-separate-frame nil ;; The notification is on the same window ?
           sauron-sticky-frame t
           sauron-max-line-length nil ;; No max. length for the line
@@ -272,7 +283,10 @@ activations.
           sauron-column-alist '(( timestamp  .  20)
                                 ( origin     .  20)
                                 ( priority   .   4)
-                                ( message    . nil))))
+                                ( message    . nil))
+
+          sauron-insensitivity-handler 'sauron-keep-priority)
+  )
 #+end_src
 
 *** Sauron/Alert/Modeline integration
@@ -4865,13 +4879,12 @@ As I write papers, it is useful to have some helper to start to have the inspira
 ***** Notification activation
 #+begin_src emacs-lisp
   (use-package sauron-erc
-    :ensure sauron
     :tags '("CONNECT" "CHAT" "ERC" "NOTIFICATION")
     :commands (sauron-erc-start)
     :custom
     (sauron-prio-erc-default           1)
     (sauron-prio-erc-privmsg-root      1)
-    (sauron-prio-erc-privmsg-default   1)
+    (sauron-prio-erc-privmsg-default   2)
     (sauron-prio-erc-privmsg-for-me    2)
     (sauron-prio-erc-privmsg-mentioned 2))
 #+end_src
@@ -5135,7 +5148,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
 *** Notification part
 #+begin_src emacs-lisp
   (use-package sauron-elfeed
-    :ensure sauron
     :tags '("REQUIRES_CONNECTION" "RSS")
     :commands (elfeed-update-background-start sauron-elfeed-start)
     :hook (after-init . sauron-elfeed-start)
