@@ -75,20 +75,28 @@ Here, we are initializing =use-package= in the classic way.
 
   (eval-when-compile
     (require 'use-package))
+  (setq use-package-verbose t)
 
   ;; (eval-when-compile
   ;;   (setq use-package-expand-minimally byte-compile-current-file))
 #+end_src
 
-*** Quelpa
- Quelpa is super useful for developer package management. Adding the adaptation for the use-package
- makes it configuration file proof.
+*** Straight
+=Straight= coupled with =use-package= is a useful combination to deal with packages not on melpa or packages in development.
 
  #+begin_src emacs-lisp
-   (use-package quelpa-use-package
-     :ensure t
-     :init
-     (setq quelpa-update-melpa-p nil))
+   (defvar bootstrap-version)
+   (let ((bootstrap-file
+          (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+         (bootstrap-version 5))
+     (unless (file-exists-p bootstrap-file)
+       (with-current-buffer
+           (url-retrieve-synchronously
+            "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+            'silent 'inhibit-cookies)
+         (goto-char (point-max))
+         (eval-print-last-sexp)))
+     (load bootstrap-file nil 'nomessage))
  #+end_src
 
 *** Tagging
@@ -96,8 +104,7 @@ I am using tags to condition the use of packages based on the computer hostname.
 
 #+begin_src emacs-lisp
   (use-package use-package-tags
-    :ensure quelpa
-    :quelpa (use-package-tags :fetcher github :repo "seblemaguer/use-package-tags")
+    :straight (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
     :config
     (setq use-package-tags-enabled
 	  `(("lemagues-laptop" . ("!REQUIRES_CONNECTION"))
@@ -649,8 +656,7 @@ format. This is really useful to homogeneise documentation.
 *** Global theme
 #+begin_src emacs-lisp
   (use-package flatfluc-theme
-    :ensure quelpa
-    :quelpa (flatfluc-theme :fetcher github :repo "seblemaguer/flatfluc-theme")
+    :straight (flatfluc-theme :type git :host github :repo "seblemaguer/flatfluc-theme")
     :tags '("VISUAL")
     :config
     (load-theme 'flatfluc t))
@@ -906,8 +912,7 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
 ***** Prism
 #+begin_src emacs-lisp
   (use-package prism
-    :ensure quelpa
-    :quelpa (prism :fetcher github :repo "alphapapa/prism.el")
+    :straight (prism :type git :host github :repo "alphapapa/prism.el")
     :config
 
     (prism-set-colors :num 16
@@ -930,8 +935,7 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
 **** Scrolling
 #+begin_src emacs-lisp
   (use-package scrollkeeper
-    :ensure quelpa
-    :quelpa (scrollkeeper :fetcher github :repo "alphapapa/scrollkeeper.el")
+    :straight (scrollkeeper :type git :host github :repo "alphapapa/scrollkeeper.el")
     :tags '("VISUAL")
     :general ([remap scroll-up-command] #'scrollkeeper-contents-up
               [remap scroll-down-command] #'scrollkeeper-contents-down))
@@ -1130,8 +1134,7 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
 *** Maple minibuffer
 #+begin_src emacs-lisp
   (use-package maple-minibuffer
-    :ensure quelpa
-    :quelpa (maple-minibuffer :fetcher github :repo "honmaple/emacs-maple-minibuffer")
+    :straight (maple-minibuffer :type git :host github :repo "honmaple/emacs-maple-minibuffer")
     :disabled t
     :tags '("CORE")
     :hook
@@ -2081,8 +2084,7 @@ For the folding, I am relying on outline-minor mode and more specifically outlin
 
 #+begin_src emacs-lisp
   (use-package outshine
-    :ensure quelpa
-    :quelpa (outshine :fetcher github :repo "alphapapa/outshine")
+    :straight (outshine :type git :host github :repo "alphapapa/outshine")
     :commands (outshine-cycle)
     :bind
     (:map outline-minor-mode-map
@@ -2875,8 +2877,7 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
     :tags '("COMPILATION"))
 
   (use-package ivy-taskrunner
-    :ensure quelpa
-    :quelpa (ivy-taskrunner :fetcher "github" :repo "emacs-taskrunner/ivy-taskrunner")
+    :straight (ivy-taskrunner :type git :host github :repo "emacs-taskrunner/ivy-taskrunner")
     :tags '("COMPILATION")
     :bind ("C-c C-g b" . ivy-taskrunner))
 #+end_src
@@ -3026,11 +3027,10 @@ Config-general-mode is applied for all unix configuration files.
 
 **** Authinfo
 I developed a dedicated mode for syntax highlighting authinfo files. For now, it is not stable
-enough to be on melpa so I use quelpa.
+enough to be on melpa so I use straight.
 #+begin_src emacs-lisp
   (use-package authinfo-mode
-    :ensure quelpa
-    :quelpa (authinfo-mode :repo "seblemaguer/authinfo-mode" :fetcher github)
+    :straight (authinfo-mode :repo "seblemaguer/authinfo-mode" :type git :host github)
     :tags '("LANGUAGE")
     :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . authinfo-mode))
 #+end_src
@@ -3128,8 +3128,7 @@ enough to be on melpa so I use quelpa.
 *** Cue
 #+begin_src emacs-lisp
   (use-package cue-mode
-    :ensure quelpa
-    :quelpa (cue-mode :repo "seblemaguer/cue-mode" :fetcher github)
+    :straight (cue-mode :repo "seblemaguer/cue-mode" :type git :host github)
     :tags '("LANGUAGE")
     :mode ("\\.cue$"))
 #+end_src
@@ -3705,8 +3704,7 @@ enough to be on melpa so I use quelpa.
 ***** Id generations
 #+begin_src emacs-lisp
   (use-package org-id+
-    :ensure quelpa
-    :quelpa (org-id+ :repo "seblemaguer/org-id-plus" :fetcher github)
+    :straight (org-id+ :repo "seblemaguer/org-id-plus" :type git :host github)
     :commands (org-id+-add-ids-to-headlines-in-file)
     :tags '("ORG"))
 #+end_src
@@ -4821,8 +4819,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
 ***** Some useful plugins
 #+begin_src emacs-lisp
   (use-package erc-gitter
-    :ensure quelpa
-    :quelpa (erc-gitter :fetcher "github" :repo "jleechpe/erc-gitter")
+    :straight (erc-gitter :type git :host github :repo "jleechpe/erc-gitter")
     :tags '("CONNECTED" "CHAT" "ERC"))
 
   (use-package erc-colorize
@@ -5007,8 +5004,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
 *** Release
 #+begin_src emacs-lisp
   (use-package ma2oa
-    :ensure quelpa
-    :quelpa (ma2oa :fetcher github :repo "seblemaguer/ma2oa.el")
+    :straight (ma2oa :type git :host github :repo "seblemaguer/ma2oa.el")
     :tags '("CONNECTED")
     :config
     (add-to-list 'org-agenda-files ma2oa-target-file))
@@ -5062,8 +5058,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
 *** Youtube specificities
 #+begin_src emacs-lisp
   (use-package youtube-dl
-    :ensure quelpa
-    :quelpa (youtube-dl :repo "skeeto/youtube-dl-emacs" :fetcher github)
+    :straight (youtube-dl :repo "skeeto/youtube-dl-emacs" :type git :host github)
     :tags '("CONNECTED")
     :bind ("C-x y" . youtube-dl-list)
     :config
@@ -5824,9 +5819,8 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 ** Some toggling
 #+begin_src emacs-lisp
   (use-package eshell-toggle
-    :ensure quelpa
-    :quelpa
-    (eshell-toggle :repo "4DA/eshell-toggle" :fetcher github :version original)
+    :straight
+    (eshell-toggle :repo "4DA/eshell-toggle" :type git :host github :version original)
     :tags '("SHELL")
 
     :functions (eshell-toggle-init-eshell)
@@ -5910,8 +5904,7 @@ Thanks to pulseaudio-control, I can control my soundcard.
 ** Slurm
 #+begin_src emacs-lisp
  (use-package slurm-mode
-    :ensure quelpa
-    :quelpa (slurm :repo "ffevotte/slurm.el" :fetcher github))
+    :straight (slurm :repo "ffevotte/slurm.el" :type git :host github))
 #+end_src
 
 ** Cron
