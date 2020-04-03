@@ -1042,80 +1042,101 @@ Sometimes I just want to ignore everything except the current document. Darkroom
 #+begin_src emacs-lisp
   (use-package bufler
     :ensure t
+    :requires prism
     :tags '("BUFFER")
     :bind (("C-x C-b" . bufler)
            ("C-x b"   . bufler-switch-buffer))
 
     :custom
+    (bufler-reverse nil)
+    (bufler-face-prefix "prism-level-")
+    (bufler-vc-state t)
+    (bufler-list-group-separators '((0 . "\n")))
+    (bufler-initial-face-depth 1)
     (bufler-groups (bufler-defgroups
                      (group (group-or "Help/Info"
                                       (mode-match "*Help*" (rx bos "help-"))
                                       (mode-match "*Info*" (rx bos "info-"))
                                       (mode-match "*Apropos*" (rx bos "apropos-"))))
 
-                      (group (group-or "Mail"
-                                       (mode-match "*Mu4e*" (rx bos "mu4e-"))))
+                     (group (group-or "Mail"
+                                      (mode-match "*Mu4e*" (rx bos "mu4e-"))))
 
-                      (group (group-or "Chatty"
-                                       (mode-match "*Circe*" (rx bos "circe-"))
-                                       (name-match "*Slack*" (rx bos "*Slack")))
-                             (auto-mode))
+                     (group (group-or "Chatty"
+                                      (mode-match "ERC" (rx bos "erc-"))
+                                      (name-match "*Slack*" (rx bos "*Slack")))
 
-                      (group (mode-match "EMMS" (rx bos "emms-")))
+                            (group (mode-match "ERC" (rx bos "erc-"))
+                                   (group (name-match "Channels" (rx bos (or "#" "&"))))
+                                   (group (name-match "Servers" ".*:[0-9]\\{4\\}"))
+                                   ;; (auto-erc)
+                                   )
 
-                      (group (group-or "RSS"
-                                       (mode-match "*Elfeed*" (rx bos "elfeed-"))
-                                       (name-match "*Elfeed*" (rx bos "*elfeed"))
-                                       (name-match "rss.org" (rx bos "rss.org"))))
+                            (group (name-match "Slack" (rx bos "*Slack"))
+                                   (group (group-not "Message" (name-match "Logging" "\\*Slack[^-]*Log -")))
+                                   (group (name-match "Logging" "\\*Slack[^-]*Log -"))
+                                   )
+                            )
 
-                      (group (group-or "Todo"
-                                       (name-match "Todo" (rx bos "todo.org"))))
+                     (group (mode-match "EMMS" (rx bos "emms-")))
+
+                     (group (group-or "RSS"
+                                      (mode-match "*Elfeed*" (rx bos "elfeed-"))
+                                      (name-match "*Elfeed*" (rx bos "*elfeed"))
+                                      (name-match "rss.org" (rx bos "rss.org"))))
+
+                     (group (group-or "Todo"
+                                      (name-match "Todo" (rx bos "todo.org"))))
+
+                     (group
+                      ;; Subgroup collecting all special buffers (i.e. ones that are not
+                      ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
+                      ;; through to other groups, so they end up grouped with their project buffers).
+                      (group-and "*Special*"
+                                 (lambda (buffer)
+                                   (unless (or (funcall (mode-match "Magit" (rx bos "magit-status"))
+                                                        buffer)
+                                               (funcall (mode-match "Dired" (rx bos "dired"))
+                                                        buffer)
+                                               (funcall (auto-file) buffer))
+                                     "*Special*")))
 
                       (group
-                       ;; Subgroup collecting all special buffers (i.e. ones that are not
-                       ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
-                       ;; through to other groups, so they end up grouped with their project buffers).
-                       (group-and "*Special*"
-                                  (lambda (buffer)
-                                    (unless (or (funcall (mode-match "Magit" (rx bos "magit-status"))
-                                                         buffer)
-                                                (funcall (mode-match "Dired" (rx bos "dired"))
-                                                         buffer)
-                                                (funcall (auto-file) buffer))
-                                      "*Special*")))
+                       ;; Subgroup collecting these "special special" buffers
+                       ;; separately for convenience.
+                       (name-match "**Special**"
+                                   (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*")))
 
-                       (group
-                        ;; Subgroup collecting these "special special" buffers
-                        ;; separately for convenience.
-                        (name-match "**Special**"
-                                    (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*")))
+                      ;; For my- calendars
+                      (group (name-match "*Calendar*" "^[*]?[Cc]alendar.*$"))
 
-                       ;; For my- calendars
-                       (group (name-match "*Calendar*" "^[*]?[Cc]alendar.*$"))
+                      ;; Package management
+                      (group (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*"))))
 
-                       ;; Package management
-                       (group (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*"))))
+                      ;; Processes in background
+                      (group (name-match "*Prodigy*" (rx bos "*prodigy-")))
 
-                       ;; Processes in background
-                       (group (name-match "*Prodigy*" (rx bos "*prodigy-")))
+                      ;; Subgroup collecting all other Magit buffers, grouped by directory.
+                      (group
+                       (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
+                       (auto-directory))
+                      ;; Subgroup for Helm buffers.
+                      (mode-match "*Helm*" (rx bos "helm-"))
+                      ;; Remaining special buffers are grouped automatically by mode.
+                      (auto-mode))
 
-                       ;; Subgroup collecting all other Magit buffers, grouped by directory.
-                       (group
-                        (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
-                        (auto-directory))
-                       ;; Subgroup for Helm buffers.
-                       (mode-match "*Helm*" (rx bos "helm-"))
-                       ;; Remaining special buffers are grouped automatically by mode.
-                       (auto-mode))
-
-                      (auto-tramp)
-                      (auto-projectile)
-                      (auto-directory)))
-                   (bufler-reverse nil)
-                   (bufler-face-prefix "prism-level-")
-                   (bufler-vc-state t)
-                   (bufler-list-group-separators '((0 . "\n")))
-                   (bufler-initial-face-depth 1))
+                     (group
+                      ;; Subgroup collecting buffers in a projectile project.
+                      (auto-tramp))
+                     (group
+                      ;; Subgroup collecting buffers in a projectile project.
+                      (auto-projectile))
+                     (group
+                      ;; Subgroup collecting buffers in a version-control project,
+                      ;; grouping them by directory.
+                      (auto-project))
+                     (auto-directory)
+                     (auto-mode))))
 #+end_src
 
 ** Minibuffer
