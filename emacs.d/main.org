@@ -5043,16 +5043,18 @@ I actually use this part for minor correction. The tags are done when abcde is c
   (use-package elfeed-org
     :ensure t
     :tags '("REQUIRES_CONNECTION" "RSS")
-    :no-require t
-    :disabled t
-    :config
-    (when (file-exists-p "~/shared/pCloudDrive/org/organisation/rss.org")
-      (progn
-        (elfeed-org)
-        (setq rmh-elfeed-org-files (list "~/shared/pCloudDrive/org/organisation/rss.org"))
-        (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
+    :hook (after-init . loading-elfeed)
+    :commands (elfeed-org)
+    :init
+    (defun loading-elfeed ()
+      (when (file-exists-p "~/shared/pCloudDrive/org/organisation/rss.org")
+        (progn
+          (elfeed-org)
+          (setq rmh-elfeed-org-files (list "~/shared/pCloudDrive/org/organisation/rss.org"))
+          (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
 
-    (elfeed-update-background-start))
+      (elfeed-update-background-start))
+    )
 #+end_src
 
 *** Goodies
