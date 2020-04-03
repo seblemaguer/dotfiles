@@ -2671,7 +2671,9 @@ to extend it even further in the feature.
     :ensure t
     :demand t
     :tags '("VC")
-    :after magit)
+    :after magit
+    :custom-face
+    (forge-topic-closed ((t (:strike-through t :inherit magit-dimmed)))))
 #+end_src
 
 ***** Gist
