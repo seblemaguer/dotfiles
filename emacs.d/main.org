@@ -436,8 +436,9 @@ activations.
 #+begin_src emacs-lisp
   (use-package org-capture
     :tags '("ORG")
+    :after org
     :commands (org-capture)
-    :init
+    :config
     (setq org-capture-templates
           (doct
            `(
@@ -539,6 +540,7 @@ format. This is really useful to homogeneise documentation.
 #+begin_src emacs-lisp
   (use-package org-web-tools
     :ensure t
+    :after (org)
     :tags '("CONNECTED"))
 #+end_src
 
@@ -698,7 +700,7 @@ format. This is really useful to homogeneise documentation.
 ***** Faces
 #+begin_src emacs-lisp
   (use-package org
-    :ensure t
+    :ensure org-plus-contrib
     :tags '("VISUAL")
     :config
 
