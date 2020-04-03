@@ -949,7 +949,7 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
     :ensure t
     :tags '("VISUAL")
     :functions (emojify-set-emoji-data)
-    :hook (circe-chat-mode . emojify-mode)
+    :hook (erc-mode . emojify-mode)
     :config
 
     (setq emojify-user-emojis
@@ -967,6 +967,7 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
 
   (use-package flycheck-status-emoji
     :ensure t
+    :after (flycheck)
     :tags '("VISUAL"))
 #+end_src
 
@@ -4811,9 +4812,6 @@ As I write papers, it is useful to have some helper to start to have the inspira
     (erc-services-mode 1)
 
     ;; Reload plugins
-    (add-to-list 'erc-modules 'gitter)
-    (add-to-list 'erc-modules 'image)
-    (add-to-list 'erc-modules 'hl-nicks)
     (erc-update-modules)
     )
 #+end_src
@@ -4864,26 +4862,34 @@ As I write papers, it is useful to have some helper to start to have the inspira
     :commands (slack-start)
     :no-require t
     :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
-    :config
-    (setq slack-buffer-emojify t
-          lui-time-stamp-position 'right-margin
-          lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]")
 
+    :custom
+    (slack-profile-image-file-directory (format "%s/slack/profile_pictures" user-emacs-directory))
+    (slack-image-file-directory         (format "%s/slack/images" user-emacs-directory))
+    (slack-buffer-emojify               t)
+
+    :hook
+    (slack-mode . slack-set-timestamp-margin)
+
+    :config
     ;; Register the teams (configuration defined in a private file)
     (when (fboundp 'slack-register-teams)
       (slack-register-teams))
 
-    (setq lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]"
-          lui-time-stamp-only-when-changed-p t
-          lui-time-stamp-position 'right)
+    ;; Define formatting time!
+    (defun slack-set-timestamp-margin ()
+      "Hook function to define the timestamp in the margins"
+      (interactive)
+      (setq lui-time-stamp-position 'right-margin
+            lui-time-stamp-format "[%H:%M - %a %d %b %Y ]"
+            right-margin-width (length (format-time-string lui-time-stamp-format))))
     )
 #+end_src
 
 ***** Helm-slack
 #+begin_src emacs-lisp
   (use-package helm-slack
-    :ensure quelpa
-    :quelpa (helm-slack :fetcher "github" :repo "yuya373/helm-slack")
+    :straight (helm-slack :type git :host github :repo "yuya373/helm-slack")
     :tags '("CONNECTED")
     :after (slack))
 #+end_src
