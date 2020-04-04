@@ -309,7 +309,7 @@ activations.
 ** Global keys
 *** Main Helper
 #+begin_src emacs-lisp
-  (defhydra hydra-main (:color teal :hint nil)
+  (defhydra main-hydra (:color teal :hint nil)
     "
     Main helper
 
@@ -340,12 +340,12 @@ activations.
     ("<ESC>" nil "quit" :color blue)
     ("q"   nil "cancel" :color blue))
 
-  (global-set-key (kbd "<f1>") 'hydra-main/body)
+  (global-set-key (kbd "<f1>") 'main-hydra/body)
 #+end_src
 
 *** Project/Version control
 #+begin_src emacs-lisp
-  (defhydra hydra-project (:color teal :hint nil)
+  (defhydra project-hydra (:color teal :hint nil)
     "
          Project/Source management
 
@@ -357,13 +357,13 @@ activations.
     "
     ("<ESC>" nil "quit")
     ("d"   org-dashboard-display)
-    ("p"   hydra-projectile/body)
+    ("p"   projectile-hydra/body)
     ("f"   fic-view-listing)
-    ("F"   hydra-flycheck/body)
-    ("m"   hydra-magit/body)
+    ("F"   flycheck-hydra/body)
+    ("m"   magit-hydra/body)
     ("t"   show-my-travis-projects)
     ("q"   nil "cancel" :color blue))
-  (global-set-key (kbd "<f4>") 'hydra-project/body)
+  (global-set-key (kbd "<f4>") 'project-hydra/body)
 #+end_src
 
 *** Remapping
@@ -1652,7 +1652,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
      diredp-compress-this-file)
 
     :hydra
-    (hydra-dired (:hint nil :color pink)
+    (dired-hydra (:hint nil :color pink)
                  "
     _+_ mkdir          _v_iew           _m_ark             _(_ details        _i_nsert-subdir    wdired
     _C_opy             _O_ view other   _U_nmark all       _)_ show git info  _$_ hide-subdir    C-x C-q : edit
@@ -1709,7 +1709,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           ("e" . dired-open-externally)
           ("p" . dired-emms-play)
           ("E" . ora-ediff-files)
-          ("?" . hydra-dired/body))
+          ("?" . dired-hydra/body))
 
     :init
     (defun ora-ediff-files ()
@@ -2397,9 +2397,9 @@ to extend it even further in the feature.
   (use-package magit
     :ensure t
     :tags '("VC")
-    :commands (magit hydra-magit/body magit-get-current-branch)
+    :commands (magit magit-hydra/body magit-get-current-branch)
     :hydra
-    (hydra-magit (:color teal :hint nil)
+    (magit-hydra (:color teal :hint nil)
 
                  "
             Magit: %(magit-get \"remote\" \"origin\" \"url\")
@@ -2412,7 +2412,7 @@ to extend it even further in the feature.
       _t_: timemachine
       "
                  ("<ESC>" nil "quit")
-                 ("<" hydra-project/body "back")
+                 ("<" project-hydra/body "back")
                  ("f" magit-pull-branch)
                  ("p" magit-push-other)
                  ("c" magit-commit-create)
@@ -2793,7 +2793,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
      )
 
     :hydra
-    (hydra-projectile (:color teal :hint nil)
+    (projectile-hydra (:color teal :hint nil)
                       "
          PROJECTILE: %(projectile-project-root)
 
@@ -2807,7 +2807,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
     "
                       ("<ESC>" nil "quit")
-                      ("<" hydra-project/body "back")
+                      ("<"   project-hydra/body "back")
                       ("a"   counsel-projectile-ag)
                       ("b"   counsel-projectile-switch-to-buffer)
                       ("c"   counsel-projectile-invalidate-cache)
@@ -2882,7 +2882,7 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
     :tags '("CORE")
     :commands (flycheck-error-list-set-filter flycheck-next-error flycheck-previous-error flycheck-first-error)
     :hydra
-    (hydra-flycheck (:pre (progn (setq hydra-hint-display-type t) (flycheck-list-errors))
+    (flycheck-hydra (:pre (progn (setq hydra-hint-display-type t) (flycheck-list-errors))
                      :post (progn (setq hydra-hint-display-type nil) (quit-windows-on "*Flycheck errors*"))
                      :color teal :hint nil)
                     "Errors"
@@ -2891,8 +2891,8 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
                     ("k"  flycheck-previous-error                                   "Previous")
                     ("gg" flycheck-first-error                                      "First")
                     ("G"  (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
-                    ("<" hydra-project/body "back")
-                    ("q"   nil "cancel" :color blue))
+                    ("<"  project-hydra/body "back")
+                    ("q"  nil "cancel" :color blue))
 
     :config
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
@@ -3893,7 +3893,7 @@ It is useful to find some items in org files based on a query.
 
       :bind
       (:map pdf-view-mode-map
-            ("/" . hydra-pdftools/body)
+            ("/" . pdftools-hydra/body)
             ("<s-spc>" .  pdf-view-scroll-down-or-next-page)
             ("<C-s>" . isearch-forward)
             ("g"  . pdf-view-first-page)
@@ -3916,7 +3916,7 @@ It is useful to find some items in org files based on a query.
             ("r"  . pdf-view-reset-slice))
 
       :hydra
-      (hydra-pdftools (:color blue :hint nil)
+      (pdftools-hydra (:color blue :hint nil)
                       "
                 PDF tools
 
@@ -4614,8 +4614,9 @@ As I write papers, it is useful to have some helper to start to have the inspira
   (use-package mu4e
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :commands (mu4e)
+    :load-path "/usr/local/share/emacs/site-lisp/mu4e"
     :hydra
-    (hydra-mu4e-headers (:color blue :hint nil)
+    (mu4e-headers-hydra (:color blue :hint nil)
                         "
      ^General^   | ^Search^           | _!_: read    | _#_: deferred  | ^Switches^
     -^^----------+-^^-----------------| _?_: unread  | _%_: pattern   |-^^------------------
@@ -4696,7 +4697,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
 
      :map mu4e-headers-mode-map
      ("|" . mu4e-view-pipe)
-     ("." . hydra-mu4e-headers/body)
+     ("." . mu4e-headers-hydra/body)
 
      :map mu4e-main-mode-map
      ("u" . mu4e-update-mail-and-index)
@@ -5284,7 +5285,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
                                (color-org-header "CalendarAdapt:" "PaleGreen1"))))
 
     :hydra
-    (hydra-org-agenda-view (:color blue :hint none)
+    (org-agenda-view-hydra (:color blue :hint none)
                            "
           _d_: ?d? day        _g_: time grid=?g? _a_: arch-trees
           _w_: ?w? week       _[_: inactive      _A_: arch-files
@@ -5334,7 +5335,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (([f12] . org-agenda)
 
      :map org-agenda-mode-map
-     ("v"  . hydra-org-agenda-view/body))
+     ("v"  . org-agenda-view-hydra/body))
 
     :config
 
