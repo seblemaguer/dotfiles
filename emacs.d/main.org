@@ -274,7 +274,10 @@ activations.
       "Function to define which event should keep the same priority
     and not be raised even if it is recent. The criterion is based on
     MSG and PROPS."
-      (string= (plist-get props :sender) "root"))
+      (or
+       (string= (plist-get props :sender) "root")
+       (string= (plist-get props :event) "join")
+       (string= (plist-get props :event) "quit")))
 
     (setq sauron-separate-frame nil ;; The notification is on the same window ?
           sauron-sticky-frame t
