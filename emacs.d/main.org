@@ -585,32 +585,6 @@ format. This is really useful to homogeneise documentation.
 
 ** Visual
 *** Mode line
-**** Fancy battery
-#+begin_src emacs-lisp
-  (use-package fancy-battery
-    :ensure t
-    :tags '("VISUAL")
-    :config
-    (fancy-battery-mode))
-#+end_src
-
-**** Anzu
-#+begin_src emacs-lisp
-  (use-package anzu
-    :ensure t
-    :tags '("VISUAL")
-    :config
-    (global-anzu-mode +1))
-#+end_src
-
-**** Minor mode menu
-#+begin_src emacs-lisp
-  (use-package minions
-    :ensure t
-    :tags '("VISUAL")
-    :config (minions-mode 1))
-#+end_src
-
 **** Doom modeline
 #+begin_src emacs-lisp
   (use-package doom-modeline
@@ -665,11 +639,37 @@ format. This is really useful to homogeneise documentation.
     ;; This causes the current time in the mode line to be displayed in
     ;; `egoge-display-time-face' to make it stand out visually.
     (setq display-time-string-forms
-          '((propertize (concat "[" 24-hours ":" minutes "] ")
+          '((propertize (concat "⏲ [" 24-hours ":" minutes "] ")
                         'face 'egoge-display-time)))
 
     (display-time)
     )
+#+end_src
+
+**** Fancy battery
+#+begin_src emacs-lisp
+  (use-package fancy-battery
+    :ensure t
+    :tags '("VISUAL")
+    :config
+    (fancy-battery-mode))
+#+end_src
+
+**** Anzu
+#+begin_src emacs-lisp
+  (use-package anzu
+    :ensure t
+    :tags '("VISUAL")
+    :config
+    (global-anzu-mode +1))
+#+end_src
+
+**** Minor mode menu
+#+begin_src emacs-lisp
+  (use-package minions
+    :ensure t
+    :tags '("VISUAL")
+    :config (minions-mode 1))
 #+end_src
 
 *** Global theme
