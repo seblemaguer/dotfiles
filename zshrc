@@ -152,8 +152,10 @@ alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
 alias tangle_emacs_conf="emacs -Q --batch --eval \"(progn (require 'ob-tangle) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))\" \"~/.emacs.d/main.org\""
 
 # Keyboard switch french/bulgarian
-setxkbmap -layout "fr,bg" -variant ",phonetic" -option "grp:ctrls_toggle"
-
+if [[ `grep "^ID=" /etc/os-release | sed 's/ID=//g'` == "arch" ]]
+then
+    setxkbmap -layout "fr,bg" -variant ",phonetic" -option "grp:ctrls_toggle"
+fi
 #############################################################################################################
 #### Options
 #############################################################################################################
