@@ -2488,18 +2488,19 @@ to extend it even further in the feature.
                         (list (rx bow (group ,WORD (eval (if ,NO-PROMPT? "" ":"))))
                               ,ICON ',PROPS))
          (unless ,NO-PROMPT?
-           (add-to-list 'pretty-magit-prompt (concat ,WORD ": ")))))
+           (add-to-list 'pretty-magit-prompt (concat ,WORD ":")))))
 
     ;; Operations
-    (pretty-magit "add"   ? (:foreground "#375E97" :height 1.2) pretty-magit-prompt)
-    (pretty-magit "fix"   ? (:foreground "#FB6542" :height 1.2) pretty-magit-prompt)
-    (pretty-magit "clean" ? (:foreground "#FFBB00" :height 1.2) pretty-magit-prompt)
-    (pretty-magit "doc."  ? (:foreground "#3F681C" :height 1.2) pretty-magit-prompt)
+    (pretty-magit "add"      ?  (:foreground "#375E97" :height 1.2) t)
+    (pretty-magit "update"   ?↑   (:foreground "#375E97" :height 1.2) t)
+    (pretty-magit "fix"      ?  (:foreground "#FB6542" :height 1.2) t)
+    (pretty-magit "clean"    ?  (:foreground "#FFBB00" :height 1.2) t)
+    (pretty-magit "doc"      ?  (:foreground "#3F681C" :height 1.2) t)
 
     ;; Meta information
-    (pretty-magit "master"  ? (:box nil :height 1.2) t)
-    (pretty-magit "origin"  ? (:box nil :height 1.2) t)
-    (pretty-magit "upstream"  ? (:box nil :height 1.2) t)
+    (pretty-magit "master"    ?  (:box nil :height 1.2) t)
+    (pretty-magit "origin"    ?  (:box nil :height 1.2) t)
+    (pretty-magit "upstream"  ?  (:box nil :height 1.2) t)
 
     (defun add-magit-faces ()
       "Add face properties and compose symbols for buffer from pretty-magit."
