@@ -853,7 +853,7 @@
     # Separate environment name from Python version only with a space.
     typeset -g POWERLEVEL9K_ANACONDA_{LEFT,RIGHT}_DELIMITER=
     # Custom icon.
-    # typeset -g POWERLEVEL9K_ANACONDA_VISUAL_IDENTIFIER_EXPANSION='⭐'
+    typeset -g POWERLEVEL9K_ANACONDA_VISUAL_IDENTIFIER_EXPANSION='🐍'
 
     ################[ pyenv: python environment (https://github.com/pyenv/pyenv) ]################
     # Pyenv color.
@@ -866,7 +866,7 @@
     # If set to false, hide python version if it's equal to "system".
     typeset -g POWERLEVEL9K_PYENV_SHOW_SYSTEM=true
     # Custom icon.
-    # typeset -g POWERLEVEL9K_PYENV_VISUAL_IDENTIFIER_EXPANSION='⭐'
+    # typeset -g POWERLEVEL9K_PYENV_VISUAL_IDENTIFIER_EXPANSION='🐍'
 
     ################[ goenv: go environment (https://github.com/syndbg/goenv) ]################
     # Goenv color.
