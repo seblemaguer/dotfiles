@@ -1,26 +1,11 @@
 #!/bin/sh
 #-*- mode: sh; -*-
 
-# Main path variable
-export PATH=${HOME}/bin:${HOME}/environment/local/bin:$PATH
-export PATH=$HOME/work/tools/local/bin/:$HOME/work/maintained_tools/local/bin/:$PATH
-export PATH=$HOME/work/tools/local/share/matlab/bin:$PATH
-export PATH=$HOME/.local/bin:$PATH
-export PATH=$HOME/environment/local/go/bin:$PATH
-
-# Libraries
-export DYLD_LIBRARY_PATH=$HOME/environment/local/lib:$HOME/work/tools/local/lib:$HOME/work/maintained_tools/local/lib:/usr/local/opt/icu4c/lib/:$HOME/.local/lib:$DYLD_LIBRARY_PATH
-export LD_LIBRARY_PATH=$HOME/environment/local/lib:$HOME/work/tools/local/lib:$HOME/work/maintained_tools/local/lib:/usr/local/opt/icu4c/lib/:$HOME/.local/lib:$LD_LIBRARY_PATH
-export LIBRARY_PATH=$HOME/environment/local/lib:$HOME/work/tools/local/lib:$HOME/work/maintained_tools/local/lib:/usr/local/opt/icu4c/lib/:$HOME/.local/lib:$LIBRARY_PATH
-export PKG_CONFIG_PATH=$HOME/environment/local/lib/pkgconfig:$HOME/work/tools/local/lib/pkgconfig:$HOME/work/maintained_tools/local/lib/pkgconfig:$PKG_CONFIG_PATH
-
-# Include path
-export CPATH=$HOME/environment/local/include:$HOME/work/tools/local/include:$HOME/work/maintained_tools/local/include:/usr/include/jsoncpp/:$CPATH
-export C_INCLUDE_PATH=$HOME/environment/local/include:$HOME/work/tools/local/include:$HOME/work/maintained_tools/local/include:/usr/include/jsoncpp/:$C_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=$HOME/environment/local/include:$HOME/work/tools/local/include:$HOME/work/maintained_tools/local/include:/usr/include/jsoncpp/:$CPLUS_INCLUDE_PATH
+###################################################################################
+### Tools variable
+###################################################################################
 
 # Python part
-export PYTHONPATH=$HOME/work/tools/env/lib/python3.4/site-packages:$HOME/work/tools/local/python:$HOME/work/maintained_tools/local/python:$HOME/work/tools/env/lib/python2.7/site-packages:$HOME/environment/local/lib/python2.7/site-packages/:$PYTHONPATH
 export PYTHON=python3
 
 # Perl part
@@ -35,20 +20,50 @@ export GROOVY_HOME="/usr/share/groovy"
 # Go part
 export GOPATH=$HOME/environment/local/go
 
-# R part
-export R_LIBS_USER=$HOME/environment/local/R
+# NPM part
+NPM_PACKAGES="${HOME}/environment/local/npm-packages"
+export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
+
+###################################################################################
+### Path variables
+###################################################################################
+
+# Main path variable
+export PATH=${HOME}/bin:${HOME}/environment/local/bin:$PATH
+export PATH=$HOME/work/tools/local/bin/:$HOME/work/maintained_tools/local/bin/:$PATH
+export PATH=$HOME/work/tools/local/share/matlab/bin:$PATH
+export PATH=$HOME/.local/bin:$PATH
+export PATH=$HOME/environment/local/go/bin:$PATH
+export PATH=$NPM_PACKAGES/bin:$PATH
+
+# Libraries
+export DYLD_LIBRARY_PATH=$HOME/environment/local/lib:$HOME/work/tools/local/lib:$HOME/work/maintained_tools/local/lib:/usr/local/opt/icu4c/lib/:$HOME/.local/lib:$DYLD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$HOME/environment/local/lib:$HOME/work/tools/local/lib:$HOME/work/maintained_tools/local/lib:/usr/local/opt/icu4c/lib/:$HOME/.local/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=$HOME/environment/local/lib:$HOME/work/tools/local/lib:$HOME/work/maintained_tools/local/lib:/usr/local/opt/icu4c/lib/:$HOME/.local/lib:$LIBRARY_PATH
+export PKG_CONFIG_PATH=$HOME/environment/local/lib/pkgconfig:$HOME/work/tools/local/lib/pkgconfig:$HOME/work/maintained_tools/local/lib/pkgconfig:$PKG_CONFIG_PATH
+
+# Include path
+export CPATH=$HOME/environment/local/include:$HOME/work/tools/local/include:$HOME/work/maintained_tools/local/include:/usr/include/jsoncpp/:$CPATH
+export C_INCLUDE_PATH=$HOME/environment/local/include:$HOME/work/tools/local/include:$HOME/work/maintained_tools/local/include:/usr/include/jsoncpp/:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$HOME/environment/local/include:$HOME/work/tools/local/include:$HOME/work/maintained_tools/local/include:/usr/include/jsoncpp/:$CPLUS_INCLUDE_PATH
+
 
 # Manpage
-export MANPATH=$HOME/environment/local/share/man:$HOME/work/tools/local/share/man:$HOME/work/maintained_tools/local/share/man:$MANPATH
+export MANPATH=$HOME/environment/local/share/man:$HOME/work/tools/local/share/man:$HOME/work/maintained_tools/local/share/man:$NPM_PACKAGES/share/man:$MANPATH
 export INFOPATH=$HOME/environment/local/share/info:$INFOPATH
 
+
+###################################################################################
+### Remaining variables
+###################################################################################
+
 # Change the locale !
-cur_locale=`locale -a | grep utf8 | head -n 1`
+cur_locale=`locale -a | grep utf8  | grep "en_\(IE\|GB\|US\)" | head -n 1`
 export LC_ALL=$cur_locale
 export LANG=$cur_locale
 
-# Screen detection
-if [[ `which xrandr` != "" ]]
+# Screen detection (for work office)
+if [ `which xrandr` != "" ] && [ hostname == "stb067" ]
 then
     DP_CONNECTED=`xrandr | grep " connected" | grep "HDMI-1" | wc -l`
     if [ $DP_CONNECTED = 1 ]
