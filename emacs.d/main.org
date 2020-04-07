@@ -508,12 +508,6 @@ activations.
               :headline "To sort"
               :template-file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory))
 
-             ("Personnal calendar"
-              :keys "P"
-              :type entry
-              :file "~/Calendars/CalendarMe.org"
-              :template-file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory))
-
              ("RSS"
               :keys "r"
               :type entry
