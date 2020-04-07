@@ -929,22 +929,29 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
   (use-package prism
     :straight (prism :type git :host github :repo "alphapapa/prism.el")
     :config
+    (defun load-prism (frame)
+      (with-selected-frame frame
+        (remove-hook 'after-make-frame-functions 'load-prism)
+        (prism-set-colors :num 16
+          :desaturations (cl-loop for i from 0 below 16
+                                  collect (* i 2.5))
+          :lightens (cl-loop for i from 0 below 16
+                             collect (* i 2.5))
+          :colors (list "#C0392B" "#3498DB" "#16A085")
 
-    (prism-set-colors :num 16
-      :desaturations (cl-loop for i from 0 below 16
-                              collect (* i 2.5))
-      :lightens (cl-loop for i from 0 below 16
-                         collect (* i 2.5))
-      :colors (list "#C0392B" "#3498DB" "#16A085")
+          :comments-fn
+          (lambda (color)
+            (prism-blend color
+                         (face-attribute 'font-lock-comment-face :foreground) 0.25))
 
-      :comments-fn
-      (lambda (color)
-        (prism-blend color
-          (face-attribute 'font-lock-comment-face :foreground) 0.25))
+          :strings-fn
+          (lambda (color)
+            (prism-blend color "white" 0.5)))))
 
-      :strings-fn
-      (lambda (color)
-        (prism-blend color "white" 0.5))))
+
+    (if (daemonp)
+        (add-hook 'after-make-frame-functions 'load-prism)
+      (load-prism (car (frame-list)))))
 #+end_src
 
 **** Scrolling
@@ -1055,7 +1062,6 @@ Sometimes I just want to ignore everything except the current document. Darkroom
 #+begin_src emacs-lisp
   (use-package bufler
     :ensure t
-    :requires prism
     :tags '("BUFFER")
     :bind (("C-x C-b" . bufler)
            ("C-x b"   . bufler-switch-buffer))
