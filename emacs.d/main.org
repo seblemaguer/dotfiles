@@ -628,6 +628,7 @@ format. This is really useful to homogeneise documentation.
           ;;
           doom-modeline-checker-simple-format t)
 
+    ;; Activate time
     (defface egoge-display-time
       '((((type x w32 mac))
          ;; #060525 is the background colour of my default face.
@@ -639,21 +640,16 @@ format. This is really useful to homogeneise documentation.
     ;; This causes the current time in the mode line to be displayed in
     ;; `egoge-display-time-face' to make it stand out visually.
     (setq display-time-string-forms
-          '((propertize (concat "⏲ [" 24-hours ":" minutes "] ")
+          '((propertize (concat "[⏲ " 24-hours ":" minutes "] ")
                         'face 'egoge-display-time)))
 
     (display-time)
+
+    ;; Activate battery
+    (display-battery-mode)
     )
 #+end_src
 
-**** Fancy battery
-#+begin_src emacs-lisp
-  (use-package fancy-battery
-    :ensure t
-    :tags '("VISUAL")
-    :config
-    (fancy-battery-mode))
-#+end_src
 
 **** Anzu
 #+begin_src emacs-lisp
@@ -5008,6 +5004,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
 
     ;; Visualisation activation/deactivation
     (emms-mode-line nil)
+    (setq emms-playing-time-display-format " [♪ %s]")
     ;; (emms-playing-time-disable-display)
 
     ;; Enable cache
