@@ -2350,8 +2350,6 @@ to extend it even further in the feature.
       ("q"   nil "cancel" :color blue))
 
     :commands (lsp lsp-deferred)
-    :hook
-    (kotlin-mode . lsp-deferred)
 
     :bind
     (:map lsp-mode-map
@@ -3288,10 +3286,13 @@ enough to be on melpa so I use straight.
     :interpreter ("gradle" "groovy")
     :hook
     (groovy-mode .  (lambda () (inf-groovy-keys)))
+    (groovy-mode . lsp-deferred)
 
     :config
     (autoload 'run-groovy "inf-groovy" "Run an inferior Groovy process")
-    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode"))
+    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode")
+
+    (setq lsp-groovy-server-file "~/environment/local/lib/groovy-language-server.jar"))
 
   ;; Subpackages
   (use-package groovy-imports
@@ -3318,6 +3319,9 @@ enough to be on melpa so I use straight.
     :ensure t
     :tags '("LANGUAGE")
     :mode "\\.kts?\\'"
+    :hook
+    (kotlin-mode . lsp-deferred)
+
     :config
     (setq kotlin-tab-width 4))
 #+end_src
