@@ -21,7 +21,7 @@ export GROOVY_HOME="/usr/share/groovy"
 export GOPATH=$HOME/environment/local/go
 
 # NPM part
-NPM_PACKAGES="${HOME}/environment/local/npm-packages"
+NPM_PACKAGES="${HOME}/environment/local/npm_packages"
 export NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
 
 ###################################################################################
@@ -63,7 +63,7 @@ export LC_ALL=$cur_locale
 export LANG=$cur_locale
 
 # Screen detection (for work office)
-if [ `which xrandr` != "" ] && [ hostname == "stb067" ]
+if [ `which xrandr` != "" ] && [ `hostname` == "stb067" ]
 then
     DP_CONNECTED=`xrandr | grep " connected" | grep "HDMI-1" | wc -l`
     if [ $DP_CONNECTED = 1 ]
