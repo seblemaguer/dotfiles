@@ -63,7 +63,7 @@ export LC_ALL=$cur_locale
 export LANG=$cur_locale
 
 # Screen detection (for work office)
-if [ `which xrandr` != "" ] && [ `hostname` == "stb067" ]
+if [[ `which xrandr` != ""  &&  `hostname` == "stb067" ]]
 then
     DP_CONNECTED=`xrandr | grep " connected" | grep "HDMI-1" | wc -l`
     if [ $DP_CONNECTED = 1 ]
