@@ -2867,7 +2867,7 @@ I just modify a little bit the default compilation to be a little more "user fri
 #+begin_src emacs-lisp
   (defun my-compile-autoclose (buffer string)
     "Auto close compile log if there are no errors"
-    (when (and (string-match-p (buffer-name buffer) "*grep*")
+    (when (and (not (string-match-p (buffer-name buffer) "*grep*"))
                (string-match "finished" string))
           (delete-window (get-buffer-window buffer t))
           (bury-buffer-internal buffer)))
