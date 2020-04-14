@@ -1011,7 +1011,6 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
 
   (defun load-default-fonts ()
     (set-fontset-font "fontset-default" 'unicode "Dejavu Sans Mono")
-    (set-face-font 'default "Inconsolata-11")
 
     ;; The icons you see are not the correct icons until this is evaluated!
     (set-icon-fonts
