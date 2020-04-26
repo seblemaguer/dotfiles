@@ -4767,7 +4767,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
     ;; headers
     (mu4e-headers-date-format "%a %d %b %Y")
     (mu4e-headers-time-format "%H:%M:%S")
-    (mu4e-headers-fields      '((:human-date    .  25)
+    (mu4e-headers-fields      '((:human-date    .  15)
                                 (:flags         .   6)
                                 (:mailing-list  . 10)
                                 (:from          .  22)
