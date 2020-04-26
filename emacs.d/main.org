@@ -1101,55 +1101,61 @@ Sometimes I just want to ignore everything except the current document. Darkroom
                      (group (group-or "Todo"
                                       (name-match "Todo" (rx bos "todo.org"))))
 
-                     (group
-                      ;; Subgroup collecting all special buffers (i.e. ones that are not
-                      ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
-                      ;; through to other groups, so they end up grouped with their project buffers).
-                      (group-and "*Special*"
-                                 (lambda (buffer)
-                                   (unless (or (funcall (mode-match "Magit" (rx bos "magit-status"))
-                                                        buffer)
-                                               (funcall (mode-match "Dired" (rx bos "dired"))
-                                                        buffer)
-                                               (funcall (auto-file) buffer))
-                                     "*Special*")))
+                     ;; Subgroup collecting all special buffers (i.e. ones that are not
+                     ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
+                     ;; through to other groups, so they end up grouped with their project buffers).
+                     (group (group-and "*Special*"
+                                       (lambda (buffer)
+                                         (unless (or (funcall (mode-match "Magit" (rx bos "magit-status"))
+                                                              buffer)
+                                                     (funcall (mode-match "Dired" (rx bos "dired"))
+                                                              buffer)
+                                                     (funcall (auto-file) buffer))
+                                           "*Special*")))
 
-                      (group
-                       ;; Subgroup collecting these "special special" buffers
-                       ;; separately for convenience.
-                       (name-match "**Special**"
-                                   (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*")))
+                            ;; Subgroup collecting these "special special" buffers separately for convenience.
+                            (group (name-match "**Special**"
+                                               (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*")))
 
-                      ;; For my- calendars
-                      (group (name-match "*Calendar*" "^[*]?[Cc]alendar.*$"))
+                            ;; For my- calendars
+                            (group (name-match "*Calendar*" "^[*]?[Cc]alendar.*$"))
 
-                      ;; Package management
-                      (group (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*"))))
+                            ;; Package management
+                            (group (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*"))))
 
-                      ;; Processes in background
-                      (group (name-match "*Prodigy*" (rx bos "*prodigy-")))
+                            ;; Processes in background
+                            (group (name-match "*Prodigy*" (rx bos "*prodigy-")))
 
-                      ;; Subgroup collecting all other Magit buffers, grouped by directory.
-                      (group
-                       (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
-                       (auto-directory))
-                      ;; Subgroup for Helm buffers.
-                      (mode-match "*Helm*" (rx bos "helm-"))
-                      ;; Remaining special buffers are grouped automatically by mode.
-                      (auto-mode))
+                            ;; Subgroup collecting all other Magit buffers, grouped by directory.
+                            (group (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
+                                   (auto-directory))
 
-                     (group
-                      ;; Subgroup collecting buffers in a projectile project.
-                      (auto-tramp))
-                     (group
-                      ;; Subgroup collecting buffers in a projectile project.
-                      (auto-projectile))
-                     (group
-                      ;; Subgroup collecting buffers in a version-control project,
-                      ;; grouping them by directory.
-                      (auto-project))
-                     (auto-directory)
-                     (auto-mode))))
+                            ;; Subgroup for Helm buffers.
+                            (mode-match "*Helm*" (rx bos "helm-"))
+
+                            ;; Remaining special buffers are grouped automatically by mode.
+                            (auto-mode))
+
+
+                     (group (group-and "*Projectile*"
+                                       (lambda (buffer)
+                                         (unless (funcall (lambda (buf)
+                                                            (with-current-buffer buf
+                                                              (string= (projectile-project-name) "-"))) buffer)
+                                           "*Projectile*")))
+
+                            ;; Subgroup collecting buffers in a projectile project.
+                            (auto-projectile)
+                            (auto-mode))
+
+                     ;; Subgroup collecting buffers in a projectile project.
+                     (group (auto-tramp))
+
+                     ;; Subgroup collecting buffers in a version-control project,
+                     ;; grouping them by directory.
+                     (auto-mode)
+                     (auto-directory))))
+
 #+end_src
 
 ** Minibuffer
