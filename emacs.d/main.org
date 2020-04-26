@@ -1076,7 +1076,8 @@ Sometimes I just want to ignore everything except the current document. Darkroom
 
                      (group (group-or "Chatty"
                                       (mode-match "ERC" (rx bos "erc-"))
-                                      (name-match "*Slack*" (rx bos "*Slack")))
+                                      (name-match "*Slack*" (rx bos "*Slack"))
+                                      (mode-match "Matrix" (rx bos "matrix-client-")))
 
                             (group (mode-match "ERC" (rx bos "erc-"))
                                    (group (name-match "Channels" (rx bos (or "#" "&"))))
@@ -1086,9 +1087,9 @@ Sometimes I just want to ignore everything except the current document. Darkroom
 
                             (group (name-match "Slack" (rx bos "*Slack"))
                                    (group (group-not "Message" (name-match "Logging" "\\*Slack[^-]*Log -")))
-                                   (group (name-match "Logging" "\\*Slack[^-]*Log -"))
-                                   )
-                            )
+                                   (group (name-match "Logging" "\\*Slack[^-]*Log -")))
+
+                            (group (mode-match "Matrix" (rx bos "matrix-client-"))))
 
                      (group (mode-match "EMMS" (rx bos "emms-")))
 
