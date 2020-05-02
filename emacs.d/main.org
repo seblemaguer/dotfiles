@@ -4646,6 +4646,14 @@ As I write papers, it is useful to have some helper to start to have the inspira
         (org-mime-htmlize)
         (message-send-and-exit))))
 #+end_src
+***** Checking attachment
+#+begin_src emacs-lisp
+  (use-package message-attachment-reminder
+    :ensure t
+    :commands (message-attachment-reminder-warn-if-no-attachments)
+    :hook
+    (message-send . message-attachment-reminder-warn-if-no-attachments))
+#+end_src
 **** Mu4e
 ***** Global
 #+begin_src emacs-lisp
