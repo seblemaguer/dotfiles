@@ -4660,7 +4660,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
   (use-package mu4e
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :commands (mu4e)
-    :load-path "/usr/local/share/emacs/site-lisp/mu4e"
+    :load-path "~/environment/local/share/emacs/site-lisp/mu4e"
     :hydra
     (mu4e-headers-hydra (:color blue :hint nil)
                         "
