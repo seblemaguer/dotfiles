@@ -5035,6 +5035,32 @@ As I write papers, it is useful to have some helper to start to have the inspira
     :tags '("CONNECTED")
     :after (slack))
 #+end_src
+**** Shutdown helper
+#+begin_src emacs-lisp
+  (defun shutdown-communications ()
+    "Routine to shutdown all chats"
+    (interactive)
+
+    ;; Erc
+    (dolist (erc-buf list-erc-servers)
+      (when (get-buffer erc-buf)
+        (with-current-buffer erc-buf
+          (erc-quit-server "time to go back to the real life"))))
+
+    ;; Slack
+    (slack-ws-close)
+
+    ;; Matrix
+    (matrix-client-disconnect)
+
+    ;; Clean buffers
+    (dolist (buf (buffer-list))
+      (cond ((string-prefix-p "*Slack " (buffer-name buf))
+             (kill-buffer buf))
+            ((string= (with-current-buffer buf major-mode) "erc-mode")
+             (kill-buffer buf))
+            )))
+#+end_src
 
 ** Music
 *** Global
