@@ -2171,9 +2171,15 @@ easier. Therefore the section is still in *todo* status.
 #+begin_src emacs-lisp
   (use-package undo-propose
     :ensure t
+    :disabled t
     :tags '("CORE")
     :commands (undo-propose)
     :bind ("C-x u" . undo-propose))
+
+  (use-package undo-tree
+  :ensure t
+  :init
+  (global-undo-tree-mode))
 #+end_src
 
 **** Folding
