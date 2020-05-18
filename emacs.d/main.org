@@ -2813,38 +2813,42 @@ to extend it even further in the feature.
 **** Configuration projectile
 The commands are based on http://endlessparentheses.com/improving-projectile-with-extra-commands.html?source=rss
 #+begin_src emacs-lisp
-  (use-package projectile
-    :ensure t
-    :tags '("PROJECT")
-    :config
+    (use-package projectile
+      :ensure t
+      :tags '("PROJECT")
+      :config
 
-    ;; Global configuration
-    (setq projectile-switch-project-action 'neotree-projectile-action
-          projectile-enable-caching t
-          projectile-create-missing-test-files t
-          projectile-switch-project-action #'projectile-commander
-          projectile-ignored-project-function 'file-remote-p)
+      ;; Global configuration
+      (setq projectile-switch-project-action 'neotree-projectile-action
+            projectile-enable-caching t
+            projectile-create-missing-test-files t
+            projectile-switch-project-action #'projectile-commander
+            projectile-ignored-project-function 'file-remote-p)
 
-    ;; Defining some helpers
-    (def-projectile-commander-method ?s
-      "Open a *shell* buffer for the project."
-      ;; This requires a snapshot version of Projectile.
-      (projectile-run-shell))
+      ;; Defining some helpers
+      (def-projectile-commander-method ?s
+        "Open a *shell* buffer for the project."
+        ;; This requires a snapshot version of Projectile.
+        (projectile-run-shell))
 
-    (def-projectile-commander-method ?c
-      "Run `compile' in the project."
-      (projectile-compile-project nil))
+      (def-projectile-commander-method ?c
+        "Run `compile' in the project."
+        (projectile-compile-project nil))
 
-    (def-projectile-commander-method ?\C-?
-      "Go back to project selection."
-      (projectile-switch-project))
+      (def-projectile-commander-method ?\C-?
+        "Go back to project selection."
+        (projectile-switch-project))
 
-    ;; Keys
-    (define-key projectile-mode-map (kbd "C-x p") 'projectile-command-map)
+      ;; Keys
+      (define-key projectile-mode-map (kbd "C-x p") 'projectile-command-map)
 
-    ;; Activate globally
-    (projectile-mode)
-)
+      ;; Activate globally
+      (projectile-mode)
+
+      ;; Needed to avoid tramp hanging in buffer listing
+      (defadvice projectile-project-root (around ignore-remote first activate)
+        (unless (file-remote-p default-directory) ad-do-it))
+  )
 #+end_src
 
 **** Todos/projectile
