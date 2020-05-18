@@ -4907,7 +4907,6 @@ As I write papers, it is useful to have some helper to start to have the inspira
     :ensure t
     :tags '("CONNECTED" "CHAT" "ERC")
     :commands (erc)
-    :bind ("<S-f2>" . erc-start-or-switch)
     :hook
     (erc-mode . erc-format-buffer)
 
@@ -5035,9 +5034,23 @@ As I write papers, it is useful to have some helper to start to have the inspira
     :tags '("CONNECTED")
     :after (slack))
 #+end_src
-**** Shutdown helper
+**** Global helpers
 #+begin_src emacs-lisp
-  (defun shutdown-communications ()
+  (defun communication-start ()
+    "Routine to start all chats."
+    (interactive)
+
+    ;; ERC
+    (erc-start)
+
+    ;; Slack
+    (slack-start)
+
+    ;; Matrix
+    (matrix-connect)
+    )
+
+  (defun communication-shutdown ()
     "Routine to shutdown all chats"
     (interactive)
 
@@ -5060,6 +5073,15 @@ As I write papers, it is useful to have some helper to start to have the inspira
             ((string= (with-current-buffer buf major-mode) "erc-mode")
              (kill-buffer buf))
             )))
+
+  (defun communication-start-or-switch ()
+    (interactive)
+    (if (get-buffer (car list-erc-servers))
+        (erc-track-switch-buffer 1)
+      (communication-start)))
+
+  (global-set-key (kbd "S-<f2>") 'communication-start-or-switch)
+  (global-set-key (kbd "C-<f2>") 'communication-shutdown)
 #+end_src
 
 ** Music
