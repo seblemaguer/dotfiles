@@ -3608,7 +3608,6 @@ enough to be on melpa so I use straight.
   (use-package auctex-latexmk
     :ensure t
     :tags '("LANGUAGE")
-    :after (tex latex)
     :config
     (setq auctex-latexmk-inherit-TeX-PDF-mode t)
     (auctex-latexmk-setup))
@@ -3638,13 +3637,19 @@ enough to be on melpa so I use straight.
 #+begin_src emacs-lisp
   (use-package latex-math-preview
     :ensure t
+    :disabled t
     :tags '("LANGUAGE")
+    :hook (LaTeX-mode . LaTeX-preview-setup)
+    :commands (LaTeX-preview-setup)
     :config
-    (autoload 'LaTeX-preview-setup "preview")
-    (setq preview-scale-function 1.2)
-    (add-hook 'LaTeX-mode-hook 'LaTeX-preview-setup))
+    (setq preview-scale-function 1.2))
 #+end_src
-
+**** TikZ/PGF
+#+begin_src emacs-lisp
+  (use-package tikz-mode
+    :ensure straight
+    :straight (tikz-mode :type git :host github :repo "seblemaguer/tikz-mode"))
+#+end_src
 *** Ledger
  #+begin_src emacs-lisp
    (use-package ledger-mode
