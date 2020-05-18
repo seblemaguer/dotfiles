@@ -665,7 +665,7 @@ format. This is really useful to homogeneise documentation.
 *** Global theme
 #+begin_src emacs-lisp
   (use-package flatfluc-theme
-    :straight (flatfluc-theme :type git :host github :repo "seblemaguer/flatfluc-theme")
+    :ensure t
     :tags '("VISUAL")
     :config
     (load-theme 'flatfluc t))
