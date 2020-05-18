@@ -2060,6 +2060,9 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
           ;; tramp-verbose 9
           ;; tramp-debug-buffer t)
   )
+
+  (use-package counsel-tramp
+    :ensure t)
 #+end_src
 
 ** Trash
