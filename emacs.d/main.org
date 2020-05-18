@@ -5676,6 +5676,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
  #+begin_src emacs-lisp
    (use-package excorporate
      :ensure t
+     :disabled t
      :tags '("CALENDAR" "REQUIRES_CONNECTION")
      :hook
      (org-agenda-cleanup-fancy-diary-hook . ab/agenda-update-diary)
