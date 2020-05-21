@@ -12,5 +12,5 @@ exports.tlsOptions = { "rejectUnauthorized": false };
 exports.username = "slemaguer";
 exports.password = getStdout("python3 ~/.get_passwd.py 'mail.coli.uni-saarland.de' 'slemaguer'");
 exports.onNewMail = "mbsync -q Saarland";
-exports.onNewMailPost = "emacsclient  -e '(mu4e-update-index)'";
+exports.onNewMailPost = "~/environment/local/emacs/bin/emacsclient  -e '(mu4e-update-index)'";
 exports.boxes = [ "INBOX" ];

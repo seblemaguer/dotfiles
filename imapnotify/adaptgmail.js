@@ -12,5 +12,5 @@ exports.tlsOptions = { "rejectUnauthorized": false };
 exports.username = "sebastien.lemaguer@adaptcentre.ie";
 exports.password = getStdout("python3 ~/.get_passwd.py 'imap.gmail.com' 'sebastien.lemaguer@adaptcentre.ie'");
 exports.onNewMail = "mbsync -q AdaptGmail";
-exports.onNewMailPost = "emacsclient  -e '(mu4e-update-index)'";
+exports.onNewMailPost = "~/environment/local/emacs/bin/emacsclient  -e '(mu4e-update-index)'";
 exports.boxes = [ "INBOX" ];

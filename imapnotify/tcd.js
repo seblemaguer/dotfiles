@@ -12,5 +12,5 @@ exports.tlsOptions = { "rejectUnauthorized": false };
 exports.username = "lemagues@tcd.ie";
 exports.password = getStdout("python3 ~/.get_passwd.py 'outlook.office365.com' 'lemagues@tcd.ie'");
 exports.onNewMail = "mbsync -q TCD";
-exports.onNewMailPost = "emacsclient -e '(mu4e-update-index)'";
+exports.onNewMailPost = "~/environment/local/emacs/bin/emacsclient  -e '(mu4e-update-index)'";
 exports.boxes = [ "INBOX" ];
