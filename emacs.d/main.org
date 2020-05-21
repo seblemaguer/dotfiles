@@ -266,8 +266,7 @@ activations.
                                    :repo "seblemaguer/sauron"
                                    :branch "ignore"))
     :tags '("NOTIFICATION")
-    :commands
-    (sauron-start-hidden)
+    :commands (sauron-start-hidden)
 
     :config
     (defun sauron-keep-priority (msg props)
@@ -450,6 +449,8 @@ activations.
 #+end_src
 
 **** Entry point
+Also use https://github.com/karlicoss/grasp to connect with firefox.
+
 #+begin_src emacs-lisp
   (use-package org-capture
     :tags '("ORG")
@@ -1149,7 +1150,9 @@ Sometimes I just want to ignore everything except the current document. Darkroom
                             (auto-mode))
 
                      ;; Subgroup collecting buffers in a projectile project.
-                     (group (auto-tramp))
+                     (group
+                      (auto-tramp)
+                     (auto-mode))
 
                      ;; Subgroup collecting buffers in a version-control project,
                      ;; grouping them by directory.
@@ -5002,12 +5005,13 @@ As I write papers, it is useful to have some helper to start to have the inspira
 ***** Notification activation
 #+begin_src emacs-lisp
   (use-package sauron-erc
+    :ensure sauron
     :tags '("CONNECT" "CHAT" "ERC" "NOTIFICATION")
     :commands (sauron-erc-start)
     :custom
     (sauron-prio-erc-default           1)
     (sauron-prio-erc-privmsg-root      1)
-    (sauron-prio-erc-privmsg-default   2)
+    (sauron-prio-erc-privmsg-default   1)
     (sauron-prio-erc-privmsg-for-me    2)
     (sauron-prio-erc-privmsg-mentioned 2))
 #+end_src
