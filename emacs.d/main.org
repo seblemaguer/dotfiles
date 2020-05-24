@@ -798,6 +798,11 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
     :tags '("VISUAL")
     :ensure t)
 
+  (use-package hl-line+
+    :load-path default-plugin-dir
+    :config
+    (global-hl-line-mode 1))
+
   ;; See column-number
   (column-number-mode t)
   (size-indication-mode t)
