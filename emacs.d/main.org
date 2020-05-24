@@ -3368,7 +3368,7 @@ enough to be on melpa so I use straight.
     (autoload 'run-groovy "inf-groovy" "Run an inferior Groovy process")
     (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode")
 
-    (setq lsp-groovy-server-file "~/environment/local/lib/groovy-language-server.jar"))
+    (setq lsp-groovy-server-file "~/environment/local/lib/groovy-language-server-all.jar"))
 
   ;; Subpackages
   (use-package groovy-imports
