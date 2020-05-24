@@ -46,19 +46,17 @@
   "Target language for the translation")
 
 
-(defun translate (word)
+(defun wordreference (word)
   "Translate the given word using WordReference"
   (interactive "sEnter the word to translate: ")
-  (shr-browse-url (concat wordreference-roots wordreference-source-language
-					  wordreference-target-language "/"
-					  word))
-  )
+  (browse-url (concat wordreference-roots wordreference-source-language
+	              wordreference-target-language "/"
+	              word)))
 
-(defun translate-at-point()
+(defun wordreference-at-point()
   "Translate the word at point using WordReference."
   (interactive)
-  (translate (thing-at-point 'word))
-  )
+  (translate (thing-at-point 'word)))
 
 
 (provide 'wordreference)

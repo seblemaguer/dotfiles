@@ -4649,6 +4649,13 @@ As I write papers, it is useful to have some helper to start to have the inspira
     :ensure t
     :tags '("WRITING"))
 #+end_src
+** Translation
+*** WordReference
+#+begin_src emacs-lisp
+  (use-package wordreference
+    :load-path default-plugin-dir
+    :commands (wordreference wordreference-at-point))
+#+end_src
 
 * "Entertainment"
 ** Communication
