@@ -1965,6 +1965,31 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     :config
     (bind-key "C-c C-r" 'dired-rsync dired-mode-map))
 #+end_src
+*** Toggle
+#+begin_src emacs-lisp
+  (use-package dired-toggle
+    :ensure t
+    :commands (dired-toggle)
+    :bind (("C-<f8>" . #'dired-toggle)
+           :map dired-mode-map
+           ("q" . #'dired-toggle-quit)
+           ([remap dired-find-file] . #'dired-toggle-find-file)
+           ([remap dired-up-directory] . #'dired-toggle-up-directory)
+           ("C-c C-u" . #'dired-toggle-up-directory))
+    :hook
+    (dired-toggle-mode . dired-toggle-hook)
+
+    :init
+    (defun dired-toggle-hook ()
+      (interactive)
+      (visual-line-mode 1)
+      (setq-local visual-line-fringe-indicators '(nil right-curly-arrow))
+      (setq-local word-wrap nil))
+
+    :config
+    (setq dired-toggle-window-size 32
+          dired-toggle-window-side 'left))
+#+end_src
 
 ** Images
 *** Visualisation
