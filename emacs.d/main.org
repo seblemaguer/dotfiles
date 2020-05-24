@@ -4629,9 +4629,10 @@ As I write papers, it is useful to have some helper to start to have the inspira
     :ensure t
     :tags '("WRITING" "CONNECTED"))
 
-  (use-package powerthesaurus
-    :ensure t
-    :tags '("WRITING" "CONNECTED"))
+  (use-package mw-thesaurus
+    :ensure straight
+    :straight (mw-thesaurus :type git :fetcher github :repo "agzam/mw-thesaurus.el")
+    :commands (mw-thesaurus-lookup-at-point))
 #+end_src
 
 ** Grammar checking
