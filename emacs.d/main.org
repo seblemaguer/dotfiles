@@ -178,7 +178,6 @@ This section focus on defining some variables/helpers needed to have a more glob
   ;; Define root directory and add the plugins
   (defvar default-plugin-dir (format "%s/plugins" user-emacs-directory)
     "The plugins directory")
-  (add-to-list 'load-path default-plugin-dir)
 
   ;; Don't screw up my files with custom
   (setq custom-file (format "%s/custom.el" user-emacs-directory))
