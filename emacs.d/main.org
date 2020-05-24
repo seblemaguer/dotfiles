@@ -4306,48 +4306,56 @@ It is useful to find some items in org files based on a query.
 *** Web configuration
 **** Global web configuration
 #+begin_src emacs-lisp
-  (use-package web-mode
-    :ensure t
-    :tags '("LANGUAGE")
-    :mode
-    ("\\.phtml\\'" "\\.tpl\\.php\\'" "\\.[agj]sp\\'" "\\.as[cp]x\\'"
-    "\\.erb\\'" "\\.mustache\\'" "\\.djhtml\\'" "\\.html?\\'")
+    (use-package web-mode
+      :ensure t
+      :tags '("LANGUAGE")
+      :mode
+      (
+       ".twig$"
+       ".html?$"
+       ".hbs$"
+       ".vue$"
+       ".php$"
+       ".tpl$"
+       ".mustache$"
+       )
+      :init
+      (setq web-mode-code-indent-offset 2
+            web-mode-css-indent-offset 2
+            web-mode-enable-auto-closing t
+            web-mode-enable-auto-expanding t
+            web-mode-enable-auto-indentation t
+            web-mode-enable-auto-opening t
+            web-mode-enable-auto-pairing t
+            web-mode-enable-css-colorization t
+            web-mode-markup-indent-offset 2)
 
-    :init
-    (setq web-mode-markup-indent-offset 2
-          web-mode-code-indent-offset 2
-          web-mode-css-indent-offset 2
+      :config
+      ;; Template
+      (setq web-mode-engines-alist
+            '(("php"    . "\\.phtml\\'")
+              ("blade"  . "\\.blade\\."))
+            )
 
-          web-mode-enable-auto-pairing t
-          web-mode-enable-auto-expanding t
-          web-mode-enable-css-colorization t)
+      )
 
-    :config
-    ;; Template
-    (setq web-mode-engines-alist
-          '(("php"    . "\\.phtml\\'")
-            ("blade"  . "\\.blade\\."))
-          )
+    (use-package web-beautify
+      :ensure t
+      :tags '("LANGUAGE")
+      :commands (web-beautify-css
+                 web-beautify-css-buffer
+                 web-beautify-html
+                 web-beautify-html-buffer
+                 web-beautify-js
+                 web-beautify-js-buffer))
 
-    )
+    (use-package web-completion-data
+      :ensure t
+      :tags '("LANGUAGE"))
 
-  (use-package web-beautify
-    :ensure t
-    :tags '("LANGUAGE")
-    :commands (web-beautify-css
-               web-beautify-css-buffer
-               web-beautify-html
-               web-beautify-html-buffer
-               web-beautify-js
-               web-beautify-js-buffer))
-
-  (use-package web-completion-data
-    :ensure t
-    :tags '("LANGUAGE"))
-
-  (use-package web-mode-edit-element
-    :ensure t
-    :tags '("LANGUAGE"))
+    (use-package web-mode-edit-element
+      :ensure t
+      :tags '("LANGUAGE"))
 #+end_src
 
 **** EMMET
