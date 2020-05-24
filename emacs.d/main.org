@@ -5377,9 +5377,23 @@ I actually use this part for minor correction. The tags are done when abcde is c
 
 *** Youtube
 #+begin_src emacs-lisp
-  (use-package ivy-youtube
+  (use-package ytel
     :ensure t
-    :tags '("CONNECTED"))
+    :tags '("CONNECTED" "MULTIMEDIA")
+    :commands (ytel)
+    :bind (("<C-f9>" . ytel)
+           :map ytel-mode-map
+           ("P" . ytel-watch))
+    :config
+    (defun ytel-watch ()
+      "Stream video at point in mpv."
+      (interactive)
+      (let* ((video (ytel-get-current-video))
+             (id    (ytel-video-id video)))
+        (start-process "ytel mpv" nil
+                       "mpv"
+                       (concat "https://www.youtube.com/watch?v=" id)))))
+        ;; "--ytdl-format=bestvideo[height<=?720]+bestaudio/best")))
 #+end_src
 
 *** Codesearch
