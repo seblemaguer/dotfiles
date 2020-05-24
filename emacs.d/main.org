@@ -434,8 +434,8 @@ activations.
     :ensure t
     :tags '("HELPER")
     :hook (after-init . remind-bindings-initialise)
-    :bind (("C-h C-d" . 'remind-bindings-togglebuffer)   ;; toggle buffer
-           ("C-c M-d" . 'remind-bindings-specific-mode))) ;; buffer-specific only
+    :bind (("<f10>" . 'remind-bindings-togglebuffer)   ;; toggle buffer
+           ("C-<f10>" . 'remind-bindings-specific-mode))) ;; buffer-specific only
 #+end_src
 
 *** Capturing
