@@ -265,7 +265,7 @@ activations.
     :straight (sauron :type git :host github :repo "djcb/sauron"
                       :fork (:host github
                                    :repo "seblemaguer/sauron"
-                                   :branch "ignore"))
+                                   :branch "functional"))
     :tags '("NOTIFICATION")
     :commands (sauron-start-hidden)
 
@@ -287,7 +287,7 @@ activations.
                                 ( origin     .  20)
                                 ( priority   .   4)
                                 ( message    . nil))
-
+          sauron-org-exclude-todo-states (list "IN PROCESS" "EXEC_STARTED" "PAUSED" "DELEGATED" "WAITING")
           sauron-insensitivity-handler 'sauron-keep-priority)
   )
 #+end_src
@@ -725,7 +725,7 @@ format. This is really useful to homogeneise documentation.
             ;; I can't really do anything here!
             ("WAITING"       :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
             ("PAUSED"        :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("EXEC_STARTED"  :background "light green"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("EXEC_STARTED"  :background "light green"   :foreground "black" :weight bold :box (:line-width 2 :style released-button))
             ("DELEGATED"     :background "gold"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
 
             ;; Done but not complete
