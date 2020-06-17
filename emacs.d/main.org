@@ -5442,7 +5442,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :commands (ytel)
     :bind (("<C-f9>" . ytel)
            :map ytel-mode-map
-           ("P" . ytel-watch))
+           ("<return>" . ytel-watch))
     :config
     (defun ytel-watch ()
       "Stream video at point in mpv."
