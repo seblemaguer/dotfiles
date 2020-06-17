@@ -5592,7 +5592,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :config
 
     ;; Agenda files
-    (setq org-agenda-files '())
     (when (file-exists-p "~/shared/pCloudDrive/org/todo/todo.org")
       (add-to-list 'org-agenda-files "~/shared/pCloudDrive/org/todo/todo.org"))
 
