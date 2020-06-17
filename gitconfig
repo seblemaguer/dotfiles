@@ -11,6 +11,10 @@ textconv = markdown
 [core]
 excludesfile = /home/lemagues/.gitignore
 editor = emacs
+pager = /home/lemagues/environment/local/bin/delta --theme="GitHub"
+
+[interactive]
+diffFilter = /home/lemagues/environment/local/bin/delta --color-only
 
 # [gpg]
 # 	program = gpgv2
