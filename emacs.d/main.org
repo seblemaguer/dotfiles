@@ -5275,11 +5275,27 @@ I actually use this part for minor correction. The tags are done when abcde is c
 
 *** Release
 #+begin_src emacs-lisp
-  (use-package ma2oa
-    :straight (ma2oa :type git :host github :repo "seblemaguer/ma2oa.el")
-    :tags '("CONNECTED")
+  (use-package om
+    :straight (om :type git :host github :repo "ndwarshuis/om.el"))
+
+  (use-package metal-archives
+    :straight (metal-archives :type git :host github :repo "seblemaguer/metal-archives.el")
+    :commands (metal-archives-shopping-list-update
+               metal-archives-retrieve-next-releases
+               metal-archives-load-artists-map)
+    :hook
+    (kill-emacs . metal-archives-shopping-list-update)
+    (after-init . metal-archives-load-artists-map)
+
+    :custom
+    (metal-archives-shopping-list-target-file "~/.emacs.d/shopping_list.org")
+    (metal-archives-shopping-list-root-node "CD")
+
+    :init
+    (add-to-list 'org-agenda-files metal-archives-shopping-list-target-file)
+
     :config
-    (add-to-list 'org-agenda-files ma2oa-target-file))
+    (setq metal-archives-favorite-handle 'metal-archives-shopping-list-add-release-and-alert))
 #+end_src
 
 ** RSS
