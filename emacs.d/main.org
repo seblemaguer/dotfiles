@@ -3858,10 +3858,11 @@ enough to be on melpa so I use straight.
     :ensure t
     :tags '("ORG" "USER")
     :defer t
-    :disabled t
     :init
     (org-babel-do-load-languages 'org-babel-load-languages
-                                 '((jupyter . t))))
+                                 '((jupyter . t)))
+    :config
+    (org-babel-jupyter-override-src-block "python"))
 
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((emacs-lisp . t)
