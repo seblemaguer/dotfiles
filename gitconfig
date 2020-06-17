@@ -1,16 +1,16 @@
 [user]
-	name = Sebastien Le Maguer
-	email = lemagues@tcd.ie
+name = Sebastien Le Maguer
+email = lemagues@tcd.ie
 
 [push]
-	default = simple
+default = simple
 
 [diff "md"]
-    textconv = markdown
+textconv = markdown
 
 [core]
-	excludesfile = /home/lemagues/.gitignore
-	editor = emacs
+excludesfile = /home/lemagues/.gitignore
+editor = emacs
 
 # [gpg]
 # 	program = gpgv2
@@ -19,4 +19,4 @@
 # 	gpgsign = true
 
 [include]
-	path = /home/lemagues/.private_git
+path = /home/lemagues/.private_git
