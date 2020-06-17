@@ -97,6 +97,8 @@ Here, we are initializing =use-package= in the classic way.
          (goto-char (point-max))
          (eval-print-last-sexp)))
      (load bootstrap-file nil 'nomessage))
+
+   (setq straight-vc-git-default-protocol 'ssh)
  #+end_src
 
 *** Tagging
