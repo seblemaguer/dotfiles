@@ -3500,7 +3500,7 @@ enough to be on melpa so I use straight.
     :config
     (defun bibtex-generate-autokey ()
       (let* ((bibtex-autokey-names nil)
-             (bibtex-autokey-year-length 2)
+             (bibtex-autokey-year-length 4)
              (bibtex-autokey-name-separator "\0")
              (names (split-string (bibtex-autokey-get-names) "\0"))
              (year (bibtex-autokey-get-year))
@@ -3509,15 +3509,13 @@ enough to be on melpa so I use straight.
                               (t 1)))
              (existing-keys (bibtex-parse-keys))
              key)
-        (setq names (mapconcat (lambda (x)
-                                 (substring x 0 name-char))
-                               names
-                               ""))
-        (setq key (format "%s%s" names year))
+        (setq names (s-upper-camel-case (car names)))
+        (setq key (format "%s:%s" year names))
+
         (let ((ret key))
           (loop for c from ?a to ?z
                 while (assoc ret existing-keys)
-                do (setq ret (format "%s%c" key c)))
+                do (setq ret (format "%s:%c" key c)))
           ret)))
 
     (setq bibtex-align-at-equal-sign t
