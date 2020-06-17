@@ -5080,8 +5080,15 @@ As I write papers, it is useful to have some helper to start to have the inspira
 
     :hook
     (slack-mode . slack-set-timestamp-margin)
+    (slack-mode . company-slack-hook)
 
     :config
+
+    (defun company-slack-hook ()
+      (make-local-variable 'company-backends)
+      (setq company-backends (copy-tree company-backends))
+      (set 'company-backends (append '(company-slack-backend) company-backends)))
+
     ;; Create directory in case of
     (make-directory slack-profile-image-file-directory t)
     (make-directory slack-image-file-directory t)
