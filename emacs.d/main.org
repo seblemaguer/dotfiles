@@ -3239,7 +3239,11 @@ enough to be on melpa so I use straight.
   (use-package logview
     :ensure t
     :tags '("LANGUAGE")
-    :mode ("syslog\\(?:\\.[0-9]+\\)" "\\.log\\(?:\\.[0-9]+\\)?\\'"))
+
+    :commands logview-mode
+    :mode
+    ("\\.log\\(?:\\.[0-9]+\\)?\\'" . logview-mode)
+    ("syslog\\(?:\\.[0-9]+\\)?\\'" . logview-mode))
 #+end_src
 
 **** yaml
