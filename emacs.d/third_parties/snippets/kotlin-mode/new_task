@@ -41,36 +41,16 @@ open class ${3:Name}Task @Inject constructor(objects: ObjectFactory, @Internal v
      */
     @TaskAction
     fun run() {
-
-        // Define parameters
-        val params: $3WorkerParameters = $3WorkerParameters(/* TO FILL */)
-        val conf: $3WorkerConfiguration = $3WorkerConfiguration(params)
+        val workQueue: WorkQueue = workerExecutor.noIsolation();
 
         // Submit the execution
-        workerExecutor.submit($3Worker::class.java, conf)
+        workQueue.submit($3Worker::class) {
+        }
     }
 }
 
-
-/**
- * Configures the worker with IsolationMode.NONE and the $3WorkerParameters.
- *
- */
-class $3WorkerConfiguration(val parameters: $3WorkerParameters): Action<WorkerConfiguration> {
-    override fun execute(workerConfiguration: WorkerConfiguration) {
-        workerConfiguration.isolationMode = IsolationMode.NONE
-        workerConfiguration.setParams(parameters)
-    }
+interface $3WorkerParameters : WorkParameters {
 }
-
-
-/**
- * Serializable stateless parameters that are needed by the $3Worker.
- *
- */
-data class $3WorkerParameters(
-    /* To FILL */
-) : Serializable
 
 /**
  *  Worker which ${2}
