@@ -5453,8 +5453,16 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :commands (ytel)
     :bind (("<C-f9>" . ytel)
            :map ytel-mode-map
-           ("<return>" . ytel-watch))
+           ("<return>" . ytel-watch)
+           ("d"        . ytel-download))
     :config
+    (defun ytel-download ()
+      "Download video at point"
+      (interactive)
+      (let* ((video (ytel-get-current-video))
+             (id    (ytel-video-id video)))
+        (youtube-dl (concat "https://www.youtube.com/watch?v=" id))))
+
     (defun ytel-watch ()
       "Stream video at point in mpv."
       (interactive)
