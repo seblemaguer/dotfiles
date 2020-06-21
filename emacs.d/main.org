@@ -246,6 +246,17 @@ Easy use wrapper around auth-* authentification emacs utils.
   (when (file-exists-p private-file)
     (load private-file))
 #+end_src
+** Debug helper
+#+begin_src emacs-lisp
+  (use-package explain-pause-mode
+    :ensure straight
+    :straight (explain-pause-mode :type git :host github :repo "lastquestion/explain-pause-mode")
+    :disabled t
+    :init
+    (explain-pause-mode t)
+    :bind
+    (("C-<f1>" . explain-pause-top)))
+#+end_src
 
 ** Minor-mode activation
 I use some minor modes based on some filetypes. This package is an helper which facilitates these
@@ -1208,6 +1219,13 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
         (left-fringe . 5)
         (right-fringe . 5))))
 
+#+end_src
+** EAF
+#+begin_src emacs-lisp
+  (use-package eaf
+    :ensure straight
+    :tags '("HELPER")
+    :load-path "~/environment/src/emacs/emacs-application-framework")
 #+end_src
 * Editor
 ** Global emacs edition configuration
