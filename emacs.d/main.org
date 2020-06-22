@@ -98,7 +98,8 @@ Here, we are initializing =use-package= in the classic way.
          (eval-print-last-sexp)))
      (load bootstrap-file nil 'nomessage))
 
-   (setq straight-vc-git-default-protocol 'ssh)
+   (unless (string= (getenv "TRAVIS") "true")
+     (setq straight-vc-git-default-protocol 'ssh))
  #+end_src
 
 *** Tagging
