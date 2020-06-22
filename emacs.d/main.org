@@ -2441,95 +2441,96 @@ emacs. It is the baseline of my configuration for java, kotlin and also python. 
 to extend it even further in the feature.
 
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :ensure t
-    :tags '("IDE")
-    :hydra
-    (lsp-hydra (:exit t :hint nil)
-      "
-   Buffer^^               Server^^                   Symbol
-  -------------------------------------------------------------------------------------
-   [_f_] format           [_M-r_] restart            [_d_] declaration  [_i_] implementation  [_o_] documentation
-   [_m_] imenu            [_S_]   shutdown           [_D_] definition   [_t_] type            [_r_] rename
-   [_x_] execute action   [_M-s_] describe session   [_R_] references   [_s_] signature"
-      ("d"   lsp-find-declaration)
-      ("D"   lsp-ui-peek-find-definitions)
-      ("R"   lsp-ui-peek-find-references)
-      ("i"   lsp-ui-peek-find-implementation)
-      ("t"   lsp-find-type-definition)
-      ("s"   lsp-signature-help)
-      ("o"   lsp-describe-thing-at-point)
-      ("r"   lsp-rename)
+    (use-package lsp-mode
+      :ensure t
+      :tags '("IDE")
+      :hydra
+      (lsp-hydra (:exit t :hint nil)
+        "
+     Buffer^^               Server^^                   Symbol
+    -------------------------------------------------------------------------------------
+     [_f_] format           [_M-r_] restart            [_d_] declaration  [_i_] implementation  [_o_] documentation
+     [_m_] imenu            [_S_]   shutdown           [_D_] definition   [_t_] type            [_r_] rename
+     [_x_] execute action   [_M-s_] describe session   [_R_] references   [_s_] signature"
+        ("d"   lsp-find-declaration)
+        ("D"   lsp-ui-peek-find-definitions)
+        ("R"   lsp-ui-peek-find-references)
+        ("i"   lsp-ui-peek-find-implementation)
+        ("t"   lsp-find-type-definition)
+        ("s"   lsp-signature-help)
+        ("o"   lsp-describe-thing-at-point)
+        ("r"   lsp-rename)
 
-      ("f"   lsp-format-buffer)
-      ("m"   lsp-ui-imenu)
-      ("x"   lsp-execute-code-action)
+        ("f"   lsp-format-buffer)
+        ("m"   lsp-ui-imenu)
+        ("x"   lsp-execute-code-action)
 
-      ("M-s" lsp-describe-session)
-      ("M-r" lsp-restart-workspace)
-      ("S"   lsp-shutdown-workspace)
-      ("q"   nil "cancel" :color blue))
+        ("M-s" lsp-describe-session)
+        ("M-r" lsp-restart-workspace)
+        ("S"   lsp-shutdown-workspace)
+        ("q"   nil "cancel" :color blue))
 
-    :commands (lsp lsp-deferred)
+      :commands (lsp lsp-deferred)
 
-    :bind
-    (:map lsp-mode-map
-          ("C-h M-h" . lsp-hydra/body))
+      :bind
+      (:map lsp-mode-map
+            ("C-h M-h" . lsp-hydra/body))
 
-    :init
-    (setq lsp-before-save-edits t
-          lsp-inhibit-message t
-          lsp-eldoc-render-all nil
-          lsp-highlight-symbol-at-point nil
-          lsp-prefer-flymake nil
-          lsp-idle-delay 0.500))
+      :init
+      (setq lsp-before-save-edits t
+            lsp-inhibit-message t
+            lsp-eldoc-render-all nil
+            lsp-highlight-symbol-at-point nil
+            lsp-prefer-flymake nil
+            lsp-idle-delay 0.500))
 
-  (use-package company-lsp
-    :ensure t
-    :tags '("IDE")
-    :after company lsp-mode
-    :commands company-lsp
-    ;; :compdef lsp-mode
-    ;; :company company-lsp
-    :hook
-    (lsp-mode . company-lsp-hook)
+    (use-package company-lsp
+      :ensure t
+      :tags '("IDE")
+      :after company lsp-mode
+      :commands company-lsp
+      ;; :compdef lsp-mode
+      ;; :company company-lsp
+      :hook
+      (lsp-mode . company-lsp-hook)
 
-    :init
-    (defun company-lsp-hook ()
-      (make-local-variable 'company-backends)
-      (setq company-backends (copy-tree company-backends))
-      (set 'company-backends (append '(company-lsp) company-backends)))
+      :init
+      (defun company-lsp-hook ()
+        (make-local-variable 'company-backends)
+        (setq company-backends (copy-tree company-backends))
+        (set 'company-backends (append '(company-lsp) company-backends)))
 
-    :config
-    (setq company-lsp-enable-snippet t
-          company-lsp-cache-candidates 'auto))
+      :config
+      (setq company-lsp-enable-snippet t
+            company-lsp-cache-candidates 'auto))
 
-  (use-package lsp-ui
-    :ensure t
-    :tags '("IDE")
-    :after lsp-mode
-    :commands lsp-ui-mode
-    :config
-    (setq lsp-ui-doc-enable t
-          lsp-ui-doc-use-webkit nil
-          lsp-ui-doc-delay 0.2
-          lsp-ui-doc-include-signature t
-          lsp-ui-doc-position 'at-point
-          lsp-eldoc-enable-hover nil ; Disable eldoc displays in minibuffer
+    (use-package lsp-ui
+      :ensure t
+      :tags '("IDE")
+      :after lsp-mode
+      :commands lsp-ui-mode
+      :config
+      (setq lsp-ui-doc-enable t
+            lsp-ui-doc-use-webkit nil
+            lsp-ui-doc-delay 1.0
+            lsp-ui-sideline-delay 1.0
+            lsp-ui-doc-include-signature t
+            lsp-ui-doc-position 'at-point
+            lsp-eldoc-enable-hover nil ; Disable eldoc displays in minibuffer
 
-          lsp-ui-sideline-enable t
-          lsp-ui-sideline-show-hover nil
-          lsp-ui-sideline-show-diagnostics nil
-          lsp-ui-sideline-ignore-duplicate t))
+            lsp-ui-sideline-enable t
+            lsp-ui-sideline-show-hover nil
+            lsp-ui-sideline-show-diagnostics nil
+            lsp-ui-sideline-ignore-duplicate t))
 
-  (use-package dap-mode
-    :ensure t
-    :tags '("IDE")
-    :commands dap-debug
-    :after lsp-mode
-    :init
-    (dap-mode t)
-    (dap-ui-mode t))
+    (use-package dap-mode
+      :ensure t
+      :tags '("IDE")
+      :commands dap-debug
+      :after lsp-mode
+      :init
+      (dap-mode t)
+      (dap-ui-mode t))
 #+end_src
 
 *** Version control
