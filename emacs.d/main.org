@@ -3071,10 +3071,13 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
 **** Task runner
 #+begin_src emacs-lisp
   (use-package taskrunner
-    :ensure t
+    :ensure straight
+    :straight (taskrunner :type git :host github :repo "emacs-taskrunner/emacs-taskrunner"
+                          :fork (:host github :repo "seblemaguer/emacs-taskrunner"))
     :tags '("COMPILATION"))
 
   (use-package ivy-taskrunner
+    :ensure straight
     :straight (ivy-taskrunner :type git :host github :repo "emacs-taskrunner/ivy-taskrunner")
     :tags '("COMPILATION")
     :bind ("C-c C-g b" . ivy-taskrunner))
