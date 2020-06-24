@@ -1224,9 +1224,8 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
 ** EAF
 #+begin_src emacs-lisp
   (use-package eaf
-    :ensure straight
     :tags '("HELPER")
-    :load-path "~/environment/src/emacs/emacs-application-framework")
+    :load-path "~/environment/src/20-tools/emacs/emacs-application-framework/emacs-application-framework")
 #+end_src
 * Editor
 ** Global emacs edition configuration
@@ -4932,7 +4931,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
 
     :config
     (add-to-list 'mu4e-view-actions
-                 '("ViewInBrowser" . mu4e-action-view-in-browser) t)
+                 '("ViewHTML" . eaf-open-mail-as-html) t)
 
     ;; use imagemagick, if available
     (when (fboundp 'imagemagick-register-types)
