@@ -59,7 +59,7 @@ interface $3WorkerParameters : WorkParameters {
  *  @property model_file The model file trained.
  *  @Constructor Creates the worker
  */
-class $3Worker @Inject constructor(params: $3WorkerParameters): Runnable {
+abstract class $3Worker: WorkAction<$3WorkerParameters> {
     private val logger: Logger = Logger.getLogger($3Worker::class.java.name)
 
     /* to fill */
@@ -68,7 +68,7 @@ class $3Worker @Inject constructor(params: $3WorkerParameters): Runnable {
      *  Running function
      *
      */
-    override fun run() {
+    override fun execute() {
         $0
     }
 }
