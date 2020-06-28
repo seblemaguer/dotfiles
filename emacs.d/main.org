@@ -1485,113 +1485,111 @@ This the global backup configuration. For that I adapted a little bit the wonder
 snapshot-timemachine package.
 
 #+begin_src emacs-lisp
-    (use-package snapshot-timemachine
-      :ensure t
-      :tags '("CORE")
-      :init
+  (use-package snapshot-timemachine
+    :ensure t
+    :tags '("CORE")
+    :init
+    ;; Redefine find-backup-filename to avoid the "!" replacement
+    (defun find-backup-file-name (fn)
+      "Find a file name for a backup file FN, and suggestions for deletions.
+    Value is a list whose car is the name for the backup file
+    and whose cdr is a list of old versions to consider deleting now.
+    If the value is nil, don't make a backup.
+    Uses `backup-directory-alist' in the same way as
+    `make-backup-file-name--default-function' does."
+      (let ((handler (find-file-name-handler fn 'find-backup-file-name)))
+        ;; Run a handler for this function so that ange-ftp can refuse to do it.
+        (if handler
+            (funcall handler 'find-backup-file-name fn)
+          (if (or (eq version-control 'never)
+                  ;; We don't support numbered backups on plain MS-DOS
+                  ;; when long file names are unavailable.
+                  (and (eq system-type 'ms-dos)
+                       (not (msdos-long-file-names))))
+              (list (make-backup-file-name fn))
+            (let* ((basic-name (make-backup-file-name fn))
+                   (base-versions (concat (file-name-nondirectory basic-name)
+                                          ".~"))
+                   (backup-extract-version-start (length base-versions))
+                   (high-water-mark 0)
+                   (number-to-delete 0)
+                   possibilities deserve-versions-p versions)
+              (condition-case ()
+                  (setq possibilities (file-name-all-completions
+                                       base-versions
+                                       (file-name-directory basic-name))
+                        versions (sort (mapcar #'backup-extract-version
+                                               possibilities)
+                                       #'<)
+                        high-water-mark (apply 'max 0 versions)
+                        deserve-versions-p (or version-control
+                                               (> high-water-mark 0))
+                        number-to-delete (- (length versions)
+                                            kept-old-versions
+                                            kept-new-versions
+                                            -1))
+                (file-error (setq possibilities nil)))
+              (if (not deserve-versions-p)
+                  (list (make-backup-file-name fn))
+                (cons (format "%s.~%d~" basic-name (1+ high-water-mark))
+                      (if (and (> number-to-delete 0)
+                               ;; Delete nothing if there is overflow
+                               ;; in the number of versions to keep.
+                               (>= (+ kept-new-versions kept-old-versions -1) 0))
+                          (mapcar (lambda (n)
+                                    (format "%s.~%d~" basic-name n))
+                                  (let ((v (nthcdr kept-old-versions versions)))
+                                    (rplacd (nthcdr (1- number-to-delete) v) ())
+                                    v))))))))))
 
-      ;; Redefine find-backup-filename to avoid the "!" replacement
-      (defun find-backup-file-name (fn)
-        "Find a file name for a backup file FN, and suggestions for deletions.
-      Value is a list whose car is the name for the backup file
-      and whose cdr is a list of old versions to consider deleting now.
-      If the value is nil, don't make a backup.
-      Uses `backup-directory-alist' in the same way as
-      `make-backup-file-name--default-function' does."
-        (let ((handler (find-file-name-handler fn 'find-backup-file-name)))
-          ;; Run a handler for this function so that ange-ftp can refuse to do it.
-          (if handler
-              (funcall handler 'find-backup-file-name fn)
-            (if (or (eq version-control 'never)
-                    ;; We don't support numbered backups on plain MS-DOS
-                    ;; when long file names are unavailable.
-                    (and (eq system-type 'ms-dos)
-                         (not (msdos-long-file-names))))
-                (list (make-backup-file-name fn))
-              (let* ((basic-name (make-backup-file-name fn))
-                     (base-versions (concat (file-name-nondirectory basic-name)
-                                            ".~"))
-                     (backup-extract-version-start (length base-versions))
-                     (high-water-mark 0)
-                     (number-to-delete 0)
-                     possibilities deserve-versions-p versions)
-                (condition-case ()
-                    (setq possibilities (file-name-all-completions
-                                         base-versions
-                                         (file-name-directory basic-name))
-                          versions (sort (mapcar #'backup-extract-version
-                                                 possibilities)
-                                         #'<)
-                          high-water-mark (apply 'max 0 versions)
-                          deserve-versions-p (or version-control
-                                                 (> high-water-mark 0))
-                          number-to-delete (- (length versions)
-                                              kept-old-versions
-                                              kept-new-versions
-                                              -1))
-                  (file-error (setq possibilities nil)))
-                (if (not deserve-versions-p)
-                    (list (make-backup-file-name fn))
-                  (cons (format "%s.~%d~" basic-name (1+ high-water-mark))
-                        (if (and (> number-to-delete 0)
-                                 ;; Delete nothing if there is overflow
-                                 ;; in the number of versions to keep.
-                                 (>= (+ kept-new-versions kept-old-versions -1) 0))
-                            (mapcar (lambda (n)
-                                      (format "%s.~%d~" basic-name n))
-                                    (let ((v (nthcdr kept-old-versions versions)))
-                                      (rplacd (nthcdr (1- number-to-delete) v) ())
-                                      v))))))))))
+    ;; Default Backup directory
+    (defvar backup-directory "~/.emacs.d/backups/")
+    (setq backup-directory-alist `((".*" . ,backup-directory)))
+    (when (not (file-exists-p backup-directory))
+      (make-directory backup-directory t))
 
-      ;; Default Backup directory
-      (defvar backup-directory "~/.emacs.d/backups/")
-      (setq backup-directory-alist `((".*" . ,backup-directory)))
-      (when (not (file-exists-p backup-directory))
-        (make-directory backup-directory t))
+    ;; Auto-save
+    (defvar auto-save-directory "~/.emacs.d/auto-save/")
+    (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
+    (when (not (file-exists-p auto-save-directory))
+      (make-directory auto-save-directory t))
 
-      ;; Auto-save
-      (defvar auto-save-directory "~/.emacs.d/auto-save/")
-      (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
+    ;; Tramp backup
+    (defvar tramp-backup-directory "~/.emacs.d/tramp-backups/")
+    (setq tramp-backup-directory-alist `((".*" . ,tramp-backup-directory)))
 
-      (when (not (file-exists-p auto-save-directory))
-        (make-directory auto-save-directory t))
+    (when (not (file-exists-p tramp-backup-directory))
+      (make-directory tramp-backup-directory t))
 
-      ;; Tramp backup
-      (defvar tramp-backup-directory "~/.emacs.d/tramp-backups/")
-      (setq tramp-backup-directory-alist `((".*" . ,tramp-backup-directory)))
+    (setq make-backup-files t               ; backup of a file the first time it is saved.
+          backup-by-copying t               ; don't clobber symlinks
+          version-control t                 ; version numbers for backup files
+          delete-old-versions t             ; delete excess backup files silently
+          delete-by-moving-to-trash t
+          kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
+          kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+          auto-save-default t               ; auto-save every buffer that visits a file
+          auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
+          auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
+          )
 
-      (when (not (file-exists-p tramp-backup-directory))
-        (make-directory tramp-backup-directory t))
+    :config
 
-      (setq make-backup-files t               ; backup of a file the first time it is saved.
-            backup-by-copying t               ; don't clobber symlinks
-            version-control t                 ; version numbers for backup files
-            delete-old-versions t             ; delete excess backup files silently
-            delete-by-moving-to-trash t
-            kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
-            kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
-            auto-save-default t               ; auto-save every buffer that visits a file
-            auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
-            auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
-            )
+    (defun snapshot-timemachine-backup-finder (file)
+      "Find snapshots of FILE in rsnapshot backups."
+      (let* ((file (expand-file-name file))
+             (file-dir (file-name-directory file))
+             (file-base (file-name-nondirectory file))
+             (backup-files (directory-files (concat backup-directory file-dir) t
+                                            (format "%s.*" file-base))))
+        (seq-map-indexed (lambda (backup-file index)
+                           (make-snapshot :id index
+                                          :name (format "%d" index)
+                                          :file backup-file
+                                          :date (nth 5 (file-attributes backup-file))))
+                         backup-files)))
 
-      :config
-
-      (defun snapshot-timemachine-backup-finder (file)
-        "Find snapshots of FILE in rsnapshot backups."
-        (let* ((file (expand-file-name file))
-               (file-dir (file-name-directory file))
-               (file-base (file-name-nondirectory file))
-               (backup-files (directory-files (concat backup-directory file-dir) t
-                                              (format "%s.*" file-base))))
-          (seq-map-indexed (lambda (backup-file index)
-                             (make-snapshot :id index
-                                            :name (format "%d" index)
-                                            :file backup-file
-                                            :date (nth 5 (file-attributes backup-file))))
-                           backup-files)))
-
-      (setq snapshot-timemachine-snapshot-finder #'snapshot-timemachine-backup-finder))
+    (setq snapshot-timemachine-snapshot-finder #'snapshot-timemachine-backup-finder))
 #+end_src
 
 *** Sensitive mode
@@ -2441,96 +2439,97 @@ emacs. It is the baseline of my configuration for java, kotlin and also python. 
 to extend it even further in the feature.
 
 #+begin_src emacs-lisp
-    (use-package lsp-mode
-      :ensure t
-      :tags '("IDE")
-      :hydra
-      (lsp-hydra (:exit t :hint nil)
-        "
-     Buffer^^               Server^^                   Symbol
-    -------------------------------------------------------------------------------------
-     [_f_] format           [_M-r_] restart            [_d_] declaration  [_i_] implementation  [_o_] documentation
-     [_m_] imenu            [_S_]   shutdown           [_D_] definition   [_t_] type            [_r_] rename
-     [_x_] execute action   [_M-s_] describe session   [_R_] references   [_s_] signature"
-        ("d"   lsp-find-declaration)
-        ("D"   lsp-ui-peek-find-definitions)
-        ("R"   lsp-ui-peek-find-references)
-        ("i"   lsp-ui-peek-find-implementation)
-        ("t"   lsp-find-type-definition)
-        ("s"   lsp-signature-help)
-        ("o"   lsp-describe-thing-at-point)
-        ("r"   lsp-rename)
+  (use-package lsp-mode
+    :ensure t
+    :tags '("IDE")
+    :hydra
+    (lsp-hydra (:exit t :hint nil)
+      "
+   Buffer^^               Server^^                   Symbol
+  -------------------------------------------------------------------------------------
+   [_f_] format           [_M-r_] restart            [_d_] declaration  [_i_] implementation  [_o_] documentation
+   [_m_] imenu            [_S_]   shutdown           [_D_] definition   [_t_] type            [_r_] rename
+   [_x_] execute action   [_M-s_] describe session   [_R_] references   [_s_] signature"
+      ("d"   lsp-find-declaration)
+      ("D"   lsp-ui-peek-find-definitions)
+      ("R"   lsp-ui-peek-find-references)
+      ("i"   lsp-ui-peek-find-implementation)
+      ("t"   lsp-find-type-definition)
+      ("s"   lsp-signature-help)
+      ("o"   lsp-describe-thing-at-point)
+      ("r"   lsp-rename)
 
-        ("f"   lsp-format-buffer)
-        ("m"   lsp-ui-imenu)
-        ("x"   lsp-execute-code-action)
+      ("f"   lsp-format-buffer)
+      ("m"   lsp-ui-imenu)
+      ("x"   lsp-execute-code-action)
 
-        ("M-s" lsp-describe-session)
-        ("M-r" lsp-restart-workspace)
-        ("S"   lsp-shutdown-workspace)
-        ("q"   nil "cancel" :color blue))
+      ("M-s" lsp-describe-session)
+      ("M-r" lsp-restart-workspace)
+      ("S"   lsp-shutdown-workspace)
+      ("q"   nil "cancel" :color blue))
 
-      :commands (lsp lsp-deferred)
+    :commands (lsp lsp-deferred)
 
-      :bind
-      (:map lsp-mode-map
-            ("C-h M-h" . lsp-hydra/body))
+    :bind
+    (:map lsp-mode-map
+          ("C-h M-h" . lsp-hydra/body))
 
-      :init
-      (setq lsp-before-save-edits t
-            lsp-inhibit-message t
-            lsp-eldoc-render-all nil
-            lsp-highlight-symbol-at-point nil
-            lsp-prefer-flymake nil
-            lsp-idle-delay 0.500))
+    :init
+    (setq lsp-before-save-edits t
+          lsp-inhibit-message t
+          lsp-eldoc-render-all nil
+          lsp-highlight-symbol-at-point nil
+          lsp-prefer-flymake nil
+          read-process-output-max (* 1024 1024)
+          lsp-idle-delay 0.500))
 
-    (use-package company-lsp
-      :ensure t
-      :tags '("IDE")
-      :after company lsp-mode
-      :commands company-lsp
-      ;; :compdef lsp-mode
-      ;; :company company-lsp
-      :hook
-      (lsp-mode . company-lsp-hook)
+  (use-package company-lsp
+    :ensure t
+    :tags '("IDE")
+    :after company lsp-mode
+    :commands company-lsp
+    ;; :compdef lsp-mode
+    ;; :company company-lsp
+    :hook
+    (lsp-mode . company-lsp-hook)
 
-      :init
-      (defun company-lsp-hook ()
-        (make-local-variable 'company-backends)
-        (setq company-backends (copy-tree company-backends))
-        (set 'company-backends (append '(company-lsp) company-backends)))
+    :init
+    (defun company-lsp-hook ()
+      (make-local-variable 'company-backends)
+      (setq company-backends (copy-tree company-backends))
+      (set 'company-backends (append '(company-lsp) company-backends)))
 
-      :config
-      (setq company-lsp-enable-snippet t
-            company-lsp-cache-candidates 'auto))
+    :config
+    (setq company-lsp-enable-snippet t
+          company-lsp-cache-candidates 'auto))
 
-    (use-package lsp-ui
-      :ensure t
-      :tags '("IDE")
-      :after lsp-mode
-      :commands lsp-ui-mode
-      :config
-      (setq lsp-ui-doc-enable t
-            lsp-ui-doc-use-webkit nil
-            lsp-ui-doc-delay 1.0
-            lsp-ui-sideline-delay 1.0
-            lsp-ui-doc-include-signature t
-            lsp-ui-doc-position 'at-point
-            lsp-eldoc-enable-hover nil ; Disable eldoc displays in minibuffer
+  (use-package lsp-ui
+    :ensure t
+    :tags '("IDE")
+    :after lsp-mode
+    :commands lsp-ui-mode
+    :config
+    (setq lsp-ui-doc-enable t
+          lsp-ui-doc-use-webkit nil
+          lsp-ui-doc-delay 1.0
+          lsp-ui-sideline-delay 1.0
+          lsp-ui-doc-include-signature t
+          lsp-ui-doc-position 'at-point
+          lsp-eldoc-enable-hover nil ; Disable eldoc displays in minibuffer
 
-            lsp-ui-sideline-enable t
-            lsp-ui-sideline-show-hover nil
-            lsp-ui-sideline-show-diagnostics nil
-            lsp-ui-sideline-ignore-duplicate t))
+          lsp-ui-sideline-enable t
+          lsp-ui-sideline-show-hover nil
+          lsp-ui-sideline-show-diagnostics nil
+          lsp-ui-sideline-ignore-duplicate t))
 
-    (use-package dap-mode
-      :ensure t
-      :tags '("IDE")
-      :commands dap-debug
-      :after lsp-mode
-      :init
-      (dap-mode t)
-      (dap-ui-mode t))
+  (use-package dap-mode
+    :ensure t
+    :tags '("IDE")
+    :commands dap-debug
+    :after lsp-mode
+    :init
+    (dap-mode t)
+    (dap-ui-mode t))
 #+end_src
 
 *** Version control
