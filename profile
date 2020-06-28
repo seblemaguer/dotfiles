@@ -47,13 +47,16 @@ export CPATH=$HOME/environment/local/include:$HOME/work/tools/local/include:$HOM
 export C_INCLUDE_PATH=$HOME/environment/local/include:$HOME/work/tools/local/include:$HOME/work/maintained_tools/local/include:/usr/include/jsoncpp/:$C_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=$HOME/environment/local/include:$HOME/work/tools/local/include:$HOME/work/maintained_tools/local/include:/usr/include/jsoncpp/:$CPLUS_INCLUDE_PATH
 
-
 # Manpage
 export MANPATH=$HOME/environment/local/share/man:$HOME/work/tools/local/share/man:$HOME/work/maintained_tools/local/share/man:$NPM_PACKAGES/share/man:$MANPATH
 export INFOPATH=$HOME/environment/local/share/info:$INFOPATH
 
+# Ruby
+export GEM_HOME="$HOME/environment/local/gems"
+export PATH="$HOME/.gem/ruby/2.7.0/bin:$PATH"
+export PATH="$GEM_HOME/bin:$PATH"
 
-###################################################################################
+#################################################################################ex#
 ### Remaining variables
 ###################################################################################
 
@@ -76,6 +79,13 @@ then
         ~/.screenlayout/office_dpi.sh
     fi
 fi
+
+###################################################################################
+### Toolkit
+###################################################################################
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh"
+[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
 
 # Indicate that the profile is loaded
 export PROFILE_LOADED=True

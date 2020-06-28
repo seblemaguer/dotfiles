@@ -28,10 +28,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-
-#############################################################################################################
+########################################################################################
 #### Basics
-#############################################################################################################
+########################################################################################
 if ! type "emacs" > /dev/null; then
     export EDITOR=vim
 else
@@ -63,9 +62,7 @@ antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle sudo
 antigen bundle command-not-found
 
-#
 # Antigen Bundles
-#
 antigen bundle tmuxinator
 antigen bundle rupa/z
 
@@ -119,22 +116,17 @@ antigen bundle zsh-users/zsh-syntax-highlighting
 antigen apply
 
 
-#############################################################################################################
+########################################################################################
 #### Use .ssh/config for completion
-#############################################################################################################
+########################################################################################
 zstyle -s ':completion:*:hosts' hosts _ssh_config
 [[ -r ~/.ssh/config ]] && _ssh_config+=($(cat ~/.ssh/config | sed -ne 's/Host[=\t ]//p'))
 zstyle ':completion:*:hosts' hosts $_ssh_config
 
 
-#############################################################################################################
-#### Environement variables
-#############################################################################################################
-export VIMRUNTIME=`vim -e -T dumb --cmd 'exe "set t_cm=\<C-M>" | echo $VIMRUNTIME | quit' | tr -d '\015' `
-
-#############################################################################################################
+########################################################################################
 #### Aliases / Helpers
-#############################################################################################################
+########################################################################################
 # Some
 alias vi='vim'
 
@@ -143,7 +135,6 @@ alias mvn="mvn-color"
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
-alias less="$VIMRUNTIME/macros/less.sh"
 
 # Network
 alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
@@ -151,14 +142,9 @@ alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
 # Emacs helper
 alias tangle_emacs_conf="emacs -Q --batch --eval \"(progn (require 'ob-tangle) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))\" \"~/.emacs.d/main.org\""
 
-# Keyboard switch french/bulgarian
-if [[ `grep "^ID=" /etc/os-release | sed 's/ID=//g'` == "arch" ]]
-then
-    setxkbmap -layout "fr,bg" -variant ",phonetic" -option "grp:ctrls_toggle"
-fi
-#############################################################################################################
+########################################################################################
 #### Options
-#############################################################################################################
+########################################################################################
 # = History
 HISTSIZE=1000
 SAVEHIST=1000
@@ -172,11 +158,21 @@ HIST_SAVE_NO_DUPS=true
 # = Diverse
 AUTO_CD=true
 
-#############################################################################################################
-#### Conda
-#############################################################################################################
-[ -f $HOME/environment/local/miniconda3/etc/profile.d/conda.sh ] && source $HOME/environment/local/miniconda3/etc/profile.d/conda.sh
-[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh"
-
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.config/zsh/p10k.zsh ]] || source ~/.config/zsh/p10k.zsh
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/lemagues/environment/local/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/lemagues/environment/local/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/lemagues/environment/local/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/lemagues/environment/local/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
