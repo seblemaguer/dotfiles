@@ -44,9 +44,6 @@ if [[ ! -d $ANTIGEN ]]; then
 fi
 source $ANTIGEN/antigen.zsh
 
-# oh-my-zsh
-antigen use oh-my-zsh
-
 # VCS bundle
 antigen bundle git
 antigen bundle github
@@ -89,6 +86,9 @@ antigen bundle virtualenv
 # Java & gradle
 antigen bundle gradle/gradle-completion
 antigen bundle gvm
+
+# oh-my-zsh
+antigen use oh-my-zsh
 
 # Theme
 antigen theme romkatv/powerlevel10k
