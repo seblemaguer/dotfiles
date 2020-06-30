@@ -1227,6 +1227,26 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
     :tags '("HELPER")
     :load-path "~/environment/src/20-tools/emacs/emacs-application-framework/emacs-application-framework")
 #+end_src
+** Interface with Firefox (GhostText)
+https://github.com/GhostText/GhostText
+#+begin_src emacs-lisp
+  (use-package atomic-chrome
+    :ensure t
+    :hook
+    (after-init . atomic-chrome-start-server)
+
+    :commands
+    (atomic-chrome-start-server)
+
+    :init
+    (setq atomic-chrome-server-ghost-text-port 4666
+          atomic-chrome-default-major-mode 'org-mode)
+
+    :bind
+    (("s-c C-c" . atomic-chrome-close-current-buffer)
+     :map  atomic-chrome-edit-mode-map
+     ("C-c C-c" . nil)))
+#+end_src
 * Editor
 ** Global emacs edition configuration
 #+begin_src emacs-lisp
