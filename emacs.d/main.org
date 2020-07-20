@@ -3257,10 +3257,10 @@ Config-general-mode is applied for all unix configuration files.
 I developed a dedicated mode for syntax highlighting authinfo files. For now, it is not stable
 enough to be on melpa so I use straight.
 #+begin_src emacs-lisp
-  (use-package authinfo-mode
-    :straight (authinfo-mode :repo "seblemaguer/authinfo-mode" :type git :host github)
+  (use-package colored-authinfo-mode
+    :straight (colored-authinfo-mode :repo "seblemaguer/colored-authinfo-mode" :type git :host github)
     :tags '("LANGUAGE")
-    :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . authinfo-mode))
+    :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . colored-authinfo-mode))
 #+end_src
 
 **** Apache
