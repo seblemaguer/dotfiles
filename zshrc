@@ -109,7 +109,6 @@ elif [[ $OSTYPE == linux* ]]; then
 fi
 
 # Highlighting
-antigen bundle HeroCC/LS_COLORS
 antigen bundle zsh-users/zsh-syntax-highlighting
 
 # Tell Antigen that you're done.
