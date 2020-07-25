@@ -4923,6 +4923,9 @@ As I write papers, it is useful to have some helper to start to have the inspira
 
      :map mu4e-main-mode-map
      ("u" . mu4e-update-mail-and-index)
+
+     :map message-mode-map
+     ("C-c C-a" . mail-add-attachment)
      )
 
     :hook
