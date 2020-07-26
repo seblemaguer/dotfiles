@@ -248,6 +248,9 @@ Easy use wrapper around auth-* authentification emacs utils.
     (load private-file))
 #+end_src
 ** Debug helper
+Explain-pause-mode is useful to monitor emacs and "profile" what is going on.
+However, sometimes it tends to conflict with other part of my configuration.
+Therefore, for now, it is disabled.
 #+begin_src emacs-lisp
   (use-package explain-pause-mode
     :ensure straight
@@ -260,8 +263,8 @@ Easy use wrapper around auth-* authentification emacs utils.
 #+end_src
 
 ** Minor-mode activation
-I use some minor modes based on some filetypes. This package is an helper which facilitates these
-activations.
+I use some minor modes based on some filetypes.
+This package is an helper which facilitates these activations.
 
 #+begin_src emacs-lisp
   (use-package auto-minor-mode
@@ -271,7 +274,20 @@ activations.
 
 * User interaction
 ** Notification
+Emacs is my entry point for almost everything.
+Therefore, it is also useful to have the notifications handled directly in Emacs.
+To do so, I rely on the couple sauron/alert.
+Alert is the entry point for raising notifications while sauron is used to log the notifications.
+
+This combination allows me to use the modeline as an indicator of the priority of the notification.
+By doing so, I can be aware of a notification but choose to ignore it if I am focusing on something else.
+If another notification of at most the same priority is raised, it will be logged but there won't be any visible cue.
+However, if a notification of an higher priority is raised, the color of the modeline will be updated to reflect the priority of the notification.
+
 *** Sauron
+Sauron is the pivot of the notification system.
+Due to some priority issues with ERC and some event that I would like to ignore with the notifications coming from the *org-agenda*, I use my own fork for now.
+
 #+begin_src emacs-lisp
   (use-package sauron
     :straight (sauron :type git :host github :repo "djcb/sauron"
@@ -305,6 +321,11 @@ activations.
 #+end_src
 
 *** Sauron/Alert/Modeline integration
+By using my plugin `sauron-mode-line`, I link Alert and Sauron.
+By this way, all the Alert notifications are automatically transmitted to Sauron.
+If a Sauron event is raised, it is transmitted to Alert to adapt the modeline bar.
+This plugin is in charge to managing the communication and avoid any cycle.
+
 #+begin_src emacs-lisp
   (use-package sauron-mode-line
     :tags '("NOTIFICATION")
