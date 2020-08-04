@@ -5412,7 +5412,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (after-init . metal-archives-load-artists-map)
 
     :custom
-    (metal-archives-shopping-list-target-file "~/.emacs.d/shopping_list.org")
+    (metal-archives-shopping-list-target-file "~/shared/pCloudDrive/org/organisation/shopping_list.org")
     (metal-archives-shopping-list-root-node "CD")
 
     :init
