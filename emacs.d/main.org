@@ -340,7 +340,25 @@ This plugin is in charge to managing the communication and avoid any cycle.
 #+end_src
 
 ** Global keys
-*** Main Helper
+In this section, we define the bindings used globally.
+We can consider the following categories:
+  - The functional bindings :: which allows the user to access to a functionality from anywhere (e.g. opening the version-control manager)
+  - The remapped bindings :: which are homogeneizing or extending existing bindings in multiple modes
+
+An helper to remind these bindings is also provided.
+
+*** Functional bindings
+This section defines the functional bindings.
+Hydra is used as the provider for these bindings.
+For now, we consider the following two ones: *main helpers* and *version control*
+
+**** Main Helper
+The main helper, mapped to *<f1>* contains the global operations which are interesting to access globally:
+ - org-mode capturing and sniffing webpage
+ - zooming
+ - bookmarking and listing the bookmarks
+ - Mail management: listing the synchronization process managed by *prodigy* and creating a new may
+
 #+begin_src emacs-lisp
   (defhydra main-hydra (:color teal :hint nil)
     "
@@ -376,7 +394,16 @@ This plugin is in charge to managing the communication and avoid any cycle.
   (global-set-key (kbd "<f1>") 'main-hydra/body)
 #+end_src
 
-*** Project/Version control
+**** Project/Version control
+The following functional binding is the entry point to deal with code project management.
+It is mapped to *<f4>*
+It deals with:
+  - project management using *projectile*
+  - version control using *magit*
+  - fixme
+  - flychecks
+  - travis
+
 #+begin_src emacs-lisp
   (defhydra project-hydra (:color teal :hint nil)
     "
