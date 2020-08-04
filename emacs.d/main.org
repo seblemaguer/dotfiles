@@ -4938,6 +4938,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
     (mu4e-change-filenames-when-moving t)
 
     ;; User interaction
+    (mail-user-agent 'mu4e-user-agent)
     (mu4e-compose-forward-as-attachment t)
     (mu4e-hide-index-messages t)
     (mu4e-compose-context-policy 'ask-if-none)
@@ -4962,8 +4963,12 @@ As I write papers, it is useful to have some helper to start to have the inspira
                                 (:subject       .  nil)))
 
     :config
+    (defun mu4e-eaf-wrapper (msg)
+      "Wrapper to be able to add `eaf-open-mail-as-html' in `mu4e-view-actions'."
+      (eaf-open-mail-as-html))
+
     (add-to-list 'mu4e-view-actions
-                 '("ViewHTML" . eaf-open-mail-as-html) t)
+                 '("ViewHTML" . mu4e-eaf-wrapper) t)
 
     ;; use imagemagick, if available
     (when (fboundp 'imagemagick-register-types)
