@@ -1355,7 +1355,8 @@ this information per buffer.
   (set-selection-coding-system 'utf-8)
 #+end_src
 
-** Searching
+** Searching / Replacing
+*** Searching
 Double-saber is really helpful to reduce the result of a search after the search itself.
 
 #+begin_src emacs-lisp
@@ -1388,6 +1389,12 @@ Double-saber is really helpful to reduce the result of a search after the search
               (lambda ()
                 (double-saber-mode)
                 (setq-local double-saber-start-line 5))))
+#+end_src
+*** Replacing
+#+begin_src emacs-lisp
+  (use-package comby
+    :ensure t
+    :commands (comby))
 #+end_src
 
 ** Diff at point
