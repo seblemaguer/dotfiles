@@ -3789,14 +3789,11 @@ enough to be on melpa so I use straight.
 
 **** Preview
 #+begin_src emacs-lisp
-  (use-package latex-math-preview
+  (use-package xenops
     :ensure t
-    :disabled t
-    :tags '("LANGUAGE")
-    :hook (LaTeX-mode . LaTeX-preview-setup)
-    :commands (LaTeX-preview-setup)
-    :config
-    (setq preview-scale-function 1.2))
+    :commands (xenops-mode xenops-doctor)
+    :hook
+    (latex-mode . xenops-mode))
 #+end_src
 **** TikZ/PGF
 #+begin_src emacs-lisp
