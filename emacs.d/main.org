@@ -4310,14 +4310,15 @@ It is useful to find some items in org files based on a query.
           python-shell-interpreter-args "--simple-prompt -i"))
 #+end_src
 
-**** Lsp (with microsoft language server)
+**** Lsp
 #+begin_src emacs-lisp
-  (use-package lsp-python-ms
+  (use-package lsp-pyright
     :ensure t
     :commands (lsp lsp-deferred)
     :tags '("LANGUAGE" "IDE")
-    :hook (python-mode . lsp-deferred)  ; or lsp-deferred
-    )
+    :hook (python-mode . (lambda ()
+                            (require 'lsp-pyright)
+                            (lsp))))
 #+end_src
 
 **** Pipenv
