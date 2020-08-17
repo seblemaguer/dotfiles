@@ -2567,26 +2567,6 @@ to extend it even further in the feature.
           read-process-output-max (* 1024 1024)
           lsp-idle-delay 0.500))
 
-  (use-package company-lsp
-    :ensure t
-    :tags '("IDE")
-    :after company lsp-mode
-    :commands company-lsp
-    ;; :compdef lsp-mode
-    ;; :company company-lsp
-    :hook
-    (lsp-mode . company-lsp-hook)
-
-    :init
-    (defun company-lsp-hook ()
-      (make-local-variable 'company-backends)
-      (setq company-backends (copy-tree company-backends))
-      (set 'company-backends (append '(company-lsp) company-backends)))
-
-    :config
-    (setq company-lsp-enable-snippet t
-          company-lsp-cache-candidates 'auto))
-
   (use-package lsp-ui
     :ensure t
     :tags '("IDE")
