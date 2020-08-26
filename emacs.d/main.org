@@ -5601,6 +5601,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
            :map ytel-mode-map
            ("<return>" . ytel-watch)
            ("d"        . ytel-download))
+    :custom (ytel-sort-criterion 'upload_date)
     :config
     (defun ytel-download ()
       "Download video at point"
