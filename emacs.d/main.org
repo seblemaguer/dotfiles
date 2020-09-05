@@ -5696,6 +5696,9 @@ I actually use this part for minor correction. The tags are done when abcde is c
         (add-text-properties (line-beginning-position) (+ (line-end-position) 1)
                              `(face (:background, backcolor)))))
 
+    ;; Agenda is used at startup, it is better
+    (setq initial-buffer-choice '(lambda () (get-buffer org-agenda-buffer-name)))
+
     :hook
     (org-agenda-finalize . (lambda ()
                              (save-excursion
@@ -5959,7 +5962,8 @@ I actually use this part for minor correction. The tags are done when abcde is c
             ))
 
     ;; Activate mode
-    (org-super-agenda-mode t))
+    (org-super-agenda-mode t)
+    (org-agenda nil "a"))
 #+end_src
 
 *** Excorporate
