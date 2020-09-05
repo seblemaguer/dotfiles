@@ -465,6 +465,7 @@ It deals with:
 #+end_src
 
 **** Buffers
+
 #+begin_src emacs-lisp
   (global-set-key (kbd "M-G") 'what-line)
 #+end_src
@@ -4394,6 +4395,7 @@ It is useful to find some items in org files based on a query.
 #+end_src
 
 *** Shell
+**** Completion
 #+begin_src emacs-lisp
   (use-package company-shell
     :ensure t
@@ -4408,7 +4410,19 @@ It is useful to find some items in org files based on a query.
       (make-local-variable 'company-backends)
       (set 'company-backends (append '(company-shell company-shell-env company-fish-shell) company-backends))))
 #+end_src
-
+**** Modern helpers
+#+begin_src emacs-lisp
+  (use-package modern-sh
+    :ensure t
+    :hook (sh-mode . embed-modern-sh-mode-toggle)
+    :bind
+    (:map modern-sh-mode-map
+          ("C-<f6>"  . modern-sh-menu))
+    :init
+    (defun embed-modern-sh-mode-toggle ()
+        (when (buffer-file-name)
+          (modern-sh-mode))))
+#+end_src
 *** PlantUML
 #+begin_src emacs-lisp
   (use-package plantuml-mode
@@ -6305,6 +6319,12 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 
     :bind
     ("<f6>" . eshell-toggle))
+#+end_src
+** Outline-mode helpers
+#+begin_src emacs-lisp
+  (use-package eshell-outline
+    :ensure t
+    :hook (eshell-mode . eshell-outline-mode))
 #+end_src
 
 * System manager
