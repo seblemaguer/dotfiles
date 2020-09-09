@@ -426,7 +426,10 @@ It deals with:
   (global-set-key (kbd "<f4>") 'project-hydra/body)
 #+end_src
 
-*** Remapping
+*** Remapped bindings
+The following bindings are remapped to be homogeneous accross the different modes.
+It concerns
+
 **** Compilation
 #+begin_src emacs-lisp
   (defhydra hydra-next-error (global-map "C-x")
@@ -448,6 +451,10 @@ It deals with:
 #+end_src
 
 **** Commenting
+I prefer to use a _C-c C-c_ to compile and therefore, the bindings to comment a section of the code should be remapped.
+I select _C-c C-;_ to comment and _C-c C-:_ to uncomment.
+Adding a toggle support for the commenting would be a good idea too
+
 #+begin_src emacs-lisp
   (use-package cc-mode
     :bind
