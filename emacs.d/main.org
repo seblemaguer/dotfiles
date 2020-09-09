@@ -110,11 +110,10 @@ I am using tags to condition the use of packages based on the computer hostname.
     :straight (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
     :config
     (setq use-package-tags-enabled
-	  `(("lemagues-laptop" . ("!REQUIRES_CONNECTION"))
-	    ("lemagues-surface" . ("ALL"))
+	  `(("lemagues-surface" . ("ALL"))
 	    ("stb067" . ("ALL"))
-	    ("mackenzie" . ("!MAIL" "!RSS" "!USER" "!GUI"))
-	    (,use-package-tags-default-host . ("CORE" "!USER")))))
+	    ("mackenzie" . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
+	    (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
 #+end_src
 
 *** Hydra
@@ -522,7 +521,7 @@ Also use https://github.com/karlicoss/grasp to connect with firefox.
 
 #+begin_src emacs-lisp
   (use-package org-capture
-    :tags '("ORG")
+    :tags '("ORG" "USER")
     :after org
     :commands (org-capture)
     :config
@@ -599,7 +598,7 @@ Also use https://github.com/karlicoss/grasp to connect with firefox.
 #+begin_src emacs-lisp
     (use-package org-chef
       :ensure t
-      :tags '("ORG")
+      :tags '("ORG" "USER")
       :after (org-capture)
       :config
       (add-to-list 'org-capture-templates
@@ -4734,7 +4733,7 @@ organize read papers or "to read" papers. This is mainly based on https://codear
 #+begin_src emacs-lisp
   (use-package ivy-bibtex
     :ensure t
-    :tags '("PRODUCTION")
+    :tags '("PRODUCTION" "USER")
     :config
     (setq ivy-bibtex-bibliography "~/shared/pCloudDrive/org/work/biblio/index.bib" ;; where your references are stored
           ivy-bibtex-library-path "~/shared/pCloudDrive/org/work/biblio/lib/" ;; where your pdfs etc are stored
@@ -4744,7 +4743,7 @@ organize read papers or "to read" papers. This is mainly based on https://codear
 
   (use-package org-ref
     :ensure t
-    :tags '("ORG")
+    :tags '("ORG" "USER")
     :hook
     (org-export-before-parsing . orcp-citeproc)
     :init
@@ -4756,7 +4755,7 @@ organize read papers or "to read" papers. This is mainly based on https://codear
 
   (use-package org-noter
     :ensure t
-    :tags '("ORG")
+    :tags '("ORG" "USER")
     :bind ("C-x i" . org-noter)
     :config
     (setq org-noter-property-doc-file "INTERLEAVE_PDF"
@@ -5707,7 +5706,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
 **** Global
 #+begin_src emacs-lisp
   (use-package org-agenda
-    :tags '("ORG")
+    :tags '("ORG" "USER")
     :commands (org-agenda)
     :init
     (defun color-org-header (tag backcolor)
@@ -6342,7 +6341,7 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
 #+begin_src emacs-lisp
   (use-package desktop-environment
     :ensure t
-    :tags '("CORE")
+    :tags '("CORE" "DESKTOP")
     :config
     (setq desktop-environment-brightness-normal-increment "-inc 10"
           desktop-environment-brightness-normal-decrement "-dec 10"
@@ -6359,7 +6358,7 @@ Thanks to pulseaudio-control, I can control my soundcard.
 #+begin_src emacs-lisp
   (use-package pulseaudio-control
     :ensure t
-    :tags '("CORE")
+    :tags '("CORE" "DESKTOP")
     :config
     (setq pulseaudio-control--current-sink "@DEFAULT_SINK@"))
 #+end_src
@@ -6368,7 +6367,7 @@ Thanks to pulseaudio-control, I can control my soundcard.
 #+begin_src emacs-lisp
   (use-package bluetooth
     :ensure t
-    :tags '("SYSTEM"))
+    :tags '("SYSTEM" "DESKTOP"))
 #+end_src
 
 ** Docker
@@ -6376,30 +6375,30 @@ Thanks to pulseaudio-control, I can control my soundcard.
   (use-package docker
     :ensure t
     :commands (docker)
-    :tags '("OS"))
+    :tags '("SYSTEM"))
 
   (use-package docker-api
     :ensure t
-    :tags '("OS"))
+    :tags '("SYSTEM"))
 
   (use-package docker-tramp
     :ensure t
-    :tags '("OS"))
+    :tags '("SYSTEM"))
 
   (use-package dockerfile-mode
     :ensure t
-    :tags '("OS"))
+    :tags '("SYSTEM"))
 #+end_src
 
 ** SSH
 #+begin_src emacs-lisp
   (use-package ssh
     :ensure t
-    :tags '("OS"))
+    :tags '("SYSTEM"))
 
   (use-package ssh-deploy
     :ensure t
-    :tags '("OS"))
+    :tags '("SYSTEM"))
 #+end_src
 
 ** Slurm
@@ -6418,20 +6417,21 @@ Thanks to pulseaudio-control, I can control my soundcard.
 #+begin_src emacs-lisp
   (use-package symon
     :ensure t
-    :tags '("OS"))
+    :tags '("SYSTEM"))
 #+end_src
 
 ** Clipboard
 #+begin_src emacs-lisp
   (use-package cliphist
     :ensure t
-    :tags '("OS"))
+    :tags '("SYSTEM"))
 #+end_src
 
 ** Execute with shell environment
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell
     :ensure t
+    :tags '("SYSTEM")
     :config
     (setq exec-path-from-shell-arguments nil)
     (exec-path-from-shell-initialize))
@@ -6439,7 +6439,10 @@ Thanks to pulseaudio-control, I can control my soundcard.
 
 ** systctl
 #+begin_src emacs-lisp
-  (use-package sysctl :ensure t :commands (sysctl))
+  (use-package sysctl
+    :ensure t
+    :tags '("SYSTEM")
+    :commands (sysctl))
 #+end_src
 
 ** Password generation
@@ -6496,7 +6499,7 @@ Thanks to @branch14 of 200ok fame for the function!
 #+begin_src emacs-lisp
   (use-package scratch-ext
     :ensure t
-    :tags '("REQUIRES_CONNECTION")
+    :tags '("REQUIRES_CONNECTION" "USER")
     :hook (after-init . scratch-ext-restore-last-scratch)
     :config
     ;; Org-mode + start folded buffer
