@@ -804,6 +804,7 @@ format. This is really useful to homogeneise documentation.
             ("EVENT"         :foreground "purple"                            :weight bold)
             ("NOTE"          :foreground "purple"                            :weight bold)
             ("RELEASE"       :foreground "purple"                            :weight bold)
+            ("MANDATORY"     :foreground "red"                               :weight bold)
 
             ;; Done and complete
             ("DONE"          :background "forest green"  :foreground "lightgray" :weight bold :box (:line-width 2 :style released-button))
@@ -3903,7 +3904,7 @@ enough to be on melpa so I use straight.
                               (sequence "REVIEW(r)" "RELEASE(R)" "MAIL(m)" "|")
 
                               ;; Note information
-                              (sequence "|" "NOTE(N)" "EVENT(E)"))
+                              (sequence "|" "NOTE(N)" "EVENT(E)" "MANDATORY(M)"))
 
           org-todo-state-tags-triggers '(("CANCELLED" ("CANCELLED" . t))
                                          ("POSTPONED" ("POSTPONED" . t)))
