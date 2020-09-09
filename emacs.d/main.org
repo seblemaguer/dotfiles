@@ -4803,7 +4803,20 @@ As I write papers, it is useful to have some helper to start to have the inspira
     :load-path default-plugin-dir
     :commands (wordreference wordreference-at-point))
 #+end_src
-
+*** Google
+#+begin_src emacs-lisp
+  (use-package go-translate
+    :ensure t
+    :bind (("\C-ct" . go-translate)
+           ("\C-cT" . go-translate-popup))
+    :config
+    (setq go-translate-local-language "en"
+          go-translate-target-language "fr"
+          go-translate-extra-directions '(("bg" . "en")
+                                          ("en" . "bg")
+                                          ("en" . "fr"))
+          go-translate-buffer-follow-p t))
+#+end_src
 * "Entertainment"
 ** Communication
 *** Mail
@@ -5604,10 +5617,6 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :tags '("CONNECTED"))
 
   (use-package google-maps
-    :ensure t
-    :tags '("CONNECTED"))
-
-  (use-package google-translate
     :ensure t
     :tags '("CONNECTED"))
 #+end_src
