@@ -1443,11 +1443,18 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
   (use-package prodigy
     :ensure t
     :tags '("REQUIRES_CONNECTION" "MAIL")
+    :hook
+    (kill-emacs . prodigy-force-stop-all-service)
+
     :config
     ;; Define services
     (when (fboundp 'define-mail-services)
       (define-mail-services))
-    )
+
+    (defun prodigy-force-stop-all-service ()
+      "Helper to force kill all service"
+      (dolist (service prodigy-services)
+        (prodigy-stop-service service t))))
 
   (use-package elcontext
     :ensure t
