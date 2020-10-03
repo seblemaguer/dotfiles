@@ -937,6 +937,12 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
     ;; Integration with magit
     (with-eval-after-load 'magit
       (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)))
+
+  (use-package abridge-diff
+    :ensure t
+    :after magit ;; optional, if you'd like to use with magit
+    :tags '("VISUAL")
+    :init (abridge-diff-mode 1))
 #+end_src
 
 **** Faces/Colors
