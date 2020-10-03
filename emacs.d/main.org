@@ -126,7 +126,24 @@ I use hydra a lot so it is easier to add its support directly in the use-package
     :demand t
     :tags '("CORE")
     :bind
-    ("M-SPC" . major-mode-hydra))
+    ("M-SPC" . major-mode-hydra)
+
+    :preface
+    (defun with-alltheicon (icon str &optional height v-adjust)
+      "Displays an icon from all-the-icon."
+      (s-concat (all-the-icons-alltheicon icon :v-adjust (or v-adjust 0) :height (or height 1)) " " str))
+
+    (defun with-faicon (icon str &optional height v-adjust)
+      "Displays an icon from Font Awesome icon."
+      (s-concat (all-the-icons-faicon icon :v-adjust (or v-adjust 0) :height (or height 1)) " " str))
+
+    (defun with-fileicon (icon str &optional height v-adjust)
+      "Displays an icon from the Atom File Icons package."
+      (s-concat (all-the-icons-fileicon icon :v-adjust (or v-adjust 0) :height (or height 1)) " " str))
+
+    (defun with-octicon (icon str &optional height v-adjust)
+      "Displays an icon from the GitHub Octicons."
+      (s-concat (all-the-icons-octicon icon :v-adjust (or v-adjust 0) :height (or height 1)) " " str)))
 #+end_src
 
 **** Using posframe
@@ -417,6 +434,41 @@ It deals with:
      ))
 
   (global-set-key (kbd "<f4>") 'project-hydra/body)
+#+end_src
+
+**** Toggling
+:PROPERTIES:
+:FROM:     https://github.com/jerrypnz/major-mode-hydra.el
+:END:
+#+begin_src emacs-lisp :tangle yes
+  (defvar jp-toggles--title (with-faicon "toggle-on" "Toggles" 1 -0.05))
+
+  (pretty-hydra-define jp-toggles
+    (:color amaranth :quit-key "q" :title jp-toggles--title)
+    ("Basic"
+     (("n" linum-mode "line number" :toggle t)
+      ("w" whitespace-mode "whitespace" :toggle t)
+      ("W" whitespace-cleanup-mode "whitespace cleanup" :toggle t)
+      ("r" rainbow-mode "rainbow" :toggle t)
+      ("L" page-break-lines-mode "page break lines" :toggle t))
+
+     "Highlight"
+     (("s" symbol-overlay-mode "symbol" :toggle t)
+      ("l" hl-line-mode "line" :toggle t)
+      ("x" highlight-sexp-mode "sexp" :toggle t)
+      ("t" hl-todo-mode "todo" :toggle t))
+
+     "Coding"
+     (("p" smartparens-mode "smartparens" :toggle t)
+      ("P" smartparens-strict-mode "smartparens strict" :toggle t)
+      ("S" show-smartparens-mode "show smartparens" :toggle t)
+      ("f" flycheck-mode "flycheck" :toggle t))
+
+     "Emacs"
+     (("D" toggle-debug-on-error "debug on error" :toggle (default-value 'debug-on-error))
+      ("X" toggle-debug-on-quit "debug on quit" :toggle (default-value 'debug-on-quit)))))
+
+  (global-set-key (kbd "<f3>") 'jp-toggles/body)
 #+end_src
 
 *** Remapped bindings
@@ -2818,54 +2870,6 @@ to extend it even further in the feature.
   (use-package hgrc-mode
     :ensure t
     :tags '("VC"))
-#+end_src
-
-**** Merging
-#+begin_src emacs-lisp
-(use-package smerge-mode
-    :bind ("C-c h s" . jethro/hydra-smerge/body)
-    :init
-    (defun jethro/enable-smerge-maybe ()
-      "Auto-enable `smerge-mode' when merge conflict is detected."
-      (save-excursion
-        (goto-char (point-min))
-        (when (re-search-forward "^<<<<<<< " nil :noerror)
-          (smerge-mode 1))))
-    (add-hook 'find-file-hook  #'jethro/enable-smerge-maybe :append)
-
-    :hydra
-    (jethro/hydra-smerge (:color pink
-                                 :hint nil
-                                 :pre (smerge-mode 1)
-                                 ;; Disable `smerge-mode' when quitting hydra if
-                                 ;; no merge conflicts remain.
-                                 :post (smerge-auto-leave))
-                         "
-     ^Move^       ^Keep^               ^Diff^                 ^Other^
-     ^^-----------^^-------------------^^---------------------^^-------
-     _n_ext       _b_ase               _<_: upper/base        _C_ombine
-     _p_rev       _u_pper              _=_: upper/lower       _r_esolve
-     ^^           _l_ower              _>_: base/lower        _k_ill current
-     ^^           _a_ll                _R_efine
-     ^^           _RET_: current       _E_diff
-     "
-                         ("n" smerge-next)
-                         ("p" smerge-prev)
-                         ("b" smerge-keep-base)
-                         ("u" smerge-keep-upper)
-                         ("l" smerge-keep-lower)
-                         ("a" smerge-keep-all)
-                         ("RET" smerge-keep-current)
-                         ("\C-m" smerge-keep-current)
-                         ("<" smerge-diff-base-upper)
-                         ("=" smerge-diff-upper-lower)
-                         (">" smerge-diff-base-lower)
-                         ("R" smerge-refine)
-                         ("E" smerge-ediff)
-                         ("C" smerge-combine-with-next)
-                         ("r" smerge-resolve)
-                         ("k" smerge-kill-current)
-                         ("q" nil "cancel" :color blue)))
 #+end_src
 
 **** Providers
