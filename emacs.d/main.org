@@ -2878,7 +2878,28 @@ to extend it even further in the feature.
 #+begin_src emacs-lisp
   (use-package gist
     :ensure t
-    :tags '("VC"))
+    :tags '("VC")
+    :mode-hydra
+    (gist-list-mode
+     (:color red)
+     ("Basic"
+      (("F" gist-fetch-current "Fetch")
+       ("+" gist-add-buffer "Add buffer")
+       ("-" gist-remove-file "Remove file")
+       ("g" gist-list-reload "List reload")
+       ("k" gist-kill-current "Kill current"))
+
+      "Information"
+      (("e" gist-edit-current-description "Edit description")
+       ("y" gist-print-current-url "Print URL"))
+
+      "Starring"
+      (("^" gist-unstar "Unstar")
+       ("*" gist-star "Start"))
+
+      "Remote"
+      (("b" gist-browse-current-url "Browse current URL")
+       ("f" gist-fork "Fork")))))
 #+end_src
 
 ***** Gitlab
