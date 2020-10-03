@@ -2,10 +2,11 @@ language: nix
 
 os:
   - linux
-  - osx
+  # - osx
 
 env:
   - EMACS_CI=emacs-26-3
+  - EMACS_CI=emacs-27.1
   - EMACS_CI=emacs-snapshot
 
 install:
