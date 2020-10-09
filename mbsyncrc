@@ -117,31 +117,31 @@ Channel AdaptGmail-sent
 Channel AdaptGmail-trash
 
 
-# ##########################################################################
-# # TCD (Disabled as auth2 and imap are tricky in office365 so far)
-# ##########################################################################
-# IMAPAccount TCD
-# Host outlook.office365.com
-# User lemagues@tcd.ie
+##########################################################################
+# TCD (Disabled as auth2 and imap are tricky in office365 so far)
+##########################################################################
+IMAPAccount TCD
+Host outlook.office365.com
+User lemagues@tcd.ie
 # AuthMechs XOAUTH2
-# Pass vcvwrtmhjvhpwntw
-# # "python3 ~/.get_passwd.py 'outlook.office365.com' 'lemagues@tcd.ie'"
-# Port 993
-# SSLType IMAPS
-# # CertificateFile /etc/ssl/certs/ca-bundle.crt
+Port 993
+SSLType IMAPS
+PassCmd "python3 ~/.get_passwd.py 'outlook.office365.com' 'lemagues@tcd.ie'"
+# PassCmd "oauth2get tcd <account>" # mswvrbxrhjklbywm
+# CertificateFile /etc/ssl/certs/ca-bundle.crt
 
-# IMAPStore TCD-remote
-# Account TCD
+IMAPStore TCD-remote
+Account TCD
 
-# MaildirStore TCD-local
-# Path ~/mail/TCD/
-# Inbox ~/mail/TCD/INBOX
-# SubFolders Legacy
+MaildirStore TCD-local
+Path ~/mail/TCD/
+Inbox ~/mail/TCD/INBOX
+SubFolders Legacy
 
-# Channel TCD
-# Master :TCD-remote:
-# Slave :TCD-local:
-# Patterns "INBOX" "Deleted Items" "Sent Items"
+Channel TCD
+Master :TCD-remote:
+Slave :TCD-local:
+Patterns "INBOX" "Deleted Items" "Sent Items"
 
 # ======================================================================================
 # ======================================================================================
