@@ -5959,25 +5959,20 @@ I actually use this part for minor correction. The tags are done when abcde is c
 
 *** Excorporate
  #+begin_src emacs-lisp
+   (use-package calfw
+     :ensure t
+     :tags '("CALENDAR" "REQUIRES_CONNECTION"))
+
    (use-package excorporate
      :ensure t
-     :disabled t
      :tags '("CALENDAR" "REQUIRES_CONNECTION")
-     :hook
-     (org-agenda-cleanup-fancy-diary-hook . ab/agenda-update-diary)
+
+     :init
+     (setq excorporate-configuration '("lemagues@tcd.ie" . "https://outlook.office365.com/EWS/Exchange.asmx")
+           excorporate-calendar-show-day-function 'exco-calfw-show-day)
 
      :config
-     (setq excorporate-configuration '("lemagues@tcd.ie" . "https://outlook.office365.com/EWS/Exchange.asmx")
-           excorporate-calendar-show-day-function 'exco-calfw-show-day
-           org-agenda-include-diary t) ;; FIXME: move this?
-
-     (defun ab/agenda-update-diary ()
-       "call excorporate to update the diary for today"
-       (exco-diary-diary-advice (calendar-current-date) (calendar-current-date) #'message "diary updated"))
-
-     ;; activate excorporate and request user/password to start connection
-     (excorporate)
-     (excorporate-diary-enable))
+     (excorporate))
  #+end_src
 
 ** GTD
