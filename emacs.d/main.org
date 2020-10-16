@@ -2502,7 +2502,13 @@ Ivy-yasnippet is used for snippet discovery.
   (use-package yasnippet
     :ensure t
     :tags '("COMPLETION")
-    :hook (after-init . yas-global-mode)
+    :init
+    (yas-global-mode 1))
+
+  ;; Load snippets
+  (use-package yasnippet-snippets
+    :ensure t
+    :tags '("COMPLETION")
     :config
 
     ;; Add third parties snippets
@@ -2515,19 +2521,11 @@ Ivy-yasnippet is used for snippet discovery.
 
     (eval-after-load 'yasnippet '(third-parties-snippets-initialize)))
 
-  ;; Load official snippets
-  (use-package yasnippet-snippets
-    :ensure t
-    :tags '("COMPLETION")
-    :requires (yasnippet)
-    :commands (yas-global-mode))
-
   ;; Connect with ivy to have a list on demand
   (use-package ivy-yasnippet
     :ensure t
     :tags '("COMPLETION")
-    :requires (yasnippet ivy)
-    :commands (yas-global-mode))
+    :requires (yasnippet ivy))
 #+end_src
 
 ***** Filetype templates
