@@ -398,6 +398,11 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
  - Mail management: listing the synchronization process managed by *prodigy* and creating a new may
 
 #+begin_src emacs-lisp
+  (defun text-scale-reset ()
+    "Reset the text scale to its original level (0)."
+    (interactive)
+    (text-scale-set 0))
+
   (pretty-hydra-define main-hydra (:color teal :hint nil)
     ("Org related"
      (("c" counsel-org-capture "Org capture")
@@ -409,7 +414,8 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
 
      "Zooming"
      (("+" text-scale-increase "Zoom in"  :color pink)
-      ("-" text-scale-decrease "Zoom out" :color pink))
+      ("-" text-scale-decrease "Zoom out" :color pink)
+      ("0" text-scale-reset "Reset zoom"))
 
      "Bookmark"
      (("b" list-bookmarks "List bookmarks")
