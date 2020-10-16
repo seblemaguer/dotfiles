@@ -121,13 +121,9 @@ I use hydra a lot so it is easier to add its support directly in the use-package
 
 **** Major mode/pretty hydra
 #+begin_src emacs-lisp
-  (use-package major-mode-hydra
+  (use-package pretty-hydra
     :ensure t
-    :demand t
     :tags '("CORE")
-    :bind
-    ("M-SPC" . major-mode-hydra)
-
     :preface
     (defun with-alltheicon (icon str &optional height v-adjust)
       "Displays an icon from all-the-icon."
@@ -144,13 +140,34 @@ I use hydra a lot so it is easier to add its support directly in the use-package
     (defun with-octicon (icon str &optional height v-adjust)
       "Displays an icon from the GitHub Octicons."
       (s-concat (all-the-icons-octicon icon :v-adjust (or v-adjust 0) :height (or height 1)) " " str)))
+
+  (use-package major-mode-hydra
+    :ensure t
+    :demand t
+    :tags '("CORE")
+    :bind
+    ("M-SPC" . major-mode-hydra))
 #+end_src
 
 **** Using posframe
-#+begin_src emacs-lisp :tangle yes
+#+begin_src emacs-lisp
   (use-package hydra-posframe
     :tags '("CORE")
+    ;;  :disabled t
     :straight (hydra-posframe :type git :host github :repo "Ladicle/hydra-posframe")
+
+    :custom
+    (hydra-posframe-parameters
+     '(
+       (left-fringe . 4) (right-fringe . 4)
+       (top-fringe . 4) (bottom-fringe . 4)
+       ;; (height . 18) (width . 105)
+       ;;(min-height . 17) (max-height . 30)
+       ;; (top . 25)
+       ))
+
+    :custom-face
+    (hydra-posframe-border-face ((t (:background "#6272a4"))))
     :hook (after-init . hydra-posframe-enable))
 #+end_src
 
@@ -441,8 +458,9 @@ It deals with:
 :PROPERTIES:
 :FROM:     https://github.com/jerrypnz/major-mode-hydra.el
 :END:
-#+begin_src emacs-lisp :tangle yes
-  (defvar jp-toggles--title (with-faicon "toggle-on" "Toggles" 1 -0.05))
+#+begin_src emacs-lisp
+  ;; (defvar jp-toggles--title (with-faicon "toggle-on" "Toggles" 1 -0.05))
+  (defvar jp-toggles--title "Toggles")
 
   (pretty-hydra-define jp-toggles
     (:color amaranth :quit-key "q" :title jp-toggles--title)
