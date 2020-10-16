@@ -2,7 +2,9 @@
 config/
 
 # Emacs
-emacs.d/
+emacs.d/*
+!emacs.d/third_parties
+!emacs.d/plugins
 
 # htop part
 system/htoprc
