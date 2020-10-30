@@ -154,7 +154,7 @@ I use hydra a lot so it is easier to add its support directly in the use-package
   (use-package hydra-posframe
     :straight (hydra-posframe :type git :host github :repo "Ladicle/hydra-posframe")
     :tags '("CORE")
-
+    :disabled t
     :custom
     (hydra-posframe-parameters
      '(
