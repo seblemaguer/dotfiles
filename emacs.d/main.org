@@ -603,63 +603,63 @@ Also use https://github.com/karlicoss/grasp to connect with firefox.
              ("Book"
               :keys "p"
               :type entry
-              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :file "~/pCloudDrive/org/todo/todo.org"
               :headline "To read"
               :template-file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory))
 
              ("CD"
               :keys "c"
               :type entry
-              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :file "~/pCloudDrive/org/todo/todo.org"
               :headline "CD"
               :template-file ,(format "%s/third_parties/org-capture-templates/cd.org" user-emacs-directory))
 
              ("Concert"
               :keys "C"
               :type entry
-              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :file "~/pCloudDrive/org/todo/todo.org"
               :headline "Concert"
               :template-file ,(format "%s/third_parties/org-capture-templates/concert.org" user-emacs-directory))
 
              ("Reference"
               :keys "f"
               :type entry
-              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :file "~/pCloudDrive/org/todo/todo.org"
               :headline "Reference task"
               :template-file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory))
 
              ("Bookmark"
               :keys "L"
               :type entry
-              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :file "~/pCloudDrive/org/todo/todo.org"
               :olp ("To review" "Bookmarks")
               :template-file ,(format "%s/third_parties/org-capture-templates/bookmark.org" user-emacs-directory))
 
              ("Mail"
               :keys "m"
               :type entry
-              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :file "~/pCloudDrive/org/todo/todo.org"
               :headline "Mailing"
               :template-file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory))
 
              ("Meeting"
               :keys "M"
               :type entry
-              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :file "~/pCloudDrive/org/todo/todo.org"
               :headline "To sort"
               :template-file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory))
 
              ("RSS"
               :keys "r"
               :type entry
-              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :file "~/pCloudDrive/org/todo/todo.org"
               :olp ("To review" "RSS")
               :template-file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory))
 
              ("TODO"
               :keys "t"
               :type entry
-              :file "~/shared/pCloudDrive/org/todo/todo.org"
+              :file "~/pCloudDrive/org/todo/todo.org"
               :headline "To sort"
               :template-file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory)
               :empty-lines-before 1)
@@ -678,7 +678,7 @@ Also use https://github.com/karlicoss/grasp to connect with firefox.
                            ("Cookbook"
                             :keys "o"
                             :type entry
-                            :file "~/shared/pCloudDrive/recipes/cookbook.org"
+                            :file "~/pCloudDrive/org/perso/cooking/cookbook.org"
                             :template ("* %^{Description}"
                                        "%(org-chef-get-recipe-from-url)")
                             :empty-lines 1)
@@ -1631,10 +1631,10 @@ leads to this configuration
 
     ;; elfeed
     (add-to-list 'recentf-exclude (format "%s/\\.elfeed/.*" (getenv "HOME")))
-    (add-to-list 'recentf-exclude (format "%s/shared/pCloudDrive/emacs/elfeed/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/pCloudDrive/emacs/elfeed/.*" (getenv "HOME")))
 
     ;; Org-mode organisation
-    (add-to-list 'recentf-exclude (format "%s/shared/pCloudDrive/org/organisation/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/pCloudDrive/org/perso/emacs/.*" (getenv "HOME")))
 
     ;; Org/todo/calendars
     (add-to-list 'recentf-exclude ".*todo.org")
@@ -4768,11 +4768,11 @@ organize read papers or "to read" papers. This is mainly based on https://codear
     :ensure t
     :tags '("PRODUCTION" "USER")
     :config
-    (setq ivy-bibtex-bibliography "~/shared/pCloudDrive/org/work/biblio/index.bib" ;; where your references are stored
-          ivy-bibtex-library-path "~/shared/pCloudDrive/org/work/biblio/lib/" ;; where your pdfs etc are stored
-          ivy-bibtex-notes-path "~/shared/pCloudDrive/org/work/biblio/index.org" ;; where your notes are stored
-          bibtex-completion-bibliography "~/shared/pCloudDrive/org/work/biblio/index.bib" ;; writing completion
-          bibtex-completion-notes-path "~/shared/pCloudDrive/org/work/biblio/index.org"))
+    (setq ivy-bibtex-bibliography "~/pCloudDrive/org/work/biblio/index.bib" ;; where your references are stored
+          ivy-bibtex-library-path "~/pCloudDrive/org/work/biblio/lib/" ;; where your pdfs etc are stored
+          ivy-bibtex-notes-path "~/pCloudDrive/org/work/biblio/index.org" ;; where your notes are stored
+          bibtex-completion-bibliography "~/pCloudDrive/org/work/biblio/index.bib" ;; writing completion
+          bibtex-completion-notes-path "~/pCloudDrive/org/work/biblio/index.org"))
 
   (use-package org-ref
     :ensure t
@@ -4781,10 +4781,10 @@ organize read papers or "to read" papers. This is mainly based on https://codear
     (org-export-before-parsing . orcp-citeproc)
     :init
     (setq org-ref-completion-library 'org-ref-ivy-cite
-          org-ref-notes-directory "~/shared/pCloudDrive/org/work/biblio"
-          org-ref-bibliography-notes "~/shared/pCloudDrive/org/work/biblio/index.org"
-          org-ref-default-bibliography '("~/shared/pCloudDrive/org/work/biblio/index.bib")
-          org-ref-pdf-directory "~/shared/pCloudDrive/org/work/biblio/lib/"))
+          org-ref-notes-directory "~/pCloudDrive/org/work/biblio"
+          org-ref-bibliography-notes "~/pCloudDrive/org/work/biblio/index.org"
+          org-ref-default-bibliography '("~/pCloudDrive/org/work/biblio/index.bib")
+          org-ref-pdf-directory "~/pCloudDrive/org/work/biblio/lib/"))
 
   (use-package org-noter
     :ensure t
@@ -5493,7 +5493,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (after-init . metal-archives-load-artists-map)
 
     :custom
-    (metal-archives-shopping-list-target-file "~/shared/pCloudDrive/org/organisation/shopping_list.org")
+    (metal-archives-shopping-list-target-file "~/pCloudDrive/org/perso/music/shopping_list.org")
     (metal-archives-shopping-list-root-node "CD")
 
     :init
@@ -5515,7 +5515,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
 
     :config
     ;; Change the storage directory
-    (setq elfeed-db-directory "~/shared/pCloudDrive/emacs/elfeed"
+    (setq elfeed-db-directory "~/pCloudDrive/emacs/elfeed"
 
           ;; Formatting dates
           elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left)))
@@ -5530,10 +5530,10 @@ I actually use this part for minor correction. The tags are done when abcde is c
     :commands (elfeed-org)
     :init
     (defun loading-elfeed ()
-      (when (file-exists-p "~/shared/pCloudDrive/org/organisation/rss.org")
+      (when (file-exists-p "~/pCloudDrive/org/perso/emacs/rss.org")
         (progn
           (elfeed-org)
-          (setq rmh-elfeed-org-files (list "~/shared/pCloudDrive/org/organisation/rss.org"))
+          (setq rmh-elfeed-org-files (list "~/pCloudDrive/org/perso/emacs/rss.org"))
           (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))
 
       (elfeed-update-background-start))
@@ -5775,11 +5775,11 @@ I actually use this part for minor correction. The tags are done when abcde is c
   :config
 
   ;; Agenda files
-  (when (file-exists-p "~/shared/pCloudDrive/org/todo/todo.org")
-    (add-to-list 'org-agenda-files "~/shared/pCloudDrive/org/todo/todo.org"))
+  (when (file-exists-p "~/pCloudDrive/org/todo/todo.org")
+    (add-to-list 'org-agenda-files "~/pCloudDrive/org/todo/todo.org"))
 
-  ;; (when (file-exists-p "~/shared/pCloudDrive/org/organisation/bookmarks.org")
-  ;;   (add-to-list 'org-agenda-files "~/shared/pCloudDrive/org/organisation/bookmarks.org"))
+  ;; (when (file-exists-p "~/pCloudDrive/org/organisation/bookmarks.org")
+  ;;   (add-to-list 'org-agenda-files "~/pCloudDrive/org/organisation/bookmarks.org"))
 
   (when (file-exists-p "~/Calendars")
     (setq org-agenda-files (append org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$"))))
@@ -6047,7 +6047,7 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+begin_src emacs-lisp
   (use-package org-analyzer
     :ensure t
-    :custom (org-analyzer-org-directory  "~/shared/pCloudDrive/org/todo")
+    :custom (org-analyzer-org-directory  "~/pCloudDrive/org/todo")
     :commands (org-analyzer-start))
 #+end_src
 
