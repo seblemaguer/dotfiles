@@ -6152,6 +6152,30 @@ I prefer to keep the architecture, so for the archiving I am based on the discus
     :ensure t
     :commands (org-sidebar))
 #+end_src
+** Roaming
+**** Global configuration
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam
+    :ensure t
+    :tags '("ORG" "USER")
+    :hook
+    (after-init . org-roam-mode)
+    :custom
+    (org-roam-directory "~/pCloudDrive/org")
+    :bind (:map org-roam-mode-map
+                (("C-c n l" . org-roam)
+                 ("C-c n f" . org-roam-find-file))
+                :map org-mode-map
+                (("C-c n i" . org-roam-insert))
+                (("C-c n I" . org-roam-insert-immediate))))
+#+END_SRC
+
+**** Visualization server
+#+BEGIN_SRC emacs-lisp
+  (use-package org-roam-server
+    :ensure t
+    :tags '("ORG" "USER" "GUI"))
+#+END_SRC
 
 ** Helpers
 #+begin_src emacs-lisp
