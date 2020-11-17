@@ -402,6 +402,7 @@ x-scheme-handler/ssh=ktelnetservice5.desktop;
 x-scheme-handler/telnet=ktelnetservice5.desktop;
 x-scheme-handler/vnd.libreoffice.cmis=libreoffice-startcenter.desktop;
 x-scheme-handler/zoommtg=Zoom.desktop;
+x-scheme-handler/msteams=teams.desktop
 
 [Added Associations]
 text/plain=org.gnome.gedit.desktop;
