@@ -6143,7 +6143,7 @@ I prefer to keep the architecture, so for the archiving I am based on the discus
 #+begin_src emacs-lisp
   (use-package org-dashboard
     :ensure t
-    :commands (org-dashboard))
+    :commands (org-dashboard-display))
 #+end_src
 
 **** Sidebar
