@@ -111,7 +111,7 @@ I am using tags to condition the use of packages based on the computer hostname.
     :config
     (setq use-package-tags-enabled
 	  `(("lemagues-surface" . ("ALL"))
-	    ("stb067" . ("ALL"))
+	    ("sig201" . ("ALL"))
 	    ("mackenzie" . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
 	    (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
 #+end_src
@@ -1537,6 +1537,7 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
 
   (use-package elcontext
     :ensure t
+    :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
 
     (defun elcontext-start-prodigy (name)
