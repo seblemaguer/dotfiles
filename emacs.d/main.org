@@ -5484,7 +5484,17 @@ I actually use this part for minor correction. The tags are done when abcde is c
 *** Release
 #+begin_src emacs-lisp
   (use-package metal-archives
-    :straight (metal-archives :type git :host github :repo "seblemaguer/metal-archives.el")
+    :straight (metal-archives :type git
+                              :host github
+                              :repo "seblemaguer/metal-archives.el"
+                              :files ("metal-archives.el"))
+    )
+
+  (use-package metal-archives-shopping-list
+    :straight (metal-archives-shopping-list :type git
+                              :host github
+                              :repo "seblemaguer/metal-archives.el"
+                              :files ("metal-archives-shopping-list.el"))
     :tags '("REQUIRES_CONNECTION" "USER")
     :commands (metal-archives-shopping-list-update
                metal-archives-retrieve-next-releases
