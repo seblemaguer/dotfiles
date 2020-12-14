@@ -3597,7 +3597,7 @@ enough to be on melpa so I use straight.
 
     ;; Minor helpers for comment and quotes
     (add-to-list 'LaTeX-verbatim-environments "comment")
-    (setq TeX-open-quote "\enquote{"
+    (setq TeX-open-quote "\\enquote{"
           TeX-close-quote "}")
 
     ;; Indentation
