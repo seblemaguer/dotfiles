@@ -3958,7 +3958,6 @@ enough to be on melpa so I use straight.
           ;; Archiving
           org-archive-mark-done t
           org-log-done 'time
-          org-archive-location "%s_archive::* Archived Tasks"
 
           ;; Refiling
           org-refile-targets '((nil . (:maxlevel . 6))
@@ -6063,7 +6062,8 @@ I actually use this part for minor correction. The tags are done when abcde is c
 #+end_src
 
 *** Archiving
-I prefer to keep the architecture, so for the archiving I am based on the discussion here: https://gist.github.com/Fuco1/e86fb5e0a5bb71ceafccedb5ca22fcfb
+I prefer to keep the architecture, so for the archiving I am based on the discussion here:
+https://github.com/daviderestivo/galactic-emacs/blob/master/lisp/org-archive-subtree.el
 
 #+begin_src emacs-lisp
   (use-package org-archive
@@ -6073,20 +6073,17 @@ I prefer to keep the architecture, so for the archiving I am based on the discus
     (defadvice org-archive-subtree (around fix-hierarchy activate)
       (let* ((fix-archive-p (and (not current-prefix-arg)
                                  (not (use-region-p))))
-             (location (org-archive--compute-location org-archive-location))
-             (afile (car location))
-             (offset (if (= 0 (length (cdr location)))
-                         1
-                       (1+ (string-match "[^*]" (cdr location)))))
+             (afile  (car (org-archive--compute-location
+                           (or (org-entry-get nil "ARCHIVE" 'inherit) org-archive-location))))
              (buffer (or (find-buffer-visiting afile) (find-file-noselect afile))))
         ad-do-it
         (when fix-archive-p
           (with-current-buffer buffer
             (goto-char (point-max))
-            (while (> (org-current-level) offset) (org-up-heading-safe))
+            (while (org-up-heading-safe))
             (let* ((olpath (org-entry-get (point) "ARCHIVE_OLPATH"))
                    (path (and olpath (split-string olpath "/")))
-                   (level offset)
+                   (level 1)
                    tree-text)
               (when olpath
                 (org-mark-subtree)
