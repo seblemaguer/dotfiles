@@ -5613,6 +5613,22 @@ I actually use this part for minor correction. The tags are done when abcde is c
     (define-key elfeed-search-mode-map "D" 'elfeed-search-youtube-dl-slow)
     (define-key elfeed-search-mode-map "L" 'youtube-dl-list))
 #+end_src
+*** Dashboard
+#+BEGIN_SRC emacs-lisp
+  (use-package elfeed-dashboard
+    :ensure t
+    :tags '("REQUIRES_CONNECTION" "RSS")
+    :commands (elfeed-dashboard)
+    :bind
+    (([f9] . elfeed-dashboard))
+
+    :custom
+    (elfeed-dashboard-file "~/.emacs.d/third_parties/dashboards/elfeed.org")
+
+    :config
+    ;; to update feed counts automatically
+    (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links))
+#+END_SRC
 
 *** Notification part
 #+begin_src emacs-lisp
