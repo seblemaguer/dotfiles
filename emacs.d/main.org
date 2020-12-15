@@ -1101,6 +1101,16 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
       (load-prism (car (frame-list)))))
 #+end_src
 
+**** Flashing
+#+BEGIN_SRC emacs-lisp
+  (use-package goggles
+    :ensure t
+    :tags '("VISUAL")
+    :config
+    (goggles-mode)
+    (setq-default goggles-pulse t))
+#+END_SRC
+
 **** Scrolling
 #+begin_src emacs-lisp
   (use-package scrollkeeper
