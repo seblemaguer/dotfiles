@@ -1543,34 +1543,35 @@ service. Internally, imapnotify is going to call emacsclient to notify the user 
     (defun prodigy-force-stop-all-service ()
       "Helper to force kill all service"
       (dolist (service prodigy-services)
-	(prodigy-stop-service service t))))
+        (prodigy-stop-service service t))))
 
   (use-package elcontext
     :ensure t
+    :disabled t
     :tags '("REQUIRES_CONNECTION" "MAIL")
     :config
 
     (defun elcontext-start-prodigy (name)
       "Helper to start properly the prodigy service NAME via elcontext."
       (prodigy-start-service
-	  (prodigy-find-service name)))
+          (prodigy-find-service name)))
 
     (when (fboundp 'list-mail-services)
       (dolist (name (list-mail-services))
-	(setq elcontext--context-id name
-	      elcontext--context-current (ht (:name name)
-					     (:time (ht))
-					     (:action `(elcontext-start-prodigy ,name))
-					     (:location (ht))
-					     (:directory (expand-file-name "~"))))
-	(elcontext-add-context elcontext--context-id elcontext--context-current)))
+        (setq elcontext--context-id name
+              elcontext--context-current (ht (:name name)
+                                             (:time (ht))
+                                             (:action `(elcontext-start-prodigy ,name))
+                                             (:location (ht))
+                                             (:directory (expand-file-name "~"))))
+        (elcontext-add-context elcontext--context-id elcontext--context-current)))
 
     ;; Reinit everything
     (setq elcontext--context-id nil
-	  elcontext--context-current (ht (:name nil)
-					 (:time (ht))
-					 (:action nil)
-					 (:location (ht))))
+          elcontext--context-current (ht (:name nil)
+                                         (:time (ht))
+                                         (:action nil)
+                                         (:location (ht))))
     (elcontext-global-mode))
 #+end_src
 
