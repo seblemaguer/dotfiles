@@ -743,7 +743,6 @@ Remember the cursor position of files when reopening them
     (save-place-mode 1))
 #+end_src
 
-
 ** TODO Scratch
 #+begin_src emacs-lisp
   (use-package scratch-ext
@@ -1089,23 +1088,11 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
                                           ,(format "%s/third_parties/icons/org.png" user-emacs-directory)
                                           nil nil :ascent center)
 
-                                         ("^[Hh][Tt][Ss]$"
-                                          ,(format "%s/third_parties/icons/hts.png" user-emacs-directory)
-                                          nil nil :ascent center)
-
-                                         ("^[Mm]ary[tT]\\{2\\}[sS]$"
-                                          ,(format "%s/third_parties/icons/marytts.png" user-emacs-directory)
-                                          nil nil :ascent center)
-
-                                         ("^SFB$"
-                                          ,(format "%s/third_parties/icons/sfb.png" user-emacs-directory)
-                                          nil nil :ascent center)
-
                                          ("[Ss]ystem"
                                           ,(format "%s/third_parties/icons/debian.png" user-emacs-directory)
                                           nil nil :ascent center)
 
-                                         ("[Tt]ools?"
+                                         ("\\([Tt]ool\\|[Cc]onfiguration\\)s?"
                                           ,(format "%s/third_parties/icons/wrench.png" user-emacs-directory)
                                           nil nil :ascent center)
 
@@ -1118,10 +1105,6 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
                                           ,(format "%s/third_parties/icons/admin.png" user-emacs-directory)
                                           nil nil :ascent center)
 
-                                         ("[Mm]eeting"
-                                          ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory)
-                                          nil nil :ascent center)
-
                                          ("[Aa]ppointments?"
                                           ,(format "%s/third_parties/icons/appointment.png" user-emacs-directory)
                                           nil nil :ascent center)
@@ -1130,16 +1113,12 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
                                           ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
                                           nil nil :ascent center)
 
-                                         ("synsig"
+                                         ("\\([Ss]ynsig\\|SSW\\)"
                                           ,(format "%s/third_parties/icons/isca.png" user-emacs-directory)
                                           nil nil :ascent center)
 
                                          ("\\([Tt]rip\\|[Dd]eplacement\\)"
                                           ,(format "%s/third_parties/icons/trip.png" user-emacs-directory)
-                                          nil nil :ascent center)
-
-                                         ("Train"
-                                          ,(format "%s/third_parties/icons/train.png" user-emacs-directory)
                                           nil nil :ascent center)
 
                                          ;; Deadlines / dates
@@ -1152,28 +1131,24 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
                                           nil nil :ascent center)
 
                                          ("[Mm]ails?"
-                                          ,(format "%s/third_parties/icons/gnus.png" user-emacs-directory)
+                                          ,(format "%s/third_parties/icons/email.png" user-emacs-directory)
                                           nil nil :ascent center)
 
-                                         ("[Rr]eview?"
+                                         ("[Rr]eviews?"
                                           ,(format "%s/third_parties/icons/review.png" user-emacs-directory)
                                           nil nil :ascent center)
 
-                                         ;; Personnal dates
-                                         ("Medical"
-                                          ,(format "%s/third_parties/icons/medical.png" user-emacs-directory)
+                                         ("[Ss]upervising"
+                                          ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
                                           nil nil :ascent center)
 
-                                         ("\\(Party\\|Celeb\\)"
-                                          ,(format "%s/third_parties/icons/party.png" user-emacs-directory)
+                                         ;; Personnal dates
+                                         ("[rM]edical"
+                                          ,(format "%s/third_parties/icons/medical.png" user-emacs-directory)
                                           nil nil :ascent center)
 
                                          ("Anniv"
                                           ,(format "%s/third_parties/icons/anniversary.png" user-emacs-directory)
-                                          nil nil :ascent center)
-
-                                         ("\\([Hh]olidays\\|[Vv]acations?\\)"
-                                          ,(format "%s/third_parties/icons/holidays.png" user-emacs-directory)
                                           nil nil :ascent center)
 
                                          ("Concert"
@@ -1181,18 +1156,14 @@ Disabled as for now it is creating a conflict with emacs 27 daemon
                                           nil nil :ascent center)
 
                                          ;; Personnal diverse
-                                         ("CD"
+                                         ("[Rr]elease"
                                           ,(format "%s/third_parties/icons/cd.png" user-emacs-directory)
                                           nil nil :ascent center)
 
                                          ("Book"
                                           ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
                                           nil nil :ascent center)
-
-                                         ("[Pp]rojects?"
-                                          ,(format "%s/third_parties/icons/project.png" user-emacs-directory)
-                                          nil nil :ascent center)
-
+                                       
                                          (".*" '(space . (:width (16))))))
 
   (defun org-agenda-cts ()
@@ -1664,6 +1635,7 @@ Prescient helps to sort candidates by last used first and then sorting by length
     :tags '("COMPLETION")
     :config (company-prescient-mode +1))
 #+end_src
+
 *** TODO Marginalia
 #+begin_src emacs-lisp
   (use-package marginalia
