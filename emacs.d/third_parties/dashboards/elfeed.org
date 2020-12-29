@@ -8,12 +8,11 @@
 
 * Bookmarks
 
- [u] Unread      ([[elfeed:+unread][    14]]/[[elfeed:][  5048]])
+ [u] Unread      ([[elfeed:+unread][     0]]/[[elfeed:][     0]])
  [e] Emacs       ([[elfeed:+unread +emacs][     0]]/[[elfeed:+emacs][     0]])
- [b] Blogs       ([[elfeed:+unread +blog][     0]]/[[elfeed:+blog][     0]])
- [m] Monitoring  ([[elfeed:+unread +monitoring][     0]]/[[elfeed:+monitoring][     0]])
- [n] News        ([[elfeed:+unread +news][     0]]/[[elfeed:+news][     0]])
- [v] Video       ([[elfeed:+unread +video][     0]]/[[elfeed:+video][     0]])
+ [g] github      ([[elfeed:+unread +repositories][     0]]/[[elfeed:+repositories][     0]])
+ [p] podcasts    ([[elfeed:+unread +podcasts][     0]]/[[elfeed:+podcasts][     0]])
+ [v] Video       ([[elfeed:+unread +youtube][     0]]/[[elfeed:+youtube][     0]])
 
 * Configuration
   :PROPERTIES:
