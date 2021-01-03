@@ -556,14 +556,20 @@ This leads to ensuring the package =vlf= with the use-package header defined to 
     :init (setq vlf-application 'dont-ask))
 #+end_src
 
-* Session [0%]
-** TODO Recent files
+* Session [100%]
+As I am using emacs as a daemon/client combination,
+my daily routine consists of opening emacs at the beginning of work and switching it off on the evening.
+Therefore it is difficult to track what needs to be remembered.
+This section provides helpers which automatises key part to make the transition between two sessions smoother.
+
+** DONE Recent files
+CLOSED: [2021-01-03 Sun 11:31]
 Opening recent files is always an easy and fast shortcut. Some files should be ignored though. That
 leads to this configuration
 
 #+begin_src emacs-lisp
   (use-package recentf
-    :tags '("CORE")
+    :tags '("CORE" "SESSION" "RECENT")
     :init
     (recentf-mode 1)
 
@@ -594,133 +600,135 @@ leads to this configuration
     (add-to-list 'recentf-exclude (format "%s/maildir.*" (getenv "HOME"))))
 #+end_src
 
-** TODO Backup files [0%]
+** DONE Backup files [100%]
+CLOSED: [2021-01-03 Sun 11:33]
 This section is dedicated to deal with backups. The main logic is to exlude some specific files
 (either because of they are sensitive, either because they are just results of a process). For the
 other ones, I want to have an easy way to navigate in it.
 
-*** TODO Global backup configuration
+*** DONE Global backup configuration
+CLOSED: [2021-01-03 Sun 11:33]
 This the global backup configuration. For that I adapted a little bit the wonderful
 snapshot-timemachine package.
 
 #+begin_src emacs-lisp
-    (use-package snapshot-timemachine
-      :ensure t
-      :tags '("CORE")
-      :init
+  (use-package snapshot-timemachine
+    :ensure t
+    :tags '("CORE" "SESSION" "BACKUP")
+    :init
 
+    (defun my-make-backup-file-name (FILE)
+      (let* ((dirname backup-directory)
+             (backup-filename (concat dirname (file-truename FILE))))
+        (unless (file-exists-p (file-name-directory  backup-filename))
+          (make-directory (file-name-directory backup-filename) t))
+        backup-filename))
 
-      (defun my-make-backup-file-name (FILE)
-        (let* ((dirname backup-directory)
-               (backup-filename (concat dirname (file-truename FILE))))
-          (unless (file-exists-p (file-name-directory  backup-filename))
-            (make-directory (file-name-directory backup-filename) t))
-          backup-filename))
+    ;; Redefine find-backup-filename to avoid the "!" replacement
+    (defun find-backup-file-name (fn)
+      "Find a file name for a backup file FN, and suggestions for deletions.
+    Value is a list whose car is the name for the backup file
+    and whose cdr is a list of old versions to consider deleting now.
+    If the value is nil, don't make a backup.
+    Uses `backup-directory-alist' in the same way as
+    `make-backup-file-name--default-function' does."
+      (let ((handler (find-file-name-handler fn 'find-backup-file-name)))
+        ;; Run a handler for this function so that ange-ftp can refuse to do it.
+        (if handler
+            (funcall handler 'find-backup-file-name fn)
+          (if (or (eq version-control 'never)
+                  ;; We don't support numbered backups on plain MS-DOS
+                  ;; when long file names are unavailable.
+                  (and (eq system-type 'ms-dos)
+                       (not (msdos-long-file-names))))
+              (list (make-backup-file-name fn))
+            (let* ((basic-name (make-backup-file-name fn))
+                   (base-versions (concat (file-name-nondirectory basic-name)
+                                          ".~"))
+                   (backup-extract-version-start (length base-versions))
+                   (high-water-mark 0)
+                   (number-to-delete 0)
+                   possibilities deserve-versions-p versions)
+              (condition-case ()
+                  (setq possibilities (file-name-all-completions
+                                       base-versions
+                                       (file-name-directory basic-name))
+                        versions (sort (mapcar #'backup-extract-version
+                                               possibilities)
+                                       #'<)
+                        high-water-mark (apply 'max 0 versions)
+                        deserve-versions-p (or version-control
+                                               (> high-water-mark 0))
+                        number-to-delete (- (length versions)
+                                            kept-old-versions
+                                            kept-new-versions
+                                            -1))
+                (file-error (setq possibilities nil)))
+              (if (not deserve-versions-p)
+                  (list (make-backup-file-name fn))
+                (cons (format "%s.~%d~" basic-name (1+ high-water-mark))
+                      (if (and (> number-to-delete 0)
+                               ;; Delete nothing if there is overflow
+                               ;; in the number of versions to keep.
+                               (>= (+ kept-new-versions kept-old-versions -1) 0))
+                          (mapcar (lambda (n)
+                                    (format "%s.~%d~" basic-name n))
+                                  (let ((v (nthcdr kept-old-versions versions)))
+                                    (rplacd (nthcdr (1- number-to-delete) v) ())
+                                    v))))))))))
 
-      ;; Redefine find-backup-filename to avoid the "!" replacement
-      (defun find-backup-file-name (fn)
-        "Find a file name for a backup file FN, and suggestions for deletions.
-      Value is a list whose car is the name for the backup file
-      and whose cdr is a list of old versions to consider deleting now.
-      If the value is nil, don't make a backup.
-      Uses `backup-directory-alist' in the same way as
-      `make-backup-file-name--default-function' does."
-        (let ((handler (find-file-name-handler fn 'find-backup-file-name)))
-          ;; Run a handler for this function so that ange-ftp can refuse to do it.
-          (if handler
-              (funcall handler 'find-backup-file-name fn)
-            (if (or (eq version-control 'never)
-                    ;; We don't support numbered backups on plain MS-DOS
-                    ;; when long file names are unavailable.
-                    (and (eq system-type 'ms-dos)
-                         (not (msdos-long-file-names))))
-                (list (make-backup-file-name fn))
-              (let* ((basic-name (make-backup-file-name fn))
-                     (base-versions (concat (file-name-nondirectory basic-name)
-                                            ".~"))
-                     (backup-extract-version-start (length base-versions))
-                     (high-water-mark 0)
-                     (number-to-delete 0)
-                     possibilities deserve-versions-p versions)
-                (condition-case ()
-                    (setq possibilities (file-name-all-completions
-                                         base-versions
-                                         (file-name-directory basic-name))
-                          versions (sort (mapcar #'backup-extract-version
-                                                 possibilities)
-                                         #'<)
-                          high-water-mark (apply 'max 0 versions)
-                          deserve-versions-p (or version-control
-                                                 (> high-water-mark 0))
-                          number-to-delete (- (length versions)
-                                              kept-old-versions
-                                              kept-new-versions
-                                              -1))
-                  (file-error (setq possibilities nil)))
-                (if (not deserve-versions-p)
-                    (list (make-backup-file-name fn))
-                  (cons (format "%s.~%d~" basic-name (1+ high-water-mark))
-                        (if (and (> number-to-delete 0)
-                                 ;; Delete nothing if there is overflow
-                                 ;; in the number of versions to keep.
-                                 (>= (+ kept-new-versions kept-old-versions -1) 0))
-                            (mapcar (lambda (n)
-                                      (format "%s.~%d~" basic-name n))
-                                    (let ((v (nthcdr kept-old-versions versions)))
-                                      (rplacd (nthcdr (1- number-to-delete) v) ())
-                                      v))))))))))
+    ;; Default Backup directory
+    (defvar backup-directory "~/.emacs.d/backups/")
+    (setq backup-directory-alist `((".*" . ,backup-directory)))
+    (when (not (file-exists-p backup-directory))
+      (make-directory backup-directory t))
+    (setq make-backup-file-name-function #'my-make-backup-file-name)
+    ;; Auto-save
+    (defvar auto-save-directory "~/.emacs.d/auto-save/")
+    (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
+    (when (not (file-exists-p auto-save-directory))
+      (make-directory auto-save-directory t))
 
-      ;; Default Backup directory
-      (defvar backup-directory "~/.emacs.d/backups/")
-      (setq backup-directory-alist `((".*" . ,backup-directory)))
-      (when (not (file-exists-p backup-directory))
-        (make-directory backup-directory t))
-      (setq make-backup-file-name-function #'my-make-backup-file-name)
-      ;; Auto-save
-      (defvar auto-save-directory "~/.emacs.d/auto-save/")
-      (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
-      (when (not (file-exists-p auto-save-directory))
-        (make-directory auto-save-directory t))
+    ;; Tramp backup
+    (defvar tramp-backup-directory "~/.emacs.d/tramp-backups/")
+    (setq tramp-backup-directory-alist `((".*" . ,tramp-backup-directory)))
 
-      ;; Tramp backup
-      (defvar tramp-backup-directory "~/.emacs.d/tramp-backups/")
-      (setq tramp-backup-directory-alist `((".*" . ,tramp-backup-directory)))
+    (when (not (file-exists-p tramp-backup-directory))
+      (make-directory tramp-backup-directory t))
 
-      (when (not (file-exists-p tramp-backup-directory))
-        (make-directory tramp-backup-directory t))
+    (setq make-backup-files t               ; backup of a file the first time it is saved.
+          backup-by-copying t               ; don't clobber symlinks
+          version-control t                 ; version numbers for backup files
+          delete-old-versions t             ; delete excess backup files silently
+          delete-by-moving-to-trash t
+          kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
+          kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+          auto-save-default t               ; auto-save every buffer that visits a file
+          auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
+          auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
+          )
 
-      (setq make-backup-files t               ; backup of a file the first time it is saved.
-            backup-by-copying t               ; don't clobber symlinks
-            version-control t                 ; version numbers for backup files
-            delete-old-versions t             ; delete excess backup files silently
-            delete-by-moving-to-trash t
-            kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
-            kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
-            auto-save-default t               ; auto-save every buffer that visits a file
-            auto-save-timeout 20              ; number of seconds idle time before auto-save (default: 30)
-            auto-save-interval 200            ; number of keystrokes between auto-saves (default: 300)
-            )
+    :config
 
-      :config
+    (defun snapshot-timemachine-backup-finder (file)
+      "Find snapshots of FILE in rsnapshot backups."
+      (let* ((file (expand-file-name file))
+             (file-dir (file-name-directory file))
+             (file-base (file-name-nondirectory file))
+             (backup-files (directory-files (concat backup-directory file-dir) t
+                                            (format "%s.*" file-base))))
+        (seq-map-indexed (lambda (backup-file index)
+                           (make-snapshot :id index
+                                          :name (format "%d" index)
+                                          :file backup-file
+                                          :date (nth 5 (file-attributes backup-file))))
+                         backup-files)))
 
-      (defun snapshot-timemachine-backup-finder (file)
-        "Find snapshots of FILE in rsnapshot backups."
-        (let* ((file (expand-file-name file))
-               (file-dir (file-name-directory file))
-               (file-base (file-name-nondirectory file))
-               (backup-files (directory-files (concat backup-directory file-dir) t
-                                              (format "%s.*" file-base))))
-          (seq-map-indexed (lambda (backup-file index)
-                             (make-snapshot :id index
-                                            :name (format "%d" index)
-                                            :file backup-file
-                                            :date (nth 5 (file-attributes backup-file))))
-                           backup-files)))
-
-      (setq snapshot-timemachine-snapshot-finder #'snapshot-timemachine-backup-finder))
+    (setq snapshot-timemachine-snapshot-finder #'snapshot-timemachine-backup-finder))
 #+end_src
 
-*** TODO Sensitive mode
+*** DONE Sensitive mode
+CLOSED: [2021-01-03 Sun 11:33]
 There are some files which are not desired to be backed up. This part goal is to setup this
 "avoiding saving" spécificities.
 
@@ -754,7 +762,7 @@ There are some files which are not desired to be backed up. This part goal is to
 
   (use-package auto-minor-mode
     :ensure t
-    :tags '("CORE")
+    :tags '("CORE" "SESSION" "MINOR")
     :config
     (add-to-list 'auto-minor-mode-alist '("\\.git/.*\\'" . sensitive-mode))
     (add-to-list 'auto-minor-mode-alist '("emacs\\.d/.*\\'" . sensitive-mode))
@@ -763,27 +771,35 @@ There are some files which are not desired to be backed up. This part goal is to
     (add-to-list 'auto-minor-mode-alist '("\\.gpg\\'" . sensitive-mode)))
 #+end_src
 
-** TODO Reload file at saved position
+** DONE Reload file at saved position
+CLOSED: [2021-01-03 Sun 11:35]
 :PROPERTIES:
 :FROM:     https://github.com/munen/emacs.d
 :END:
-Remember the cursor position of files when reopening them
+When a file is large, it is easier to restart from the exact position where we stopped.
+To do so, I am using the package =saveplace=
 
 #+begin_src emacs-lisp
   (use-package saveplace
     :ensure t
-    :tags '("CORE")
+    :tags '("CORE" "SESSION")
     :init
-    (setq save-place-file "~/.emacs.d/saveplace")
+    (setq save-place-file (format "%s/saveplace" user-emacs-directory))
     :config
     (save-place-mode 1))
 #+end_src
 
-** TODO Scratch
+** DONE Scratch
+CLOSED: [2021-01-03 Sun 11:39]
+I am using the scratch buffer as a notebook.
+Therefore, as everything which is not saved elsewhere is saved there, I am using =scratch-ext= to deal with the saving/loading part.
+The backups are stored on the cloud so it requires a connection and can't be used on a server.
+Finally, instead of having the scratch buffer using the =emacs-lisp-mode= as the major mode, I am using =org-mode= which is less limited.
+
 #+begin_src emacs-lisp
   (use-package scratch-ext
     :ensure t
-    :tags '("REQUIRES_CONNECTION" "USER")
+    :tags '("CORE" "SESSION" "REQUIRES_CONNECTION")
     :hook (after-init . scratch-ext-restore-last-scratch)
     :config
     ;; Org-mode + start folded buffer
