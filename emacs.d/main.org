@@ -31,7 +31,7 @@ We also provide a helper to shutdown properly the server.
   (kill-emacs))
 #+end_src
 
-* Core [50%]
+* Core [62%]
 This section focuses on providing helpers and utilities required for the rest of the configuration.
 
 ** DONE Fundamentals [100%]
@@ -345,22 +345,35 @@ This plugin is in charge to managing the communication and avoid any cycle.
      ("C-<f7>" . sauron-mode-line-clear)))
 #+end_src
 
-** TODO Documentation [0%]
-*** TODO Key bindinds
+** DONE Documentation [100%]
+CLOSED: [2021-01-03 Sun 11:19]
+Emacs is dense and provides a lot of features.
+Too many to remember everything.
+This part is there to help to navigate the documentation more easily.
+
+*** DONE Key bindinds
+CLOSED: [2021-01-03 Sun 11:18]
+=helm-descbinds= is a useful package which provides a way to list all the shortcuts available in the current buffer.
+
 #+begin_src emacs-lisp
   (use-package helm-descbinds
     :ensure t
-    :tags '("DOCUMENTATION")
+    :tags '("CORE" "DOCUMENTATION")
     :commands (helm-descbinds)
     :bind
     ("C-h b" . helm-descbinds))
 #+end_src
 
-*** TODO Help
+*** DONE Helpful
+CLOSED: [2021-01-03 Sun 11:19]
+=helpful= is a powerful package to access to the documentation of a key/symbol/...
+It also supports references and back-references.
+I am using it as the entry point of any documentation I want to access.
+
 #+begin_src emacs-lisp
   (use-package helpful
     :ensure t
-    :tags '("DOCUMENTATION")
+    :tags '("CORE" "DOCUMENTATION")
     :commands (helpful-key helpful-symbol helpful-at-point)
     :bind (("C-h k" . helpful-key)
            ("C-h a" . helpful-symbol)
