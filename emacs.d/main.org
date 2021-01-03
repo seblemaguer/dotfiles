@@ -1669,7 +1669,7 @@ format. This is really useful to homogeneise documentation.
     :tags '("CONNECTED"))
 #+end_src
 
-* Environment [25%]
+* Environment [50%]
 ** TODO Undo
 
 #+begin_src emacs-lisp
@@ -1894,12 +1894,20 @@ It is a nice extension to =selectrum= which brings to functionalities close to t
     :bind (:map flycheck-command-map
                 ("!" . consult-flycheck)))
 #+end_src
-** TODO Templating [0%]
-I use templates for 2 use cases: the buffer edition and the file specific templates. Both are relying on *yasnippet*.
 
-*** TODO Edition templates
+** DONE Templating [100%]
+CLOSED: [2021-01-03 Sun 17:58]
+I use templates for two cases:
+  - starting point as new script/code file
+  - accessing to some snippets.
+    
+In both cases, I rely on =yasnippet=.
+
+*** DONE Snippets
+CLOSED: [2021-01-03 Sun 17:57]
 The default configuration of yasnippet consists of activating it and plugging it with company.
-Ivy-yasnippet is used for snippet discovery.
+Obviously, the package =yasnippet-snippets= is also configured to provide default snippets.
+Finally, my own snippets are stored in the directory =~/.emacs.d/third_parties/snippets=.
 
 #+begin_src emacs-lisp
   (use-package yasnippet
@@ -1925,9 +1933,10 @@ Ivy-yasnippet is used for snippet discovery.
     (eval-after-load 'yasnippet '(third-parties-snippets-initialize)))
 #+end_src
 
-*** TODO Filetype templates
+*** DONE File templates
+CLOSED: [2021-01-03 Sun 17:58]
 This part is using yatemplate (an over-layer of yasnippet) coupled with auto-insert to have a set of
-file type dedicated templates. The templates are available in =third_parties/templates= directory.
+file type dedicated templates. The templates are available in =~/.emacs.d/third_parties/templates= directory.
 
 #+begin_src emacs-lisp
   (use-package yatemplate
