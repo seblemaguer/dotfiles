@@ -808,7 +808,7 @@ Finally, instead of having the scratch buffer using the =emacs-lisp-mode= as the
     (set (make-local-variable 'org-startup-folded) t))
 #+end_src
 
-* Org-mode [50%]
+* Org-mode [87%]
 =Org-mode= is the core of how I am organizing tasks, writing documents, ...
 While it is mainly a programming/writing language, it involves too many subparts and, therefore, has its own section.
 
@@ -1343,16 +1343,25 @@ As I have my own way of being organized, I redefined completely the groups.
     (org-super-agenda-mode t)
     (org-agenda nil "a"))
 #+end_src
-** TODO GTD [0%]
-*** TODO Clock management
+
+** DONE GTD [100%]
+CLOSED: [2021-01-03 Sun 14:45]
+Getting Things Done (GTD) is my main way of dealing with tasks.
+My main source of inspiration is proposed in http://doc.norang.ca/org-mode.html but I deviate from it on multiple aspects.
+
+*** DONE Clock management
+CLOSED: [2021-01-03 Sun 14:42]
 :PROPERTIES:
 :FROM:     https://sachachua.com/blog/2007/12/clocking-time-with-emacs-org/
 :END:
+Based on Sacha Chua blog post, I use the following configuration to clock-in/clock-out.
+It deviates from Sacha's blog solely on the states; as I am using my own org states.
+
 #+begin_src emacs-lisp
   (use-package org-mru-clock
     :ensure t
     :tags '("ORG")
-    :bind* (("C-c C-x i" . org-mru-clock-in)
+    :bind* (("C-c C-x i"   . org-mru-clock-in)
             ("C-c C-x C-j" . org-mru-clock-select-recent-task))
     :init
     (setq org-mru-clock-how-many 100
@@ -1395,12 +1404,18 @@ As I have my own way of being organized, I redefined completely the groups.
     :commands (org-analyzer-start))
 #+end_src
 
-*** TODO Archiving
-I prefer to keep the architecture, so for the archiving I am based on the discussion here:
-https://github.com/daviderestivo/galactic-emacs/blob/master/lisp/org-archive-subtree.el
+*** DONE Archiving
+CLOSED: [2021-01-03 Sun 14:44]
+:PROPERTIES:
+:FROM:     https://github.com/daviderestivo/galactic-emacs/blob/master/lisp/org-archive-subtree.el
+:END:
+I prefer to keep the tree structure.
+This is why I use this configuration.
 
 #+begin_src emacs-lisp
   (use-package org-archive
+    :ensure org-plus-contrib
+    :tags '("ORG")
     :config
     (setq org-archive-default-command 'org-archive-subtree)
 
@@ -1480,44 +1495,64 @@ https://github.com/daviderestivo/galactic-emacs/blob/master/lisp/org-archive-sub
         (message "No need to clean"))))
 #+end_src
 
-*** TODO Monitoring
-**** Dashboard
+*** DONE Monitoring
+CLOSED: [2021-01-03 Sun 14:45]
+I tend to have multiple project running in parallel.
+To have an overview of what is going on, I am using =org-dashboard=.
+
 #+begin_src emacs-lisp
   (use-package org-dashboard
     :ensure t
+    :tags '("ORG")
     :commands (org-dashboard-display))
 #+end_src
 
-**** Sidebar
-#+begin_src emacs-lisp
-  (use-package org-sidebar
-    :ensure t
-    :commands (org-sidebar))
-#+end_src
-** TODO Roaming [0%]
-*** TODO Global configuration
+** DONE Roaming
+CLOSED: [2021-01-03 Sun 15:20]
+I am using =org-roam= to link all the informations I save and archive in org files.
+To visualize everything, I am using =org-roam-server= which is spawning a webserver.
+The visualization is more fancy and the graph is auto-organized which makes everything easier to read.
+
 #+begin_src emacs-lisp
   (use-package org-roam
     :ensure t
-    :tags '("ORG" "USER")
+    :tags '("ORG")
     :hook
     (after-init . org-roam-mode)
+
     :custom
     (org-roam-directory "~/pCloudDrive/org")
+
     :bind (:map org-roam-mode-map
                 (("C-c n l" . org-roam)
                  ("C-c n f" . org-roam-find-file))
-                :map org-mode-map
+           :map org-mode-map
                 (("C-c n i" . org-roam-insert))
                 (("C-c n I" . org-roam-insert-immediate))))
-#+end_src
 
-*** TODO Visualization server
-#+begin_src emacs-lisp
   (use-package org-roam-server
     :ensure t
     :tags '("ORG" "USER" "GUI"))
 #+end_src
+
+** DONE Accessing
+CLOSED: [2021-01-03 Sun 15:24]
+This section configures packages to access information from the org files.
+=org-ql= is providing commands to query the org files in a SQL manner.
+=org-protocol= is a package of =org-plus-contrib= which provides helper to use emacsclient to access to org files.
+This package is mainly use to bookmark webpages from firefox.
+
+#+begin_src emacs-lisp
+  (use-package org-ql
+    :ensure t
+    :tags '("ORG")
+    :commands (org-ql-search org-ql-view org-ql-view-recent-items))
+
+  (use-package org-protocol
+    :ensure org-plus-contrib
+    :tags '("ORG"))
+#+end_src
+
 ** TODO Capturing [0%]
 *** TODO DOCT
 #+begin_src emacs-lisp
