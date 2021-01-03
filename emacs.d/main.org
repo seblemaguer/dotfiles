@@ -31,7 +31,7 @@ We also provide a helper to shutdown properly the server.
   (kill-emacs))
 #+end_src
 
-* Core [25%]
+* Core [50%]
 This section focuses on providing helpers and utilities required for the rest of the configuration.
 
 ** DONE Fundamentals [100%]
@@ -261,7 +261,11 @@ Nonetheless, a key feature is missing: which are the new packages available afte
           paradox-github-token (my:auth-source-get-passwd :host "api.github.com" :user "seblemaguer^paradox")))
 #+end_src
 
-** TODO Load private part
+** DONE Load private part
+CLOSED: [2021-01-03 Sun 11:11]
+Some parts can't be totally hidden using the =my:auth-source-get-*= helpers.
+These sensitive configuration parts are store in a dedicated file (identified by the variable =privade-file=) which is loaded here.
+
 #+begin_src emacs-lisp
   (defvar private-file "~/.emacs.d/private-variables.el"
     "Path to the file which stores my configuration.")
@@ -270,7 +274,8 @@ Nonetheless, a key feature is missing: which are the new packages available afte
     (load private-file))
 #+end_src
 
-** TODO Notifications [0%]
+** DONE Notifications [100%]
+CLOSED: [2021-01-03 Sun 11:14]
 Emacs is my entry point for almost everything.
 Therefore, it is also useful to have the notifications handled directly in Emacs.
 To do so, I rely on the couple sauron/alert.
@@ -281,9 +286,11 @@ By doing so, I can be aware of a notification but choose to ignore it if I am fo
 If another notification of at most the same priority is raised, it will be logged but there won't be any visible cue.
 However, if a notification of an higher priority is raised, the color of the modeline will be updated to reflect the priority of the notification.
 
-*** TODO Sauron
+*** DONE Sauron
+CLOSED: [2021-01-03 Sun 11:13]
 Sauron is the pivot of the notification system.
-Due to some priority issues with ERC and some event that I would like to ignore with the notifications coming from the *org-agenda*, I use my own fork for now.
+However, I need to use my own fork for two reasons:
+the upstream has some priority issues with ERC; I would like to ignore some events emitted by the *org-agenda*.
 
 #+begin_src emacs-lisp
   (use-package sauron
@@ -291,7 +298,7 @@ Due to some priority issues with ERC and some event that I would like to ignore 
                       :fork (:host github
                                    :repo "seblemaguer/sauron"
                                    :branch "functional"))
-    :tags '("NOTIFICATION")
+    :tags '("CORE" "NOTIFICATION")
     :commands (sauron-start-hidden)
 
     :config
@@ -317,15 +324,16 @@ Due to some priority issues with ERC and some event that I would like to ignore 
   )
 #+end_src
 
-*** TODO Sauron/Alert/Modeline integration
-By using my plugin `sauron-mode-line`, I link Alert and Sauron.
+*** DONE Sauron/Alert/Modeline integration
+CLOSED: [2021-01-03 Sun 11:14]
+By using my plugin =sauron-mode-line=, I link Alert and Sauron.
 By this way, all the Alert notifications are automatically transmitted to Sauron.
 If a Sauron event is raised, it is transmitted to Alert to adapt the modeline bar.
 This plugin is in charge to managing the communication and avoid any cycle.
 
 #+begin_src emacs-lisp
   (use-package sauron-mode-line
-    :tags '("NOTIFICATION")
+    :tags '("CORE" "NOTIFICATION")
     :load-path default-plugin-dir
     :custom
     (sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron)
