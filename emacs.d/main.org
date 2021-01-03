@@ -1954,61 +1954,78 @@ file type dedicated templates. The templates are available in =~/.emacs.d/third_
     ;; (add-hook 'find-file-hook 'auto-insert)
     )
 #+end_src
-* IDE [0%]
-** TODO Compilation [0%]
-I develop with emacs, so compiling is actually a big part of my life. Therefore, I modified baseline
-compilation mechanisms as well as fly checking.
+* IDE [100%]
+While the environment configuration is fundamental for editing,
+it is necessary to add more features to simplify coding life.
+This section focuses on three components: the compilation, the commenting and the formatting.
 
-*** TODO Baseline compilation
+** DONE Compilation [100%]
+CLOSED: [2021-01-03 Sun 18:23]
+I configured the configuration around two main parts:
+refining the default compilation support and add fly-checking support.
+
+*** DONE Baseline compilation
+CLOSED: [2021-01-03 Sun 18:23]
 I just modify a little bit the default compilation to be a little more "user friendly".
+This implies two key features:
+  - colorizing the compilation buffer for better reading
+  - closing the compilation buffer if the compilation was a success.
 
+A bug (described in http://stackoverflow.com/questions/15489319/how-can-i-skip-in-file-included-from-in-emacs-c-compilation-mode ) is also addressed.
+    
 #+begin_src emacs-lisp
-  (defun my-compile-autoclose (buffer string)
-    "Auto close compile log if there are no errors"
-    (when (and (not (string-match-p (buffer-name buffer) "*grep*"))
-               (string-match "finished" string))
-          (delete-window (get-buffer-window buffer t))
-          (bury-buffer-internal buffer)))
-
   (use-package compile
     :defer
     :diminish compilation-in-progress
-    :tags '("COMPILATION")
+    :tags '("IDE" "COMPILATION")
     :hook
     (compilation-filter-hook . my-colorize-compilation-buffer)
+  
     :init
     (setq compilation-scroll-output t)
+  
     :config
+    ;; Helper to colorize the compilation buffer
     (defun my-colorize-compilation-buffer ()
-          (read-only-mode 'toggle)
-          (ansi-color-apply-on-region compilation-filter-start (point))
-          (read-only-mode 'toggle))
+      "Colorize compile log."
+      (read-only-mode 'toggle)
+      (ansi-color-apply-on-region compilation-filter-start (point))
+      (read-only-mode 'toggle))
+
+    ;; Auto close if success
+    (defun my-compile-autoclose (buffer string)
+      "Auto close compile log if there are no errors"
+      (when (and (not (string-match-p (buffer-name buffer) "*grep*"))
+                 (string-match "finished" string))
+        (delete-window (get-buffer-window buffer t))
+        (bury-buffer-internal buffer)))
     (add-to-list 'compilation-finish-functions #'my-compile-autoclose)
 
     (setq compilation-always-kill t
           compilation-ask-about-save nil
           compilation-scroll-output 'first-error)
 
-    ;; the next-error function weirdly stops at "In file included from
-    ;; config.cpp:14:0:". Stop that:
+    ;; the next-error function weirdly stops at "In file included from...". Stop that:
     ;; http://stackoverflow.com/questions/15489319/how-can-i-skip-in-file-included-from-in-emacs-c-compilation-mode
-    (setcar (nthcdr 5 (assoc 'gcc-include compilation-error-regexp-alist-alist)) 0)
-    )
+    (setcar (nthcdr 5 (assoc 'gcc-include compilation-error-regexp-alist-alist)) 0))
 #+end_src
 
-*** TODO Flychecking
-For the fly checking, I use flycheck instead of flymake. So I adapted it for my needs by also adding proselint support.
+*** DONE Flychecking
+CLOSED: [2021-01-03 Sun 18:13]
+For the fly checking, I use flycheck instead of flymake.
+The key part of this configuration is the fact that checking the documentation is disabled.
+I also use =flycheck-posframe= to have a quick idea of what is going on at the pointed error/warning/...
 
 #+begin_src emacs-lisp
   ;; Disable checking doc
   (use-package flycheck
     :ensure t
-    :tags '("CORE")
+    :tags '("CORE" "COMPILATION" "IDE")
     :commands (flycheck-error-list-set-filter flycheck-next-error flycheck-previous-error flycheck-first-error)
     :pretty-hydra
     ((:pre (progn (setq hydra-hint-display-type t) (flycheck-list-errors))
-	   :post (progn (setq hydra-hint-display-type nil) (quit-windows-on "*Flycheck errors*"))
-	   :color teal :hint nil)
+           :post (progn (setq hydra-hint-display-type nil) (quit-windows-on "*Flycheck errors*"))
+           :color teal :hint nil)
 
      ("Errors"
       (("f"  flycheck-error-list-set-filter                            "Filter")
@@ -2019,58 +2036,46 @@ For the fly checking, I use flycheck instead of flymake. So I adapted it for my 
        ("<"  project-hydra/body "back"))))
 
     :config
-    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-
-    (flycheck-define-checker proselint
-      "A linter for prose."
-      :command ("proselint" source-inplace)
-      :error-patterns
-      ((warning line-start (file-name) ":" line ":" column ": "
-		(id (one-or-more (not (any " "))))
-		(message) line-end))
-      :modes (text-mode markdown-mode gfm-mode org-mode))
-    )
+    (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
 
   (use-package flycheck-posframe
     :ensure t
+    :tags '("CORE" "UI")
     :after flycheck
     :hook (flycheck-mode . flycheck-posframe-mode)
     :config
     (setq flycheck-posframe-warning-prefix "\u26a0 "))
 #+end_src
 
-*** TODO Task runner
-#+begin_src emacs-lisp
-  (use-package taskrunner
-    :ensure straight
-    :straight (taskrunner :type git :host github :repo "emacs-taskrunner/emacs-taskrunner"
-                          :fork (:host github :repo "seblemaguer/emacs-taskrunner"))
-    :tags '("COMPILATION"))
-#+end_src
-** TODO Commenting [0%]
-*** TODO Fixme keywords management
-To deal with the fixme, I relie on two part: fic-mode for the highlighting and occur for the
-listing.
+** DONE Commenting
+CLOSED: [2021-01-03 Sun 18:33]
+For the commenting, the common denominator is how to deal with FIXMEs.
+To do so, I relie on two part: fic-mode for the highlighting and occur for the listing.
+For language specific configurations, it is done in the language configuration part.
 
 #+begin_src emacs-lisp
   (use-package fic-mode
     :ensure t
-    :tags '("CORE")
+    :tags '("CORE" "IDE")
     :hook
     (prog-mode . fic-mode)
-    :init
 
+    :init
     (defun fic-view-listing ()
       "Use occur to list related FIXME keywords"
       (interactive)
-      (occur "\\<\\(FIXME\\|WRITEME\\|WRITEME!\\|TODO\\|BUG\\):?")))
+      (occur "\\<\\(FIXME\\|WRITEME\\|WRITEME!\\|TODO\\|BUG\\|NOTE\\):?")))
 #+end_src
-** TODO Formatting
-We can globally reformat the buffer relying on external tool. =format-all= is here for this.
+
+** DONE Formatting
+CLOSED: [2021-01-03 Sun 18:26]
+In order to format the buffer, it is better to rely on external formatter/linter.
+=format-all= proposes support of big bunch of them, so I am using it.
 
 #+begin_src emacs-lisp
   (use-package format-all
     :ensure t
+    :tags '("IDE" "FORMAT")
     :commands (format-all-buffer format-all-mode))
 #+end_src
 
