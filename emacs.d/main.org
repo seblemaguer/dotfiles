@@ -31,12 +31,17 @@ We also provide a helper to shutdown properly the server.
   (kill-emacs))
 #+end_src
 
-* Core [0%]
+* Core [12%]
 This section focuses on providing helpers and utilities required for the rest of the configuration.
 
-** TODO Fundamentals [0%]
-*** TODO Define some important variables
-This section focus on defining some variables/helpers needed to have a more global configuration
+** DONE Fundamentals [100%]
+CLOSED: [2021-01-03 Sun 10:46]
+This section define the fundamental variables and helpers which are recurrently used in the configuration.
+
+*** DONE Define some important variables
+CLOSED: [2021-01-03 Sun 10:39]
+The section defines the variables =default-plugin-dir= and set the =custom-file=.
+Some default values related to emacs' core behaviour, like the garbage collector, are also set here.
 
 #+begin_src emacs-lisp
   ;; Define root directory and add the plugins
@@ -49,15 +54,17 @@ This section focus on defining some variables/helpers needed to have a more glob
 
   ;; Silence!!!!!!
   (setq save-abbrevs 'silently
-	ad-redefinition-action 'accept
+        ad-redefinition-action 'accept
 
-	;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
-	gc-cons-threshold 100000000
-	large-file-warning-threshold 100000000)
+        ;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
+        gc-cons-threshold 100000000
+        large-file-warning-threshold 100000000)
 #+end_src
 
-*** TODO Identification helper
-Easy use wrapper around auth-* authentification emacs utils.
+*** DONE Identification helper
+CLOSED: [2021-01-03 Sun 10:41]
+In order to keep the authentification as private as possible, two primitives are defined here;
+one to get the user (=my:auth-source-get-user=) and on to get the password (=my:auth-source-get-passwd=).
 
 #+begin_src emacs-lisp
   (require 'cl-lib)
@@ -74,8 +81,14 @@ Easy use wrapper around auth-* authentification emacs utils.
 	(funcall (plist-get (nth 0 founds) :secret)))))
 #+end_src
 
-*** TODO Dealing with tangling this file
-This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
+*** DONE Dealing with tangling this file
+CLOSED: [2021-01-03 Sun 10:46]
+:PROPERTIES:
+:FROM:     https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
+:END:
+This section defines two functions:
+one to generate the emacs init file from =~/.emacs.d/main.org= and one to byte-compile the emacs init file.
+
 
 #+begin_src emacs-lisp
   (defun tangle-main-org ()
@@ -85,20 +98,18 @@ This part is copy/pasted from https://www.reddit.com/r/emacs/comments/6t37yg/org
     ;; Tangle to init.el
     (with-current-buffer (find-file (concat user-emacs-directory "main.org"))
       (org-babel-tangle))
-    )
 
-  ;; ;; byte-compile plugins
-  ;; (byte-recompile-directory (expand-file-name default-plugin-dir) 0)
+    ;; byte-compile plugins
+    (byte-recompile-directory (expand-file-name default-plugin-dir) 0))
 
   (defun compile-init ()
-    "byte compiles ~/.emacs.d/init.el"
+    "Byte compiles ~/.emacs.d/init.el."
     (interactive)
     (when (equal (buffer-name)
-		 (concat "main.org"))
+                 (concat "main.org"))
       ;; Recompile init file
-      (byte-compile-disable-warning  'make-local) ;; FIXME: apparently people says this warning is simply wrong, so ignore it!
-      (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)
-      ))
+      (byte-compile-disable-warning  'make-local) ;; NOTE: apparently people says this warning is simply wrong, so ignore it!
+      (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)))
 #+end_src
 
 ** TODO Package management [0%]
