@@ -31,7 +31,7 @@ We also provide a helper to shutdown properly the server.
   (kill-emacs))
 #+end_src
 
-* Core [62%]
+* Core [100%]
 This section focuses on providing helpers and utilities required for the rest of the configuration.
 
 ** DONE Fundamentals [100%]
@@ -380,12 +380,20 @@ I am using it as the entry point of any documentation I want to access.
            ("C-h h" . helpful-at-point)))
 #+end_src
 
-** TODO Buffer listing
+** DONE Buffer listing
+CLOSED: [2021-01-03 Sun 11:24]
+Buffer listing is the fundamental navigation tool.
+After playing with =ibuffer= and other helpers, I settled using =bufler=.
+This choice has been made due its the simplicity and its recursive nature.
+=bufler= can be used in conjunction with =prism=.
+While this latter package is to define some visual aspect, I only use it in conjunction with =bufler=.
+Therefore, I decided to set it up here.
+
 #+begin_src emacs-lisp
   ;; I need prism to use my configuration of bufler
   (use-package prism
     :ensure t
-    :tags '("BUFFER")
+    :tags '("CORE" "BUFFER")
     :config
     (defun load-prism (frame)
       (with-selected-frame frame
@@ -412,7 +420,7 @@ I am using it as the entry point of any documentation I want to access.
 
   (use-package bufler
     :ensure t
-    :tags '("BUFFER")
+    :tags '("CORE" "BUFFER")
     :bind (("C-x C-b" . bufler)
            ("C-x b"   . bufler-switch-buffer))
 
@@ -517,12 +525,13 @@ I am using it as the entry point of any documentation I want to access.
 
 #+end_src
 
-** TODO Minibuffer
+** DONE Minibuffer
+CLOSED: [2021-01-03 Sun 11:24]
 Minibuffer configuration part. Nothing really outstanding, just the classical stuff.
 
 #+begin_src emacs-lisp
   (use-package minibuffer
-    :tags '("CORE")
+    :tags '("CORE" "MINIBUFFER")
     ;; :hook
     ;; (eval-expression-minibuffer-setup .  #'eldoc-mode)
     :config
@@ -533,18 +542,18 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
     (file-name-shadow-mode 1))
 #+end_src
 
-** TODO Large files
-Some buffer specificities configuration like how to deal with trailing whitespaces or the
-fill-column for example.
+** DONE Large files
+CLOSED: [2021-01-03 Sun 11:28]
+Large files are difficult to handle properly in emacs.
+The best way is to use =vlf=.
+However, the entry point is actually =vlf-setup=.
+This leads to ensuring the package =vlf= with the use-package header defined to be =vlf-setup=
 
 #+begin_src emacs-lisp
-  ;; Open Large file
-  (use-package vlf
-    :ensure t
+  (use-package vlf-setup
+    :ensure vlf
     :tags '("CORE")
-    :hook (before-s)
-    :config
-    (require 'vlf-setup))
+    :init (setq vlf-application 'dont-ask))
 #+end_src
 
 * Session [0%]
