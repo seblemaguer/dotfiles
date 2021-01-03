@@ -31,7 +31,7 @@ We also provide a helper to shutdown properly the server.
   (kill-emacs))
 #+end_src
 
-* Core [12%]
+* Core [25%]
 This section focuses on providing helpers and utilities required for the rest of the configuration.
 
 ** DONE Fundamentals [100%]
@@ -112,11 +112,19 @@ one to generate the emacs init file from =~/.emacs.d/main.org= and one to byte-c
       (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)))
 #+end_src
 
-** TODO Package management [0%]
-The first part of the configuration is to prepare the package management. I am using =use-package= as
-the central tool to deal with configuration of the packages.
+** DONE Package management [100%]
+CLOSED: [2021-01-03 Sun 11:04]
+My configuration relies on a lot (too-many?) of packages.
+It relies primarly on =use-package= and some extensions.
+The process of how to deal with the packages is the following:
+  - by default, if possible, let's use =melpa=
+  - if the package is not on melpa, let's use =straight=
+  - if the package is on melpa but requires extra development, let's use =straight=
 
-*** TODO Emacs package configuration
+Furthermore, each package is tagged with several keywors to have a "machine-dependent" loading scheme.
+
+*** DONE Emacs package configuration
+CLOSED: [2021-01-03 Sun 10:51]
 In this section, we are configuring the repositories and emacs internal package management. The only
 specificity here is that the TLS algorithm is specific for 26.2.1.
 
@@ -141,8 +149,9 @@ specificity here is that the TLS algorithm is specific for 26.2.1.
   (package-initialize)
 #+end_src
 
-*** TODO Load use-package
-Here, we are initializing =use-package= in the classic way.
+*** DONE Load use-package
+CLOSED: [2021-01-03 Sun 10:51]
+In this section, we are initializing =use-package= in the classic way.
 
 #+begin_src emacs-lisp
   (unless (package-installed-p 'use-package)
@@ -154,8 +163,11 @@ Here, we are initializing =use-package= in the classic way.
   (setq use-package-verbose t)
 #+end_src
 
-*** TODO Straight
-=Straight= coupled with =use-package= is a useful combination to deal with packages not on melpa or packages in development.
+*** DONE Straight
+CLOSED: [2021-01-03 Sun 10:52]
+In this section, we are configuring =straight=.
+=Straight= supports =use-package= by default.
+Therefore, there is no extra-configuration for this to do.
 
  #+begin_src emacs-lisp
    (defvar bootstrap-version)
@@ -174,25 +186,35 @@ Here, we are initializing =use-package= in the classic way.
    (unless (string= (getenv "TRAVIS") "true")
      (setq straight-vc-git-default-protocol 'ssh))
  #+end_src
+ 
+*** DONE Tagging
+CLOSED: [2021-01-03 Sun 10:58]
+I am using keywords/tags to define a loading scheme for each of the machine where emacs is installed.
+Each package, from now on, has one or multiple keywords associated using the key =:tags=.
+Each computer has a series of tags which are required to be loaded.
+The specification respects the following syntax:
+  - list of strings which are
+  - a tag prefixed by =!= explicitely reject packages whose have this tag associated with
+  - ="ALL"= is a joker indicating =all the tags!= $\rightarrow$ no filtering
 
-*** TODO Tagging
-I am using tags to condition the use of packages based on the computer hostname.
 
 #+begin_src emacs-lisp
   (use-package use-package-tags
     :straight (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
     :config
     (setq use-package-tags-enabled
-	  `(("lemagues-surface" . ("ALL"))
-	    ("sig201" . ("ALL"))
-	    ("mackenzie" . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
-	    (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
+          `(("lemagues-surface" . ("ALL"))
+            ("sig201"           . ("ALL"))
+            ("mackenzie"        . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
+            (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
 #+end_src
 
-*** TODO Hydra
+*** DONE Hydra
+CLOSED: [2021-01-03 Sun 11:01]
 I use hydra a lot so it is easier to add its support directly in the use-package configuration part.
+The combination pretty-hydra/major-mode-hydra provides an easy and powerful way to declare hydra.
+While alternatives exist, I find this combination more straightforward and cleaner when it is used in combination with =use-package=.
 
-**** Major mode/pretty hydra
 #+begin_src emacs-lisp
   (use-package pretty-hydra
     :ensure t
@@ -222,38 +244,11 @@ I use hydra a lot so it is easier to add its support directly in the use-package
     ("M-SPC" . major-mode-hydra))
 #+end_src
 
-**** Using posframe
-#+begin_src emacs-lisp
-  (use-package hydra-posframe
-    :straight (hydra-posframe :type git :host github :repo "Ladicle/hydra-posframe")
-    :tags '("CORE")
-    :disabled t
-    :custom
-    (hydra-posframe-parameters
-     '(
-       (left-fringe . 4) (right-fringe . 4)
-       (top-fringe . 4) (bottom-fringe . 4)
-       (height . 18) (width . 105)
-       (min-height . 17) (max-height . 30)
-       (top . 25)
-       ))
-
-    :custom-face
-    (hydra-posframe-border-face ((t (:background "#6272a4"))))
-    :hook (after-init . hydra-posframe-enable))
-#+end_src
-
-*** TODO General
-I introduce general to configure the key management. It is not really used yet, but it will be more and and more.
-
-#+begin_src emacs-lisp
-  (use-package general
-    :ensure t
-    :tags '("CORE"))
-#+end_src
-
-*** TODO Paradox to enhance package list management
-Finally, I use paradox to enhance the package listing experience.
+*** DONE Paradox to enhance package list management
+CLOSED: [2021-01-03 Sun 11:04]
+The default =list-packages= provides a nice experience.
+Nonetheless, a key feature is missing: which are the new packages available after refresh.
+=Paradox= is providing this information so I am using it for now even if I prefer the rendering of the default package listing.
 
 #+begin_src emacs-lisp
   (use-package paradox
