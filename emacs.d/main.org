@@ -808,7 +808,7 @@ Finally, instead of having the scratch buffer using the =emacs-lisp-mode= as the
     (set (make-local-variable 'org-startup-folded) t))
 #+end_src
 
-* Org-mode [12%]
+* Org-mode [37%]
 =Org-mode= is the core of how I am organizing tasks, writing documents, ...
 While it is mainly a programming/writing language, it involves too many subparts and, therefore, has its own section.
 
@@ -937,7 +937,8 @@ Finally, some keywords are there for note purposes:
           org-confirm-babel-evaluate nil
           org-startup-with-inline-images t))
 #+end_src
-** TODO Source [66%]
+** DONE Source [100%]
+CLOSED: [2021-01-03 Sun 13:59]
 The source visualisation of org files can be pretty raw.
 This section provides configurations to help the navigation and the visualisation of such files.
 
@@ -1011,41 +1012,60 @@ Jupyter is more powerful than the default python management which is why I chose
 
 #+end_src
 
-*** TODO To_sort
-#+begin_src emacs-lisp
-  (use-package org-checklist :defer t)
-  (use-package ob-exp :defer t)
-  (use-package ox-bibtex :defer t)
-  (use-package org-protocol :defer t)
-#+end_src
+*** DONE ID Generation
+CLOSED: [2021-01-03 Sun 13:30]
+I don't like how identifier are hashed in org-mode.
+This package aims to provide an equivalent to the "auctex/reftex" label generation module but for org-mode.
 
-** TODO Helpers [0%]
-*** TODO Querying
-#+begin_src emacs-lisp
-  (use-package org-ql
-    :ensure t)
-#+end_src
-
-*** TODO ID Generation
 #+begin_src emacs-lisp
   (use-package org-id+
     :straight (org-id+ :repo "seblemaguer/org-id-plus" :type git :host github)
     :commands (org-id+-add-ids-to-headlines-in-file)
     :tags '("ORG"))
 #+end_src
+*** DONE Checklist
+CLOSED: [2021-01-03 Sun 13:55]
+I am using checklist regularly.
+Consequently, adding its support in org-mode is a big advantage.
+To do so, I am relying the package =org-checklist= which is provided by =org-plus-contrib=.
 
-** TODO Export [0%]
-*** TODO HTML
-    #+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
+  (use-package org-checklist
+    :ensure org-plus-contrib
+    :tags '("ORG"))
+#+END_SRC
+
+** DONE Export [100%]
+CLOSED: [2021-01-03 Sun 13:47]
+This section focuses on configuring the export of org files to some document format.
+
+*** DONE HTML
+CLOSED: [2021-01-03 Sun 13:44]
+In this section, we configure the export for HTML main files and for presentation using =reveal.js=.
+Both configurations relies on =htmlize= to deal with the coloring part.
+We also defines additional link to support audios and videos.
+
+#+begin_src emacs-lisp
   (use-package htmlize
     :ensure t
     :tags '("ORG"))
 
   (use-package ox-html
+    :ensure org-plus-contrib
     :after ox
     :requires (htmlize)
-    :functions (endless/export-audio-link endless/export-video-link)
     :tags '("ORG")
+    :init
+    (defun endless/export-audio-link (path desc format)
+      "Export org audio links to hmtl."
+      (cl-case format
+        (html (format "<audio src=\"%s\" controls>%s</audio>" path (or desc "")))))
+
+    (defun endless/export-video-link (path desc format)
+      "Export org video links to hmtl."
+      (cl-case format
+        (html (format "<video controls src=\"%s\">%s</video>" path (or desc "")))))
+
     :config
     (setq org-html-xml-declaration '(("html" . "")
                                      ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
@@ -1057,17 +1077,8 @@ Jupyter is more powerful than the default python management which is why I chose
           org-export-htmlize-output-type 'css ; Do not generate internal css formatting for HTML exports
           )
 
-    (defun endless/export-audio-link (path desc format)
-      "Export org audio links to hmtl."
-      (cl-case format
-        (html (format "<audio src=\"%s\" controls>%s</audio>" path (or desc "")))))
-    (org-link-set-parameters "audio" :ignore #'endless/export-audio-link)
-
-    (defun endless/export-video-link (path desc format)
-      "Export org video links to hmtl."
-      (cl-case format
-        (html (format "<video controls src=\"%s\">%s</video>" path (or desc "")))))
     (org-link-set-parameters "video" :ignore #'endless/export-video-link)
+    (org-link-set-parameters "audio" :ignore #'endless/export-audio-link)
 
     (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/firefox %s")))
 
@@ -1077,32 +1088,46 @@ Jupyter is more powerful than the default python management which is why I chose
     :requires (ox-html htmlize))
 #+end_src
 
-*** TODO Latex
+*** DONE Latex
+CLOSED: [2021-01-03 Sun 13:46]
+In this section, the export for latex and beamer are configured.
+The key part is that we are using minted to deal with the source.
+Therefore, we have to modify the call to the =latexmk= command (which is therefore required).
+
 #+begin_src emacs-lisp
   (use-package ox-latex
+    :ensure org-plus-contrib
     :tags '("ORG")
     :after ox
     :config
     (setq org-latex-listings t
           org-export-with-LaTeX-fragments t
           org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
-#+end_src
 
-*** TODO Beamer
-#+begin_src emacs-lisp
   (use-package ox-beamer
+    :ensure org-plus-contrib
     :tags '("ORG")
     :after ox)
+
+  (use-package ox-bibtex
+    :ensure org-plus-contrib
+    :tags '("ORG")
+    :after ox
+    :defer t)
 #+end_src
 
-*** TODO Markdown
+*** DONE Markdown
+CLOSED: [2021-01-03 Sun 13:47]
+I am using mainly the Github markdown format.
+Therefore, I use the package =ox-gfm=
+
 #+begin_src emacs-lisp
   (use-package ox-gfm
       :ensure t
       :tags '("ORG")
-      :after ox
-      :config (require 'ox-gfm))
+      :after ox)
 #+end_src
+
 ** TODO Agenda [0%]
 *** TODO Global
 #+begin_src emacs-lisp
