@@ -506,7 +506,21 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
     (file-name-shadow-mode 1))
 #+end_src
 
-* ??? [0%]
+** TODO Large files
+Some buffer specificities configuration like how to deal with trailing whitespaces or the
+fill-column for example.
+
+#+begin_src emacs-lisp
+  ;; Open Large file
+  (use-package vlf
+    :ensure t
+    :tags '("CORE")
+    :hook (before-s)
+    :config
+    (require 'vlf-setup))
+#+end_src
+
+* Session [0%]
 ** TODO Recent files
 Opening recent files is always an easy and fast shortcut. Some files should be ignored though. That
 leads to this configuration
@@ -711,20 +725,6 @@ There are some files which are not desired to be backed up. This part goal is to
     (add-to-list 'auto-minor-mode-alist '("emacs\\.d/emms/.*\\'" . sensitive-mode))
     (add-to-list 'auto-minor-mode-alist '("Calendars/.*.org\\'" . sensitive-mode))
     (add-to-list 'auto-minor-mode-alist '("\\.gpg\\'" . sensitive-mode)))
-#+end_src
-
-** TODO Large files
-Some buffer specificities configuration like how to deal with trailing whitespaces or the
-fill-column for example.
-
-#+begin_src emacs-lisp
-  ;; Open Large file
-  (use-package vlf
-    :ensure t
-    :tags '("CORE")
-    :hook (before-s)
-    :config
-    (require 'vlf-setup))
 #+end_src
 
 ** TODO Reload file at saved position
@@ -1527,7 +1527,7 @@ format. This is really useful to homogeneise documentation.
     :tags '("CONNECTED"))
 #+end_src
 
-* ??? [0%]
+* Environment [0%]
 ** TODO Undo
 In order to have a better and more visual control of undoing, I use undo-propose for now. I used to
 use undo-tree but corruption was a problem. However, having the navigation tree might be
@@ -1781,7 +1781,7 @@ file type dedicated templates. The templates are available in =third_parties/tem
     ;; (add-hook 'find-file-hook 'auto-insert)
     )
 #+end_src
-* IDE Functionnalities [0%]
+* IDE [0%]
 ** TODO Compilation [0%]
 I develop with emacs, so compiling is actually a big part of my life. Therefore, I modified baseline
 compilation mechanisms as well as fly checking.
@@ -2180,7 +2180,7 @@ enough to be on melpa so I use straight.
     ("\\.log\\(?:\\.[0-9]+\\)?\\'" . logview-mode)
     ("syslog\\(?:\\.[0-9]+\\)?\\'" . logview-mode))
 #+end_src
-** TODO ???? [0%]
+** TODO Programming languages [0%]
 *** TODO Mathematics based languages
 #+begin_src emacs-lisp
   (use-package matlab-load
@@ -3045,6 +3045,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
   (use-package github-review
     :ensure t)
 #+end_src
+
 *** TODO Gist
 #+begin_src emacs-lisp
   (use-package gist
