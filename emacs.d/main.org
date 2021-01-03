@@ -2079,16 +2079,19 @@ In order to format the buffer, it is better to rely on external formatter/linter
     :commands (format-all-buffer format-all-mode))
 #+end_src
 
-* Programming [0%]
-** TODO Language interaction (LSP)
-LSP is a set of helper to interact with external "ide" tools and provide their functionalities into
-emacs. It is the baseline of my configuration for java, kotlin and also python. I suspect I am going
-to extend it even further in the feature.
+* Programming [40%]
+Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
+To do so, I rely mainly on Language Server Protocol (LSP).
+
+** DONE LSP general configuration
+CLOSED: [2021-01-03 Sun 21:28]
+The general configuration of LSP is centered around two key parts: the UI and the keys.
+I also override some default parameters to make the experience more appealing.
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
     :ensure t
-    :tags '("IDE")
+    :tags '("IDE" "PROGRAMMING" "LSP")
     :mode-hydra
     (lsp-mode
      (:color red)
@@ -2113,7 +2116,6 @@ to extend it even further in the feature.
        ("r"   lsp-rename "Rename"))))
 
     :commands (lsp lsp-deferred)
-
     :bind
     (:map lsp-mode-map
           ("C-h M-h" . lsp-mode-hydra/body))
@@ -2140,52 +2142,77 @@ to extend it even further in the feature.
           lsp-ui-doc-include-signature t
           lsp-ui-doc-position 'at-point
           lsp-eldoc-enable-hover nil ; Disable eldoc displays in minibuffer
-
           lsp-ui-sideline-enable t
           lsp-ui-sideline-show-hover nil
           lsp-ui-sideline-show-diagnostics nil
           lsp-ui-sideline-ignore-duplicate t))
-
-  (use-package dap-mode
-    :ensure t
-    :tags '("IDE")
-    :commands dap-debug
-    :after lsp-mode
-    :init
-    (dap-mode t)
-    (dap-ui-mode t))
 #+end_src
 
-** TODO Data [0%]
-*** TODO CSV
+** DONE Data [100%]
+CLOSED: [2021-01-03 Sun 21:49]
+This section is dedicated to the configuration of modes to deal with data formats.
+
+*** DONE CSV
+CLOSED: [2021-01-03 Sun 21:32]
+For CSV file, I rely on =csv-mode= but I add more separators.
+
  #+begin_src emacs-lisp
    (use-package csv-mode
      :ensure t
-     :tags '("LANGUAGE")
+     :tags '("PROGRAMMING" " DATA")
      :config
 
      ;; Define separators
      (setq csv-separators '("," ";" ":" " ")))
  #+end_src
 
-*** TODO Cue
+*** DONE CUE
+CLOSED: [2021-01-03 Sun 21:35]
+I use CUE files to guide audio CD I encode.
+I developed a dedicated mode for this, so I am using it
+
 #+begin_src emacs-lisp
   (use-package cue-mode
     :straight (cue-mode :repo "seblemaguer/cue-mode" :type git :host github)
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "DATA" "RELEASE")
     :mode ("\\.cue$"))
 #+end_src
 
-*** TODO Praat
+*** DONE JSON
+CLOSED: [2021-01-03 Sun 21:47]
+I am using JSON both for storing data and for configuration.
+The configuration relies on =json-mode= for the main part and =json-reformat= for a better formatting.
+
+#+begin_src emacs-lisp
+  (use-package json-mode
+    :ensure t
+    :tags '("PROGRAMMING" "DATA" "CONFIGURATION")
+    :mode ("\\.json$"))
+
+  (use-package json-reformat
+    :ensure t
+    :tags '("PROGRAMMING" "DATA" "CONFIGURATION" "FORMATTING"))
+#+end_src
+
+*** DONE Praat
+CLOSED: [2021-01-03 Sun 21:38]
+I use praat, and more especially Textgrid, to annotate speech signals.
+Praat-mode helps to have a proper visualization of Textgrids in Empacs.
+
 #+begin_src emacs-lisp
   (use-package praat-mode
-    :tags '("LANGUAGE")
-    :mode ("\\.praat" "\\.[tT][Gg]"))
+    :tags '("PROGRAMMING" "DATA")
+    :mode ("\\.[tT][Gg]"))
 #+end_src
-*** TODO XML
+
+*** DONE XML
+CLOSED: [2021-01-03 Sun 21:49]
+XML is, as JSON, used for data formatting and configuration.
+However, I had to do extra-configurations to have outline support and a better formatting.
+
 #+begin_src emacs-lisp
   (use-package nxml-mode
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "DATA" "CONFIGURATION")
     :mode ("\\.xml$" . nxml-mode)
     :commands (pretty-print-xml-region)
     :init
@@ -2260,20 +2287,6 @@ enough to be on melpa so I use straight.
     :config
     (autoload 'ssh-config-mode "ssh-config-mode" t))
 #+end_src
-*** TODO JSON
-#+begin_src emacs-lisp
-  (use-package json-mode
-    :ensure t
-    :tags '("LANGUAGE")
-    :mode
-    ("\\.json$"))
-
-  ;; Subpackage
-  (use-package json-reformat
-    :ensure t
-    :tags '("LANGUAGE"))
-#+end_src
-
 *** TODO yaml
 #+begin_src emacs-lisp
   (use-package yaml-mode
