@@ -808,7 +808,7 @@ Finally, instead of having the scratch buffer using the =emacs-lisp-mode= as the
     (set (make-local-variable 'org-startup-folded) t))
 #+end_src
 
-* Org-mode [37%]
+* Org-mode [50%]
 =Org-mode= is the core of how I am organizing tasks, writing documents, ...
 While it is mainly a programming/writing language, it involves too many subparts and, therefore, has its own section.
 
@@ -1128,10 +1128,22 @@ Therefore, I use the package =ox-gfm=
       :after ox)
 #+end_src
 
-** TODO Agenda [0%]
-*** TODO Global
+** DONE Agenda [100%]
+CLOSED: [2021-01-03 Sun 14:22]
+In this section, I configure the agenda part of org-mode.
+It is my main source of visualizing the todo tasks.
+I rely on the baseline =org-agenda= package and on =org-super-agenda= for a better visualisation.
+
+*** DONE Baseline configuration
+CLOSED: [2021-01-03 Sun 14:21]
+The baseline configuration is fairly standard.
+The only important bits are:
+  - the todo file is set to =~/pCloudDrive/org/todo/todo.org=
+  - some icons are associated to some categories
+
 #+begin_src emacs-lisp
   (use-package org-agenda
+    :ensure org-plus-contrib
     :tags '("ORG" "USER")
     :commands (org-agenda)
     :init
@@ -1146,153 +1158,131 @@ Therefore, I use the package =ox-gfm=
     ;; Agenda is used at startup, it is better
     (setq initial-buffer-choice '(lambda () (get-buffer org-agenda-buffer-name)))
 
-    :hook
-    (org-agenda-finalize . (lambda ()
-                             (save-excursion
-                               (color-org-header "CalendarMe:" "RosyBrown1")
-                               (color-org-header "CalendarAdapt:" "PaleGreen1"))))
     :mode-hydra
     (org-agenda-mode
      (:color blue)
-     ("Time window"
-      (("d" org-agenda-day-view "Day")
-       ;; (if (eq 'day (org-agenda-cts)) "[x]" "[ ]"))
-       ("w" org-agenda-week-view "Week")
-       ;; (if (eq 'week (org-agenda-cts)) "[x]" "[ ]"))
-       ("t" org-agenda-fortnight-view "Fortnight")
-       ;; (if (eq 'fortnight (org-agenda-cts)) "[x]" "[ ]"))
-       ("m" org-agenda-month-view "Month")
-       ;; (if (eq 'month (org-agenda-cts)) "[x]" "[ ]"))
-       ("y" org-agenda-year-view "Year")
-        ;; (if (eq 'year (org-agenda-cts)) "[x]" "[ ]")))
-      )))
+     ("Time window" (("d" org-agenda-day-view "Day")
+                     ("w" org-agenda-week-view "Week")
+                     ("t" org-agenda-fortnight-view "Fortnight")
+                     ("m" org-agenda-month-view "Month")
+                     ("y" org-agenda-year-view "Year"))))
 
+    :bind
+    (([f12] . org-agenda)
 
-  :bind
-  (([f12] . org-agenda)
+     :map org-agenda-mode-map
+     ("v"  . org-agenda-hydra/body))
 
-   :map org-agenda-mode-map
-   ("v"  . org-agenda-hydra/body))
+    :config
 
-  :config
+    ;; Agenda files
+    (when (file-exists-p "~/pCloudDrive/org/todo/todo.org")
+      (add-to-list 'org-agenda-files "~/pCloudDrive/org/todo/todo.org"))
 
-  ;; Agenda files
-  (when (file-exists-p "~/pCloudDrive/org/todo/todo.org")
-    (add-to-list 'org-agenda-files "~/pCloudDrive/org/todo/todo.org"))
+    ;; Deadline management
+    (setq org-agenda-include-diary nil
+          org-deadline-warning-days 7
+          org-timeline-show-empty-dates t
+          org-agenda-span 'day
+          org-agenda-prefix-format '((agenda . " %i %-15:c%?-15t% s")
+                                     (todo . " %i %-15:c")
+                                     (tags . " %i %-15:c")
+                                     (search . " %i %-15:c"))
 
-  ;; (when (file-exists-p "~/pCloudDrive/org/organisation/bookmarks.org")
-  ;;   (add-to-list 'org-agenda-files "~/pCloudDrive/org/organisation/bookmarks.org"))
+          org-agenda-category-icon-alist `(
+                                           ;; Tools / utils
+                                           ("[Ee]macs"
+                                            ,(format "%s/third_parties/icons/emacs24.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-  (when (file-exists-p "~/Calendars")
-    (setq org-agenda-files (append org-agenda-files (directory-files "~/Calendars/" t "^.*\\.org$"))))
+                                           ("[Oo]rg"
+                                            ,(format "%s/third_parties/icons/org.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-  ;; Deadline management
-  (setq org-agenda-include-diary nil
-        org-deadline-warning-days 7
-        org-timeline-show-empty-dates t
-        org-agenda-span 'day
-        org-agenda-prefix-format '((agenda . " %i %-15:c%?-15t% s")
-                                   (todo . " %i %-15:c")
-                                   (tags . " %i %-15:c")
-                                   (search . " %i %-15:c"))
+                                           ("[Ss]ystem"
+                                            ,(format "%s/third_parties/icons/debian.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-        org-agenda-category-icon-alist `(
-                                         ;; Tools / utils
-                                         ("[Ee]macs"
-                                          ,(format "%s/third_parties/icons/emacs24.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("\\([Tt]ool\\|[Cc]onfiguration\\)s?"
+                                            ,(format "%s/third_parties/icons/wrench.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("[Oo]rg"
-                                          ,(format "%s/third_parties/icons/org.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("[Ex]pe\\(riment\\)s?"
+                                            ,(format "%s/third_parties/icons/expes.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("[Ss]ystem"
-                                          ,(format "%s/third_parties/icons/debian.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ;; Admin / meeting
+                                           ("[Aa]dmin"
+                                            ,(format "%s/third_parties/icons/admin.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("\\([Tt]ool\\|[Cc]onfiguration\\)s?"
-                                          ,(format "%s/third_parties/icons/wrench.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("[Aa]ppointments?"
+                                            ,(format "%s/third_parties/icons/appointment.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("[Ex]pe\\(riment\\)s?"
-                                          ,(format "%s/third_parties/icons/expes.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("[Vv]isitors"
+                                            ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ;; Admin / meeting
-                                         ("[Aa]dmin"
-                                          ,(format "%s/third_parties/icons/admin.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("\\([Ss]ynsig\\|SSW\\)"
+                                            ,(format "%s/third_parties/icons/isca.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("[Aa]ppointments?"
-                                          ,(format "%s/third_parties/icons/appointment.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("\\([Tt]rip\\|[Dd]eplacement\\)"
+                                            ,(format "%s/third_parties/icons/trip.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("[Vv]isitors"
-                                          ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ;; Deadlines / dates
+                                           ("\\([Pp]resentations?\\)"
+                                            ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("\\([Ss]ynsig\\|SSW\\)"
-                                          ,(format "%s/third_parties/icons/isca.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("\\([Pp]apers?\\|[Bb]lio\\|[Aa]rticles?\\|[Rr]eading\\|[Ww]riting\\)"
+                                            ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("\\([Tt]rip\\|[Dd]eplacement\\)"
-                                          ,(format "%s/third_parties/icons/trip.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("[Mm]ails?"
+                                            ,(format "%s/third_parties/icons/email.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ;; Deadlines / dates
-                                         ("\\([Pp]resentations?\\)"
-                                          ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("[Rr]eviews?"
+                                            ,(format "%s/third_parties/icons/review.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("\\([Pp]apers?\\|[Bb]lio\\|[Aa]rticles?\\|[Rr]eading\\|[Ww]riting\\)"
-                                          ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("[Ss]upervising"
+                                            ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("[Mm]ails?"
-                                          ,(format "%s/third_parties/icons/email.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ;; Personnal dates
+                                           ("[rM]edical"
+                                            ,(format "%s/third_parties/icons/medical.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("[Rr]eviews?"
-                                          ,(format "%s/third_parties/icons/review.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("Anniv"
+                                            ,(format "%s/third_parties/icons/anniversary.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("[Ss]upervising"
-                                          ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("Concert"
+                                            ,(format "%s/third_parties/icons/music.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ;; Personnal dates
-                                         ("[rM]edical"
-                                          ,(format "%s/third_parties/icons/medical.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ;; Personnal diverse
+                                           ("[Rr]elease"
+                                            ,(format "%s/third_parties/icons/cd.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("Anniv"
-                                          ,(format "%s/third_parties/icons/anniversary.png" user-emacs-directory)
-                                          nil nil :ascent center)
+                                           ("Book"
+                                            ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
+                                            nil nil :ascent center)
 
-                                         ("Concert"
-                                          ,(format "%s/third_parties/icons/music.png" user-emacs-directory)
-                                          nil nil :ascent center)
-
-                                         ;; Personnal diverse
-                                         ("[Rr]elease"
-                                          ,(format "%s/third_parties/icons/cd.png" user-emacs-directory)
-                                          nil nil :ascent center)
-
-                                         ("Book"
-                                          ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
-                                          nil nil :ascent center)
-                                       
-                                         (".*" '(space . (:width (16))))))
-
-  (defun org-agenda-cts ()
-    (let ((args (get-text-property
-                 (min (1- (point-max)) (point))
-                 'org-last-args)))
-      (nth 2 args)))
-  )
+                                           (".*" '(space . (:width (16)))))))
 #+end_src
 
-*** TODO Super agenda
+*** DONE Super agenda
+CLOSED: [2021-01-03 Sun 14:22]
+In this section, I confugre =org-super-agenda=.
+As I have my own way of being organized, I redefined completely the groups.
+
 #+begin_src emacs-lisp
   (use-package org-super-agenda
     :ensure t
