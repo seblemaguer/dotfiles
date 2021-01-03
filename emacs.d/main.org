@@ -1636,8 +1636,7 @@ Also use https://github.com/karlicoss/grasp to connect with firefox.
               :file "~/pCloudDrive/org/todo/todo.org"
               :headline "To sort"
               :template-file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory)
-              :empty-lines-before 1)
-             ))))
+              :empty-lines-before 1)))))
 #+end_src
 
 *** TODO Cooking
@@ -1670,11 +1669,8 @@ format. This is really useful to homogeneise documentation.
     :tags '("CONNECTED"))
 #+end_src
 
-* Environment [0%]
+* Environment [25%]
 ** TODO Undo
-In order to have a better and more visual control of undoing, I use undo-propose for now. I used to
-use undo-tree but corruption was a problem. However, having the navigation tree might be
-easier. Therefore the section is still in *todo* status.
 
 #+begin_src emacs-lisp
   (use-package undo-tree
@@ -1695,14 +1691,19 @@ For the folding, I am relying on outline-minor mode and more specifically outlin
           ("<C-tab>"  . outshine-cycle)))
 #+end_src
 
-** TODO Completion [0%]
-This part focuses on completion configuration. Language specific configurations are not done here
-but in the dedicate language configuration part. This section is just for global configuration.
+** DONE Completion [100%]
+CLOSED: [2021-01-03 Sun 17:52]
+Completion is one of the biggest time-saver feature a text editor can have.
+I rely on three key completion systems for different purposes:
+  - =company= is used for inline completion (mainly to access programming helpers and snippets)
+  - =selectrum= is used as the standard mini-buffer based completion
+  - =helm= is provided for some specific completion tools which are interesting but are not supported by =selectrum=
 
-*** TODO Company
-In order to have inline completion, really important for coding, I use company. However I adapted
-some facing attributes. Each language is also adding its backend when needed. Therefore, only global
-configuration here.
+*** DONE Company
+CLOSED: [2021-01-03 Sun 17:42]
+In this section, only the global configuration of =company= is provided.
+The configuration associated with each language is done separately and is, as much as possible, buffer local.
+I also use =company-quickhelp= to provide the description of the current candidate.
 
 #+begin_src emacs-lisp
   (use-package company
@@ -1724,13 +1725,28 @@ configuration here.
   (use-package company-quickhelp
     :ensure t
     :after company
-    :tags '("COMPLETION")
+    :tags '("COMPLETION" "UI")
     :config
     (company-quickhelp-mode 1))
 #+end_src
 
-*** TODO Helm
+*** DONE Selectrum
+CLOSED: [2021-01-03 Sun 17:42]
+This section provides the configuration of =selectrum=.
+Nothing fancy happens here, just its activation.
+
+#+begin_src emacs-lisp
+  (use-package selectrum
+    :ensure t
+    :tags '("COMPLETION")
+    :config
+    (selectrum-mode +1))
+
+#+end_src
+*** DONE Helm
+CLOSED: [2021-01-03 Sun 17:43]
 I use Helm for some specific cases which requires an important visibility space completion.
+Once again, nothing fancy here, the configuration to have a better UX.
 
 #+begin_src emacs-lisp
   (use-package helm
@@ -1750,16 +1766,14 @@ I use Helm for some specific cases which requires an important visibility space 
           )
     )
 #+end_src
-*** TODO Selectrum
-#+begin_src emacs-lisp
-  (use-package selectrum
-    :ensure t
-    :tags '("COMPLETION")
-    :config
-    (selectrum-mode +1))
-#+end_src
-*** TODO Prescient
+*** DONE Extension [100%]
+CLOSED: [2021-01-03 Sun 17:52]
+While the previous completion system is enough to work on its own, it is possible to enhance the user experince by adding a couple of more tweaks.
+
+**** DONE Prescient
+CLOSED: [2021-01-03 Sun 17:44]
 Prescient helps to sort candidates by last used first and then sorting by length.
+It integrates well with selectrum and company but doesn't support helm (yet?!).
 
 #+begin_src emacs-lisp
   (use-package prescient
@@ -1779,7 +1793,11 @@ Prescient helps to sort candidates by last used first and then sorting by length
     :config (company-prescient-mode +1))
 #+end_src
 
-*** TODO Marginalia
+**** DONE Marginalia
+CLOSED: [2021-01-03 Sun 17:49]
+Marginalia is completing =selectrum= by providing annotations to the candidates.
+For now, I am using the default configuration.
+
 #+begin_src emacs-lisp
   (use-package marginalia
     :ensure t
@@ -1809,30 +1827,33 @@ Prescient helps to sort candidates by last used first and then sorting by length
     (setq marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil)))
 #+end_src
 
-*** TODO Consult
+**** DONE Consult
+CLOSED: [2021-01-03 Sun 17:52]
+Consult provides a set of commands which are particularly useful.
+It is a nice extension to =selectrum= which brings to functionalities close to the ones proposed in =swiper= and =counsel=.
+
 #+begin_src emacs-lisp
   (use-package consult
     :ensure t
-    :bind (("C-x M-:" . consult-complex-command)
-           ("C-c h" . consult-history)
-           ("C-c m" . consult-mode-command)
-           ("C-x b" . consult-buffer)
-           ("C-x 4 b" . consult-buffer-other-window)
-           ("C-x 5 b" . consult-buffer-other-frame)
-           ("C-x r x" . consult-register)
-           ("C-x r b" . consult-bookmark)
-           ("C-x C-r" . consult-recent-file)
-           ("M-g g" . consult-goto-line)
-           ("M-g M-g" . consult-goto-line)
-           ("M-g o" . consult-outline)     ;; "M-s o" is a good alternative.
-           ("M-g l" . consult-line)        ;; "M-s l" is a good alternative.
-           ("M-g m" . consult-mark)        ;; I recommend to bind Consult navigation
-           ("M-g k" . consult-global-mark) ;; commands under the "M-g" prefix.
-           ("M-g i" . consult-imenu)
-           ("M-g e" . consult-error)
-           ("M-s m" . consult-multi-occur)
-           ("M-y" . consult-yank-pop)
-           ("<help> a" . consult-apropos))
+    :bind (("C-x M-:"  . consult-complex-command)
+           ("C-c h"    . consult-history)
+           ("C-c m"    . consult-mode-command)
+           ("C-x b"    . consult-buffer)
+           ("C-x 4 b"  . consult-buffer-other-window)
+           ("C-x 5 b"  . consult-buffer-other-frame)
+           ("C-x r x"  . consult-register)
+           ("C-x r b"  . consult-bookmark)
+           ("C-x C-r"  . consult-recent-file)
+           ("M-g g"    . consult-goto-line)
+           ("M-g M-g"  . consult-goto-line)
+           ("M-g o"    . consult-outline)     ;; "M-s o" is a good alternative.
+           ("M-g l"    . consult-line)        ;; "M-s l" is a good alternative.
+           ("M-g m"    . consult-mark)        ;; I recommend to bind Consult navigation
+           ("M-g k"    . consult-global-mark) ;; commands under the "M-g" prefix.
+           ("M-g i"    . consult-imenu)
+           ("M-g e"    . consult-error)
+           ("M-s m"    . consult-multi-occur)
+           ("M-y"      . consult-yank-pop))
 
     ;; The :init configuration is always executed (Not lazy!)
     :init
