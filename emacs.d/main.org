@@ -3108,17 +3108,37 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     (pdfgrep-mode))
 #+end_src
 
-* Version Control / Project Management [0%]
-** TODO Git [0%]
-*** TODO Magit [0%]
-- Externally opening has been copied from https://gist.github.com/dotemacs/9a0433341e75e01461c9
-- Pretty configuration is adapted from https://ekaschalk.github.io/post/pretty-magit/
+* Version Control / Project Management [20%]
+My code project management is articulated around three key points: GIT, github/gist and =projectile=.
+GIT is used as the version control manager; 
+github for the non-sensitive repositories; 
+gist for snippets and helpers; 
+=projectile= to provide project helpers.
 
-**** TODO Global
+** DONE Git
+CLOSED: [2021-01-04 Mon 15:40]
+My configuration for GIT relies mainly on =magit=.
+Aside the standard key/hydra configuration, 
+I copied the external opening from https://gist.github.com/dotemacs/9a0433341e75e01461c9
+and the pretty configuration is adapted from https://ekaschalk.github.io/post/pretty-magit/
+
+My whole process relies on the commits following this pattern
+#+begin_example
+[package] operation: short message
+
+optional further description
+#+end_example
+
+where:
+ - package :: corresponds to subpart of the repository (so mainly packages, modules, or meta and git related informations).
+ - operation :: is ~add~, ~update~, ~fix~, ~clean~ or ~doc~
+ - short message :: is a short description
+ - optional further description :: is used to complete the short description. It is optional and I don't use it so often; only for complicated tweaks
+
 #+begin_src emacs-lisp
   (use-package magit
     :ensure t
-    :tags '("VC")
+    :tags '("VC" "GIT")
     :commands (magit magit-hydra/body magit-get-current-branch)
     :pretty-hydra
     ((:color blue)
@@ -3138,41 +3158,41 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
 
     :bind
     (:map magit-mode-map
-	  ("o" . magit-open-repo))
+          ("o" . magit-open-repo))
 
     :config
 
     ;; Ignore recent commit
     (setq magit-status-sections-hook
-	  '(magit-insert-status-headers
-	    magit-insert-merge-log
-	    magit-insert-rebase-sequence
-	    magit-insert-am-sequence
-	    magit-insert-sequencer-sequence
-	    magit-insert-bisect-output
-	    magit-insert-bisect-rest
-	    magit-insert-bisect-log
-	    magit-insert-untracked-files
-	    magit-insert-unstaged-changes
-	    magit-insert-staged-changes
-	    magit-insert-stashes
-	    magit-insert-unpulled-from-upstream
-	    magit-insert-unpulled-from-pushremote
-	    magit-insert-unpushed-to-upstream
-	    magit-insert-unpushed-to-pushremote))
+          '(magit-insert-status-headers
+            magit-insert-merge-log
+            magit-insert-rebase-sequence
+            magit-insert-am-sequence
+            magit-insert-sequencer-sequence
+            magit-insert-bisect-output
+            magit-insert-bisect-rest
+            magit-insert-bisect-log
+            magit-insert-untracked-files
+            magit-insert-unstaged-changes
+            magit-insert-staged-changes
+            magit-insert-stashes
+            magit-insert-unpulled-from-upstream
+            magit-insert-unpulled-from-pushremote
+            magit-insert-unpushed-to-upstream
+            magit-insert-unpushed-to-pushremote))
 
     ;; Update visualization
     (setq pretty-magit-alist nil
-	  pretty-magit-prompt nil)
+          pretty-magit-prompt nil)
 
     (defmacro pretty-magit (WORD ICON PROPS &optional NO-PROMPT?)
       "Replace sanitized WORD with ICON, PROPS and by default add to prompts."
       `(prog1
-	   (add-to-list 'pretty-magit-alist
-			(list (rx bow (group ,WORD (eval (if ,NO-PROMPT? "" ":"))))
-			      ,ICON ',PROPS))
-	 (unless ,NO-PROMPT?
-	   (add-to-list 'pretty-magit-prompt (concat ,WORD ":")))))
+           (add-to-list 'pretty-magit-alist
+                        (list (rx bow (group ,WORD (eval (if ,NO-PROMPT? "" ":"))))
+                              ,ICON ',PROPS))
+         (unless ,NO-PROMPT?
+           (add-to-list 'pretty-magit-prompt (concat ,WORD ":")))))
 
     ;; Operations
     (pretty-magit "add:"      ?  (:foreground "#375E97" :height 1.2) t)
@@ -3190,16 +3210,16 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
       "Add face properties and compose symbols for buffer from pretty-magit."
       (interactive)
       (with-silent-modifications
-	(--each pretty-magit-alist
-	  (-let (((rgx icon props) it))
-	    (save-excursion
-	      (goto-char (point-min))
-	      (while (search-forward-regexp rgx nil t)
-		(compose-region
-		 (match-beginning 1) (match-end 1) icon)
-		(when props
-		  (add-face-text-property
-		   (match-beginning 1) (match-end 1) props))))))))
+        (--each pretty-magit-alist
+          (-let (((rgx icon props) it))
+            (save-excursion
+              (goto-char (point-min))
+              (while (search-forward-regexp rgx nil t)
+                (compose-region
+                 (match-beginning 1) (match-end 1) icon)
+                (when props
+                  (add-face-text-property
+                   (match-beginning 1) (match-end 1) props))))))))
 
     (advice-add 'magit-status :after 'add-magit-faces)
     (advice-add 'magit-refresh-buffer :after 'add-magit-faces)
@@ -3208,65 +3228,58 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     (defun parse-url (url)
       "convert a git remote location as a HTTP URL"
       (if (string-match "^http" url)
-	  url
-	(replace-regexp-in-string "\\(.*\\)@\\(.*\\):\\(.*\\)\\(\\.git?\\)"
-				  "https://\\2/\\3"
-				  url)))
+          url
+        (replace-regexp-in-string "\\(.*\\)@\\(.*\\):\\(.*\\)\\(\\.git?\\)"
+                                  "https://\\2/\\3"
+                                  url)))
     (defun magit-open-repo ()
       "open remote repo URL"
       (interactive)
       (let ((url (magit-get "remote" "origin" "url")))
-	(progn
-	  (browse-url (parse-url url))
-	  (message "opening repo %s" url))))
-    )
-#+end_src
+        (progn
+          (browse-url (parse-url url))
+          (message "opening repo %s" url)))))
 
-**** TODO Diff
-#+begin_src emacs-lisp
   (use-package magit-tbdiff
     :ensure t
-    :tags '("VC")
+    :tags '("VC" "GIT")
     :after magit)
 #+end_src
-*** TODO Git helpers [0%]
-**** TODO Git ignore
-#+begin_src emacs-lisp
-  (use-package helm-gitignore
-    :ensure t
-    :tags '("VC"))
-#+end_src
 
-**** TODO prefix
+*** DONE Git helpers
+CLOSED: [2021-01-04 Mon 15:39]
+In order to be more efficient with git, I also need some helpers.
+I use =gitignore-snippets= to provide starting gitignore content;
+=git-timemachine= to navigate changes of a dedicated file;
+=git-msg-prefix= to be provide a starting for the commit message and
+=git-patch= to send a patch via email (if necessary obviously.)
+
 #+begin_src emacs-lisp
+  (use-package gitignore-snippets
+    :ensure t
+    :tags '("VC" "GIT"))
+
   (use-package git-msg-prefix
     :ensure t
-    :tags '("VC")
+    :tags '("VC" "GIT")
+    :hook
+    (git-commit-mode . git-msg-prefix)
     :config
     (setq git-msg-prefix-log-flags " --since='1 week ago' "
-          git-msg-prefix-regex "^\\([^:]*: \\)")
-    ;; (add-hook 'git-commit-mode-hook 'git-msg-prefix)
-    )
-#+end_src
+          git-msg-prefix-regex "^\\([^:]*: \\)"))
 
-**** TODO Commit navigation
-#+begin_src emacs-lisp
   (use-package git-timemachine
     :ensure t
     :commands (git-timemachine-toggle)
-    :tags '("VC"))
-#+end_src
+    :tags '("VC" "GIT"))
 
-**** TODO Send patch by email
-#+begin_src emacs-lisp
   (use-package gitpatch
     :ensure t
-    :tags '("VC")
+    :tags '("VC" "GIT" "CONNECTED")
     :config
     (setq gitpatch-mail-attach-patch-key "C-c i"))
 #+end_src
 ** TODO Github [0%]
-*** TODO Forge
 #+begin_src emacs-lisp
   (use-package forge
     :ensure t
@@ -3275,22 +3288,16 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     :after magit
     :custom-face
     (forge-topic-closed ((t (:strike-through t :inherit magit-dimmed)))))
-#+end_src
 
-*** TODO Exploring repository
-#+begin_src emacs-lisp
   (use-package github-explorer
     :ensure t
     :tags '("VC"))
-#+end_src
 
-*** TODO Reviewing
-#+begin_src emacs-lisp
   (use-package github-review
     :ensure t)
 #+end_src
 
-*** TODO Gist
+** TODO Gist
 #+begin_src emacs-lisp
   (use-package gist
     :ensure t
