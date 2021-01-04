@@ -799,7 +799,7 @@ Finally, instead of having the scratch buffer using the =emacs-lisp-mode= as the
 #+begin_src emacs-lisp
   (use-package scratch-ext
     :ensure t
-    :tags '("CORE" "SESSION" "REQUIRES_CONNECTION")
+    :tags '("CORE" "SESSION" "CONNECTED")
     :hook (after-init . scratch-ext-restore-last-scratch)
     :config
     ;; Org-mode + start folded buffer
@@ -1532,7 +1532,7 @@ The visualization is more fancy and the graph is auto-organized which makes ever
 
   (use-package org-roam-server
     :ensure t
-    :tags '("ORG" "USER" "GUI"))
+    :tags '("ORG" "USER" "DESKTOP"))
 #+end_src
 
 ** DONE Accessing
@@ -4098,7 +4098,7 @@ I just need to define a default priority level for each feed.
 *** TODO Message composition
 #+begin_src emacs-lisp
   (use-package message
-    :tags '("REQUIRES_CONNECTION" "MAIL")
+    :tags '("CONNECTED" "MAIL")
     :hook
     (message-setup . (lambda () (footnote-mode t)))
 
@@ -4109,8 +4109,7 @@ I just need to define a default priority level for each feed.
           message-sendmail-f-is-evil nil
           message-kill-buffer-on-exit t
           message-signature-file (format "%s/third_parties/mail/signature" user-emacs-directory)
-          message-fill-column 100)
-    )
+          message-fill-column 100))
 #+end_src
 
 *** TODO Composing/Sending [0%]
@@ -4118,7 +4117,7 @@ I just need to define a default priority level for each feed.
   #+begin_src emacs-lisp
     (use-package smtpmail-multi
       :ensure t
-      :tags '("REQUIRES_CONNECTION" "MAIL")
+      :tags '("CONNECTED" "MAIL")
       :config
       ;; Get account informations from private file
       (when (fboundp 'set-smtpmail-multi-accounts)
@@ -4166,7 +4165,7 @@ I just need to define a default priority level for each feed.
 **** TODO Global
 #+begin_src emacs-lisp
   (use-package mu4e
-    :tags '("REQUIRES_CONNECTION" "MAIL")
+    :tags '("CONNECTED" "MAIL")
     :commands (mu4e)
     :load-path "~/environment/local/share/emacs/site-lisp/mu4e"
     :pretty-hydra
@@ -4356,7 +4355,7 @@ I just need to define a default priority level for each feed.
 #+begin_src emacs-lisp
   (use-package mu4e-context
     :after mu4e
-    :tags '("REQUIRES_CONNECTION" "MAIL")
+    :tags '("CONNECTED" "MAIL")
     :config
     ;; Define the contexts (configuration defined in a private file)
     (when (fboundp 'set-mu4e-contexts)
@@ -4378,7 +4377,7 @@ I just need to define a default priority level for each feed.
   (use-package mu4e-alert
     :ensure t
     :after (sauron-mode-line)
-    :tags '("REQUIRES_CONNECTION" "MAIL" "NOTIFICATION")
+    :tags '("CONNECTED" "MAIL" "NOTIFICATION")
     :config
     ;; Just notify the counting
     (setq mu4e-alert-email-notification-types '(count))
@@ -4395,7 +4394,7 @@ I just need to define a default priority level for each feed.
 #+begin_src emacs-lisp
   (use-package org-mu4e
     :after mu4e
-    :tags '("REQUIRES_CONNECTION" "MAIL"))
+    :tags '("CONNECTED" "MAIL"))
 #+end_src
 
 ** TODO Chat [0%]
@@ -4652,7 +4651,7 @@ I just need to define a default priority level for each feed.
 #+begin_src emacs-lisp
   (use-package metal-archives-shopping-list
     :ensure t
-    :tags '("REQUIRES_CONNECTION" "USER")
+    :tags '("CONNECTED" "USER")
     :commands (metal-archives-shopping-list-update
                metal-archives-retrieve-next-releases
                metal-archives-load-artists-map)
@@ -4853,7 +4852,7 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
 #+begin_src emacs-lisp
   (use-package conda
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("SYSTEM" "PYTHON" "R")
     :init
     (setq conda-anaconda-home (expand-file-name "~/environment/local/miniconda3"))
 
@@ -4907,14 +4906,14 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
                      :repo "ffevotte/slurm.el" 
                      :fork (:host github
                                   :repo "seblemaguer/slurm.el"
-                                  :branch "explicit-username")))
-  
+                                  :branch "explicit-username"))
+    :tags '("SYSTEM" "SERVER" "CONNECTED"))
 #+end_src
 
 ** TODO EAF
 #+begin_src emacs-lisp
   (use-package eaf
-    :tags '("HELPER" "GUI")
+    :tags '("HELPER" "DESKTOP")
     :load-path "~/environment/src/20-tools/emacs/emacs-application-framework/emacs-application-framework")
 #+end_src
 
@@ -4927,6 +4926,7 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
     :config
     (load-theme 'flatfluc t))
 #+end_src
+
 ** TODO Mode-line
 #+begin_src emacs-lisp
   (use-package nano-base-colors
