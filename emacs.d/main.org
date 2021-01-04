@@ -2644,7 +2644,7 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
         (modern-sh-mode))))
 #+end_src
 
-* Writing / Reading [22%]
+* Writing / Reading [33%]
 I decided to dissociate programming and writing for more clarity.
 Nonetheless, both sections rely on the same principles.
 Concerning the writing part, I use mainly org-mode and LaTeX (article and shared documents).
@@ -2835,7 +2835,7 @@ Finally, I use bibclean-format to have a clean final bibtex file.
 
 #+begin_src emacs-lisp
   (use-package bibtex
-    :tags '("LANGUAGE")
+    :tags '("WRITING" "BIBTEX")
     :config
     (defun bibtex-generate-autokey ()
       (let* ((bibtex-autokey-names nil)
@@ -2866,6 +2866,7 @@ Finally, I use bibclean-format to have a clean final bibtex file.
 
   (use-package bibclean-format
     :ensure t
+    :tags '("WRITING" "BIBTEX")
     :hook
     (bibtex-mode . bibclean-format-on-save-mode)
 
@@ -2877,14 +2878,22 @@ Finally, I use bibclean-format to have a clean final bibtex file.
     (setq bibclean-format-args '("--max-width" "0" "--align-equal")))
 #+end_src
 
-** TODO TikZ/PGF
+** DONE TikZ/PGF
+CLOSED: [2021-01-04 Mon 12:18]
+To generate figures, I use sometimes inkscape but main TikZ/PGF.
+While ktikz provides a nice tools, the way it deals with the header is problematic for me.
+Furthermore, it is not integrated in emacs :D
+Therefore, I developed a mode.
+However, it relies on a side script ~compilePGF~ being in the PATH!
+
 #+begin_src emacs-lisp
   (use-package tikz-mode
     :ensure straight
-    :straight (tikz-mode :type git :host github :repo "seblemaguer/tikz-mode"))
+    :straight (tikz-mode :type git :host github :repo "seblemaguer/tikz-mode")
+      :tags '("WRITING" "BIBTEX" "DESKTOP"))
 #+end_src
+
 ** TODO Markdown [0%]
-*** TODO Global
 #+begin_src emacs-lisp
   (use-package markdown-mode
     :ensure t
