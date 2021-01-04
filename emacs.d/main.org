@@ -3550,73 +3550,19 @@ For this, I use the =eshell-toggle= package.
     :hook (eshell-mode . eshell-syntax-highlighting-mode))
 #+end_src
 
-* File manager [0%]
-** TODO Dired [0%]
-*** TODO Run associated application - define helpers
-First, globally association achieve thanks to *xdg-open*.  Also, by making some minor adaptations, I
-defined some helpers to play video/audio using emms directly. It is mainly adapted from here:
-https://github.com/kuanyui/.emacs.d/blob/master/rc/rc-emms.el
-#+begin_src emacs-lisp
-  (defun dired-open-native ()
-    "Open marked files (or the file the cursor is on) from dired."
-    (interactive)
-    (let* ((files (dired-get-marked-files t current-prefix-arg))
-           (n (length files)))
-      (when (or (<= n 3)
-                (y-or-n-p (format "Open %d files?" n)))
-        (dolist (file files)
-          (call-process "xdg-open" nil 0 nil file)))))
+* File manager [20%]
+I am using emacs as my main file manager.
+To do so, I rely on =dired= which is builtin package which I tweaked massively and I added multiple subpackages to improve UX.
+I also added support for basic image processing and some additional operations (trashing, visualising diffs, ...).
 
-                                          ; The use of "gnome-open" here should probably be parameterized.
-  (defun dired-open-current-directory-in-GUI-file-manager ()
-    "Open the current directory in native GUI file namanger
-  For those times when dired just wont do.
-  "
-    (interactive)
-    (save-window-excursion
-      (dired-do-async-shell-command
-       "xdg-open .")))
-
-  (defun emms-clear-playlist-if-any ()
-    "Clear emms playlist (coming from: https://www.emacswiki.org/emacs/SimpleEmmsUserInterface )."
-    (when emms-playlist-buffer
-      (with-current-buffer emms-playlist-buffer)
-        (emms-playlist-clear)))
-
-  (defun file-audio-or-video-p (file-path)
-    "Detect if the FILE-PATH is pointing to a video/audio file or not."
-    (let* ((safe-path (replace-regexp-in-string "\"" "\\\"" (expand-file-name file-path)))
-           (mime (shell-command-to-string (format "file --mime --brief \"%s\"" safe-path)))
-           (type (car (split-string mime "/"))))
-      (if (member type '(video audio))
-          type
-        nil)))
-
-  ;; Disable video output to prevent a stupid new window.
-  (defun dired-emms-play ()
-    "Play current file from the dired buffer using emms"
-    (interactive)
-    (let ((file-path (dired-get-filename)))
-      (if (or (member (file-name-extension file-path)
-                      '("ogg" "mp3" "wav" "mpg" "mpeg" "wmv" "wma" "3gpp"
-                        "mov" "avi" "divx" "ogm" "ogv" "asf" "mkv"
-                        "rm" "rmvb" "mp4" "flac" "vrob" "m4a" "ape"
-                        "flv" "webm"))
-              (file-audio-or-video-p file-path))
-
-          (progn
-            (emms-play-dired)
-            (emms-clear-playlist-if-any))))
-
-    (dired-next-line 1))
-#+end_src
-
-*** TODO Main configuration
-Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired and adapted.
+** DONE Dired [100%]
+CLOSED: [2021-01-04 Mon 18:55]
+The configuration of =dired= focuses mainly on defining keys, tuning the files to omit, and tweaking the LS command used to get the informations.
+The hydra mapping is adapted from https://github.com/abo-abo/hydra/wiki/Dired.
 
 #+begin_src emacs-lisp
   (use-package dired
-    :tags '("FILE_MANAGEMENT")
+    :tags '("FILE_MANAGEMENT" "DIRED")
     :functions
     (diredp-hide-subdir-nomove
      diredp-ediff
@@ -3719,8 +3665,7 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
           ;; Details information
           dired-listing-switches "--group-directories-first -alh"
-          dired-details-hidden-string "[...]")
-    )
+          dired-details-hidden-string "[...]"))
 
   (use-package ls-lisp
     :config
@@ -3735,40 +3680,17 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
         (setq ls-lisp-format-time-list '("%Y-%m-%d %H:%M" "%Y-%m-%d %H:%M"))))
 #+end_src
 
-*** TODO peep-dired
-#+begin_src emacs-lisp
-  (use-package peep-dired
-    :ensure t
-    :tags '("FILE_MANAGEMENT")
-    :config
-    (define-key dired-mode-map (kbd "P") 'peep-dired))
-#+end_src
+*** DONE Extensions
+CLOSED: [2021-01-04 Mon 18:55]
+In order to have a better experience, 
+I added support for more precise visualisation (=dired-filter=, =dired-subtree=, =peep-dired=, =dired-narrow=, =dired-single= and =dired-git-info=),
+as well a enhanced copy features (=dired-async= and =dired-rsync=).
+This part consists mainly of ensuring the packages are properly required and that some keys are defined.
 
-*** TODO dired-narrow
-#+begin_src emacs-lisp
-  (use-package dired-narrow
-    :ensure t
-    :tags '("FILE_MANAGEMENT")
-    :config
-    (define-key dired-mode-map (kbd "/") 'dired-narrow))
-#+end_src
-
-*** TODO dired-single
-#+begin_src emacs-lisp
-  (use-package dired-single
-    :ensure t
-    :tags '("FILE_MANAGEMENT")
-    :config
-    (define-key dired-mode-map [return] 'dired-single-buffer)
-    (define-key dired-mode-map [mouse-1] 'dired-single-buffer-mouse))
-#+end_src
-
-
-*** TODO dired-filter
 #+begin_src emacs-lisp
   (use-package dired-filter
     :ensure t
-    :tags '("FILE_MANAGEMENT")
+    :tags '("FILE_MANAGEMENT" "DIRED" "DIRED_EXTENSION")
     :hook
     (dired-mode . dired-filter-group-mode)
 
@@ -3797,65 +3719,56 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
               (extension "zip" "rar" "gz" "bz2" "tar"))
              ("Images"
               (extension "jpg" "JPG" "webp" "png" "PNG" "jpeg" "JPEG" "bmp" "BMP" "TIFF" "tiff" "gif" "GIF"))))))
-#+end_src
 
-*** TODO dired-subtree
-#+begin_src emacs-lisp
   (use-package dired-subtree
     :ensure t
-    :tags '("FILE_MANAGEMENT")
+    :tags '("FILE_MANAGEMENT" "DIRED" "DIRED_EXTENSION")
     :bind (:map dired-mode-map
-                ("i" . dired-subtree-insert)
-                (";" . dired-subtree-remove)))
-#+end_src
+                (("i" . dired-subtree-insert)
+                 (";" . dired-subtree-remove))))
 
-*** TODO dired-git-info
-#+begin_src emacs-lisp
+  (use-package peep-dired
+    :ensure t
+    :tags '("FILE_MANAGEMENT" "DIRED" "DIRED_EXTENSION")
+    :bind (:map dired-mode-map
+                (("P" . peep-dired))))
+
+  (use-package dired-narrow
+    :ensure t
+    :tags '("FILE_MANAGEMENT" "DIRED" "DIRED_EXTENSION")
+    :bind (:map dired-mode-map
+                (("/" . dired-narrow))))
+
+  (use-package dired-single
+    :ensure t
+    :tags '("FILE_MANAGEMENT" "DIRED" "DIRED_EXTENSION")
+  
+    :bind (:map dired-mode-map
+                (([return] . dired-single-buffer)
+                 ([mouse-1] . dired-single-buffer-mouse))))
+
   (use-package dired-git-info
     :ensure t
-    :tags '("FILE_MANAGEMENT")
+    :tags '("FILE_MANAGEMENT" "DIRED" "DIRED_EXTENSION")
     :bind (:map dired-mode-map
-                (")"  . dired-git-info-mode)))
-#+end_src
+                ((")"  . dired-git-info-mode))))
 
-#+end_src
-
-*** TODO Images
-#+begin_src emacs-lisp
-  (use-package image-dired+
-    :ensure t
-    :tags '("FILE_MANAGEMENT")
+  (use-package dired-async
+    :ensure async
+    :tags '("FILE_MANAGEMENT" "DIRED" "DIRED_EXTENSION")
     :config
-    (setq auto-image-file-mode t)
-    (eval-after-load 'image-dired+ '(image-diredx-async-mode 1)))
-#+end_src
+    (dired-async-mode 1))
 
-*** TODO Async
-#+begin_src emacs-lisp
-  (use-package async
-    :ensure t
-    :tags '("FILE_MANAGEMENT")
-    :after dired
-    :config
-
-    (when (require 'dired-aux)
-      (progn
-        (require 'dired-async))
-      (dired-async-mode 1)))
-#+end_src
-
-*** TODO Dired / Rsync
-#+begin_src emacs-lisp
   (use-package dired-rsync
     :ensure t
-    :tags '("FILE_MANAGEMENT")
+    :tags '("FILE_MANAGEMENT" "DIRED" "DIRED_EXTENSION")
     :functions dired-do-rsync
-    :config
-    (bind-key "C-c C-r" 'dired-rsync dired-mode-map))
+    :bind (:map dired-mode-map
+                (("C-c C-r"  . dired-rsync))))
 #+end_src
 
-** TODO Images [0%]
-*** TODO Visualisation
+** TODO Images
+
 #+begin_src emacs-lisp
   (use-package image+
     :ensure t
