@@ -203,7 +203,7 @@ The specification respects the following syntax:
     :straight (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
     :config
     (setq use-package-tags-enabled
-          `(("lemagues-surface" . ("ALL"))
+          `(("lemagues-surface" . ("ALL" "!MUSIC"))
             ("sig201"           . ("ALL"))
             ("mackenzie"        . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
             (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
@@ -4747,12 +4747,17 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
     (setq metal-archives-favorite-handle 'metal-archives-shopping-list-add-release-and-alert))
 #+end_src
 
-* Music [0%]
-** TODO Global
+* Music
+I am playing music in Emacs using EMMS.
+The default configuration is already satisfying but I prefered to tweak a couple of part to make it more useable.
+The first thing I changed is to use ~mpv~ as a player as I am already it as a default on my system.
+I also tweaked the cache and some rendering part as I have a lot of files to navigate through.
+Finally, I activated the browser and assigned the multimedia keys to be understood directly by EMMS.
+
 #+begin_src emacs-lisp
   (use-package emms
     :ensure t
-    :tags '("MULTIMEDIA")
+    :tags '("MULTIMEDIA" "MUSIC")
     :commands (emms emms-browse-by-artist)
     :bind
     (("<f5>"            . emms-browse-by-artist)
@@ -4763,7 +4768,6 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
      ("<XF86AudioNext>" . emms-next))
 
     :config
-
     (emms-all)
 
     ;; Use mpv player
@@ -4828,17 +4832,15 @@ Hydra mapping for dired taken from https://github.com/abo-abo/hydra/wiki/Dired a
 
   (use-package emms-info-libtag
     :after emms
+    :tags '("MULTIMEDIA" "MUSIC")
     :config
 
     (setq emms-info-asynchronously nil
           emms-info-functions '(emms-info-libtag)))
-#+end_src
 
-** TODO Browser
-#+begin_src emacs-lisp
   (use-package emms-browser
     :after emms
-    :tags '("MULTIMEDIA")
+    :tags '("MULTIMEDIA" "MUSIC")
     :hook
     (emms-browser-show-display . (lambda () (hl-line-mode 1)))
 
