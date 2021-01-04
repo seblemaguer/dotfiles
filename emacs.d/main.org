@@ -3946,17 +3946,22 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
     (dired-mode . treemacs-icons-dired-mode))
 #+end_src
 
-* Online [0%]
-** TODO RSS [0%]
-*** TODO Global
+* Online [20%]
+I am using emacs to deal with a lot of online stuffy.
+The main services I consult using emacs are: RSS streams, emails, chats, "exchange services" and CD releases.
+
+** DONE RSS [100%]
+CLOSED: [2021-01-04 Mon 19:53]
+To retrieve and visualize my RSS feeds, I use =elfeed=.
+As a general configuration, I just changed where elfeed's database is stored to be available on the cloud.
+I rely on subpackages (see subsections) to enhance the experience.
+
 #+begin_src emacs-lisp
   (use-package elfeed
     :ensure t
-    :tags '("REQUIRES_CONNECTION" "RSS")
+    :tags '("CONNECTED" "RSS")
     :commands (elfeed elfeed-update)
     :no-require t
-    :bind (([f9] . elfeed))
-
     :config
     ;; Change the storage directory
     (setq elfeed-db-directory "~/pCloudDrive/emacs/elfeed"
@@ -3965,11 +3970,15 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
           elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left)))
 #+end_src
 
-*** TODO Org connection
+*** DONE Org connection
+CLOSED: [2021-01-04 Mon 19:41]
+I prefer to store the configuration in an org-mode file as it is more readable.
+Once again, this file is stored on the cloud.
+
 #+begin_src emacs-lisp
   (use-package elfeed-org
     :ensure t
-    :tags '("REQUIRES_CONNECTION" "RSS")
+    :tags '("CONNECTED" "RSS")
     :hook (after-init . loading-elfeed)
     :commands (elfeed-org)
     :init
@@ -3981,12 +3990,25 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
           (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))))
 #+end_src
 
-*** TODO Youtube specificities
+*** DONE Youtube specificities
+CLOSED: [2021-01-04 Mon 19:51]
+I have some feeds which are related to youtube, so I add support for ~youtube-dl~ from the same author of elfeed.
+I added a couple of primitives to facilitate the interaction between elfeed and youtube-dl.
+
 #+begin_src emacs-lisp
   (use-package youtube-dl
     :straight (youtube-dl :repo "skeeto/youtube-dl-emacs" :type git :host github)
-    :tags '("CONNECTED")
-    :bind ("C-x y" . youtube-dl-list)
+    :tags '("CONNECTED" "RSS" "YOUTUBE")
+    :bind (("C-x y" . youtube-dl-list)
+
+           :map elfeed-show-mode-map
+           (("d" . elfeed-show-youtube-dl))
+
+           :map elfeed-search-mode-map
+           (("d" . elfeed-search-youtube-dl)
+            ("D" . elfeed-search-youtube-dl-slow)
+            ("L" . youtube-dl-list)))
+
     :config
     (setq youtube-dl-directory "~/Downloads")
 
@@ -4017,18 +4039,19 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
           (unless (use-region-p) (forward-line)))))
 
     (defalias 'elfeed-search-youtube-dl-slow
-      (expose #'elfeed-search-youtube-dl :slow t))
-
-    (define-key elfeed-show-mode-map "d" 'elfeed-show-youtube-dl)
-    (define-key elfeed-search-mode-map "d" 'elfeed-search-youtube-dl)
-    (define-key elfeed-search-mode-map "D" 'elfeed-search-youtube-dl-slow)
-    (define-key elfeed-search-mode-map "L" 'youtube-dl-list))
+      (expose #'elfeed-search-youtube-dl :slow t)))
 #+end_src
-*** TODO Dashboard
+
+*** DONE Dashboard
+CLOSED: [2021-01-04 Mon 19:53]
+I like to start with a dashboard to get a nice summary.
+So I use =elfeed-dashboard= to have this for elfeed.
+The dashboard template is part of the ~third parties~.
+
 #+begin_src emacs-lisp
   (use-package elfeed-dashboard
     :ensure t
-    :tags '("REQUIRES_CONNECTION" "RSS")
+    :tags '("CONNECTED" "RSS")
     :commands (elfeed-dashboard)
     :bind
     (([f9] . elfeed-dashboard))
@@ -4041,17 +4064,21 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
     (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links))
 #+end_src
 
-*** TODO Notification part
+*** DONE Notification part
+CLOSED: [2021-01-04 Mon 19:46]
+For the notification, we simply have to connect sauron and elfeed.
+I just need to define a default priority level for each feed.
+
 #+begin_src emacs-lisp
   (use-package sauron-elfeed
-    :tags '("REQUIRES_CONNECTION" "RSS")
+    :ensure sauron
+    :tags '("CONNECTED" "RSS" "NOTIFICATION")
     :commands (elfeed-update-background-start sauron-elfeed-start)
     :hook (after-init . sauron-elfeed-start)
     :config
     (cl-loop for feed in elfeed-feeds
              do (when (member 'mustread (cdr feed))
                   (puthash (car feed) 3 sauron-elfeed-prio-hash))))
-
 #+end_src
 
 ** TODO Mail [0%]
