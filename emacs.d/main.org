@@ -2644,7 +2644,7 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
         (modern-sh-mode))))
 #+end_src
 
-* Writing / Reading [33%]
+* Writing / Reading [44%]
 I decided to dissociate programming and writing for more clarity.
 Nonetheless, both sections rely on the same principles.
 Concerning the writing part, I use mainly org-mode and LaTeX (article and shared documents).
@@ -2893,25 +2893,29 @@ However, it relies on a side script ~compilePGF~ being in the PATH!
       :tags '("WRITING" "BIBTEX" "DESKTOP"))
 #+end_src
 
-** TODO Markdown [0%]
+** DONE Markdown
+CLOSED: [2021-01-04 Mon 12:22]
+Markdown is the main language used to write READMEs in collaborative projects.
+While I prefer it org-mode, I still have to use it for collaborative purposes.
+Consequently, I have to get a proper configuration.
+Luckily, =markdown-mode= and =markdown-mode+= provide more than enough.
+I just added =grip-mode= to have a proper preview of the file.
+
 #+begin_src emacs-lisp
   (use-package markdown-mode
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("WRITING" "MARKDOWN")
     :mode ("\\.md$"))
 
   (use-package markdown-mode+
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("WRITING" "MARKDOWN")
     :after markdown-mode)
-#+end_src
 
-*** TODO Visualize GFM rendering
-#+begin_src emacs-lisp
   (use-package grip-mode
     :ensure t
+    :tags '("WRITING" "MARKDOWN" "DESKTOP")
     :commands (grip-mode)
-    :tags '("GUI")
     :bind (:map markdown-mode-command-map
                 ("g" . grip-mode)))
 #+end_src
