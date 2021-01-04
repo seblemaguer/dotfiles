@@ -3550,7 +3550,7 @@ For this, I use the =eshell-toggle= package.
     :hook (eshell-mode . eshell-syntax-highlighting-mode))
 #+end_src
 
-* File manager [20%]
+* File manager [100%]
 I am using emacs as my main file manager.
 To do so, I rely on =dired= which is builtin package which I tweaked massively and I added multiple subpackages to improve UX.
 I also added support for basic image processing and some additional operations (trashing, visualising diffs, ...).
@@ -3559,6 +3559,7 @@ I also added support for basic image processing and some additional operations (
 CLOSED: [2021-01-04 Mon 18:55]
 The configuration of =dired= focuses mainly on defining keys, tuning the files to omit, and tweaking the LS command used to get the informations.
 The hydra mapping is adapted from https://github.com/abo-abo/hydra/wiki/Dired.
+I also replace a base deletion by moving the files/directories to the trash.
 
 #+begin_src emacs-lisp
   (use-package dired
@@ -3641,6 +3642,16 @@ The hydra mapping is adapted from https://github.com/abo-abo/hydra/wiki/Dired.
     (setq-default dired-omit-files "^\\.\\([a-zA-Z0-9].*\\)?$"
                   dired-omit-mode t)
 
+    (defun empty-trash()
+      "Command to empty the trash (for now gnome/linux specific)"
+      (interactive)
+      (shell-command "rm -rf ~/.local/share/Trash/*"))
+
+    (defun open-trash-dir()
+      "Command to open the trash dir"
+      (interactive)
+      (find-file "~/.local/share/Trash/files"))
+  
     :config
 
     ;; Adapt ls for mac
@@ -3665,7 +3676,11 @@ The hydra mapping is adapted from https://github.com/abo-abo/hydra/wiki/Dired.
 
           ;; Details information
           dired-listing-switches "--group-directories-first -alh"
-          dired-details-hidden-string "[...]"))
+          dired-details-hidden-string "[...]"
+        
+          ;; Ask confirmation only once and move to trash
+          dired-recursive-deletes 'always
+          delete-by-moving-to-trash t))
 
   (use-package ls-lisp
     :config
@@ -3767,12 +3782,17 @@ This part consists mainly of ensuring the packages are properly required and tha
                 (("C-c C-r"  . dired-rsync))))
 #+end_src
 
-** TODO Images
+** DONE Images
+CLOSED: [2021-01-04 Mon 19:06]
+In order to deal with images, I rely on three packages:
+  - =image+= which provides proper primitives to visualize and basic image manipulation.
+  - =image-dired+= which link image+ and dired
+  - =blimp= which provides an encapsulation of the ~image-magick~ toolkit. This package enhances the manipulation of images.
 
 #+begin_src emacs-lisp
   (use-package image+
     :ensure t
-    :tags '("FILE_MANAGEMENT")
+    :tags '("FILE_MANAGEMENT" "IMAGE" "DESKTOP")
     :pretty-hydra
     ((:color red)
      ("Zoom"
@@ -3786,30 +3806,36 @@ This part consists mainly of ensuring the packages are properly required and tha
 
       "I/O"
       (("O" imagex-sticky-restore-original "restore original")
-       ("S" imagex-sticky-save-image "save file"))
-      ))
+       ("S" imagex-sticky-save-image "save file"))))
 
     :hook
     (image-mode . (lambda () (require 'image+) (imagex-sticky-mode)))
 
     :bind (:map image-mode-map
 		("/" . image+-hydra/body)))
-#+end_src
 
-*** TODO Manipulation
-#+begin_src emacs-lisp
+  (use-package image-dired+
+    :ensure t
+    :tags '("FILE_MANAGEMENT" "IMAGE" "DIRED" "DESKTOP")
+    :config
+    (setq auto-image-file-mode t)
+    (eval-after-load 'image-dired+ '(image-diredx-async-mode 1)))
+
   (use-package blimp
     :ensure t
-    :tags '("FILE_MANAGEMENT")
+    :tags '("FILE_MANAGEMENT" "IMAGE" "DESKTOP")
     :hook
     (image-mode . blimp-mode))
 #+end_src
 
-** TODO Diff [0%]
-*** TODO Global
+** DONE Diff
+CLOSED: [2021-01-04 Mon 19:10]
+Visualizing diff is important especially when I have a file, outside of project files, which is present on multiple machines.
+Diff visualization relies mainly on =ediff= but to which I added two primitives to focus on some regions (=diff-region= followed by =diff-region-now=).
+
 #+begin_src emacs-lisp
   (use-package ediff
-    :tags '("FILE_MANAGEMENT")
+    :tags '("FILE_MANAGEMENT" "DIFF")
     :config
     (autoload 'diff-mode "diff-mode" "Diff major mode" t)
     (setq diff-switches "-u"
@@ -3820,10 +3846,7 @@ This part consists mainly of ensuring the packages are properly required and tha
             (if (> (frame-width) 160)
                 (split-window-horizontally arg)
               (split-window-vertically arg)))))
-#+end_src
 
-*** TODO Helpers for region diff
-#+begin_src emacs-lisp
   (defun diff-region ()
     "Select a region to compare"
     (interactive)
@@ -3833,8 +3856,7 @@ This part consists mainly of ensuring the packages are properly required and tha
         (save-current-buffer
           (set-buffer buf)
           (erase-buffer))
-        (append-to-buffer buf (region-beginning) (region-end)))
-      )
+        (append-to-buffer buf (region-beginning) (region-end))))
     (message "Now select other region to compare and run `diff-region-now`"))
 
   (defun diff-region-now ()
@@ -3848,50 +3870,20 @@ This part consists mainly of ensuring the packages are properly required and tha
           (set-buffer bufb)
           (erase-buffer))
         (append-to-buffer bufb (region-beginning) (region-end))
-        (ediff-buffers bufa bufb))
-      ))
+        (ediff-buffers bufa bufb))))
 #+end_src
 
-** TODO Tramp
-#+begin_src emacs-lisp
-  (use-package tramp
-    :defer t
-    :tags '("FILE_MANAGEMENT")
-    :custom (tramp-default-method "ssh"
-             password-cache-expiry 60
-             tramp-verbose 1
-             tramp-auto-save-directory temporary-file-directory)
-          ;; ;; Debug
-          ;; tramp-verbose 9
-          ;; tramp-debug-buffer t)
-  )
-#+end_src
+** DONE Treemacs
+CLOSED: [2021-01-04 Mon 19:25]
+To have a quick visualisation (on the sidebar) of the project directory tree (and a little bit further), I am using treemacs.
+I added support for visualizing the git status (=treemacs-magit=), 
+for project restriction (=treemacs-projectile=) and adding some icons (=treemacs-icons-dired=).
 
-** TODO Trash
-#+begin_src emacs-lisp
-  ;; Ask confirmation only once and move to trash
-  (setq dired-recursive-deletes 'always)
-  (setq delete-by-moving-to-trash t)
-
-  (defun empty-trash()
-    "Command to empty the trash (for now gnome/linux specific)"
-    (interactive)
-    (shell-command "rm -rf ~/.local/share/Trash/*"))
-
-  (defun open-trash-dir()
-    "Command to open the trash dir"
-    (interactive)
-    (find-file "~/.local/share/Trash/files"))
-#+end_src
-
-** TODO Treemacs [0%]
-*** TODO Global
 #+begin_src emacs-lisp
   (use-package treemacs
     :ensure t
-    :tags '("FILE_MANAGEMENT")
-    :bind (:map global-map
-                ([f8]        . treemacs))
+    :tags '("FILE_MANAGEMENT" "TREEMACS")
+    :bind (([f8]        . treemacs))
     :functions (treemacs-follow-mode treemacs-filewatch-mode)
 
     :config
@@ -3932,32 +3924,21 @@ This part consists mainly of ensuring the packages are properly required and tha
 
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t))
-#+end_src
 
-*** TODO Projectile
-#+begin_src emacs-lisp
   (use-package treemacs-projectile
     :ensure t
-    :tags '("FILE_MANAGEMENT")
+    :tags '("FILE_MANAGEMENT" "TREEMACS" "PROJECT")
     :functions treemacs-projectile-create-header
-    :after treemacs projectile
     :config
     (setq treemacs-header-function #'treemacs-projectile-create-header))
-#+end_src
 
-*** TODO Magit
-#+begin_src emacs-lisp
   (use-package treemacs-magit
-    :tags '("FILE_MANAGEMENT")
-    :after treemacs magit
-    :ensure t)
-#+end_src
-
-*** TODO Icons
-#+begin_src emacs-lisp
-  (use-package treemacs-icons-dired
-    :tags '("FILE_MANAGEMENT")
     :ensure t
+    :tags '("FILE_MANAGEMENT" "TREEMACS" "VC" "GIT"))
+
+  (use-package treemacs-icons-dired
+    :ensure t
+    :tags '("FILE_MANAGEMENT" "TREEMACS" "DIRED" "DESKTOP")
     :commands (treemacs-icons-dired-mode)
     :hook
     (dired-mode . treemacs-icons-dired--enable-highlight-correction)
