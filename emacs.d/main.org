@@ -2079,7 +2079,7 @@ In order to format the buffer, it is better to rely on external formatter/linter
     :commands (format-all-buffer format-all-mode))
 #+end_src
 
-* Programming [40%]
+* Programming [80%]
 Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
 To do so, I rely mainly on Language Server Protocol (LSP).
 
@@ -2247,51 +2247,69 @@ However, I had to do extra-configurations to have outline support and a better f
         (indent-region begin end))))
 #+end_src
 
-** TODO Configuration [0%]
-*** TODO Default unix configuration
-Config-general-mode is applied for all unix configuration files.
+** DONE Configuration [100%]
+CLOSED: [2021-01-04 Mon 07:03]
+*** DONE Default unix configuration
+CLOSED: [2021-01-03 Sun 21:52]
+=config-general-mode= is applied for all unix configuration files.
+For now, I know/use only files with extension ~rc~ or ~conf~.
+
 #+begin_src emacs-lisp
   (use-package config-general-mode
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "CONFIGURATION")
     :mode ("\\.conf$" "\\.*rc$"))
 #+end_src
 
-*** TODO Authinfo
-I developed a dedicated mode for syntax highlighting authinfo files. For now, it is not stable
-enough to be on melpa so I use straight.
+*** DONE Authinfo
+CLOSED: [2021-01-03 Sun 21:56]
+The default =authinfo-mode= provided by emacs 27.1 is pretty nice but doesn't provide proper font-locking.
+I started to develop =colored-authinfo-mode= to provide a better colorization for authinfo files.
+
 #+begin_src emacs-lisp
   (use-package colored-authinfo-mode
     :straight (colored-authinfo-mode :repo "seblemaguer/colored-authinfo-mode" :type git :host github)
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "CONFIGURATION")
     :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . colored-authinfo-mode))
 #+end_src
 
-*** TODO Apache
+*** DONE Apache
+CLOSED: [2021-01-04 Mon 06:41]
+Nothing fancy here, we just add the support for =apache-mode= for several files which are known to be configuration for Apache.
+Because the configuration of Apache requires root permissions, I assign the category SUDO to this package.
 #+begin_src emacs-lisp
   (use-package apache-mode
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "CONFIGURATION" "SUDO")
     :mode ("\\.htaccess\\'" "httpd\\.conf\\'" "srm\\.conf\\'"
            "access\\.conf\\'" "sites-\\(available\\|enabled\\)/"))
 #+end_src
 
-*** TODO SSH configuration
+*** DONE SSH configuration
+CLOSED: [2021-01-04 Mon 06:48]
+Nothing fancy here, we just add the support for =ssh-config-mode= for several files which are known to be configuration for SSH.
+
 #+begin_src emacs-lisp
   (use-package ssh-config-mode
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "CONFIGURATION")
     :mode ("/\\.ssh/config\\'" "/system/ssh\\'" "/sshd?_config\\'" "/known_hosts\\'" "/authorized_keys2?\\'")
     :hook (ssh-config-mode . turn-on-font-lock)
 
     :config
     (autoload 'ssh-config-mode "ssh-config-mode" t))
 #+end_src
-*** TODO yaml
+
+*** DONE YAML
+CLOSED: [2021-01-04 Mon 06:53]
+YAML is my main configuration format file as it supports references and more importantly comments.
+I mainly rely on =yaml-mode= to which I add outline support for a better navigation.
+I also use =yaml-tomato= to get the path at the current point which helps the access to a specific subpart of the configuration.
+
 #+begin_src emacs-lisp
   (use-package yaml-mode
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "CONFIGURATION")
     :mode (".yaml$")
     :hook
     (yaml-mode . yaml-mode-outline-hook)
@@ -2304,73 +2322,103 @@ enough to be on melpa so I use straight.
     (defun yaml-mode-outline-hook ()
       (outline-minor-mode)
       (setq outline-regexp "^\\([ ]\\{2\\}\\)*\\([-] \\)?\\([\"][^\"]*[\"]\\|[a-zA-Z0-9_-]*\\): *\\([>|]\\|&[a-zA-Z0-9_-]*\\)?$")
-      (setq outline-level 'yaml-outline-level))
-    )
+      (setq outline-level 'yaml-outline-level)))
 
   (use-package yaml-tomato
     :ensure t
-    :tags '("LANGUAGE"))
+    :tags '("LANGUAGE")
+    :commands (yaml-tomato-show-current-path yaml-tomato-copy))
 #+end_src
 
-*** TODO vimrc
+*** DONE VIM
+CLOSED: [2021-01-04 Mon 06:55]
+I am using VIM as an alternative editor for quick editions, so I need to be able to modify its configuration.
+To do so, I actually use Emacs and rely on =vimrc-mode=.
+
 #+begin_src emacs-lisp
   (use-package vimrc-mode
     :ensure t
-    :tags '("LANGUAGE")
-    :mode ("^\\.vimrc\\'"))
+    :tags '("PROGRAMMING" "CONFIGURATION")
+    :mode ("^\\.vimrc\\'" "/etc/vim/vimrc"))
 #+end_src
-*** TODO GIT
+
+*** DONE GIT
+CLOSED: [2021-01-04 Mon 06:58]
+I am using GIT as my main VC.
+GIT relies on, at least, three types of configuration files: the general ~config~ , the ~gitignore~ and the ~attributes~ files.
+I use a dedicated mode for each type.
+
 #+begin_src emacs-lisp
   (use-package gitattributes-mode
     :ensure t
-    :tags '("VC"))
+    :tags '("PROGRAMMING" "CONFIGURATION" "VC"))
 
   (use-package gitconfig-mode
     :ensure t
-    :tags '("VC")
+    :tags '("PROGRAMMING" "CONFIGURATION" "VC")
     :mode
     ("/\.gitconfig\'"    . gitconfig-mode)
     ("/vcs/gitconfig\'"    . gitconfig-mode))
 
   (use-package gitignore-mode
     :ensure t
-    :tags '("VC"))
+    :tags '("PROGRAMMING" "CONFIGURATION" "VC"))
 #+end_src
 
-*** TODO Mercurial
+*** DONE Mercurial
+CLOSED: [2021-01-04 Mon 06:59]
+Aside GIT, I sometimes use mercurial. As for GIT, I use a dedicated mode for each type (~hgignore~ and ~hgrc~) of configuration file.
+
 #+begin_src emacs-lisp
   (use-package hgignore-mode
     :ensure t
-    :tags '("VC"))
+    :tags '("PROGRAMMING" "CONFIGURATION" "VC"))
 
   (use-package hgrc-mode
     :ensure t
-    :tags '("VC"))
+    :tags '("PROGRAMMING" "CONFIGURATION" "VC"))
 #+end_src
-*** TODO Dockerfile
+
+*** DONE Dockerfile
+CLOSED: [2021-01-04 Mon 07:01]
+I am a constant user of Docker. 
+Consequently, I need a proper node to edit docker build files as I build my own images for my experiences.
+
 #+begin_src emacs-lisp
   (use-package dockerfile-mode
     :ensure t
-    :tags '("SYSTEM"))
+    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM"))
 #+end_src
 
-*** TODO Cron
+*** DONE CRON
+CLOSED: [2021-01-04 Mon 07:03]
+CRON is a useful tool to plan some executions.
+However the default editor is too raw for me.
+While I would generally use VIM for such editions, I prefer to use emacs configured using =crontab-mode= to avoid mistakes.
+
 #+begin_src emacs-lisp
   (use-package crontab-mode
-    :ensure t)
+    :ensure t
+    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM"))
 #+end_src
 
-** TODO Logging
+** DONE Logging
+CLOSED: [2021-01-04 Mon 07:07]
+In all of my scripts/software, I rely more on loggers than print.
+Therefore, visualizing logs is key and =log-view= is a really flexible mode for this.
+While it is configured to open files whose basenames contain ~syslog~ or the extension is composed by ~.log~.
+In both cases, backup numbers are as well supported.
+
 #+begin_src emacs-lisp
   (use-package logview
     :ensure t
     :tags '("LANGUAGE")
-
     :commands logview-mode
     :mode
     ("\\.log\\(?:\\.[0-9]+\\)?\\'" . logview-mode)
     ("syslog\\(?:\\.[0-9]+\\)?\\'" . logview-mode))
 #+end_src
+
 ** TODO Programming languages [0%]
 *** TODO Mathematics based languages
 #+begin_src emacs-lisp
