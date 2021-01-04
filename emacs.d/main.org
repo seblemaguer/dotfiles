@@ -3108,7 +3108,7 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     (pdfgrep-mode))
 #+end_src
 
-* Version Control / Project Management [60%]
+* Version Control / Project Management [100%]
 My code project management is articulated around three key points: GIT, github/gist and =projectile=.
 GIT is used as the version control manager; 
 github for the non-sensitive repositories; 
@@ -3339,27 +3339,14 @@ The package =gist= provides a nice way of dealing with gists.
       (("b" gist-browse-current-url "Browse current URL")
        ("f" gist-fork "Fork")))))
 #+end_src
-** TODO Continuous integration
-#+begin_src emacs-lisp
-  (use-package travis
-    :ensure t
-    :tags '("VC")
-    :commands (show-my-travis-projects)
-    :config
+** DONE Project management
+CLOSED: [2021-01-04 Mon 16:03]
+=projectile= provides a nice way to restrict a lot of complementary packages to a dedicated project.
+A project root directory is defined by the root directory of the repository, which is ideal as all my projects are versioned using GIT.
+The default configuration is almost optimal.
+I just added a bunch of commands which are based on http://endlessparentheses.com/improving-projectile-with-extra-commands.html?source=rss
+I also added a hack to avoi hanging issues because of tramp (see https://github.com/bbatsov/projectile/issues/1232)
 
-    (require 'travis-utils)
-
-    (defun travis--get-github-token ()
-      "Retrieve the Travis token ID."
-      (my:auth-source-get-passwd :host "travis-ci.org" :user "seblemaguer"))
-
-    (defun show-my-travis-projects ()
-      (interactive)
-      (travis-show-projects "seblemaguer")))
-#+end_src
-
-** TODO Project management
-The commands are based on http://endlessparentheses.com/improving-projectile-with-extra-commands.html?source=rss
 #+begin_src emacs-lisp
   (use-package projectile
     :ensure t
@@ -3395,8 +3382,7 @@ The commands are based on http://endlessparentheses.com/improving-projectile-wit
 
     ;; Needed to avoid tramp hanging in buffer listing
     (defadvice projectile-project-root (around ignore-remote first activate)
-      (unless (file-remote-p default-directory) ad-do-it))
-    )
+      (unless (file-remote-p default-directory) ad-do-it)))
 #+end_src
 
 * Shell [0%]
