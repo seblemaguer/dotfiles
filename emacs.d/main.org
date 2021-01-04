@@ -2644,7 +2644,7 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
         (modern-sh-mode))))
 #+end_src
 
-* Writing / Reading [44%]
+* Writing / Reading [100%]
 I decided to dissociate programming and writing for more clarity.
 Nonetheless, both sections rely on the same principles.
 Concerning the writing part, I use mainly org-mode and LaTeX (article and shared documents).
@@ -2920,72 +2920,50 @@ I just added =grip-mode= to have a proper preview of the file.
                 ("g" . grip-mode)))
 #+end_src
 
-** TODO Biblio
-This part focus on bibliography/library configuration. The goal is to have a global configuration to
-organize read papers or "to read" papers. This is mainly based on https://codearsonist.com/reading-for-programmers
-
-#+begin_src emacs-lisp
-  (use-package org-ref
-    :ensure t
-    :tags '("ORG" "USER")
-    :hook
-    (org-export-before-parsing . orcp-citeproc)
-    :init
-    (setq ;; org-ref-completion-library 'org-ref-ivy-cite
-          org-ref-notes-directory "~/pCloudDrive/org/work/biblio"
-          org-ref-bibliography-notes "~/pCloudDrive/org/work/biblio/index.org"
-          org-ref-default-bibliography '("~/pCloudDrive/org/work/biblio/index.bib")
-          org-ref-pdf-directory "~/pCloudDrive/org/work/biblio/lib/"))
-
-  (use-package org-noter
-    :ensure t
-    :tags '("ORG" "USER")
-    :bind ("C-x i" . org-noter)
-    :config
-    (setq org-noter-property-doc-file "INTERLEAVE_PDF"
-          org-noter-property-note-location "INTERLEAVE_PAGE_NOTE"))
-
-  (use-package gscholar-bibtex
-    :ensure t
-    :tags '("WRITING" "CONNECTED")
-    :commands (gscholar-bibtex)
-    )
-#+end_src
-
-** TODO Inspiration helpers
-As I write papers, it is useful to have some helper to start to have the inspiration.
+** DONE Writing helpers
+CLOSED: [2021-01-04 Mon 13:05]
+As I am prone to constantly using the same writing ways, I need some helpers to get out the loop.
+I am using =academic-phrases= to provided starting points and =mw-thesaurus= to find synonyms and/or related words.
 
 #+begin_src emacs-lisp
   (use-package academic-phrases
     :ensure t
-    :tags '("WRITING" "CONNECTED"))
+    :tags '("WRITING" "HELPERS" "CONNECTED")
+    :commands (academic-phrases))
 
   (use-package mw-thesaurus
     :ensure straight
     :straight (mw-thesaurus :type git :fetcher github :repo "agzam/mw-thesaurus.el")
+    :tags '("WRITING" "HELPERS" "CONNECTED")
     :commands (mw-thesaurus-lookup-at-point))
 #+end_src
 
-** TODO Grammar checking [%]
-*** TODO For english
+** DONE Grammar checking
+CLOSED: [2021-01-04 Mon 13:06]
+To help to deal with my poor English, I am using grammarly to check my text.
+The package =grammarly= bring its functionnality into emacs which is a saver for me.
+
 #+begin_src emacs-lisp
   (use-package grammarly
     :ensure t
     :tags '("WRITING" "CONNECTED"))
 #+end_src
 
-** TODO Translation [%]
-*** TODO WordReference
+** DONE Translation 
+CLOSED: [2021-01-04 Mon 13:08]
+As I have the luck to deal with multiple languages (french, english and bulgarian), I need to have a quick access to some translations.
+WordReference is my first choice as I find it quite complete and accurate.
+As a fallback, I am using google-translate via the package =go-translate=.
+
 #+begin_src emacs-lisp
   (use-package wordreference
     :load-path default-plugin-dir
+    :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :commands (wordreference wordreference-at-point))
-#+end_src
 
-*** TODO Google
-#+begin_src emacs-lisp
   (use-package go-translate
     :ensure t
+    :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :bind (("\C-ct" . go-translate)
            ("\C-cT" . go-translate-popup))
     :config
@@ -2997,11 +2975,17 @@ As I write papers, it is useful to have some helper to start to have the inspira
           go-translate-buffer-follow-p t))
 #+end_src
 
-** TODO PDF [%]
+** DONE PDF
+CLOSED: [2021-01-04 Mon 12:57]
+Visualizing PDF files in Emacs is quite useful.
+I am using =pdf-tools= which provides a lot of functionalities.
+The configuration consists mainly of providing proper keyboard based controls using =hydra=.
+I am also using =pdf-view-restore= to keep track of where I was before closing emacs.
+
 #+begin_src emacs-lisp
   (use-package pdf-tools
     :ensure t
-    :tags '("DOCUMENT" "GUI")
+    :tags '("DOCUMENT" "DESKTOP")
     :functions
     (pdf-history-backward
      pdf-history-forward
@@ -3110,7 +3094,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
   (use-package pdf-view-restore
     :ensure t
     :after pdf-tools
-    :tags '("DOCUMENT" "GUI")
+    :tags '("DOCUMENT" "DESKTOP")
     :hook
     (pdf-view-mode-hook . pdf-view-restore-mode))
 #+end_src
@@ -3119,7 +3103,7 @@ As I write papers, it is useful to have some helper to start to have the inspira
 #+begin_src emacs-lisp
   (use-package pdfgrep
     :ensure t
-      :tags '("DOCUMENT" "GUI")
+      :tags '("DOCUMENT" "DESKTOP")
     :config
     (pdfgrep-mode))
 #+end_src
