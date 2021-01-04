@@ -3108,7 +3108,7 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     (pdfgrep-mode))
 #+end_src
 
-* Version Control / Project Management [20%]
+* Version Control / Project Management [60%]
 My code project management is articulated around three key points: GIT, github/gist and =projectile=.
 GIT is used as the version control manager; 
 github for the non-sensitive repositories; 
@@ -3279,29 +3279,44 @@ I use =gitignore-snippets= to provide starting gitignore content;
     :config
     (setq gitpatch-mail-attach-patch-key "C-c i"))
 #+end_src
-** TODO Github [0%]
+** DONE Github
+CLOSED: [2021-01-04 Mon 15:45]
+GIT is the tool I am using for VC.
+I am mainly using github to store non-sensitive repositories.
+To interact with github in emacs, I rely on three packages:
+=forge= as an entry point and which is integrating nicely with magit;
+=github-explorer= to browse a repository in emacs;
+=github-review= to deal with code reviewing (which integrates well with =forge=).
+
+
 #+begin_src emacs-lisp
   (use-package forge
     :ensure t
     :demand t
-    :tags '("VC")
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
     :after magit
     :custom-face
     (forge-topic-closed ((t (:strike-through t :inherit magit-dimmed)))))
 
   (use-package github-explorer
     :ensure t
-    :tags '("VC"))
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED"))
 
   (use-package github-review
-    :ensure t)
+    :ensure t
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED"))
 #+end_src
 
-** TODO Gist
+** DONE Gist
+CLOSED: [2021-01-04 Mon 15:47]
+For scripts/helpers/snippets/... which do not deserve to be saved in a dedicated repository,
+I am storing them in a dedicated gist.
+The package =gist= provides a nice way of dealing with gists.
+
 #+begin_src emacs-lisp
   (use-package gist
     :ensure t
-    :tags '("VC")
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
     :mode-hydra
     (gist-list-mode
      (:color red)
