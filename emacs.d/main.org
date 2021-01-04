@@ -2644,13 +2644,25 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
         (modern-sh-mode))))
 #+end_src
 
-* Writing / Reading [0%]
-** TODO Latex [0%]
-*** TODO Global
+* Writing / Reading [11%]
+I decided to dissociate programming and writing for more clarity.
+Nonetheless, both sections rely on the same principles.
+Concerning the writing part, I use mainly org-mode and LaTeX (article and shared documents).
+I also use markdown for README and collaborative projects.
+Finally, concerning the reading part, I consider only PDF Files.
+I use libreoffice/office 365 for official documents which can't be handled in PDF.
+
+** DONE LaTeX [100%]
+CLOSED: [2021-01-04 Mon 12:05]
+LaTeX is the core languages I am using to write scientific documents and presentations.
+My configuration relies mainly on auctex but I had to tweak several part to match my way of dealing with such files.
+These tweaks concerns mainly of using =outline= to deal with folding, 
+using the ~enquote~ command to do some quotation in latex and prepare a proper pdf compilation/synchronization.
+
 #+begin_src emacs-lisp
   (use-package tex-site
     :ensure auctex
-    :tags '("LANGUAGE")
+    :tags '("WRITING" "LATEX")
     :after (tex latex)
     :hook
     (LaTeX-mode . turn-off-auto-fill)
@@ -2660,7 +2672,7 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
     (LaTeX-mode . TeX-source-correlate-mode)
 
     :config
-    ;; Pdf activated by default
+    ;; PDF activated by default
     (TeX-global-PDF-mode 1)
 
     ;; Diverse
@@ -2679,24 +2691,6 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
           TeX-brace-indent-level 4
           TeX-newline-function 'newline-and-indent)
 
-    (defadvice LaTeX-fill-region-as-paragraph (around LaTeX-sentence-filling)
-      "Start each sentence on a new line."
-      (let ((from (ad-get-arg 0))
-            (to-marker (set-marker (make-marker) (ad-get-arg 1)))
-            tmp-end)
-        (while (< from (marker-position to-marker))
-          (forward-sentence)
-          ;; might have gone beyond to-marker --- use whichever is smaller:
-          (ad-set-arg 1 (setq tmp-end (min (point) (marker-position to-marker))))
-          ad-do-it
-          (ad-set-arg 0 (setq from (point)))
-          (unless (or
-                   (bolp)
-                   (looking-at "\\s *$"))
-            (LaTeX-newline)))
-        (set-marker to-marker nil)))
-    (ad-activate 'LaTeX-fill-region-as-paragraph)
-
     ;; PDF/Tex correlation
     (setq TeX-source-correlate-method 'synctex)
 
@@ -2704,8 +2698,137 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
     (define-key LaTeX-mode-map (kbd "C-c C-=") 'align-current))
 #+end_src
 
-*** TODO Bibtex [0%]
-**** TODO Global
+*** DONE Reftex
+CLOSED: [2021-01-04 Mon 11:55]
+I am using =reftex= to deal with references.
+The configuration consists mainly of pluging it into auctex and expand the citation keywords and commands.
+
+#+begin_src emacs-lisp
+  (use-package reftex
+    :tags '("WRITING" "LATEX")
+    :hook
+    (LaTeX-mode . turn-on-reftex)
+
+    :config
+    (setq reftex-save-parse-info t
+          reftex-enable-partial-scans t
+          reftex-use-multiple-selection-buffers t
+          reftex-plug-into-AUCTeX t
+          reftex-vref-is-default t
+          reftex-cite-format
+          '((?c    . "\\cite[]{%l}")
+            (?t    . "\\textcite{%l}")
+            (?a    . "\\autocite[]{%l}")
+            (?p    . "\\parencite{%l}")
+            (?f    . "\\footcite[][]{%l}")
+            (?F    . "\\fullcite[]{%l}")
+            (?x    . "[]{%l}")
+            (?X    . "{%l}"))
+
+          font-latex-match-reference-keywords
+          '(("cite"             "[{")
+            ("cites"            "[{}]")
+            ("footcite"         "[{")
+            ("footcites"        "[{")
+            ("parencite"        "[{")
+            ("textcite"         "[{")
+            ("fullcite"         "[{")
+            ("citetitle"        "[{")
+            ("citetitles"       "[{")
+            ("headlessfullcite" "[{"))
+
+          reftex-cite-prompt-optional-args nil
+          reftex-cite-cleanup-optional-args t))
+#+end_src
+
+*** DONE Completion
+CLOSED: [2021-01-04 Mon 12:00]
+For the completion, I need to prepare some proper hook for =company=.
+I use two packages =company-auctex= which provides the enhancement of auctex and =company-reftex= which provides a proper completion support for references.
+
+#+begin_src emacs-lisp
+  (setq TeX-auto-global (format "%s/auctex/style" user-emacs-directory))
+
+  (use-package company-auctex
+    :ensure t
+    :tags '("WRITING" "LATEX" "COMPLETION")
+    :hook
+    (LaTeX-mode . company-auctex-hook)
+
+    :init
+    (defun company-auctex-hook ()
+      (make-local-variable 'company-backends)
+      (company-auctex-init)))
+
+  (use-package company-reftex
+    :ensure t
+    :tags '("WRITING" "LATEX" "ORG" "COMPLETION")
+    :hook
+    (LaTeX-mode . company-reftex-hook)
+    (org-mode   . company-reftex-hook)
+
+    :init
+    (defun company-reftex-hook ()
+      (make-local-variable 'company-backends)
+      (set 'company-backends (append '(company-reftex-labels company-reftex-citations) company-backends))))
+#+end_src
+
+*** DONE Compilation
+CLOSED: [2021-01-04 Mon 12:03]
+For the compilation, I prefer to use =latexmk=. 
+It processes everything automatically which removes the burden of having to define the sequence of commands.
+I could have used the auctex default sequence, but I prefer to have an homogeneous process with what I do in the shell!
+
+#+begin_src emacs-lisp
+  (use-package auctex-latexmk
+    :ensure t
+    :tags '("WRITING" "LATEX" "COMPILATION")
+    :config
+  
+    ;; Redine TeX-output-mode to get the color !
+    (define-derived-mode TeX-output-mode TeX-special-mode "LaTeX Output"
+      "Major mode for viewing TeX output.
+    \\{TeX-output-mode-map} "
+      :syntax-table nil
+      (set (make-local-variable 'revert-buffer-function)
+           #'TeX-output-revert-buffer)
+
+      (set (make-local-variable 'font-lock-defaults)
+           '((("^!.*" . font-lock-warning-face) ; LaTeX error
+              ("^-+$" . font-lock-builtin-face) ; latexmk divider
+              ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-builtin-face)
+              ;; .....
+              )))
+
+      ;; special-mode makes it read-only which prevents input from TeX.
+      (setq buffer-read-only nil))
+
+
+    ;; Setup everything
+    (setq auctex-latexmk-inherit-TeX-PDF-mode t
+          TeX-show-compilation nil)  
+    (auctex-latexmk-setup))
+#+end_src
+
+*** DONE Preview
+CLOSED: [2021-01-04 Mon 12:05]
+Complicated equations can be difficult to parse properly at first sight.
+I use =xenops= to generate a preview of the equations.
+=xenops= is also compatible with org-mode but I use it more with latex.
+Nonetheless, I activate it for both major modes.
+
+#+begin_src emacs-lisp
+  (use-package xenops
+    :ensure t
+    :tags '("WRITING" "LATEX" "ORG" "DESKTOP")
+    :commands (xenops-mode xenops-doctor)
+    :hook
+    (latex-mode . xenops-mode)
+    (org-mode   . xenops-mode))
+#+end_src
+
+** TODO Bibtex [0%]
+*** TODO Global
 #+begin_src emacs-lisp
   (use-package bibtex
     :tags '("LANGUAGE")
@@ -2738,14 +2861,14 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
           bibtex-autokey-titlewords 1))
 #+end_src
 
-**** TODO Utilities
+*** TODO Utilities
 #+begin_src emacs-lisp
   (defvar bibtex-plugin-dir (concat default-plugin-dir "/bibtex-utils")
     "Directory containing some bibtex helpers")
   (add-to-list 'load-path bibtex-plugin-dir)
 #+end_src
 
-**** TODO Formatting
+*** TODO Formatting
 #+begin_src emacs-lisp
   (use-package bibclean-format
     :ensure t
@@ -2759,129 +2882,6 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
           ("C-c f" . bibclean-format))
     :config
     (setq bibclean-format-args '("--max-width" "0" "--align-equal")))
-#+end_src
-
-*** TODO Reftex
-#+begin_src emacs-lisp
-  (use-package reftex
-    :tags '("LANGUAGE")
-    :hook
-    (LaTeX-mode . turn-on-reftex)   ; with AUCTeX LaTeX mode
-    :config
-    (setq reftex-save-parse-info t
-          reftex-enable-partial-scans t
-          reftex-use-multiple-selection-buffers t
-          reftex-plug-into-AUCTeX t
-          reftex-vref-is-default t
-          reftex-cite-format
-          '((?\C-m . "\\cite[]{%l}")
-            (?t . "\\textcite{%l}")
-            (?a . "\\autocite[]{%l}")
-            (?p . "\\parencite{%l}")
-            (?f . "\\footcite[][]{%l}")
-            (?F . "\\fullcite[]{%l}")
-            (?x . "[]{%l}")
-            (?X . "{%l}"))
-
-          font-latex-match-reference-keywords
-          '(("cite" "[{")
-            ("cites" "[{}]")
-            ("footcite" "[{")
-            ("footcites" "[{")
-            ("parencite" "[{")
-            ("textcite" "[{")
-            ("fullcite" "[{")
-            ("citetitle" "[{")
-            ("citetitles" "[{")
-            ("headlessfullcite" "[{"))
-
-          reftex-cite-prompt-optional-args nil
-          reftex-cite-cleanup-optional-args t))
-#+end_src
-
-*** TODO Completion
-#+begin_src emacs-lisp
-  ;; Completion
-  (setq TeX-auto-global (format "%s/auctex/style" user-emacs-directory))
-
-  (use-package company-auctex
-    :ensure t
-    :tags '("LANGUAGE")
-    :hook
-    (LaTeX-mode . company-auctex-hook)
-
-    :init
-    (defun company-auctex-hook ()
-      (make-local-variable 'company-backends)
-      (company-auctex-init)))
-
-  (use-package company-reftex
-    :ensure t
-    :tags '("LANGUAGE")
-    ;; :compdef (latex-mode org-mode)
-    ;; :company (company-reftex-labels company-reftex-citations)
-    :hook
-    (LaTeX-mode . company-reftex-hook)
-    (org-mode   . company-reftex-hook)
-
-    :init
-    (defun company-reftex-hook ()
-      (make-local-variable 'company-backends)
-      (set 'company-backends (append '(company-reftex-labels company-reftex-citations) company-backends))))
-#+end_src
-
-*** TODO Compilation
-#+begin_src emacs-lisp
-  ;; Escape mode
-  (defun TeX-toggle-escape nil
-    (interactive)
-    "Toggle Shell Escape"
-    (setq LaTeX-command
-          (if (string= LaTeX-command "latex")
-              "latex -shell-escape"
-            "latex"))
-    (message (concat "shell escape "
-                     (if (string= LaTeX-command "latex -shell-escape")
-                         "enabled"
-                       "disabled"))
-             )
-    )
-
-  (use-package auctex-latexmk
-    :ensure t
-    :tags '("LANGUAGE")
-    :config
-    (setq auctex-latexmk-inherit-TeX-PDF-mode t)
-    (auctex-latexmk-setup))
-
-  (setq TeX-show-compilation nil)
-
-  ;; Redine TeX-output-mode to get the color !
-  (define-derived-mode TeX-output-mode TeX-special-mode "LaTeX Output"
-    "Major mode for viewing TeX output.
-    \\{TeX-output-mode-map} "
-    :syntax-table nil
-    (set (make-local-variable 'revert-buffer-function)
-         #'TeX-output-revert-buffer)
-
-    (set (make-local-variable 'font-lock-defaults)
-         '((("^!.*" . font-lock-warning-face) ; LaTeX error
-            ("^-+$" . font-lock-builtin-face) ; latexmk divider
-            ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-builtin-face)
-            ;; .....
-            )))
-
-    ;; special-mode makes it read-only which prevents input from TeX.
-    (setq buffer-read-only nil))
-#+end_src
-
-*** TODO Preview
-#+begin_src emacs-lisp
-  (use-package xenops
-    :ensure t
-    :commands (xenops-mode xenops-doctor)
-    :hook
-    (latex-mode . xenops-mode))
 #+end_src
 
 ** TODO TikZ/PGF
