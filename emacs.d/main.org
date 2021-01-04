@@ -808,7 +808,7 @@ Finally, instead of having the scratch buffer using the =emacs-lisp-mode= as the
     (set (make-local-variable 'org-startup-folded) t))
 #+end_src
 
-* Org-mode [87%]
+* Org-mode [100%]
 =Org-mode= is the core of how I am organizing tasks, writing documents, ...
 While it is mainly a programming/writing language, it involves too many subparts and, therefore, has its own section.
 
@@ -1553,28 +1553,26 @@ This package is mainly use to bookmark webpages from firefox.
     :tags '("ORG"))
 #+end_src
 
-** TODO Capturing [0%]
-*** TODO DOCT
+** DONE Capturing [100%]
+CLOSED: [2021-01-04 Mon 08:33]
+I use the capturing mechanism provded by org mode to add information for further investigations.
+=doct= package is used to have a more human-friendly way a describing the templates.
+I also use capturing mechanism to save recipes and some interesting websites.
+
 #+begin_src emacs-lisp
   (use-package doct
     :ensure t
-    :tags '("ORG")
+    :tags '("ORG" "CAPTURE" "DESKTOP")
     :commands (doct))
-#+end_src
 
-*** TODO Entry point
-Also use https://github.com/karlicoss/grasp to connect with firefox.
-
-#+begin_src emacs-lisp
   (use-package org-capture
-    :tags '("ORG" "USER")
+    :tags '("ORG" "CAPTURE" "DESKTOP")
     :after org
     :commands (org-capture)
     :config
     (setq org-capture-templates
           (doct
-           `(
-             ("Book"
+           `(("Book"
               :keys "p"
               :type entry
               :file "~/pCloudDrive/org/todo/todo.org"
@@ -1639,11 +1637,15 @@ Also use https://github.com/karlicoss/grasp to connect with firefox.
               :empty-lines-before 1)))))
 #+end_src
 
-*** TODO Cooking
+*** DONE Cooking
+CLOSED: [2021-01-04 Mon 08:33]
+=org-ref= provides an easy way to save recipes.
+It supports multiple website so its configuration consists only of providing the template.
+
 #+begin_src emacs-lisp
     (use-package org-chef
       :ensure t
-      :tags '("ORG" "USER")
+      :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED")
       :after (org-capture)
       :config
       (add-to-list 'org-capture-templates
@@ -1658,15 +1660,16 @@ Also use https://github.com/karlicoss/grasp to connect with firefox.
                            ))))
 #+end_src
 
-*** TODO ORG/Web tools
-Org-web-tools is a nice package which allows to sniff a webpage and convert it into org-mode
+*** DONE ORG/Web tools
+CLOSED: [2021-01-04 Mon 08:33]
+=org-web-tools= is a nice package which allows to sniff a webpage and convert it into org-mode
 format. This is really useful to homogeneise documentation.
 
 #+begin_src emacs-lisp
   (use-package org-web-tools
     :ensure t
     :after (org)
-    :tags '("CONNECTED"))
+    :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED"))
 #+end_src
 
 * Environment [50%]
