@@ -3385,14 +3385,17 @@ I also added a hack to avoi hanging issues because of tramp (see https://github.
       (unless (file-remote-p default-directory) ad-do-it)))
 #+end_src
 
-* Shell [0%]
-** TODO Global
-The key configuration is mainly coming from https://github.com/jcf/emacs.d the rest is coming from http://www.modernemacs.com/post/custom-eshell/ with some adaptation
+* Shell [100%]
+My use of shell is kind of anarchic. 
+I alternate between zsh and emacs internal shell (eshell).
+Because I use eshell regularly, I spend some time to configure it in details.
+The main part of the configuration is coming from https://github.com/jcf/emacs.d.
+The rest has been adapted from http://www.modernemacs.com/post/custom-eshell/.
 
 #+begin_src emacs-lisp
   (use-package eshell
     :demand
-    :tags '("SHELL")
+    :tags '("ESHELL")
     :hook
     (eshell-mode .  (lambda ()
                       (define-key eshell-mode-map
@@ -3501,31 +3504,31 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
     )
 #+end_src
 
-** TODO Status in the fringe
+** DONE Some extensions
+CLOSED: [2021-01-04 Mon 18:20]
+The builtin =eshell= package provides enough information to be used.
+Nonetheless, adding some complementary packages helps to have a better UX.
+For now, I restrict this to some visualuation helpers (=eshell-fringe-status= & =eshell-syntax-highlighting=) and some completion helpers (=fish-completion=).
+I also prefer to toggle the shell as I generally use it for quick commands.
+For this, I use the =eshell-toggle= package.
+
 #+begin_src emacs-lisp
   (use-package eshell-fringe-status
     :ensure t
-    :tags '("SHELL")
+    :tags '("ESHELL" "ESHELL_EXTENSION")
     :hook
     (eshell-mode . eshell-fringe-status-mode))
-#+end_src
 
-** TODO Fish completion
-#+begin_src emacs-lisp
   (use-package fish-completion
     :ensure t
-    :tags '("SHELL")
+    :tags '("ESHELL" "ESHELL_EXTENSION")
     :config
     (global-fish-completion-mode))
-#+end_src
 
-** TODO Some toggling
-#+begin_src emacs-lisp
   (use-package eshell-toggle
     :straight
     (eshell-toggle :repo "4DA/eshell-toggle" :type git :host github :version original)
-    :tags '("SHELL")
-
+    :tags '("ESHELL" "ESHELL_EXTENSION")
     :functions (eshell-toggle-init-eshell)
     :custom
     (eshell-toggle-size-fraction 3)
@@ -3535,24 +3538,16 @@ The key configuration is mainly coming from https://github.com/jcf/emacs.d the r
 
     :bind
     ("<f6>" . eshell-toggle))
-#+end_src
 
-** TODO Outline-mode helpers
-#+begin_src emacs-lisp
   (use-package eshell-outline
     :ensure t
+    :tags '("ESHELL" "ESHELL_EXTENSION")
     :hook (eshell-mode . eshell-outline-mode))
-#+end_src
 
-** TODO Syntax highlighting
-#+begin_src emacs-lisp
-(use-package eshell-syntax-highlighting
-  :ensure t
-  :after esh-mode
-  :tags '("SHELL")
-  :config
-  ;; Enable in all Eshell buffers.
-  (eshell-syntax-highlighting-global-mode +1))
+  (use-package eshell-syntax-highlighting
+    :ensure t
+    :tags '("ESHELL" "ESHELL_EXTENSION")
+    :hook (eshell-mode . eshell-syntax-highlighting-mode))
 #+end_src
 
 * File manager [0%]
