@@ -2644,7 +2644,7 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
         (modern-sh-mode))))
 #+end_src
 
-* Writing / Reading [11%]
+* Writing / Reading [22%]
 I decided to dissociate programming and writing for more clarity.
 Nonetheless, both sections rely on the same principles.
 Concerning the writing part, I use mainly org-mode and LaTeX (article and shared documents).
@@ -2827,8 +2827,12 @@ Nonetheless, I activate it for both major modes.
     (org-mode   . xenops-mode))
 #+end_src
 
-** TODO Bibtex [0%]
-*** TODO Global
+** DONE Bibtex
+CLOSED: [2021-01-04 Mon 12:15]
+To store bibliography entries, BibTex is the way to go.
+The global configuration consists mainly on providing a way to generate proper keys.
+Finally, I use bibclean-format to have a clean final bibtex file.
+
 #+begin_src emacs-lisp
   (use-package bibtex
     :tags '("LANGUAGE")
@@ -2859,24 +2863,13 @@ Nonetheless, I activate it for both major modes.
           bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an")
           bibtex-autokey-titleword-length 100
           bibtex-autokey-titlewords 1))
-#+end_src
 
-*** TODO Utilities
-#+begin_src emacs-lisp
-  (defvar bibtex-plugin-dir (concat default-plugin-dir "/bibtex-utils")
-    "Directory containing some bibtex helpers")
-  (add-to-list 'load-path bibtex-plugin-dir)
-#+end_src
-
-*** TODO Formatting
-#+begin_src emacs-lisp
   (use-package bibclean-format
     :ensure t
     :hook
     (bibtex-mode . bibclean-format-on-save-mode)
 
     :commands (bibclean-format)
-
     :bind
     (:map bibtex-mode-map
           ("C-c f" . bibclean-format))
