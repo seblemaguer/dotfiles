@@ -2079,7 +2079,7 @@ In order to format the buffer, it is better to rely on external formatter/linter
     :commands (format-all-buffer format-all-mode))
 #+end_src
 
-* Programming [80%]
+* Programming [100%]
 Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
 To do so, I rely mainly on Language Server Protocol (LSP).
 
@@ -2419,12 +2419,113 @@ In both cases, backup numbers are as well supported.
     ("syslog\\(?:\\.[0-9]+\\)?\\'" . logview-mode))
 #+end_src
 
-** TODO Programming languages [0%]
-*** TODO Mathematics based languages
+** DONE Programming languages [100%]
+CLOSED: [2021-01-04 Mon 07:42]
+I am using emacs as IDE for multiple languages.
+For my research, I am using mainly on python, shell, java and maths-based languages.
+I, obviously, write some elisp code as well.
+Consequently, this section configure all of these languages.
+
+*** DONE Emacs Lisp
+CLOSED: [2021-01-04 Mon 07:38]
+The configuration of emacs, to edit (e)lisp files, consists mainly of adding a linter support (~package-lint~) and REPL environment (~elpl~).
+I also added a hydra configuration to link properly everything.
+
+#+begin_src emacs-lisp
+  (use-package emacs-lisp-mode
+    :mode-hydra
+    ("Eval"
+     (("b" eval-buffer "buffer")
+      ("e" eval-defun "defun")
+      ("r" eval-region "region"))
+
+     "REPL"
+     (("I" elpl "elpl"))
+
+     "Formatting/linting"
+     (("p" package-lint "package-lint"))
+
+     "Test"
+     (("t" ert "prompt")
+      ("T" (ert t) "all")
+      ("F" (ert :failed) "failed"))
+
+     "Doc"
+     (("d" describe-foo-at-point "thing-at-pt")
+      ("f" describe-function "function")
+      ("v" describe-variable "variable")
+      ("i" info-lookup-symbol "info lookup"))))
+
+  (use-package package-lint
+    :ensure t
+    :tags '("PROGRAMMING" "ELISP" "COMPILATION"))
+
+  (use-package elpl
+    :ensure t
+    :tags '("PROGRAMMING" "ELISP" "REPL")
+    :commands (elpl))
+#+end_src
+
+*** DONE Java based languages
+CLOSED: [2021-01-04 Mon 07:19]
+I use Java and two dialects based on Java: Groovy and Kotlin.
+I strongly rely on LSP, so the configuration consists mainly on loading major mode and configuring the LSP servers.
+
+#+begin_src emacs-lisp
+  (use-package lsp-java
+    :ensure t
+    :tags '("PROGRAMMING" "JAVA" "LSP")
+    :hook
+    (java-mode . lsp)
+
+    :config
+    (setq lsp-java-save-action-organize-imports nil))
+
+  (use-package java-snippets
+    :ensure t
+    :tags '("PROGRAMMING" "JAVA" "COMPLETION"))
+
+  (use-package groovy-mode
+    :ensure t
+    :tags '("PROGRAMMING" "JAVA" "GROOVY")
+    :mode ("\.groovy$" "\.gradle$")
+    :interpreter ("gradle" "groovy")
+    :hook
+    (groovy-mode .  (lambda () (inf-groovy-keys)))
+    (groovy-mode . lsp-deferred)
+
+    :config
+    (autoload 'run-groovy "inf-groovy" "Run an inferior Groovy process")
+    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode")
+
+    (setq lsp-groovy-server-file "~/environment/local/lib/groovy-language-server-all.jar"))
+
+  ;; Subpackages
+  (use-package groovy-imports
+    :ensure t
+    :tags '("PROGRAMMING" "JAVA" "GROOVY"))
+
+  (use-package kotlin-mode
+    :ensure t
+    :tags '("PROGRAMMING" "JAVA" "KOTLIN")
+    :mode "\\.kts?\\'"
+    :hook
+    (kotlin-mode . lsp-deferred)
+
+    :config
+    (setq kotlin-tab-width 4))
+#+end_src
+
+*** DONE Mathematics based languages
+CLOSED: [2021-01-04 Mon 07:16]
+I am using two main (exclusive?!) mathematic dedicated languages: Matlab and R.
+For matlab, I rely on =matlab-mode= for which I tweaked the command to avoid matlab desktop loading.
+For R, I rely on =ess= which provides excellent support with a reasonable default configuration.
+
 #+begin_src emacs-lisp
   (use-package matlab-load
     :ensure matlab-mode
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "MATH" "MATLAB")
     :defines (matlab-shell-command-switches mlint-programs)
     :no-require t
     :mode ("\\.m$" . matlab-mode)
@@ -2445,113 +2546,22 @@ In both cases, backup numbers are as well supported.
   ;; ESS for R programming
   (use-package ess
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "MATH" "R")
     :config
     (setq ess-default-style 'RRR+))
-
-  (use-package ess-view
-    :ensure t
-    :tags '("LANGUAGE")
-    :commands (ess-view-mode)
-    :after ess)
 #+end_src
 
-*** TODO Java based languages
-#+begin_src emacs-lisp
-  (use-package lsp-java
-    :ensure t
-    :tags '("LANGUAGE")
-    :hook
-    (java-mode . lsp)
+*** DONE Python
+CLOSED: [2021-01-04 Mon 07:42]
+Python is my main programming language, so the one I configured the most intensively.
+I strongly rely on LSP and the Microsoft ~pyright~ server.
+I prefer to use ~ipython~ as the interpreter as it is more powerful.
+I also added support =ein= to have a REPL environment.
+Finally, I use =sphinx-mode= to deal with the documentation.
 
-    :config
-    (setq lsp-java-save-action-organize-imports nil))
-
-  (use-package java-snippets
-    :ensure t
-    :tags '("LANGUAGE"))
-
-  (use-package groovy-mode
-    :ensure t
-    :tags '("LANGUAGE")
-    :mode ("\.groovy$" "\.gradle$")
-    :interpreter ("gradle" "groovy")
-    :hook
-    (groovy-mode .  (lambda () (inf-groovy-keys)))
-    (groovy-mode . lsp-deferred)
-
-    :config
-    (autoload 'run-groovy "inf-groovy" "Run an inferior Groovy process")
-    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode")
-
-    (setq lsp-groovy-server-file "~/environment/local/lib/groovy-language-server-all.jar"))
-
-  ;; Subpackages
-  (use-package groovy-imports
-    :ensure t
-    :tags '("LANGUAGE"))
-
-  (use-package kotlin-mode
-    :ensure t
-    :tags '("LANGUAGE")
-    :mode "\\.kts?\\'"
-    :hook
-    (kotlin-mode . lsp-deferred)
-
-    :config
-    (setq kotlin-tab-width 4))
-#+end_src
-
-*** TODO Emacs Lisp [0%]
-**** TODO Global configuration
-#+begin_src emacs-lisp
-  (use-package emacs-lisp-mode
-    :mode-hydra
-    ("Eval"
-     (("b" eval-buffer "buffer")
-      ("e" eval-defun "defun")
-      ("r" eval-region "region"))
-
-     "REPL"
-     (("I" ielm "ielm"))
-
-     "Test"
-     (("t" ert "prompt")
-      ("T" (ert t) "all")
-      ("F" (ert :failed) "failed"))
-
-     "Doc"
-     (("d" describe-foo-at-point "thing-at-pt")
-      ("f" describe-function "function")
-      ("v" describe-variable "variable")
-      ("i" info-lookup-symbol "info lookup"))))
-#+end_src
-
-**** TODO Buffer content
-#+begin_src emacs-lisp
-  ;; Package lint
-  (use-package package-lint
-    :ensure t
-      :tags '("COMPILATION"))
-
-  ;; Pretty print for lisp
-  (use-package ipretty
-    :ensure t
-      :tags '("LANGUAGE"))
-#+end_src
-
-**** TODO ELPL
-#+begin_src emacs-lisp
-  (use-package elpl
-    :ensure t
-    :commands (elpl))
-#+end_src
-
-*** TODO Python [0%]
-**** TODO Global configuration
 #+begin_src emacs-lisp
   (use-package python
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "PYTHON")
     :mode
     ("\\.py\\'" . python-mode)
     ("\\.wsgi$" . python-mode)
@@ -2563,48 +2573,43 @@ In both cases, backup numbers are as well supported.
     (setq python-indent-offset 4
           python-shell-interpreter "ipython"
           python-shell-interpreter-args "--simple-prompt -i"))
-#+end_src
 
-**** TODO Lsp
-#+begin_src emacs-lisp
   (use-package lsp-pyright
     :ensure t
     :commands (lsp lsp-deferred)
-    :tags '("LANGUAGE" "IDE")
+    :tags '("PROGRAMMING" "PYTHON" "LSP")
     :hook (python-mode . (lambda ()
                             (require 'lsp-pyright)
                             (lsp))))
-#+end_src
 
-**** TODO Interpreter configuration
-#+begin_src emacs-lisp
   (use-package ein
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "PYTHON" "REPL")
     :config
-
     (cond
      ((eq system-type 'darwin) (setq ein:console-args '("--gui=osx" "--matplotlib=osx" "--colors=Linux")))
      ((eq system-type 'gnu/linux) (setq ein:console-args '("--gui=gtk3" "--matplotlib=gtk3" "--colors=Linux"))))
 
     (setq ein:query-timeout 1000))
-#+end_src
 
-**** TODO Sphinx documentation
-#+begin_src emacs-lisp
   (use-package sphinx-doc
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
     :hook
     (python-mode . (lambda () (sphinx-doc-mode t))))
 #+end_src
 
-*** TODO Shell [0%]
-**** TODO Completion
+*** DONE Shell
+CLOSED: [2021-01-04 Mon 07:25]
+Editing bash/zsh files is relatively straightforward using Emacs' default configuration.
+Nonetheless, a proper completion support is lacking and some helpers are always welcomed.
+To do so, I use =company-shell= to add shell support using the =company= completion system.
+I am using =modern-sh= to enhance the experience (modern syntax highlighting, REPL, ...).
+
 #+begin_src emacs-lisp
   (use-package company-shell
     :ensure t
-    :tags '("LANGUAGE")
+    :tags '("PROGRAMMING" "SHELL" "COMPLETION")
     :hook
     (shell-mode . company-shell-hook)
 
@@ -2612,21 +2617,19 @@ In both cases, backup numbers are as well supported.
     (defun company-shell-hook ()
       (make-local-variable 'company-backends)
       (set 'company-backends (append '(company-shell company-shell-env company-fish-shell) company-backends))))
-#+end_src
 
-**** TODO Modern helpers
-#+begin_src emacs-lisp
   (use-package modern-sh
     :ensure t
     :disabled t
+    :tags '("PROGRAMMING" "SHELL")
     :hook (sh-mode . embed-modern-sh-mode-toggle)
     :bind
     (:map modern-sh-mode-map
           ("C-<f6>"  . modern-sh-menu))
     :init
     (defun embed-modern-sh-mode-toggle ()
-        (when (buffer-file-name)
-          (modern-sh-mode))))
+      (when (buffer-file-name)
+        (modern-sh-mode))))
 #+end_src
 
 * Writing / Reading [0%]
