@@ -89,7 +89,6 @@ CLOSED: [2021-01-03 Sun 10:46]
 This section defines two functions:
 one to generate the emacs init file from =~/.emacs.d/main.org= and one to byte-compile the emacs init file.
 
-
 #+begin_src emacs-lisp
   (defun tangle-main-org ()
     "Tangle ~/.emacs.d/main.org to ~/.emacs.d/init.el."
@@ -1992,10 +1991,23 @@ A bug (described in http://stackoverflow.com/questions/15489319/how-can-i-skip-i
     :tags '("IDE" "COMPILATION")
     :hook
     (compilation-filter-hook . my-colorize-compilation-buffer)
-  
+
+    :pretty-hydra
+    ((:color teal :hint nil)
+
+     ("Compilation Errors"
+      (("n" next-error           "Next Error")
+       ("k" previous-error       "Previous Error")
+       ("h" first-error          "First Error")
+       ("l" (condition-case err
+                (while t
+                  (next-error))
+              (user-error nil))  "Last Error"))))
+
+
     :init
     (setq compilation-scroll-output t)
-  
+
     :config
     ;; Helper to colorize the compilation buffer
     (defun my-colorize-compilation-buffer ()
@@ -3611,7 +3623,12 @@ I also replace a base deletion by moving the files/directories to the trash.
        ("g" revert-buffer "Redisplay"))))
 
     :bind
-    (:map dired-mode-map
+    (("C-x C-d" . dired)
+     ("C-x 1" . find-name-dired)
+     ("C-x 2" . find-grep-dired)
+     ("C-x 3" . grep-find)
+
+     :map dired-mode-map
           ("C-o" . dired-omit-mode)
           ("<C-return>" . dired-open-native)
           ("e" . dired-open-externally)
@@ -3651,7 +3668,7 @@ I also replace a base deletion by moving the files/directories to the trash.
       "Command to open the trash dir"
       (interactive)
       (find-file "~/.local/share/Trash/files"))
-  
+
     :config
 
     ;; Adapt ls for mac
@@ -3677,7 +3694,7 @@ I also replace a base deletion by moving the files/directories to the trash.
           ;; Details information
           dired-listing-switches "--group-directories-first -alh"
           dired-details-hidden-string "[...]"
-        
+
           ;; Ask confirmation only once and move to trash
           dired-recursive-deletes 'always
           delete-by-moving-to-trash t))
@@ -5519,7 +5536,6 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
   (setq window-divider-default-right-width 12)
   (setq window-divider-default-places 'right-only)
   (window-divider-mode 1)
-
 #+end_src
 
 ** TODO Font
@@ -5660,7 +5676,7 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
       (emojify-set-emoji-data)))
 #+end_src
 
-* Key bindings [0%]
+* Key bindings [100%]
 In this section, we define the bindings used globally.
 We can consider the following categories:
   - The functional bindings :: which allows the user to access to a functionality from anywhere (e.g. opening the version-control manager)
@@ -5668,12 +5684,14 @@ We can consider the following categories:
 
 An helper to remind these bindings is also provided.
 
-** TODO Functional bindings [0%]
+** DONE Functional bindings [100%]
+CLOSED: [2021-01-05 Tue 10:03]
 This section defines the functional bindings.
 Hydra is used as the provider for these bindings.
-For now, we consider the following two ones: *main helpers* and *version control*
+For now, we consider the following ones: ~main helpers~, ~version control~ and some ~toggling~
 
-*** TODO Main Helper
+*** DONE Main Helper
+CLOSED: [2021-01-05 Tue 09:46]
 The main helper, mapped to *<f1>* contains the global operations which are interesting to access globally:
  - org-mode capturing and sniffing webpage
  - zooming
@@ -5715,7 +5733,8 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
   (global-set-key (kbd "<f1>") 'main-hydra/body)
 #+end_src
 
-*** TODO Project/Version control
+*** DONE Project/Version control
+CLOSED: [2021-01-05 Tue 09:46]
 The following functional binding is the entry point to deal with code project management.
 It is mapped to *<f4>*
 It deals with:
@@ -5738,16 +5757,19 @@ It deals with:
 
      "Checking/Notes"
      (("f"   fic-view-listing "Fixme listing")
-      ("F"   flycheck-hydra/body "Flycheck"))
-     ))
+      ("F"   flycheck-hydra/body "Flycheck"))))
 
   (global-set-key (kbd "<f4>") 'project-hydra/body)
 #+end_src
 
-*** TODO Toggling
+*** DONE Toggling
+CLOSED: [2021-01-05 Tue 10:03]
 :PROPERTIES:
 :FROM:     https://github.com/jerrypnz/major-mode-hydra.el
 :END:
+This section configures an access to a bunch of minor modes (or other) which can be toggled.
+It is a copy paste of what is proposed in the README file of the [[https://github.com/jerrypnz/major-mode-hydra.el][major-mode-hydra.el repository]].
+
 #+begin_src emacs-lisp
   ;; (defvar jp-toggles--title (with-faicon "toggle-on" "Toggles" 1 -0.05))
   (defvar jp-toggles--title "Toggles")
@@ -5780,37 +5802,20 @@ It deals with:
   (global-set-key (kbd "<f3>") 'jp-toggles/body)
 #+end_src
 
-** TODO Remapped bindings [0%]
-The following bindings are remapped to be homogeneous accross the different modes.
-It concerns
+** DONE Remapped bindings [100%]
+CLOSED: [2021-01-05 Tue 10:01]
+The following bindings are remapped to be homogeneous accross the different modes and OS.
+It concerns mainly the bindings to comment/uncomment and some macos related issues.
 
-*** TODO Compilation
-#+begin_src emacs-lisp
-  (defhydra hydra-next-error (global-map "C-x")
-      "
-  Compilation errors:
-  _j_: next error        _h_: first error    _q_uit
-  _k_: previous error    _l_: last error
-  "
-      ("`" next-error     nil)
-      ("j" next-error     nil :bind nil)
-      ("k" previous-error nil :bind nil)
-      ("h" first-error    nil :bind nil)
-      ("l" (condition-case err
-               (while t
-                 (next-error))
-             (user-error nil))
-       nil :bind nil)
-      ("q" nil            nil :color blue))
-#+end_src
-
-*** TODO Commenting
+*** DONE Commenting
+CLOSED: [2021-01-05 Tue 09:50]
 I prefer to use a _C-c C-c_ to compile and therefore, the bindings to comment a section of the code should be remapped.
 I select _C-c C-;_ to comment and _C-c C-:_ to uncomment.
 Adding a toggle support for the commenting would be a good idea too
 
 #+begin_src emacs-lisp
   (use-package cc-mode
+    :tags '("CORE" "BINDING")
     :bind
     (;; Global
      ("C-c C-;" .  comment-region)
@@ -5821,47 +5826,34 @@ Adding a toggle support for the commenting would be a good idea too
           ("C-c C-:" .  uncomment-region)
      :map c++-mode-map
           ("C-c C-;" .  comment-region)
-          ("C-c C-:" .  uncomment-region))
-  )
+          ("C-c C-:" .  uncomment-region)))
 #+end_src
 
-*** TODO Buffers
-#+begin_src emacs-lisp
-  (global-set-key (kbd "M-G") 'what-line)
-#+end_src
+*** DONE Mac key remapping
+CLOSED: [2021-01-05 Tue 10:01]
+I don't know if it is still needed, but I keep this here for now.
 
-*** TODO Windows
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c =") 'compare-windows)
-#+end_src
-
-*** TODO Files
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-x C-d") 'dired)
-
-  (global-set-key [(control c) ?1] 'find-name-dired)
-  (global-set-key [(control c) ?2] 'find-grep-dired)
-  (global-set-key [(control c) ?3] 'grep-find)
-#+end_src
-
-*** TODO Mac key remapping
-#+begin_src emacs-lisp
   (global-set-key (kbd "<end>") 'move-end-of-line)
   (global-set-key (kbd "<home>") 'move-beginning-of-line)
 #+end_src
 
-** TODO Reminder for bindings
+** DONE Reminder for bindings
+CLOSED: [2021-01-05 Tue 09:49]
+Finally, because of the amount of keys, I sometimes need a reminder of what is what.
+To do so, I am using =remind-bindings=.
 #+begin_src emacs-lisp
   (use-package remind-bindings
     :ensure t
-    :tags '("HELPER")
+    :tags '("HELPER" "CORE" "BINDING")
     :hook (after-init . remind-bindings-initialise)
-    :bind (("<f10>" . 'remind-bindings-togglebuffer)   ;; toggle buffer
+    :bind (("<f10>"   . 'remind-bindings-togglebuffer)   ;; toggle buffer
            ("C-<f10>" . 'remind-bindings-specific-mode))) ;; buffer-specific only
 #+end_src
 
 * Provide
-It is not super necessary but it makes travis happy
+We finish the configuration, let's provide it!
 
 #+begin_src emacs-lisp
   (provide 'init)
