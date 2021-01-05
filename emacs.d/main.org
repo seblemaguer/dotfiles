@@ -3946,7 +3946,7 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
     (dired-mode . treemacs-icons-dired-mode))
 #+end_src
 
-* Online [60%]
+* Online [100%]
 I am using emacs to deal with a lot of online stuffy.
 The main services I consult using emacs are: RSS streams, emails, chats, "exchange services" and CD releases.
 
@@ -4630,12 +4630,18 @@ This section provides three helper functions to connect/disconnect all my chatti
   (global-set-key (kbd "C-<f2>") 'communication-shutdown)
 #+end_src
 
-** TODO XXX [0%]
-*** TODO Stackexchange
+** DONE Exchange services [100%]
+CLOSED: [2021-01-05 Tue 09:41]
+
+*** DONE Stackexchange
+CLOSED: [2021-01-05 Tue 09:41]
+To access stackexchange, I rely on the package =sx=.
+Everything is nicely configured internally to this package, I just binded some keys for an easier support.
+
 #+begin_src emacs-lisp
   (use-package sx
     :ensure t
-    :tags '("CONNECTED")
+    :tags '("CONNECTED" "EXCHANGE" "STACKEXCHANGE")
     :functions (sx-open-link)
     :config
     (bind-keys :prefix "C-c s"
@@ -4649,11 +4655,17 @@ This section provides three helper functions to connect/disconnect all my chatti
                ("s" . sx-search)))
 #+end_src
 
-*** TODO Reddit
+*** DONE Reddit
+CLOSED: [2021-01-05 Tue 09:39]
+For reddit, I rely on the package =md4rd=.
+However, there is currently a bug with the hierarchy package which is not embedded in my emacs 27.
+As it requires more investigation, I disabled this packaged for now.
+
 #+begin_src emacs-lisp
   (use-package md4rd
     :ensure t
-    :tags '("CONNECTED")
+    :tags '("CONNECTED" "EXCHANGE" "REDDIT")
+    :disabled t
     :pretty-hydra
     ((:color blue :hint none)
      ("Basic"
@@ -4683,11 +4695,16 @@ This section provides three helper functions to connect/disconnect all my chatti
     (setq md4rd-subs-active '(lisp+Common_Lisp emacs)))
 #+end_src
 
-** TODO Release
+** DONE Release
+CLOSED: [2021-01-05 Tue 09:42]
+Finally, as a proper metalhead and music addict, I sometimes get lost in what is currently released.
+In order to have a better view of what is going on, I developped a package named =metal-archives=.
+I am using its extension =metal-archives-shopping-list= to maintain a list of release I want to buy.
+
 #+begin_src emacs-lisp
   (use-package metal-archives-shopping-list
     :ensure t
-    :tags '("CONNECTED" "USER")
+    :tags '("CONNECTED" "RELEASE")
     :commands (metal-archives-shopping-list-update
                metal-archives-retrieve-next-releases
                metal-archives-load-artists-map)
