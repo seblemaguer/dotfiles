@@ -196,7 +196,6 @@ The specification respects the following syntax:
   - a tag prefixed by =!= explicitely reject packages whose have this tag associated with
   - ="ALL"= is a joker indicating =all the tags!= $\rightarrow$ no filtering
 
-
 #+begin_src emacs-lisp
   (use-package use-package-tags
     :straight (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
@@ -5118,6 +5117,8 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 For the visual part, I rely mainly on =nano-emacs= developed by Nicolas P. Rougier.
 It is a simple layout but incredibly clear and precise.
 I deviate from it by prefering my emacs (color) theme (=flatfluc-theme=) and I tweaked a bit the layout (see =my-nano-layout=).
+Concerning the layout, I needed to add a specific font resolution for my surface.
+This is done in the ~config~ part of the package loading.
 
 #+begin_src emacs-lisp
   (use-package flatfluc-theme
@@ -5148,7 +5149,20 @@ I deviate from it by prefering my emacs (color) theme (=flatfluc-theme=) and I t
     :tags '("VISUAL"))
 
   (use-package my-nano-layout
-    :tags '("VISUAL"))
+    :tags '("VISUAL")
+    :config
+    (when (string= (system-name) "lemagues-surface")
+      (setq default-frame-alist
+            (append (list
+                     '(font . "Roboto Mono:style=Light:size=28")
+                     ;; '(min-height . 1)  '(height     . 45)
+                     ;; '(min-width  . 1)  '(width      . 81)
+                     '(vertical-scroll-bars . nil)
+                     ;; '(internal-border-width . 24)
+                     '(left-fringe    . 30)
+                     '(right-fringe   . 30)
+                     '(tool-bar-lines . 0)
+                     '(menu-bar-lines . 0))))))
 #+end_src
 
 ** DONE Font/Glyphs
