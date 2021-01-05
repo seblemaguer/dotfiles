@@ -4847,10 +4847,22 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
           emms-browser-playlist-info-title-format "%T. %t [%d]"))
 #+end_src
 
-* Emacs and the rest of the world [0%]
-** TODO Emacs and the desktop environment [0%]
-*** TODO Desktop environment control
-Thanks to desktop environement, I can control the keyboard and the screen brightness.
+* Emacs and the rest of the world [33%]
+As Emacs is the entry point of my numerical life, I connected to a bunch of other external things.
+It can be summarized around three categories:
+the connection to the desktop environment,
+the connection to the local operating system,
+and the connection to servers (mainly computing clusters).
+
+** DONE Emacs and the desktop [100%]
+CLOSED: [2021-01-05 Tue 12:51]
+In this section, I configure a set of packages to control different desktop aspect using Emacs.
+Each subsection focuses on dedicated aspect of the desktop.
+
+*** DONE Desktop environment control
+CLOSED: [2021-01-05 Tue 12:41]
+=desktop-environment= is package which captures bindings in emacs from multimedia keys (mainly).
+I mainly control screen and keyboard brightness using it.
 
 #+begin_src emacs-lisp
   (use-package desktop-environment
@@ -4866,22 +4878,39 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
     (desktop-environment-mode))
 #+end_src
 
-*** TODO Clipboard
+*** DONE Clipboard
+CLOSED: [2021-01-05 Tue 12:39]
+Integrate the clipboard to Emacs by using the package =cliphist=.
+
 #+begin_src emacs-lisp
   (use-package cliphist
     :ensure t
-    :tags '("SYSTEM"))
+    :tags '("DESKTOP"))
 #+end_src
 
-*** TODO Emacs and firefox
+*** DONE Bluetooth
+CLOSED: [2021-01-05 Tue 12:52]
+To control the bluetooth devices, I use the package =bluetooth=.
+No extra configuration is needed.
+
+#+begin_src emacs-lisp
+  (use-package bluetooth
+    :ensure t
+    :tags '("DESKTOP"))
+#+end_src
+
+*** DONE Emacs and firefox
+CLOSED: [2021-01-05 Tue 12:47]
 :PROPERTIES:
-:FROM: https://github.com/GhostText/GhostText
+:FROM:     https://github.com/GhostText/GhostText
 :END:
+Sometimes it is difficult to edit a text (from a textarea) in Firefox.
+Using =atomic-chrome= coupled with the ~GhostText~ firefox addon, I edit such text in Emacs and its synchronized in firefox automatically.
 
 #+begin_src emacs-lisp
     (use-package atomic-chrome
       :ensure t
-      :tags '("DESKTOP" "GUI")
+      :tags '("DESKTOP")
       :hook
       (after-init . atomic-chrome-start-server)
 
@@ -4898,14 +4927,20 @@ Thanks to desktop environement, I can control the keyboard and the screen bright
        ("C-c C-c" . nil)))
 #+end_src
 
-** TODO Emacs and the system [0%]
-*** TODO Bluetooth
+*** DONE Emacs Application Framework (EAF)
+CLOSED: [2021-01-05 Tue 12:51]
+Emacs Application Framework (EAF) provides a way to integrate multiple applications internally into Emacs.
+Emacs needs to be compiled using the flag ~--with-modules~ as it requires some dynamic linking.
+In addition, =eaf= is installed externally as it requires additional compilation effort.
+As for =mu4e=, my environment scripts are taking care of the compilation.
+
 #+begin_src emacs-lisp
-  (use-package bluetooth
-    :ensure t
-    :tags '("SYSTEM" "DESKTOP"))
+  (use-package eaf
+    :tags '("DESKTOP")
+    :load-path "~/environment/src/20-tools/emacs/emacs-application-framework/emacs-application-framework")
 #+end_src
 
+** TODO Emacs and the system [0%]
 *** TODO Docker
 #+begin_src emacs-lisp
   (use-package docker
