@@ -4847,7 +4847,7 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
           emms-browser-playlist-info-title-format "%T. %t [%d]"))
 #+end_src
 
-* Emacs and the rest of the world [33%]
+* Emacs and the rest of the world [100%]
 As Emacs is the entry point of my numerical life, I connected to a bunch of other external things.
 It can be summarized around three categories:
 the connection to the desktop environment,
@@ -4940,44 +4940,23 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
     :load-path "~/environment/src/20-tools/emacs/emacs-application-framework/emacs-application-framework")
 #+end_src
 
-** TODO Emacs and the system [0%]
-*** TODO Docker
-#+begin_src emacs-lisp
-  (use-package docker
-    :ensure t
-    :commands (docker)
-    :tags '("SYSTEM"))
+** DONE Emacs and the system [100%]
+CLOSED: [2021-01-05 Tue 13:42]
+In a lower level, I want to have a better access to some system/(non desktop-)environment tools.
+I separated the configuration into three main subsections: 
+the section dedicated to the system/shell, 
+the section dedicated to specific tools,
+and the section dedicated to background processes/"daemons" management directly into Emacs.
 
-  (use-package docker-api
-    :ensure t
-    :tags '("SYSTEM"))
-#+end_src
+*** DONE System and Shell
+CLOSED: [2021-01-05 Tue 13:13]
+In this section, I configure packages to access system informations and enforce the shell environment into Emacs.
 
-*** TODO Conda
-#+begin_src emacs-lisp
-  (use-package conda
-    :ensure t
-    :tags '("SYSTEM" "PYTHON" "R")
-    :init
-    (setq conda-anaconda-home (expand-file-name "~/environment/local/miniconda3"))
+**** DONE Get system control information
+CLOSED: [2021-01-05 Tue 13:11]
+To access the global OS information, =sysctl= provides a basic interface. 
+No extra configuration is needed.
 
-    (defun conda-hook ()
-      "Conda activation hook for python mode."
-      (setq conda-message-on-environment-switch nil)
-      (conda-env-autoactivate-mode t))
-
-    :hook
-    (python-mode . conda-hook)
-
-    :config
-    ;; If you want interactive shell support, include:
-    (conda-env-initialize-interactive-shells)
-
-    ;; If you want eshell support, include:
-    (conda-env-initialize-eshell))
-#+end_src
-
-*** TODO Get system control information
 #+begin_src emacs-lisp
   (use-package sysctl
     :ensure t
@@ -4985,7 +4964,11 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
     :commands (sysctl))
 #+end_src
 
-*** TODO Execute with shell environment
+**** DONE Execute with shell environment
+CLOSED: [2021-01-05 Tue 13:13]
+Because an important part of my environment relies on a properly configured shell (especially for environment variables),
+I use =exec-path-from-shell= to force to run a command using the shell environment.
+
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell
     :ensure t
@@ -4995,17 +4978,134 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
     (exec-path-from-shell-initialize))
 #+end_src
 
-** TODO Emacs and the servers [0%]
-*** TODO Tramp
-*** TODO Docker
+*** DONE Tools
+CLOSED: [2021-01-05 Tue 13:21]
+This section is dedicated to the configuration of specific tools.
+For now, it comprises ~Docker~ and ~Conda~.
+
+**** DONE Docker
+CLOSED: [2021-01-05 Tue 13:20]
+The package =docker= is already configured to provide everything to interact with Docker.
+
 #+begin_src emacs-lisp
-  (use-package docker-tramp
+  (use-package docker
     :ensure t
+    :commands (docker)
     :tags '("SYSTEM"))
 #+end_src
 
-*** TODO Slurm
+**** DONE Conda
+CLOSED: [2021-01-05 Tue 13:18]
+I am using conda to configure different environment for ~Python~ and ~R~.
+The package =conda= provides all the necessary XXX to integrate conda into Emacs.
+I am using my own scripts to install and configure conda into my environment directory.
+Consequently, the configuration consists mainly of defining the path of conda and activating =conda= for different modes: 
+~python-mode~, ~ess-mode~ and ~eshell-mode~.
+
 #+begin_src emacs-lisp
+  (use-package conda
+    :ensure t
+    :tags '("SYSTEM" "PYTHON" "R")
+    :init
+    (setq conda-anaconda-home (expand-file-name "~/environment/local/miniconda3"))
+
+    (defun conda-hook ()
+      "Conda activation hook."
+      (setq conda-message-on-environment-switch nil)
+      (conda-env-autoactivate-mode t))
+
+    :hook
+    (python-mode . conda-hook)
+    (ess-mode    . conda-hook)
+
+    :config
+    ;; If you want interactive shell support, include:
+    (conda-env-initialize-interactive-shells)
+
+    ;; If you want eshell support, include:
+    (conda-env-initialize-eshell))
+#+end_src
+
+*** DONE Dealing with processes
+CLOSED: [2021-01-05 Tue 13:26]
+To deal with background processes, I rely on two packages: =prodigy= and =elcontext=.
+=prodigy= is used to XXX with processes.
+However, =prodigy= doesn't provide a nice way to start processes automatically.
+=elcontext= is used to deal with the start.
+Yet =elcontext= is still slightly bugged, so I use my own fork right now.
+Currently, it is mainly used to start/stop emails but it is likely to be expanded in the future.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package prodigy
+    :ensure t
+    :demand t
+    :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
+    :hook
+    (kill-emacs . prodigy-force-stop-all-service)
+
+    :config
+    ;; Define services
+    (when (fboundp 'define-mail-services)
+      (define-mail-services))
+
+    (defun prodigy-force-stop-all-service ()
+      "Helper to force kill all service"
+      (dolist (service prodigy-services)
+        (prodigy-stop-service service t))))
+
+  (use-package elcontext
+    :straight (elcontext :type git :host github :repo "rollacaster/elcontext"
+                         :fork (:host github
+                                      :repo "seblemaguer/elcontext"
+                                      :branch "fix_missing_hydras_2"))
+    ;; :ensure t
+    :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
+    :config
+
+    (defun elcontext-start-prodigy (name)
+      "Helper to start properly the prodigy service NAME via elcontext."
+      (prodigy-start-service
+          (prodigy-find-service name)))
+
+    (when (fboundp 'list-mail-services)
+      (dolist (name (list-mail-services))
+        (setq elcontext--context-id name
+              elcontext--context-current (ht (:name name)
+                                             (:time (ht))
+                                             (:action `(elcontext-start-prodigy ,name))
+                                             (:location (ht))
+                                             (:directory (expand-file-name "~"))))
+        (elcontext-add-context elcontext--context-id elcontext--context-current)))
+
+    ;; Reinit everything
+    (setq elcontext--context-id nil
+          elcontext--context-current (ht (:name nil)
+                                         (:time (ht))
+                                         (:action nil)
+                                         (:location (ht))))
+    (elcontext-global-mode))
+#+END_SRC
+** DONE Emacs and the servers 
+CLOSED: [2021-01-05 Tue 13:06]
+Finally, I access to computing clusters regularly.
+The main tools I am using there are ~docker~ and ~slurm~.
+As an entry point, as every Emacs use, I use =tramp= to deal with servers using SSH as a backend.
+=slurm-mode= doesn't rely on =tramp= and does not proposes remote access by default.
+However, a hack was proposed in [[https://github.com/truls/slurm.el/tree/explicit-username][truls]] fork 
+I prefere to use my own fork as I would like to expand a bit more the rendering.
+
+#+begin_src emacs-lisp
+  (use-package tramp
+    :defer t
+    :tags '("SYSTEM" "SERVER" "CONNECTED")
+    :custom (tramp-default-method "ssh"
+             password-cache-expiry 60
+             tramp-verbose 1
+             tramp-auto-save-directory temporary-file-directory))
+  ;; ;; Debug
+  ;; tramp-verbose 9
+  ;; tramp-debug-buffer t)
+
   (use-package slurm-mode
     :straight (slurm :type git :host github
                      :repo "ffevotte/slurm.el" 
