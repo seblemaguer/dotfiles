@@ -3946,7 +3946,7 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
     (dired-mode . treemacs-icons-dired-mode))
 #+end_src
 
-* Online [40%]
+* Online [60%]
 I am using emacs to deal with a lot of online stuffy.
 The main services I consult using emacs are: RSS streams, emails, chats, "exchange services" and CD releases.
 
@@ -4417,14 +4417,23 @@ It is quite simple but robust enough to not being bother every 5 min.
     (mu4e-alert-enable-notifications))
 #+end_src
 
+** DONE Chat [100%]
+CLOSED: [2021-01-05 Tue 09:32]
+As for the email, I (try to) use emacs as my chatting entry point as well.
+To do so, I rely on three key tools: the couple bitlbee/IRC for facebook messenger, skype, ...; slack and matrix.
+I added a bunch of helpers to start/stop all the accounts in one shot.
 
-** TODO Chat [0%]
-*** TODO IRC [0%]
-**** TODO Global
+*** DONE IRC
+CLOSED: [2021-01-05 Tue 09:32]
+The IRC configuration is quite standard. 
+I added a couple of primitives to access more easily the passwords (~my-irc-password~) and to format properly the chat buffer (~erc-format-buffer~).
+I slightly tweaked the formatting to be more tolerant and added a bunch of plugins to enhance the UX.
+Finally, the account definition is done in the private configuration file (so it is not shown here!).
+
 #+begin_src emacs-lisp
   (use-package erc
     :ensure t
-    :tags '("CONNECTED" "CHAT" "ERC")
+    :tags '("CONNECTED" "CHAT" "IRC")
     :commands (erc)
     :hook
     (erc-mode . erc-format-buffer)
@@ -4473,34 +4482,34 @@ It is quite simple but robust enough to not being bother every 5 min.
     (erc-services-mode 1)
 
     ;; Reload plugins
-    (erc-update-modules)
-    )
-#+end_src
+    (erc-update-modules))
 
-**** TODO Some useful plugins
-#+begin_src emacs-lisp
   (use-package erc-gitter
     :straight (erc-gitter :type git :host github :repo "jleechpe/erc-gitter")
-    :tags '("CONNECTED" "CHAT" "ERC"))
+    :tags '("CONNECTED" "CHAT" "IRC"))
 
   (use-package erc-colorize
     :ensure t
-    :tags '("CONNECTED" "CHAT" "ERC"))
+    :tags '("CONNECTED" "CHAT" "IRC"))
 
   (use-package erc-hl-nicks
     :ensure t
-    :tags '("CONNECTED" "CHAT" "ERC"))
+    :tags '("CONNECTED" "CHAT" "IRC"))
 
   (use-package erc-youtube
     :ensure t
-    :tags '("CONNECTED" "CHAT" "ERC"))
+    :tags '("CONNECTED" "CHAT" "IRC"))
 
   (use-package erc-image
     :ensure t
-    :tags '("CONNECTED" "CHAT" "ERC"))
+    :tags '("CONNECTED" "CHAT" "IRC"))
 #+end_src
 
-**** TODO Notification activation
+**** DONE Notification activation
+CLOSED: [2021-01-05 Tue 09:18]
+Concerning the notification, =sauron= already supports ERC via the package =sauron-erc=.
+I simply redefined the priorities to be more in phase with how I use it.
+
 #+begin_src emacs-lisp
   (use-package sauron-erc
     :ensure sauron
@@ -4514,12 +4523,20 @@ It is quite simple but robust enough to not being bother every 5 min.
     (sauron-prio-erc-privmsg-mentioned 2))
 #+end_src
 
-*** TODO Slack [0%]
-**** TODO Global
+*** DONE Slack
+CLOSED: [2021-01-05 Tue 09:29]
+The package =slack= (or ~emacs-slack~) provides everything I need to support Slack in emacs.
+The change I do concerns mainly the formatting and the completion system.
+Because, I prefer to have the completion system, =company=, configured locally for each buffer, I needed to modify its connection with =slack=.
+Finally, because of a bug in the upstream of emacs-slack (issue [[https://github.com/yuya373/emacs-slack/issues/498][#498]]), I am currently using my own fork.
+
 #+begin_src emacs-lisp
   (use-package slack
-    :ensure t
-    :tags '("CONNECTED")
+    :straight (slack :type git :host github :repo "yuya373/emacs-slack"
+                      :fork (:host github
+                                   :repo "yuya373/emacs-slack"
+                                   :branch "fix-498"))
+    :tags '("CONNECTED" "CHAT" "SLACK")
     :commands (slack-start)
     :no-require t
     :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
@@ -4553,32 +4570,31 @@ It is quite simple but robust enough to not being bother every 5 min.
       "Hook function to define the timestamp in the margins"
       (interactive)
       (setq lui-time-stamp-position 'right-margin
-            lui-time-stamp-format "[%H:%M - %a %d %b %Y ]"
-            right-margin-width (length (format-time-string lui-time-stamp-format))))
-    )
+            lui-time-stamp-format "[%H:%M - %a %d %b %Y]"
+            right-margin-width (length (format-time-string lui-time-stamp-format)))))
 #+end_src
 
-**** TODO Helm-slack
+**** DONE Helm-slack
+CLOSED: [2021-01-05 Tue 09:21]
+As an entry point to use slack, I prefer to use =helm-slack= as it provides a nice view of everthing in one place.
+
 #+begin_src emacs-lisp
   (use-package helm-slack
     :straight (helm-slack :type git :host github :repo "yuya373/helm-slack")
-    :tags '("CONNECTED")
+    :tags '("CONNECTED" "CHAT" "SLACK" "COMPLETION")
     :after (slack helm))
 #+end_src
 
-*** TODO Global helpers
+*** DONE Global helpers
+CLOSED: [2021-01-05 Tue 09:31]
+This section provides three helper functions to connect/disconnect all my chatting accounts in one shot.
+
 #+begin_src emacs-lisp
   (defun communication-start ()
     "Routine to start all chats."
     (interactive)
-
-    ;; ERC
     (erc-start)
-
-    ;; Slack
     (slack-start)
-
-    ;; Matrix
     (matrix-connect))
 
   (defun communication-shutdown ()
@@ -4602,8 +4618,7 @@ It is quite simple but robust enough to not being bother every 5 min.
       (cond ((string-prefix-p "*Slack " (buffer-name buf))
              (kill-buffer buf))
             ((string= (with-current-buffer buf major-mode) "erc-mode")
-             (kill-buffer buf))
-            )))
+             (kill-buffer buf))))
 
   (defun communication-start-or-switch ()
     (interactive)
