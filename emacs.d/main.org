@@ -2827,7 +2827,7 @@ CLOSED: [2021-01-04 Mon 12:05]
 Complicated equations can be difficult to parse properly at first sight.
 I use =xenops= to generate a preview of the equations.
 =xenops= is also compatible with org-mode but I use it more with latex.
-Nonetheless, I activate it for both major modes.
+Therefore, it is activated by default for latex but not for org files.
 
 #+begin_src emacs-lisp
   (use-package xenops
@@ -2835,8 +2835,7 @@ Nonetheless, I activate it for both major modes.
     :tags '("WRITING" "LATEX" "ORG" "DESKTOP")
     :commands (xenops-mode xenops-doctor)
     :hook
-    (latex-mode . xenops-mode)
-    (org-mode   . xenops-mode))
+    (latex-mode . xenops-mode))
 #+end_src
 
 ** DONE Bibtex
@@ -4551,7 +4550,7 @@ Finally, because of a bug in the upstream of emacs-slack (issue [[https://github
   (use-package slack
     :straight (slack :type git :host github :repo "yuya373/emacs-slack"
                       :fork (:host github
-                                   :repo "yuya373/emacs-slack"
+                                   :repo "seblemaguer/emacs-slack"
                                    :branch "fix-498"))
     :tags '("CONNECTED" "CHAT" "SLACK")
     :commands (slack-start)
