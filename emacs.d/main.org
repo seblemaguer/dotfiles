@@ -3624,9 +3624,9 @@ I also replace a base deletion by moving the files/directories to the trash.
 
     :bind
     (("C-x C-d" . dired)
-     ("C-x 1" . find-name-dired)
-     ("C-x 2" . find-grep-dired)
-     ("C-x 3" . grep-find)
+     ("C-c 1" . find-name-dired)
+     ("C-c 2" . find-grep-dired)
+     ("C-c 3" . grep-find)
 
      :map dired-mode-map
           ("C-o" . dired-omit-mode)
@@ -4635,7 +4635,7 @@ This section provides three helper functions to connect/disconnect all my chatti
       (cond ((string-prefix-p "*Slack " (buffer-name buf))
              (kill-buffer buf))
             ((string= (with-current-buffer buf major-mode) "erc-mode")
-             (kill-buffer buf))))
+             (kill-buffer buf)))))
 
   (defun communication-start-or-switch ()
     (interactive)
