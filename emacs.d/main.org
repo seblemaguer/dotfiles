@@ -3946,7 +3946,7 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
     (dired-mode . treemacs-icons-dired-mode))
 #+end_src
 
-* Online [20%]
+* Online [40%]
 I am using emacs to deal with a lot of online stuffy.
 The main services I consult using emacs are: RSS streams, emails, chats, "exchange services" and CD releases.
 
@@ -4081,40 +4081,68 @@ I just need to define a default priority level for each feed.
                   (puthash (car feed) 3 sauron-elfeed-prio-hash))))
 #+end_src
 
-** TODO Mail [0%]
-*** TODO TTLS
-  #+begin_src emacs-lisp
-    (use-package starttls
-      :tags '("CONNECTED")
-      :if (< emacs-major-version 27)
-      :config
-      (setq starttls-use-gnutls t
-            starttls-gnutls-program "gnutls-cli"
-            starttls-extra-arguments '("--insecure")
-            auth-sources '("~/.authinfo.gpg")))
+** DONE Mail [100%]
+CLOSED: [2021-01-05 Tue 09:08]
+Emacs is my only email client.
+It is based around the ecosystem =mu/mu4e= which provides everything we need to deal with emails.
+This configuration is articulated around three parts: the authentification part, the composing emails part and the mu4e part.
 
-  #+end_src
+*** DONE Authentification
+CLOSED: [2021-01-05 Tue 08:20]
+In previous emacs version (< 27), it was necessary to configure the package =starttls=. 
+This configuration is remaining here for backward compatibility purposes.
 
-*** TODO Message composition
 #+begin_src emacs-lisp
-  (use-package message
-    :tags '("CONNECTED" "MAIL")
-    :hook
-    (message-setup . (lambda () (footnote-mode t)))
-
+  (use-package starttls
+    :tags '("CONNECTED")
+    :if (< emacs-major-version 27)
     :config
-    (setq message-auto-save-directory nil
-          message-citation-line-function 'message-insert-formatted-citation-line
-          message-citation-line-format  "\n\n-----------------------\nOn %a, %b %d %Y (%-H:%M %Z), %N wrote:\n"
-          message-sendmail-f-is-evil nil
-          message-kill-buffer-on-exit t
-          message-signature-file (format "%s/third_parties/mail/signature" user-emacs-directory)
-          message-fill-column 100))
+    (setq starttls-use-gnutls t
+          starttls-gnutls-program "gnutls-cli"
+          starttls-extra-arguments '("--insecure")
+          auth-sources '("~/.authinfo.gpg")))
 #+end_src
 
-*** TODO Composing/Sending [0%]
-**** TODO SMTP configuration
-  #+begin_src emacs-lisp
+*** DONE Composing emails
+CLOSED: [2021-01-05 Tue 08:27]
+To compose emails, I rely on the combination of multiple packages.
+Obviously, the entry point is the package =message= whose ~message-mode~ is the major mode used to edit new emails.
+I configured the package to support some additional features like a proper signature and a proper formatting.
+I also updated the citation line/format.
+
+As I am using multiple account, I use the package =smtpmail-multi= to sort this out.
+The default account is my TCD email as it is my daily use email.
+
+Because, sometimes, I want to send rich emails, I use =org-mime= which relies on the HTML exporter provided by =org= to generate HTML emails.
+Finally, as I am quite absent-minded, I use a reminder to not forget the attachment: =message-attachment-reminder=.
+
+
+#+begin_src emacs-lisp
+    (use-package message
+      :tags '("CONNECTED" "MAIL")
+      :hook
+      (message-setup . format-hook-message)
+
+
+      :config
+      (setq message-auto-save-directory nil
+            message-citation-line-function 'message-insert-formatted-citation-line
+            message-citation-line-format  "\n\n-----------------------\nOn %a, %b %d %Y (%-H:%M %Z), %N wrote:\n"
+            message-sendmail-f-is-evil nil
+            message-kill-buffer-on-exit t
+            message-signature-file (format "%s/third_parties/mail/signature" user-emacs-directory)
+            message-fill-column 100)
+
+    
+      (defun format-hook-message ()
+        "Specify some formatting rules for email message writing."
+        ;; (set-fill-column 100)
+        (footnode-mode t)
+        (auto-fill-mode 0)
+        (visual-fill-column-mode)
+        (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+        (visual-line-mode)))
+
     (use-package smtpmail-multi
       :ensure t
       :tags '("CONNECTED" "MAIL")
@@ -4131,38 +4159,45 @@ I just need to define a default priority level for each feed.
 
             ;; Debug part
             smtpmail-debug-info nil
-            smtpmail-debug-verbose nil)
-      )
-  #+end_src
+            smtpmail-debug-verbose nil))
 
-**** TODO HTML Composing
-#+begin_src emacs-lisp
-  (use-package org-mime
-    :ensure t
-    :commands (mu4e-compose-new)
-    :hook
-    (org-ctrl-c-ctrl-c . htmlize-and-send)
+    (use-package org-mime
+      :ensure t
+      :tags '("CONNECTED" "MAIL" "ORG")
+      :commands (mu4e-compose-new)
+      :hook
+      (org-ctrl-c-ctrl-c . htmlize-and-send)
 
-    :config
-    (defun htmlize-and-send ()
-      "When in an org-mu4e-compose-org-mode message, htmlize and send it."
-      (interactive)
-      (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
-        (org-mime-htmlize)
-        (message-send-and-exit))))
+      :config
+      (defun htmlize-and-send ()
+        "When in an org-mu4e-compose-org-mode message, htmlize and send it."
+        (interactive)
+        (when (member 'org~mu4e-mime-switch-headers-or-body post-command-hook)
+          (org-mime-htmlize)
+          (message-send-and-exit))))
+
+    (use-package message-attachment-reminder
+      :ensure t
+      :tags '("CONNECTED" "MAIL")
+      :commands (message-attachment-reminder-warn-if-no-attachments)
+      :hook
+      (message-send . message-attachment-reminder-warn-if-no-attachments))
 #+end_src
 
-**** TODO Checking attachment
-#+begin_src emacs-lisp
-  (use-package message-attachment-reminder
-    :ensure t
-    :commands (message-attachment-reminder-warn-if-no-attachments)
-    :hook
-    (message-send . message-attachment-reminder-warn-if-no-attachments))
-#+end_src
+*** DONE Mu4e [100%]
+CLOSED: [2021-01-05 Tue 08:53]
+As I previously indicated, =mu4e= is my entry point to deal with emails.
+However, it can't be installed via melpa.
+I have a bunch of scripts which are configuring my linux environment on ~~/environment/~.
+These scripts are installing ~mu~ and =mu4e= so the first thing to do here is to point the current configuration ~load-path~.
 
-*** TODO Mu4e [0%]
-**** TODO Global
+The core of the configuration is separated in four main parts: 
+the hydra definition, the adaptation of the ~mu4e~ environment, the introduction of new primitives and, finally, the definition of contexts.
+The last part is the most important as it provides the configuration for the mail accounts.
+These configurations are set in the private configuration file and provided by the function =set-mu4e-contexts=.
+The introduced new primitive provides a connection to EAF (~mu4e-eaf-wrapper~; see further for EAF).
+I also redesigned the header buffer.
+
 #+begin_src emacs-lisp
   (use-package mu4e
     :tags '("CONNECTED" "MAIL")
@@ -4241,9 +4276,6 @@ I just need to define a default priority level for each feed.
      :map message-mode-map
      ("C-c C-a" . mail-add-attachment))
 
-    :hook
-    (mu4e-compose-mode . format-hook-message)
-
     :custom
     ;; File management
     (mu4e-maildir "~/mail")
@@ -4287,75 +4319,63 @@ I just need to define a default priority level for each feed.
     (when (fboundp 'imagemagick-register-types)
       (imagemagick-register-types))
 
-    (defun format-hook-message ()
-      "Specify some formatting rules for email message writing."
-      ;; (set-fill-column 100)
-      (auto-fill-mode 0)
-      (visual-fill-column-mode)
-      (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
-      (visual-line-mode))
-
     (defun mu4e~headers-line-apply-flag-face (msg line)
       line)
 
     (defun mu4e~headers-field-apply-basic-properties (msg field val width)
       (case field
-        (:subject
-         (propertize
-          (concat
-           (mu4e~headers-thread-prefix (mu4e-message-field msg :thread))
-           (truncate-string-to-width val 600))
-          'face
-          (let ((flags (mu4e-message-field msg :flags)))
-            (cond
-             ((memq 'trashed flags) 'mu4e-trashed-face)
-             ((memq 'draft flags) 'mu4e-draft-face)
-             ((or (memq 'unread flags) (memq 'new flags))
-              'mu4e-unread-face)
-             ((memq 'flagged flags) 'mu4e-flagged-face)
-             ((memq 'replied flags) 'mu4e-replied-face)
-             ((memq 'passed flags) 'mu4e-forwarded-face)
-             (t 'mu4e-header-face)))))
-        (:thread-subject
-         (propertize
-          (mu4e~headers-thread-subject msg)
-          'face 'font-lock-doc-face))
-        ((:maildir :path :message-id) val)
-        ((:to :from :cc :bcc)
-         (propertize
-          (mu4e~headers-contact-str val)
-          'face 'font-lock-function-name-face))
-        (:from-or-to (mu4e~headers-from-or-to msg))
-        (:date
-         (propertize
-          (format-time-string mu4e-headers-date-format val)
-          'face 'font-lock-string-face))
-        (:mailing-list (mu4e~headers-mailing-list val))
-        (:human-date
-         (propertize
-          (mu4e~headers-human-date msg)
-          'help-echo (format-time-string
-                      mu4e-headers-long-date-format
-                      (mu4e-msg-field msg :date))
-          'face 'font-lock-string-face))
-        (:flags
-         (propertize (mu4e~headers-flags-str val)
-                     'help-echo (format "%S" val)
-                     'face 'font-lock-type-face))
-        (:tags
-         (propertize
-          (mapconcat 'identity val ", ")
-          'face 'font-lock-builtin-face))
-        (:size (mu4e-display-size val))
-        (t (mu4e~headers-custom-field msg field))))
-    )
-#+end_src
+            (:subject
+             (propertize
+              (concat
+               (mu4e~headers-thread-prefix (mu4e-message-field msg :thread))
+               (truncate-string-to-width val 600))
+              'face
+              (let ((flags (mu4e-message-field msg :flags)))
+                (cond
+                 ((memq 'trashed flags) 'mu4e-trashed-face)
+                 ((memq 'draft flags) 'mu4e-draft-face)
+                 ((or (memq 'unread flags) (memq 'new flags))
+                  'mu4e-unread-face)
+                 ((memq 'flagged flags) 'mu4e-flagged-face)
+                 ((memq 'replied flags) 'mu4e-replied-face)
+                 ((memq 'passed flags) 'mu4e-forwarded-face)
+                 (t 'mu4e-header-face)))))
+            (:thread-subject
+             (propertize
+              (mu4e~headers-thread-subject msg)
+              'face 'font-lock-doc-face))
+            ((:maildir :path :message-id) val)
+            ((:to :from :cc :bcc)
+             (propertize
+              (mu4e~headers-contact-str val)
+              'face 'font-lock-function-name-face))
+            (:from-or-to (mu4e~headers-from-or-to msg))
+            (:date
+             (propertize
+              (format-time-string mu4e-headers-date-format val)
+              'face 'font-lock-string-face))
+            (:mailing-list (mu4e~headers-mailing-list val))
+            (:human-date
+             (propertize
+              (mu4e~headers-human-date msg)
+              'help-echo (format-time-string
+                          mu4e-headers-long-date-format
+                          (mu4e-msg-field msg :date))
+              'face 'font-lock-string-face))
+            (:flags
+             (propertize (mu4e~headers-flags-str val)
+                         'help-echo (format "%S" val)
+                         'face 'font-lock-type-face))
+            (:tags
+             (propertize
+              (mapconcat 'identity val ", ")
+              'face 'font-lock-builtin-face))
+            (:size (mu4e-display-size val))
+            (t (mu4e~headers-custom-field msg field)))))
 
-**** TODO Context (mailboxes separation)
-#+begin_src emacs-lisp
   (use-package mu4e-context
-    :after mu4e
     :tags '("CONNECTED" "MAIL")
+    :load-path "~/environment/local/share/emacs/site-lisp/mu4e"
     :config
     ;; Define the contexts (configuration defined in a private file)
     (when (fboundp 'set-mu4e-contexts)
@@ -4363,16 +4383,24 @@ I just need to define a default priority level for each feed.
 
     ;; Adapt the environment
     (setq mu4e-context-policy 'pick-first
-          ;; mu4e-compose-context-policy nil
-
           mu4e-user-mail-address-list (delq nil
                                             (mapcar (lambda (context)
                                                       (when (mu4e-context-vars context)
                                                         (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
                                                     mu4e-contexts))))
+
+
+  (use-package org-mu4e
+    :tags '("CONNECTED" "MAIL" "ORG")
+    :load-path "~/environment/local/share/emacs/site-lisp/mu4e")
 #+end_src
 
-**** TODO Notification
+**** DONE Notification
+CLOSED: [2021-01-05 Tue 08:52]
+I am using =sauron= and =alert= as my notification system. 
+For now, I am using =mu4e-alert= configured using the ~count~ notification type.
+It is quite simple but robust enough to not being bother every 5 min.
+
 #+begin_src emacs-lisp
   (use-package mu4e-alert
     :ensure t
@@ -4386,16 +4414,9 @@ I just need to define a default priority level for each feed.
     (mu4e-alert-set-default-style 'sauron-mode-line-style)
 
     ;; Enable everything!
-    (mu4e-alert-enable-notifications)
-    (mu4e-alert-enable-mode-line-display))
+    (mu4e-alert-enable-notifications))
 #+end_src
 
-**** TODO Integration with org-mode
-#+begin_src emacs-lisp
-  (use-package org-mu4e
-    :after mu4e
-    :tags '("CONNECTED" "MAIL"))
-#+end_src
 
 ** TODO Chat [0%]
 *** TODO IRC [0%]
