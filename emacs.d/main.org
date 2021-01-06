@@ -242,23 +242,6 @@ While alternatives exist, I find this combination more straightforward and clean
     ("M-SPC" . major-mode-hydra))
 #+end_src
 
-*** DONE Paradox to enhance package list management
-CLOSED: [2021-01-03 Sun 11:04]
-The default =list-packages= provides a nice experience.
-Nonetheless, a key feature is missing: which are the new packages available after refresh.
-=Paradox= is providing this information so I am using it for now even if I prefer the rendering of the default package listing.
-
-#+begin_src emacs-lisp
-  (use-package paradox
-    :ensure t
-    :tags '("CORE")
-    :commands (paradox-upgrade-packages paradox-list-packages)
-    :custom (paradox-automatically-star t)
-    :config
-    (setq paradox-execute-asynchronously t
-          paradox-github-token (my:auth-source-get-passwd :host "api.github.com" :user "seblemaguer^paradox")))
-#+end_src
-
 ** DONE Load private part
 CLOSED: [2021-01-03 Sun 11:11]
 Some parts can't be totally hidden using the =my:auth-source-get-*= helpers.

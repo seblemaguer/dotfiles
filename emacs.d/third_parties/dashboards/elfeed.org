@@ -9,7 +9,7 @@
 * Bookmarks
 
  [u] Unread      ([[elfeed:+unread][     0]]/[[elfeed:][     0]])
- [e] Emacs       ([[elfeed:+unread +emacs][     0]]/[[elfeed:+emacs][     0]])
+ [e] Emacs       ([[elfeed:+unread +Emacs][     0]]/[[elfeed:+Emacs][     0]])
  [g] github      ([[elfeed:+unread +repositories][     0]]/[[elfeed:+repositories][     0]])
  [p] podcasts    ([[elfeed:+unread +podcasts][     0]]/[[elfeed:+podcasts][     0]])
  [v] Video       ([[elfeed:+unread +youtube][     0]]/[[elfeed:+youtube][     0]])
@@ -23,8 +23,9 @@
 
   #+STARTUP: showall showstars indent
   #+KEYMAP: u | elfeed-dashboard-query "+unread"
-  #+KEYMAP: e | elfeed-dashboard-query "+unread +emacs"
-  #+KEYMAP: v | elfeed-dashboard-query "+unread +video"
+  #+KEYMAP: e | elfeed-dashboard-query "+unread +Emacs"
+  #+KEYMAP: v | elfeed-dashboard-query "+unread +youtube"
+  #+KEYMAP: p | elfeed-dashboard-query "+unread +podcasts"
   #+KEYMAP: s | elfeed
   #+KEYMAP: g | elfeed-dashboard-update-links
   #+KEYMAP: U | elfeed-dashboard-update
