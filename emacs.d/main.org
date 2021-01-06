@@ -44,6 +44,13 @@ The section defines the variables =default-plugin-dir= and set the =custom-file=
 Some default values related to emacs' core behaviour, like the garbage collector, are also set here.
 
 #+begin_src emacs-lisp
+  ;; Define cloud variables
+  (defvar cloud-emacs-root-dir "~/pCloudDrive/emacs"
+    "The root directory of emacs specific files which should be saved on the cloud.")
+
+  (defvar cloud-org-root-dir "~/pCloudDrive/org"
+    "The root directory of org-mode specific files which should be saved on the cloud.")
+
   ;; Define root directory and add the plugins
   (defvar default-plugin-dir (format "%s/plugins" user-emacs-directory)
     "The plugins directory")
@@ -538,10 +545,10 @@ leads to this configuration
 
     ;; elfeed
     (add-to-list 'recentf-exclude (format "%s/\\.elfeed/.*" (getenv "HOME")))
-    (add-to-list 'recentf-exclude (format "%s/pCloudDrive/emacs/elfeed/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/elfeed/.*" cloud-emacs-root-dir))
 
     ;; Org-mode organisation
-    (add-to-list 'recentf-exclude (format "%s/pCloudDrive/org/perso/emacs/.*" (getenv "HOME")))
+    (add-to-list 'recentf-exclude (format "%s/perso/emacs/.*" cloud-org-root-dir))
 
     ;; Org/todo/calendars
     (add-to-list 'recentf-exclude ".*todo.org")
@@ -752,6 +759,7 @@ Finally, instead of having the scratch buffer using the =emacs-lisp-mode= as the
     :ensure t
     :tags '("CORE" "SESSION" "CONNECTED")
     :hook (after-init . scratch-ext-restore-last-scratch)
+    :custom (scratch-ext-log-directory (format "%s/scratch" cloud-emacs-root-dir))
     :config
     ;; Org-mode + start folded buffer
     (setq initial-major-mode 'org-mode)
@@ -1127,8 +1135,8 @@ The only important bits are:
     :config
 
     ;; Agenda files
-    (when (file-exists-p "~/pCloudDrive/org/todo/todo.org")
-      (add-to-list 'org-agenda-files "~/pCloudDrive/org/todo/todo.org"))
+    (when (file-exists-p (format "%s/todo/todo.org" cloud-org-root-dir))
+      (add-to-list 'org-agenda-files (format "%s/todo/todo.org" cloud-org-root-dir)))
 
     ;; Deadline management
     (setq org-agenda-include-diary nil
@@ -1351,7 +1359,7 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
 #+begin_src emacs-lisp
   (use-package org-analyzer
     :ensure t
-    :custom (org-analyzer-org-directory  "~/pCloudDrive/org/todo")
+    :custom (org-analyzer-org-directory  (format "%s/todo" cloud-org-root-dir))
     :commands (org-analyzer-start))
 #+end_src
 
@@ -1472,7 +1480,7 @@ The visualization is more fancy and the graph is auto-organized which makes ever
     (after-init . org-roam-mode)
 
     :custom
-    (org-roam-directory "~/pCloudDrive/org")
+    (org-roam-directory cloud-org-root-dir)
 
     :bind (:map org-roam-mode-map
                 (("C-c n l" . org-roam)
@@ -1526,63 +1534,63 @@ I also use capturing mechanism to save recipes and some interesting websites.
            `(("Book"
               :keys "p"
               :type entry
-              :file "~/pCloudDrive/org/todo/todo.org"
+              :file ,(format "%s/todo/todo.org" cloud-org-root-dir)
               :headline "To read"
               :template-file ,(format "%s/third_parties/org-capture-templates/book.org" user-emacs-directory))
 
              ("CD"
               :keys "c"
               :type entry
-              :file "~/pCloudDrive/org/todo/todo.org"
+              :file ,(format "%s/todo/todo.org" cloud-org-root-dir)
               :headline "CD"
               :template-file ,(format "%s/third_parties/org-capture-templates/cd.org" user-emacs-directory))
 
              ("Concert"
               :keys "C"
               :type entry
-              :file "~/pCloudDrive/org/todo/todo.org"
+              :file ,(format "%s/todo/todo.org" cloud-org-root-dir)
               :headline "Concert"
               :template-file ,(format "%s/third_parties/org-capture-templates/concert.org" user-emacs-directory))
 
              ("Reference"
               :keys "f"
               :type entry
-              :file "~/pCloudDrive/org/todo/todo.org"
+              :file ,(format "%s/todo/todo.org" cloud-org-root-dir)
               :headline "Reference task"
               :template-file ,(format "%s/third_parties/org-capture-templates/reference.org" user-emacs-directory))
 
              ("Bookmark"
               :keys "L"
               :type entry
-              :file "~/pCloudDrive/org/todo/todo.org"
+              :file ,(format "%s/todo/todo.org" cloud-org-root-dir)
               :olp ("To review" "Bookmarks")
               :template-file ,(format "%s/third_parties/org-capture-templates/bookmark.org" user-emacs-directory))
 
              ("Mail"
               :keys "m"
               :type entry
-              :file "~/pCloudDrive/org/todo/todo.org"
+              :file ,(format "%s/todo/todo.org" cloud-org-root-dir)
               :headline "Mailing"
               :template-file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory))
 
              ("Meeting"
               :keys "M"
               :type entry
-              :file "~/pCloudDrive/org/todo/todo.org"
+              :file ,(format "%s/todo/todo.org" cloud-org-root-dir)
               :headline "To sort"
               :template-file ,(format "%s/third_parties/org-capture-templates/meeting.org" user-emacs-directory))
 
              ("RSS"
               :keys "r"
               :type entry
-              :file "~/pCloudDrive/org/todo/todo.org"
+              :file ,(format "%s/todo/todo.org" cloud-org-root-dir)
               :olp ("To review" "RSS")
               :template-file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory))
 
              ("TODO"
               :keys "t"
               :type entry
-              :file "~/pCloudDrive/org/todo/todo.org"
+              :file ,(format "%s/todo/todo.org" cloud-org-root-dir)
               :headline "To sort"
               :template-file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory)
               :empty-lines-before 1)))))
@@ -1594,21 +1602,20 @@ CLOSED: [2021-01-04 Mon 08:33]
 It supports multiple website so its configuration consists only of providing the template.
 
 #+begin_src emacs-lisp
-    (use-package org-chef
-      :ensure t
-      :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED")
-      :after (org-capture)
-      :config
-      (add-to-list 'org-capture-templates
-                   (doct '(
-                           ("Cookbook"
-                            :keys "o"
-                            :type entry
-                            :file "~/pCloudDrive/org/perso/cooking/cookbook.org"
-                            :template ("* %^{Description}"
-                                       "%(org-chef-get-recipe-from-url)")
-                            :empty-lines 1)
-                           ))))
+  (use-package org-chef
+    :ensure t
+    :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED")
+    :after (org-capture)
+    :config
+    (add-to-list 'org-capture-templates
+                 (doct `(
+                         ("Cookbook"
+                          :keys "o"
+                          :type entry
+                          :file ,(format "%s/perso/cooking/cookbook.org" cloud-org-root-dir)
+                          :template ("* %^{Description}"
+                                     "%(org-chef-get-recipe-from-url)")
+                          :empty-lines 1)))))
 #+end_src
 
 *** DONE ORG/Web tools
@@ -3957,7 +3964,7 @@ I rely on subpackages (see subsections) to enhance the experience.
     :no-require t
     :config
     ;; Change the storage directory
-    (setq elfeed-db-directory "~/pCloudDrive/emacs/elfeed"
+    (setq elfeed-db-directory (format "%s/elfeed" cloud-emacs-root-dir)
 
           ;; Formatting dates
           elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left)))
@@ -3976,10 +3983,10 @@ Once again, this file is stored on the cloud.
     :commands (elfeed-org)
     :init
     (defun loading-elfeed ()
-      (when (file-exists-p "~/pCloudDrive/org/perso/emacs/rss.org")
+      (when (file-exists-p (format "%s/perso/emacs/rss.org" cloud-org-root-dir))
         (progn
           (elfeed-org)
-          (setq rmh-elfeed-org-files (list "~/pCloudDrive/org/perso/emacs/rss.org"))
+          (setq rmh-elfeed-org-files (list (format "%s/perso/emacs/rss.org" cloud-org-root-dir)))
           (rmh-elfeed-org-process rmh-elfeed-org-files rmh-elfeed-org-tree-id)))))
 #+end_src
 
@@ -4752,7 +4759,7 @@ I am using its extension =metal-archives-shopping-list= to maintain a list of re
     (after-init . metal-archives-load-artists-map)
 
     :custom
-    (metal-archives-shopping-list-target-file "~/pCloudDrive/org/perso/music/shopping_list.org")
+    (metal-archives-shopping-list-target-file (format "%s/perso/music/shopping_list.org" cloud-org-root-dir))
     (metal-archives-shopping-list-root-node "CD")
 
     :init
