@@ -3260,23 +3260,13 @@ where:
 CLOSED: [2021-01-04 Mon 15:39]
 In order to be more efficient with git, I also need some helpers.
 I use =gitignore-snippets= to provide starting gitignore content;
-=git-timemachine= to navigate changes of a dedicated file;
-=git-msg-prefix= to be provide a starting for the commit message and
-=git-patch= to send a patch via email (if necessary obviously.)
+=git-timemachine= to navigate changes of a dedicated file,
+ and =git-patch= to send a patch via email (if necessary obviously.)
 
 #+begin_src emacs-lisp
   (use-package gitignore-snippets
     :ensure t
     :tags '("VC" "GIT"))
-
-  (use-package git-msg-prefix
-    :ensure t
-    :tags '("VC" "GIT")
-    :hook
-    (git-commit-mode . git-msg-prefix)
-    :config
-    (setq git-msg-prefix-log-flags " --since='1 week ago' "
-          git-msg-prefix-regex "^\\([^:]*: \\)"))
 
   (use-package git-timemachine
     :ensure t
