@@ -4427,6 +4427,50 @@ It is quite simple but robust enough to not being bother every 5 min.
     (mu4e-alert-enable-notifications))
 #+end_src
 
+** DONE Calendar
+CLOSED: [2021-01-06 Wed 16:44]
+My "appointment" calendar is store exchange server.
+I use =excorporate= in combination with =calfw= for the calendar visualisation.
+I added my own function to add an appointment.
+The configuration requires to have the variable to be already defined: =exco-default-host= and =exco-default-calendar=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package calfw
+    :ensure t
+    :tags '("CALENDAR" "CONNECTED"))
+
+  (use-package excorporate
+    :ensure t
+    :tags '("CALENDAR" "CONNECTED")
+    :commands (exco-calendar-item-appointment-create excorporate)
+    :init
+    (setq excorporate-configuration `(,exco-default-calendar . ,exco-default-host)
+          excorporate-calendar-show-day-function 'exco-calfw-show-day)
+
+    (defun exco-prompt-create-calendar-item (title description &optional start-time end-time calendar host)
+      "Create an appointment at a specific time."
+      (interactive "sTitle: \nsDescription: ")
+      (let* ((cur-description (if description description ""))
+             (cur-calendar (if calendar calendar exco-default-calendar))
+             (cur-host (if host host exco-default-host))
+             (cur-start-time (org-read-date t t start-time "Start"))
+             (cur-end-time (org-read-date t t end-time "End")))
+
+        (exco-calendar-item-appointment-create
+         `(,cur-calendar . ,cur-host)
+         title cur-description
+         cur-start-time cur-end-time
+         '(lambda (identifier response)
+            (sauron-add-event
+             'excorporate 3
+             (format "Event created in calendar \"%s\" with response: %s"
+                     identifier
+                     (exco-extract-value
+                      '(ResponseMessages CreateItemResponseMessage ResponseClass)
+                      response))))))))
+#+END_SRC
+
+
 ** DONE Chat [100%]
 CLOSED: [2021-01-05 Tue 09:32]
 As for the email, I (try to) use emacs as my chatting entry point as well.
