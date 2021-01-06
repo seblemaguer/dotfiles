@@ -383,39 +383,9 @@ CLOSED: [2021-01-03 Sun 11:24]
 Buffer listing is the fundamental navigation tool.
 After playing with =ibuffer= and other helpers, I settled using =bufler=.
 This choice has been made due its the simplicity and its recursive nature.
-=bufler= can be used in conjunction with =prism=.
-While this latter package is to define some visual aspect, I only use it in conjunction with =bufler=.
-Therefore, I decided to set it up here.
+=bufler= is used in conjunction with =prism= is assumed to be loaded later.
 
 #+begin_src emacs-lisp
-  ;; I need prism to use my configuration of bufler
-  (use-package prism
-    :ensure t
-    :tags '("CORE" "BUFFER")
-    :config
-    (defun load-prism (frame)
-      (with-selected-frame frame
-        (remove-hook 'after-make-frame-functions 'load-prism)
-        (prism-set-colors :num 16
-          :desaturations (cl-loop for i from 0 below 16
-                                  collect (* i 2.5))
-          :lightens (cl-loop for i from 0 below 16
-                             collect (* i 2.5))
-          :colors (list "#C0392B" "#3498DB" "#16A085")
-
-          :comments-fn
-          (lambda (color)
-            (prism-blend color
-                         (face-attribute 'font-lock-comment-face :foreground) 0.25))
-
-          :strings-fn
-          (lambda (color)
-            (prism-blend color "white" 0.5)))))
-
-    (if (daemonp)
-        (add-hook 'after-make-frame-functions 'load-prism)
-      (load-prism (car (frame-list)))))
-
   (use-package bufler
     :ensure t
     :tags '("CORE" "BUFFER")
@@ -5052,7 +5022,7 @@ Consequently, the configuration consists mainly of defining the path of conda an
 *** DONE Dealing with processes
 CLOSED: [2021-01-05 Tue 13:26]
 To deal with background processes, I rely on two packages: =prodigy= and =elcontext=.
-=prodigy= is used to XXX with processes.
+=prodigy= is used to run and monitor the processes.
 However, =prodigy= doesn't provide a nice way to start processes automatically.
 =elcontext= is used to deal with the start.
 Yet =elcontext= is still slightly bugged, so I use my own fork right now.
@@ -5189,6 +5159,40 @@ This is done in the ~config~ part of the package loading.
                      '(tool-bar-lines . 0)
                      '(menu-bar-lines . 0))))))
 #+end_src
+
+** DONE Prism
+CLOSED: [2021-01-06 Wed 12:26]
+In daemon mode, =prism= is required to be required **after** loading the theme.
+Therefore, for now it is here!
+
+#+BEGIN_SRC emacs-lisp
+  (use-package prism
+    :ensure t
+    :tags '("CORE" "BUFFER" "VISUAL")
+    :config
+    (defun load-prism (frame)
+      (with-selected-frame frame
+        (remove-hook 'after-make-frame-functions 'load-prism)
+        (prism-set-colors :num 16
+          :desaturations (cl-loop for i from 0 below 16
+                                  collect (* i 2.5))
+          :lightens (cl-loop for i from 0 below 16
+                             collect (* i 2.5))
+          :colors (list "#C0392B" "#3498DB" "#16A085")
+
+          :comments-fn
+          (lambda (color)
+            (prism-blend color
+                         (face-attribute 'font-lock-comment-face :foreground) 0.25))
+
+          :strings-fn
+          (lambda (color)
+            (prism-blend color "white" 0.5)))))
+
+    (if (daemonp)
+        (add-hook 'after-make-frame-functions 'load-prism)
+      (load-prism (car (frame-list)))))
+#+END_SRC
 
 ** DONE Font/Glyphs
 CLOSED: [2021-01-05 Tue 10:41]
