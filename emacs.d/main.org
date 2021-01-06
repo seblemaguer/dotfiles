@@ -4067,7 +4067,10 @@ I just need to define a default priority level for each feed.
     :ensure sauron
     :tags '("CONNECTED" "RSS" "NOTIFICATION")
     :commands (elfeed-update-background-start sauron-elfeed-start)
-    :hook (after-init . sauron-elfeed-start)
+    :hook
+    (after-init . sauron-elfeed-start)
+    (after-init . elfeed-update-background-start)
+
     :config
     (cl-loop for feed in elfeed-feeds
              do (when (member 'mustread (cdr feed))
@@ -4452,7 +4455,6 @@ The configuration requires to have the variable to be already defined: =exco-def
                       '(ResponseMessages CreateItemResponseMessage ResponseClass)
                       response))))))))
 #+END_SRC
-
 
 ** DONE Chat [100%]
 CLOSED: [2021-01-05 Tue 09:32]
