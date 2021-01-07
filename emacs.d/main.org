@@ -3876,6 +3876,8 @@ Diff visualization relies mainly on =ediff= but to which I added two primitives 
 ** DONE Treemacs
 CLOSED: [2021-01-04 Mon 19:25]
 To have a quick visualisation (on the sidebar) of the project directory tree (and a little bit further), I am using treemacs.
+Aside tweaking the configuration to fit more my needs, a key part of the configuration is to redefine the function ~treemacs--setup-mode-line~.
+This is necessary in order to avoid issues with the modeline I use.
 I added support for visualizing the git status (=treemacs-magit=), 
 for project restriction (=treemacs-projectile=) and adding some icons (=treemacs-icons-dired=).
 
@@ -3922,6 +3924,7 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
           treemacs-tag-follow-delay              1.5
           treemacs-width                         35)
 
+    (defun treemacs--setup-mode-line () "Redefined modeline function to not do anything.")
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t))
 
