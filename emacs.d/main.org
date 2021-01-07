@@ -4765,10 +4765,8 @@ I am using its extension =metal-archives-shopping-list= to maintain a list of re
     (metal-archives-shopping-list-target-file (format "%s/perso/music/shopping_list.org" cloud-org-root-dir))
     (metal-archives-shopping-list-root-node "CD")
 
-    :init
-    (add-to-list 'org-agenda-files metal-archives-shopping-list-target-file)
-
     :config
+    (add-to-list 'org-agenda-files metal-archives-shopping-list-target-file)
     (setq metal-archives-favorite-handle 'metal-archives-shopping-list-add-release-and-alert))
 #+end_src
 
