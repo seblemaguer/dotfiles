@@ -4059,10 +4059,9 @@ The dashboard template is part of the ~third parties~.
     :bind
     (([f9] . elfeed-dashboard))
 
-    :custom
-    (elfeed-dashboard-file "~/.emacs.d/third_parties/dashboards/elfeed.org")
-
     :config
+    (setq elfeed-dashboard-file "~/.emacs.d/third_parties/dashboards/elfeed.org")
+
     ;; to update feed counts automatically
     (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links))
 #+end_src
