@@ -1850,7 +1850,8 @@ It is a nice extension to =selectrum= which brings to functionalities close to t
 
     ;; Optionally enable previews. Note that individual previews can be disabled
     ;; via customization variables.
-    (consult-preview-mode))
+    ;; (consult-preview-mode)
+    )
 
   ;; Enable Consult-Selectrum integration.
   ;; This package should be installed if Selectrum is used.
@@ -5087,7 +5088,6 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
                          :fork (:host github
                                       :repo "seblemaguer/elcontext"
                                       :branch "fix_missing_hydras_2"))
-    ;; :ensure t
     :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
     :config
 
