@@ -255,7 +255,7 @@ Some parts can't be totally hidden using the =my:auth-source-get-*= helpers.
 These sensitive configuration parts are store in a dedicated file (identified by the variable =privade-file=) which is loaded here.
 
 #+begin_src emacs-lisp
-  (defvar private-file "~/.emacs.d/private-variables.el"
+  (defvar private-file (concat user-emacs-directory "private-variables.el")
     "Path to the file which stores my configuration.")
 
   (when (file-exists-p private-file)
@@ -636,19 +636,19 @@ snapshot-timemachine package.
                                     v))))))))))
 
     ;; Default Backup directory
-    (defvar backup-directory "~/.emacs.d/backups/")
+    (defvar backup-directory (concat user-emacs-directory "backups/"))
     (setq backup-directory-alist `((".*" . ,backup-directory)))
     (when (not (file-exists-p backup-directory))
       (make-directory backup-directory t))
     (setq make-backup-file-name-function #'my-make-backup-file-name)
     ;; Auto-save
-    (defvar auto-save-directory "~/.emacs.d/auto-save/")
+    (defvar auto-save-directory (concat user-emacs-directory "auto-save/"))
     (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
     (when (not (file-exists-p auto-save-directory))
       (make-directory auto-save-directory t))
 
     ;; Tramp backup
-    (defvar tramp-backup-directory "~/.emacs.d/tramp-backups/")
+    (defvar tramp-backup-directory (concat user-emacs-directory "tramp-backups/"))
     (setq tramp-backup-directory-alist `((".*" . ,tramp-backup-directory)))
 
     (when (not (file-exists-p tramp-backup-directory))
@@ -4060,7 +4060,7 @@ The dashboard template is part of the ~third parties~.
     (([f9] . elfeed-dashboard))
 
     :config
-    (setq elfeed-dashboard-file "~/.emacs.d/third_parties/dashboards/elfeed.org")
+    (setq elfeed-dashboard-file (concat user-emacs-directory "third_parties/dashboards/elfeed.org"))
 
     ;; to update feed counts automatically
     (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links))
@@ -4801,7 +4801,7 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 
     ;; Some behaviour definition
     (setq later-do-interval 0.0001
-          emms-directory "~/.emacs.d/emms"
+          emms-directory (concat user-emacs-directory "emms")
           emms-playlist-buffer-name "*Music*"
           emms-source-file-default-directory (expand-file-name "~/Music")
           emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find
@@ -5398,8 +5398,8 @@ To do so, I use the package =emojify= which provides everything needed for this.
     :config
 
     (setq emojify-user-emojis
-          '(("(heart)" . (("name" . "Heart")
-                          ("image" . "~/.emacs.d/emojis/emojione-v2.2.6-22/2665.png")
+          `(("(heart)" . (("name" . "Heart")
+                          ("image" . ,(concat user-emacs-directory "emojis/emojione-v2.2.6-22/2665.png"))
                           ("style" . "github")))))
 
     ;; If emojify is already loaded refresh emoji data
