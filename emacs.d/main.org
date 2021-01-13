@@ -398,21 +398,20 @@ This choice has been made due its the simplicity and its recursive nature.
                                       (mode-match "*Mu4e*" (rx bos "mu4e-"))))
 
                      (group (group-or "Chatty"
-                                      (mode-match "ERC" (rx bos "erc-"))
+                                      (mode-match "IRC" (rx bos "circe-"))
                                       (name-match "*Slack*" (rx bos "*Slack"))
-                                      (mode-match "Matrix" (rx bos "matrix-client-")))
+                                      (mode-match "Matrix" (rx bos "ement-")))
 
-                            (group (mode-match "ERC" (rx bos "erc-"))
-                                   (group (name-match "Channels" (rx bos (or "#" "&"))))
-                                   (group (name-match "Servers" ".*:[0-9]\\{4\\}"))
-                                   ;; (auto-erc)
-                                   )
+                            (group (mode-match "IRC" (rx bos "circe"))
+                                   (group (name-match "Query" (rx bos "circe-query")))
+                                   (group (mode-match "Channels" (rx bos "circe-channel")))
+                                   (group (name-match "Servers" (rx bos "circe-server"))))
 
                             (group (name-match "Slack" (rx bos "*Slack"))
                                    (group (group-not "Message" (name-match "Logging" "\\*Slack[^-]*Log -")))
                                    (group (name-match "Logging" "\\*Slack[^-]*Log -")))
 
-                            (group (mode-match "Matrix" (rx bos "matrix-client-"))))
+                            (group (mode-match "Matrix" (rx bos "ement-"))))
 
                      (group (mode-match "EMMS" (rx bos "emms-")))
 
@@ -4477,96 +4476,147 @@ I slightly tweaked the formatting to be more tolerant and added a bunch of plugi
 Finally, the account definition is done in the private configuration file (so it is not shown here!).
 
 #+begin_src emacs-lisp
-  (use-package erc
+  (use-package circe
     :ensure t
     :tags '("CONNECTED" "CHAT" "IRC")
-    :commands (erc)
+    :config
+
+    ;; Completion
+    (setq circe-use-cycle-completion t)
+
+    ;; Spam information reduction
+    (setq circe-reduce-lurker-spam t)
+
+    ;; Tracking
+    (setq lui-track-bar-behavior 'before-switch-to-buffer)
+    (enable-lui-track-bar)
+
+    ;; Formatting / Visual
+    (enable-circe-color-nicks)
+    (enable-circe-display-images)
+
+    ;; Connection
+    (defun circe-network-connected-p (network)
+      "Return non-nil if there's any Circe server-buffer whose
+      `circe-netwok' is NETWORK."
+      (catch 'return
+        (dolist (buffer (circe-server-buffers))
+          (with-current-buffer buffer
+            (if (string= network circe-network)
+                (throw 'return t))))))
+
+    (defun circe-maybe-connect (network)
+      "Connect to NETWORK, but ask user for confirmation if it's
+      already been connected to."
+      (interactive "sNetwork: ")
+      (if (or (not (circe-network-connected-p network))
+              (y-or-n-p (format "Already connected to %s, reconnect?" network)))
+          (circe network)))
+
+    ;; Shortcut
+    (defun circe-start ()
+      "Connect to IRC"
+      (interactive)
+      (circe-maybe-connect "bitlbee")))
+
+  (use-package lui-logging
+    :tags '("CONNECTED" "CHAT" "IRC")
+    :commands (enable-lui-logging))
+
+  (use-package lui-autopaste
+    :tags '("CONNECTED" "CHAT" "IRC")
+    :config
+    (add-hook 'circe-channel-mode-hook 'enable-lui-autopaste)
+    (defvar lui-autopaste-service-gist-url nil
+      "The URL for the last gist.")
+
+    (defun lui-autopaste-service-gist (text)
+      "Paste TEXT to github using gist.el."
+      ;; It's so great gist works with callbacks! It's so much fun to
+      ;; work around that!
+      (setq lui-autopaste-service-gist-url 'waiting)
+      (with-temp-buffer
+        (insert text)
+        (gist-region (point-min) (point-max) nil
+                     (lambda (gist)
+                       (when (eq lui-autopaste-service-gist-url
+                                 'waiting)
+                         (setq lui-autopaste-service-gist-url
+                               (oref gist :html-url)))))) ;; FIXME: this provokes a Warning: Unknown slot ‘:html-url’
+      (let ((wait 0))
+        (while (and (< wait 10)
+                    (eq lui-autopaste-service-gist-url
+                        'waiting))
+          (sit-for 0.1 )
+          (setq wait (1+ wait))))
+      (if (eq lui-autopaste-service-gist-url 'waiting)
+          (progn
+            (setq lui-autopaste-service-gist-url nil)
+            (error "Couldn't create gist"))
+        (prog1 lui-autopaste-service-gist-url
+          (setq lui-autopaste-service-gist-url nil))))
+
+    (setq lui-autopaste-function 'lui-autopaste-service-gist))
+
+  ;; Disabled modeline (tracking-mode) when loading lui
+  (use-package lui
+    :tags '("CONNECTED" "CHAT" "IRC")
     :hook
-    (erc-mode . erc-format-buffer)
+    (lui-mode . my-lui-setup)
 
-    :preface
-    (defun my-irc-password (server)
-      "Return the password for the `SERVER'."
-      (my:auth-source-get-passwd :host server))
-
-    (defun erc-format-buffer ()
-      "Function to be hooked with any erc buffer to apply a dedicated format"
-      (erc-truncate-mode t)
-      (erc-fill-disable)
-      (set (make-local-variable 'scroll-conservatively) 1000)
-      (visual-line-mode))
-
-    :custom
-    (erc-autojoin-channels-alist '(
-                                   ;; ("freenode.net" "#emacs" "#latex" "#org-mode")
-                                   ("gitter.im"
-                                    "#linux-surface/support" "#linux-surface/community"
-                                    "#magit/magit" "#scimax/community" "#emacs-lsp/lsp-mode")))
-    (erc-autojoin-timing 'ident)
-    (erc-prompt-for-nickserv-password nil)
-
-    ;; Reconnection
-    (erc-server-reconnect-attempts 5)
-    (erc-server-reconnect-timeout 3)
-    (erc-lurker-threshold-time 43200)
-
-    ;; Exclusion
-    (erc-hide-list '("JOIN" "PART" "QUIT"))
-    (erc-lurker-hide-list '("JOIN" "PART" "QUIT"))
-    (erc-track-exclude-types '("JOIN" "MODE" "NICK" "PART" "QUIT"
-                               "324" "329" "332" "333" "353" "477"))
-
-    ;; Formatting
-    (erc-interpret-mirc-color t)
-    (erc-timestamp-format "[%H:%M] ")
-    (erc-fill-prefix "      ")
-    (erc-insert-timestamp-function 'erc-insert-timestamp-left)
+    :init
+    (defun my-lui-setup ()
+      (setq fringes-outside-margins t
+            right-margin-width 21
+            word-wrap t
+            wrap-prefix "    "))
 
     :config
-    (erc-track-minor-mode 1)
-    (erc-track-mode 1)
-    (erc-services-mode 1)
+    (setq lui-time-stamp-position 'right-margin
+          lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]"
+          lui-fill-type nil)
 
-    ;; Reload plugins
-    (erc-update-modules))
+    (define-derived-mode lui-mode nil "LUI"
+      "The Linewise User Interface mode.
+      This can be used as a user interface for various applications.
+      Those should define derived modes of this, so this function
+      should never be called directly.
 
-  (use-package erc-gitter
-    :straight (erc-gitter :type git :host github :repo "jleechpe/erc-gitter")
-    :tags '("CONNECTED" "CHAT" "IRC"))
+      It can be customized for an application by specifying a
+      `lui-input-function'."
+      (setq lui-input-marker (make-marker)
+            lui-output-marker (make-marker)
+            lui-input-ring (make-ring lui-input-ring-size)
+            lui-input-ring-index nil
+            flyspell-generic-check-word-predicate 'lui-flyspell-check-word-predicate)
+      (set-marker lui-input-marker (point-max))
+      (set-marker lui-output-marker (point-max))
+      (add-hook 'window-scroll-functions 'lui-scroll-window nil t)
+      (add-hook 'post-command-hook 'lui-scroll-post-command)
+      (add-hook 'change-major-mode-hook 'lui-change-major-mode nil t)
+      (lui-paren-highlighting)
+      (lui-time-stamp-enable-filtering)
+      ;; (tracking-mode 1)
+      (auto-fill-mode 0)
+      (when (fboundp 'cursor-intangible-mode)
+        (cursor-intangible-mode 1))
+      (when lui-flyspell-p
+        (require 'flyspell)
+        (lui-flyspell-change-dictionary))))
 
-  (use-package erc-colorize
+  (use-package lui-irc-colors
+    :tags '("CONNECTED" "CHAT" "IRC")
+    :after circe
+    :config
+    (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
+
+  (use-package circe-notifications
     :ensure t
-    :tags '("CONNECTED" "CHAT" "IRC"))
-
-  (use-package erc-hl-nicks
-    :ensure t
-    :tags '("CONNECTED" "CHAT" "IRC"))
-
-  (use-package erc-youtube
-    :ensure t
-    :tags '("CONNECTED" "CHAT" "IRC"))
-
-  (use-package erc-image
-    :ensure t
-    :tags '("CONNECTED" "CHAT" "IRC"))
-#+end_src
-
-**** DONE Notification activation
-CLOSED: [2021-01-05 Tue 09:18]
-Concerning the notification, =sauron= already supports ERC via the package =sauron-erc=.
-I simply redefined the priorities to be more in phase with how I use it.
-
-#+begin_src emacs-lisp
-  (use-package sauron-erc
-    :ensure sauron
-    :tags '("CONNECT" "CHAT" "ERC" "NOTIFICATION")
-    :commands (sauron-erc-start)
-    :custom
-    (sauron-prio-erc-default           1)
-    (sauron-prio-erc-privmsg-root      1)
-    (sauron-prio-erc-privmsg-default   1)
-    (sauron-prio-erc-privmsg-for-me    2)
-    (sauron-prio-erc-privmsg-mentioned 2))
+    :tags '("CONNECTED" "CHAT" "IRC" "NOTIFICATION")
+    :commands (enable-circe-notifications)
+    :custom (circe-notifications-alert-style 'sauron-mode-line-style)
+    :hook
+    (circe-server-connected . enable-circe-notifications))
 #+end_src
 
 *** DONE Slack
@@ -4579,9 +4629,9 @@ Finally, because of a bug in the upstream of emacs-slack (issue [[https://github
 #+begin_src emacs-lisp
   (use-package slack
     :straight (slack :type git :host github :repo "yuya373/emacs-slack"
-                      :fork (:host github
-                                   :repo "seblemaguer/emacs-slack"
-                                   :branch "fix-498"))
+                     :fork (:host github
+                                  :repo "seblemaguer/emacs-slack"
+                                  :branch "fix-498"))
     :tags '("CONNECTED" "CHAT" "SLACK")
     :commands (slack-start)
     :no-require t
@@ -4591,9 +4641,9 @@ Finally, because of a bug in the upstream of emacs-slack (issue [[https://github
     (slack-profile-image-file-directory (format "%s/slack/profile_pictures" user-emacs-directory))
     (slack-image-file-directory         (format "%s/slack/images" user-emacs-directory))
     (slack-buffer-emojify               t)
+    (slack-modeline-formatter           nil)
 
     :hook
-    (slack-mode . slack-set-timestamp-margin)
     (slack-mode . company-slack-hook)
 
     :config
@@ -4609,15 +4659,7 @@ Finally, because of a bug in the upstream of emacs-slack (issue [[https://github
 
     ;; Register the teams (configuration defined in a private file)
     (when (fboundp 'slack-register-teams)
-      (slack-register-teams))
-
-    ;; Define formatting time!
-    (defun slack-set-timestamp-margin ()
-      "Hook function to define the timestamp in the margins"
-      (interactive)
-      (setq lui-time-stamp-position 'right-margin
-            lui-time-stamp-format "[%H:%M - %a %d %b %Y]"
-            right-margin-width (length (format-time-string lui-time-stamp-format)))))
+      (slack-register-teams)))
 #+end_src
 
 **** DONE Helm-slack
@@ -4639,7 +4681,7 @@ This section provides three helper functions to connect/disconnect all my chatti
   (defun communication-start ()
     "Routine to start all chats."
     (interactive)
-    (erc-start)
+    (circe-start)
     (slack-start)
     (matrix-connect))
 
@@ -4647,7 +4689,7 @@ This section provides three helper functions to connect/disconnect all my chatti
     "Routine to shutdown all chats"
     (interactive)
 
-    ;; Erc
+    ;; IRC
     (dolist (erc-buf list-erc-servers)
       (when (get-buffer erc-buf)
         (with-current-buffer erc-buf
@@ -4663,16 +4705,10 @@ This section provides three helper functions to connect/disconnect all my chatti
     (dolist (buf (buffer-list))
       (cond ((string-prefix-p "*Slack " (buffer-name buf))
              (kill-buffer buf))
-            ((string= (with-current-buffer buf major-mode) "erc-mode")
+            ((string= (with-current-buffer buf major-mode) "circe-mode")
              (kill-buffer buf)))))
 
-  (defun communication-start-or-switch ()
-    (interactive)
-    (if (get-buffer (car list-erc-servers))
-        (erc-track-switch-buffer 1)
-      (communication-start)))
-
-  (global-set-key (kbd "S-<f2>") 'communication-start-or-switch)
+  (global-set-key (kbd "S-<f2>") 'communication-start)
   (global-set-key (kbd "C-<f2>") 'communication-shutdown)
 #+end_src
 
