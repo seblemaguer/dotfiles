@@ -1853,12 +1853,6 @@ It is a nice extension to =selectrum= which brings to functionalities close to t
     ;; (consult-preview-mode)
     )
 
-  ;; Enable Consult-Selectrum integration.
-  ;; This package should be installed if Selectrum is used.
-  (use-package consult-selectrum
-    :ensure t
-    :demand t)
-
   ;; Optionally add the `consult-flycheck' command.
   (use-package consult-flycheck
     :ensure t
