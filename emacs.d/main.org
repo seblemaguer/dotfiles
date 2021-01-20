@@ -4619,6 +4619,24 @@ Finally, the account definition is done in the private configuration file (so it
     (circe-server-connected . enable-circe-notifications))
 #+end_src
 
+*** DONE Matrix
+CLOSED: [2021-01-18 Mon 12:11]
+The Matrix configuration is based on =ement=. 
+This package is not in stable stage (yet) but is causing less problem with my way of using emacs than =matrix-client.el=.
+=ement= requires =plz= which is not on melpa yet.
+Therefore, all the packages are installed using =straight=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package plz
+    :straight (plz :type git :host github :repo "alphapapa/plz.el")
+    :tags '("CONNECTED" "CHAT" "MATRIX"))
+
+  (use-package ement
+    :straight (ement :host github :repo "alphapapa/ement.el")
+    :tags '("CONNECTED" "CHAT" "MATRIX")
+    :commands (ement-connect))
+#+END_SRC
+
 *** DONE Slack
 CLOSED: [2021-01-05 Tue 09:29]
 The package =slack= (or ~emacs-slack~) provides everything I need to support Slack in emacs.
@@ -4683,23 +4701,20 @@ This section provides three helper functions to connect/disconnect all my chatti
     (interactive)
     (circe-start)
     (slack-start)
-    (matrix-connect))
+    (call-interactively #'ement-connect))
 
   (defun communication-shutdown ()
     "Routine to shutdown all chats"
     (interactive)
 
-    ;; IRC
-    (dolist (erc-buf list-erc-servers)
-      (when (get-buffer erc-buf)
-        (with-current-buffer erc-buf
-          (erc-quit-server "time to go back to the real life"))))
+    ;; ;; IRC
+    (circe-command-GQUIT "time to go back to the real life")
 
     ;; Slack
     (slack-ws-close)
 
     ;; Matrix
-    (matrix-client-disconnect)
+    (ement-disconnect)
 
     ;; Clean buffers
     (dolist (buf (buffer-list))
