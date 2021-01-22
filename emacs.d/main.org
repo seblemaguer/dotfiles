@@ -4266,9 +4266,7 @@ I also redesigned the header buffer.
        ("W" mu4e-headers-toggle-include-related "Include related"))))
 
     :bind
-    (([f2] . mu4e)
-
-     :map mu4e-headers-mode-map
+    (:map mu4e-headers-mode-map
      ("|" . mu4e-view-pipe)
      ("." . mu4e-hydra/body)
 
@@ -4326,54 +4324,54 @@ I also redesigned the header buffer.
 
     (defun mu4e~headers-field-apply-basic-properties (msg field val width)
       (case field
-            (:subject
-             (propertize
-              (concat
-               (mu4e~headers-thread-prefix (mu4e-message-field msg :thread))
-               (truncate-string-to-width val 600))
-              'face
-              (let ((flags (mu4e-message-field msg :flags)))
-                (cond
-                 ((memq 'trashed flags) 'mu4e-trashed-face)
-                 ((memq 'draft flags) 'mu4e-draft-face)
-                 ((or (memq 'unread flags) (memq 'new flags))
-                  'mu4e-unread-face)
-                 ((memq 'flagged flags) 'mu4e-flagged-face)
-                 ((memq 'replied flags) 'mu4e-replied-face)
-                 ((memq 'passed flags) 'mu4e-forwarded-face)
-                 (t 'mu4e-header-face)))))
-            (:thread-subject
-             (propertize
-              (mu4e~headers-thread-subject msg)
-              'face 'font-lock-doc-face))
-            ((:maildir :path :message-id) val)
-            ((:to :from :cc :bcc)
-             (propertize
-              (mu4e~headers-contact-str val)
-              'face 'font-lock-function-name-face))
-            (:from-or-to (mu4e~headers-from-or-to msg))
-            (:date
-             (propertize
-              (format-time-string mu4e-headers-date-format val)
-              'face 'font-lock-string-face))
-            (:mailing-list (mu4e~headers-mailing-list val))
-            (:human-date
-             (propertize
-              (mu4e~headers-human-date msg)
-              'help-echo (format-time-string
-                          mu4e-headers-long-date-format
-                          (mu4e-msg-field msg :date))
-              'face 'font-lock-string-face))
-            (:flags
-             (propertize (mu4e~headers-flags-str val)
-                         'help-echo (format "%S" val)
-                         'face 'font-lock-type-face))
-            (:tags
-             (propertize
-              (mapconcat 'identity val ", ")
-              'face 'font-lock-builtin-face))
-            (:size (mu4e-display-size val))
-            (t (mu4e~headers-custom-field msg field)))))
+        (:subject
+         (propertize
+          (concat
+           (mu4e~headers-thread-prefix (mu4e-message-field msg :thread))
+           (truncate-string-to-width val 600))
+          'face
+          (let ((flags (mu4e-message-field msg :flags)))
+            (cond
+             ((memq 'trashed flags) 'mu4e-trashed-face)
+             ((memq 'draft flags) 'mu4e-draft-face)
+             ((or (memq 'unread flags) (memq 'new flags))
+              'mu4e-unread-face)
+             ((memq 'flagged flags) 'mu4e-flagged-face)
+             ((memq 'replied flags) 'mu4e-replied-face)
+             ((memq 'passed flags) 'mu4e-forwarded-face)
+             (t 'mu4e-header-face)))))
+        (:thread-subject
+         (propertize
+          (mu4e~headers-thread-subject msg)
+          'face 'font-lock-doc-face))
+        ((:maildir :path :message-id) val)
+        ((:to :from :cc :bcc)
+         (propertize
+          (mu4e~headers-contact-str val)
+          'face 'font-lock-function-name-face))
+        (:from-or-to (mu4e~headers-from-or-to msg))
+        (:date
+         (propertize
+          (format-time-string mu4e-headers-date-format val)
+          'face 'font-lock-string-face))
+        (:mailing-list (mu4e~headers-mailing-list val))
+        (:human-date
+         (propertize
+          (mu4e~headers-human-date msg)
+          'help-echo (format-time-string
+                      mu4e-headers-long-date-format
+                      (mu4e-msg-field msg :date))
+          'face 'font-lock-string-face))
+        (:flags
+         (propertize (mu4e~headers-flags-str val)
+                     'help-echo (format "%S" val)
+                     'face 'font-lock-type-face))
+        (:tags
+         (propertize
+          (mapconcat 'identity val ", ")
+          'face 'font-lock-builtin-face))
+        (:size (mu4e-display-size val))
+        (t (mu4e~headers-custom-field msg field)))))
 
   (use-package mu4e-context
     :tags '("CONNECTED" "MAIL")
@@ -4391,12 +4389,40 @@ I also redesigned the header buffer.
                                                         (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
                                                     mu4e-contexts))))
 
-
   (use-package org-mu4e
     :tags '("CONNECTED" "MAIL" "ORG")
     :load-path "~/environment/local/share/emacs/site-lisp/mu4e")
 #+end_src
 
+**** DONE Dashboard
+CLOSED: [2021-01-22 Fri 22:48]
+I prefer to use the dashboard as the entry proint for emails as it is more configurable. 
+The dashboard is not on melpa but can be retrieved using straight.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package mu4e-dashboard
+    :straight (mu4e-dashboard :type git :branch "main" :host github :repo "rougier/mu4e-dashboard")
+    :tags '("CONNECTED" "MAIL" "ORG")
+    :bind
+    (("<f2>" . mu4e-dashboard))
+
+    :commands (mu4e-dashboard-activate)
+    :init
+    (defvar mu4e-dashboard-file "~/.emacs.d/third_parties/dashboards/mu4e.org")
+
+    (defun mu4e-dashboard ()
+      "Main function."
+      (interactive)
+      (setq mu4e-dashboard--buf (find-file mu4e-dashboard-file))
+      (with-current-buffer mu4e-dashboard--buf
+        (mu4e-dashboard-activate)))
+
+    (defun mu4e-dashboard-edit ()
+      "Edit dashboard."
+      (interactive)
+      (setq buffer-read-only nil)
+      (org-mode)))
+#+END_SRC
 **** DONE Notification
 CLOSED: [2021-01-05 Tue 08:52]
 I am using =sauron= and =alert= as my notification system. 
