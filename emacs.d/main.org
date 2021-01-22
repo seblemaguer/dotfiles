@@ -4479,23 +4479,11 @@ Finally, the account definition is done in the private configuration file (so it
   (use-package circe
     :ensure t
     :tags '("CONNECTED" "CHAT" "IRC")
-    :config
+    :commands (circe circe-server-buffers)
+    :hook
+    (circe-channel-mode . emojify-mode)
 
-    ;; Completion
-    (setq circe-use-cycle-completion t)
-
-    ;; Spam information reduction
-    (setq circe-reduce-lurker-spam t)
-
-    ;; Tracking
-    (setq lui-track-bar-behavior 'before-switch-to-buffer)
-    (enable-lui-track-bar)
-
-    ;; Formatting / Visual
-    (enable-circe-color-nicks)
-    (enable-circe-display-images)
-
-    ;; Connection
+    :init
     (defun circe-network-connected-p (network)
       "Return non-nil if there's any Circe server-buffer whose
       `circe-netwok' is NETWORK."
@@ -4513,11 +4501,26 @@ Finally, the account definition is done in the private configuration file (so it
               (y-or-n-p (format "Already connected to %s, reconnect?" network)))
           (circe network)))
 
-    ;; Shortcut
     (defun circe-start ()
       "Connect to IRC"
       (interactive)
-      (circe-maybe-connect "bitlbee")))
+      (circe-maybe-connect "bitlbee"))
+
+    :config
+
+    ;; Completion
+    (setq circe-use-cycle-completion t)
+
+    ;; Spam information reduction
+    (setq circe-reduce-lurker-spam t)
+
+    ;; Tracking
+    (setq lui-track-bar-behavior 'before-switch-to-buffer)
+    (enable-lui-track-bar)
+
+    ;; Formatting / Visual
+    (enable-circe-color-nicks)
+    (enable-circe-display-images))
 
   (use-package lui-logging
     :tags '("CONNECTED" "CHAT" "IRC")
@@ -4525,8 +4528,8 @@ Finally, the account definition is done in the private configuration file (so it
 
   (use-package lui-autopaste
     :tags '("CONNECTED" "CHAT" "IRC")
+    :hook (circe-channel-mode . enable-lui-autopaste)
     :config
-    (add-hook 'circe-channel-mode-hook 'enable-lui-autopaste)
     (defvar lui-autopaste-service-gist-url nil
       "The URL for the last gist.")
 
