@@ -2056,6 +2056,15 @@ In order to format the buffer, it is better to rely on external formatter/linter
     :commands (format-all-buffer format-all-mode))
 #+end_src
 
+** DONE Sanitizing
+CLOSED: [2021-01-25 Mon 20:21]
+This part contains sanitizing helpers before saving the files.
+For now it consists of simply removing any trailing whitespace.
+
+#+BEGIN_SRC emacs-lisp
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+END_SRC
+
 * Programming [100%]
 Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
 To do so, I rely mainly on Language Server Protocol (LSP).
