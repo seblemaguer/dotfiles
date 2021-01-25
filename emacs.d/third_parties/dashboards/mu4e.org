@@ -56,7 +56,11 @@ Call [[elisp:mu4e-dashboard-deactivate][mu4e-dashboard-deactivate]] before editi
   mu find -n $count --sortfield=date --reverse --fields "f s" $query
 #+END_SRC
 
-#+KEYMAP: u | mu4e-headers-search "flag:unread"
+
+#+KEYMAP: S | mu4e-headers-search
+#+KEYMAP: u | mu4e-update-mail-and-index t
+
+#+KEYMAP: U | mu4e-headers-search "flag:unread"
 #+KEYMAP: i | mu4e-headers-search "m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox"
 #+KEYMAP: d | mu4e-headers-search "m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts"
 #+KEYMAP: s | mu4e-headers-search "m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent"
