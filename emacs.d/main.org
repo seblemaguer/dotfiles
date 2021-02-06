@@ -192,7 +192,7 @@ Therefore, there is no extra-configuration for this to do.
    (unless (string= (getenv "TRAVIS") "true")
      (setq straight-vc-git-default-protocol 'ssh))
  #+end_src
- 
+
 *** DONE Tagging
 CLOSED: [2021-01-03 Sun 10:58]
 I am using keywords/tags to define a loading scheme for each of the machine where emacs is installed.
@@ -1852,7 +1852,7 @@ CLOSED: [2021-01-03 Sun 17:58]
 I use templates for two cases:
   - starting point as new script/code file
   - accessing to some snippets.
-    
+
 In both cases, I rely on =yasnippet=.
 
 *** DONE Snippets
@@ -1924,7 +1924,7 @@ This implies two key features:
   - closing the compilation buffer if the compilation was a success.
 
 A bug (described in http://stackoverflow.com/questions/15489319/how-can-i-skip-in-file-included-from-in-emacs-c-compilation-mode ) is also addressed.
-    
+
 #+begin_src emacs-lisp
   (use-package compile
     :defer
@@ -2358,7 +2358,7 @@ Aside GIT, I sometimes use mercurial. As for GIT, I use a dedicated mode for eac
 
 *** DONE Dockerfile
 CLOSED: [2021-01-04 Mon 07:01]
-I am a constant user of Docker. 
+I am a constant user of Docker.
 Consequently, I need a proper node to edit docker build files as I build my own images for my experiences.
 
 #+begin_src emacs-lisp
@@ -2621,7 +2621,7 @@ I use libreoffice/office 365 for official documents which can't be handled in PD
 CLOSED: [2021-01-04 Mon 12:05]
 LaTeX is the core languages I am using to write scientific documents and presentations.
 My configuration relies mainly on auctex but I had to tweak several part to match my way of dealing with such files.
-These tweaks concerns mainly of using =outline= to deal with folding, 
+These tweaks concerns mainly of using =outline= to deal with folding,
 using the ~enquote~ command to do some quotation in latex and prepare a proper pdf compilation/synchronization.
 
 #+begin_src emacs-lisp
@@ -2740,7 +2740,7 @@ I use two packages =company-auctex= which provides the enhancement of auctex and
 
 *** DONE Compilation
 CLOSED: [2021-01-04 Mon 12:03]
-For the compilation, I prefer to use =latexmk=. 
+For the compilation, I prefer to use =latexmk=.
 It processes everything automatically which removes the burden of having to define the sequence of commands.
 I could have used the auctex default sequence, but I prefer to have an homogeneous process with what I do in the shell!
 
@@ -2749,7 +2749,7 @@ I could have used the auctex default sequence, but I prefer to have an homogeneo
     :ensure t
     :tags '("WRITING" "LATEX" "COMPILATION")
     :config
-  
+
     ;; Redine TeX-output-mode to get the color !
     (define-derived-mode TeX-output-mode TeX-special-mode "LaTeX Output"
       "Major mode for viewing TeX output.
@@ -2771,7 +2771,7 @@ I could have used the auctex default sequence, but I prefer to have an homogeneo
 
     ;; Setup everything
     (setq auctex-latexmk-inherit-TeX-PDF-mode t
-          TeX-show-compilation nil)  
+          TeX-show-compilation nil)
     (auctex-latexmk-setup))
 #+end_src
 
@@ -2913,7 +2913,7 @@ The package =grammarly= bring its functionnality into emacs which is a saver for
     :tags '("WRITING" "CONNECTED"))
 #+end_src
 
-** DONE Translation 
+** DONE Translation
 CLOSED: [2021-01-04 Mon 13:08]
 As I have the luck to deal with multiple languages (french, english and bulgarian), I need to have a quick access to some translations.
 WordReference is my first choice as I find it quite complete and accurate.
@@ -3340,7 +3340,7 @@ I also added a hack to avoi hanging issues because of tramp (see https://github.
 #+end_src
 
 * Shell [100%]
-My use of shell is kind of anarchic. 
+My use of shell is kind of anarchic.
 I alternate between zsh and emacs internal shell (eshell).
 Because I use eshell regularly, I spend some time to configure it in details.
 The main part of the configuration is coming from https://github.com/jcf/emacs.d.
@@ -3691,7 +3691,7 @@ I also replace a base deletion by moving the files/directories to the trash.
 
 *** DONE Extensions
 CLOSED: [2021-01-04 Mon 18:55]
-In order to have a better experience, 
+In order to have a better experience,
 I added support for more precise visualisation (=dired-filter=, =dired-subtree=, =peep-dired=, =dired-narrow=, =dired-single= and =dired-git-info=),
 as well a enhanced copy features (=dired-async= and =dired-rsync=).
 This part consists mainly of ensuring the packages are properly required and that some keys are defined.
@@ -3751,7 +3751,7 @@ This part consists mainly of ensuring the packages are properly required and tha
   (use-package dired-single
     :ensure t
     :tags '("FILE_MANAGEMENT" "DIRED" "DIRED_EXTENSION")
-  
+
     :bind (:map dired-mode-map
                 (([return] . dired-single-buffer)
                  ([mouse-1] . dired-single-buffer-mouse))))
@@ -3872,7 +3872,7 @@ CLOSED: [2021-01-04 Mon 19:25]
 To have a quick visualisation (on the sidebar) of the project directory tree (and a little bit further), I am using treemacs.
 Aside tweaking the configuration to fit more my needs, a key part of the configuration is to redefine the function ~treemacs--setup-mode-line~.
 This is necessary in order to avoid issues with the modeline I use.
-I added support for visualizing the git status (=treemacs-magit=), 
+I added support for visualizing the git status (=treemacs-magit=),
 for project restriction (=treemacs-projectile=) and adding some icons (=treemacs-icons-dired=).
 
 #+begin_src emacs-lisp
@@ -4088,7 +4088,7 @@ This configuration is articulated around three parts: the authentification part,
 
 *** DONE Authentification
 CLOSED: [2021-01-05 Tue 08:20]
-In previous emacs version (< 27), it was necessary to configure the package =starttls=. 
+In previous emacs version (< 27), it was necessary to configure the package =starttls=.
 This configuration is remaining here for backward compatibility purposes.
 
 #+begin_src emacs-lisp
@@ -4132,7 +4132,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
             message-signature-file (format "%s/third_parties/mail/signature" user-emacs-directory)
             message-fill-column 100)
 
-    
+
       (defun format-hook-message ()
         "Specify some formatting rules for email message writing."
         ;; (set-fill-column 100)
@@ -4190,7 +4190,7 @@ However, it can't be installed via melpa.
 I have a bunch of scripts which are configuring my linux environment on ~~/environment/~.
 These scripts are installing ~mu~ and =mu4e= so the first thing to do here is to point the current configuration ~load-path~.
 
-The core of the configuration is separated in four main parts: 
+The core of the configuration is separated in four main parts:
 the hydra definition, the adaptation of the ~mu4e~ environment, the introduction of new primitives and, finally, the definition of contexts.
 The last part is the most important as it provides the configuration for the mail accounts.
 These configurations are set in the private configuration file and provided by the function =set-mu4e-contexts=.
@@ -4393,7 +4393,7 @@ I also redesigned the header buffer.
 
 **** DONE Dashboard
 CLOSED: [2021-01-22 Fri 22:48]
-I prefer to use the dashboard as the entry proint for emails as it is more configurable. 
+I prefer to use the dashboard as the entry proint for emails as it is more configurable.
 The dashboard is not on melpa but can be retrieved using straight.
 
 #+BEGIN_SRC emacs-lisp
@@ -4422,7 +4422,7 @@ The dashboard is not on melpa but can be retrieved using straight.
 #+END_SRC
 **** DONE Notification
 CLOSED: [2021-01-05 Tue 08:52]
-I am using =sauron= and =alert= as my notification system. 
+I am using =sauron= and =alert= as my notification system.
 For now, I am using =mu4e-alert= configured using the ~count~ notification type.
 It is quite simple but robust enough to not being bother every 5 min.
 
@@ -4493,7 +4493,7 @@ I added a bunch of helpers to start/stop all the accounts in one shot.
 
 *** DONE IRC
 CLOSED: [2021-01-05 Tue 09:32]
-The IRC configuration is quite standard. 
+The IRC configuration is quite standard.
 I added a couple of primitives to access more easily the passwords (~my-irc-password~) and to format properly the chat buffer (~erc-format-buffer~).
 I slightly tweaked the formatting to be more tolerant and added a bunch of plugins to enhance the UX.
 Finally, the account definition is done in the private configuration file (so it is not shown here!).
@@ -4647,7 +4647,7 @@ Finally, the account definition is done in the private configuration file (so it
 
 *** DONE Matrix
 CLOSED: [2021-01-18 Mon 12:11]
-The Matrix configuration is based on =ement=. 
+The Matrix configuration is based on =ement=.
 This package is not in stable stage (yet) but is causing less problem with my way of using emacs than =matrix-client.el=.
 =ement= requires =plz= which is not on melpa yet.
 Therefore, all the packages are installed using =straight=.
@@ -5047,8 +5047,8 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
 ** DONE Emacs and the system [100%]
 CLOSED: [2021-01-05 Tue 13:42]
 In a lower level, I want to have a better access to some system/(non desktop-)environment tools.
-I separated the configuration into three main subsections: 
-the section dedicated to the system/shell, 
+I separated the configuration into three main subsections:
+the section dedicated to the system/shell,
 the section dedicated to specific tools,
 and the section dedicated to background processes/"daemons" management directly into Emacs.
 
@@ -5058,7 +5058,7 @@ In this section, I configure packages to access system informations and enforce 
 
 **** DONE Get system control information
 CLOSED: [2021-01-05 Tue 13:11]
-To access the global OS information, =sysctl= provides a basic interface. 
+To access the global OS information, =sysctl= provides a basic interface.
 No extra configuration is needed.
 
 #+begin_src emacs-lisp
@@ -5103,7 +5103,7 @@ CLOSED: [2021-01-05 Tue 13:18]
 I am using conda to configure different environment for ~Python~ and ~R~.
 The package =conda= provides all the necessary XXX to integrate conda into Emacs.
 I am using my own scripts to install and configure conda into my environment directory.
-Consequently, the configuration consists mainly of defining the path of conda and activating =conda= for different modes: 
+Consequently, the configuration consists mainly of defining the path of conda and activating =conda= for different modes:
 ~python-mode~, ~ess-mode~ and ~eshell-mode~.
 
 #+begin_src emacs-lisp
@@ -5188,13 +5188,13 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
                                          (:location (ht))))
     (elcontext-global-mode))
 #+END_SRC
-** DONE Emacs and the servers 
+** DONE Emacs and the servers
 CLOSED: [2021-01-05 Tue 13:06]
 Finally, I access to computing clusters regularly.
 The main tools I am using there are ~docker~ and ~slurm~.
 As an entry point, as every Emacs use, I use =tramp= to deal with servers using SSH as a backend.
 =slurm-mode= doesn't rely on =tramp= and does not proposes remote access by default.
-However, a hack was proposed in [[https://github.com/truls/slurm.el/tree/explicit-username][truls]] fork 
+However, a hack was proposed in [[https://github.com/truls/slurm.el/tree/explicit-username][truls]] fork
 I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 #+begin_src emacs-lisp
@@ -5211,7 +5211,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
   (use-package slurm-mode
     :straight (slurm :type git :host github
-                     :repo "ffevotte/slurm.el" 
+                     :repo "ffevotte/slurm.el"
                      :fork (:host github
                                   :repo "seblemaguer/slurm.el"
                                   :branch "explicit-username"))
@@ -5351,7 +5351,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
 
 ** DONE Helpers [100%]
 CLOSED: [2021-01-05 Tue 12:36]
-In order to guide me a little bit more to the information I need, 
+In order to guide me a little bit more to the information I need,
 I introduce a couple of visual helpers.
 All of these helpers are configured in this section.
 
@@ -5459,7 +5459,7 @@ To do so, I use =abridge-diff=.
 
 *** DONE Emoji
 CLOSED: [2021-01-05 Tue 12:28]
-I am chatting, mailing and so on. 
+I am chatting, mailing and so on.
 I prefer to visualize nicely emojis than the raw text.
 To do so, I use the package =emojify= which provides everything needed for this.
 
