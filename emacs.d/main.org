@@ -3072,6 +3072,53 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     (pdfgrep-mode))
 #+end_src
 
+** DONE Epub
+CLOSED: [2021-02-09 Tue 16:15]
+I am using =nov= to read epub files.
+I used some additional configuration which are relying on =justify-kp=.
+As this last package is not on melpa, I install it using straight.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package justify-kp
+    :ensure straight
+    :tags '("DESKTOP" "DOCUMENT")
+    :straight (justify-kp :type git :host github :repo "Fuco1/justify-kp" :files ("justify-kp.el")))
+
+  (use-package nov
+    :ensure t
+    :tags '("DESKTOP" "DOCUMENT")
+    :mode ("\\.epub\\'" . nov-mode)
+    :commands (nov-mode)
+    :config
+    (setq nov-text-width 100)
+
+    (defun my-nov-window-configuration-change-hook ()
+      (my-nov-post-html-render-hook)
+      (remove-hook 'window-configuration-change-hook
+                   'my-nov-window-configuration-change-hook
+                   t))
+
+    (defun my-nov-post-html-render-hook ()
+      (if (get-buffer-window)
+          (let ((max-width (pj-line-width))
+                buffer-read-only)
+            (save-excursion
+              (goto-char (point-min))
+              (while (not (eobp))
+                (when (not (looking-at "^[[:space:]]*$"))
+                  (goto-char (line-end-position))
+                  (when (> (shr-pixel-column) max-width)
+                    (goto-char (line-beginning-position))
+                    (pj-justify)))
+                (forward-line 1))))
+
+        (add-hook 'window-configuration-change-hook
+                  'my-nov-window-configuration-change-hook
+                  nil t)))
+
+    (add-hook 'nov-post-html-render-hook 'my-nov-post-html-render-hook))
+#+END_SRC
+
 * Version Control / Project Management [100%]
 My code project management is articulated around three key points: GIT, github/gist and =projectile=.
 GIT is used as the version control manager;
@@ -3714,8 +3761,8 @@ This part consists mainly of ensuring the packages are properly required and tha
              ("Git"
               (directory . ".git")
               (file . ".gitignore"))
-             ("PDF"
-              (extension . "pdf"))
+             ("Documents"
+              (extension "pdf" "epub" "doc" "docx" "odt"))
              ("LaTeX"
               (extension "tex" "bib"))
              ("Source"
