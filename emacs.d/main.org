@@ -4786,7 +4786,7 @@ This section provides three helper functions to connect/disconnect all my chatti
     (slack-ws-close)
 
     ;; Matrix
-    (ement-disconnect)
+    (call-interactively #'ement-disconnect)
 
     ;; Clean buffers
     (dolist (buf (buffer-list))
