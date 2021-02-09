@@ -3074,15 +3074,15 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
 
 * Version Control / Project Management [100%]
 My code project management is articulated around three key points: GIT, github/gist and =projectile=.
-GIT is used as the version control manager; 
-github for the non-sensitive repositories; 
-gist for snippets and helpers; 
+GIT is used as the version control manager;
+github for the non-sensitive repositories;
+gist for snippets and helpers;
 =projectile= to provide project helpers.
 
 ** DONE Git
 CLOSED: [2021-01-04 Mon 15:40]
 My configuration for GIT relies mainly on =magit=.
-Aside the standard key/hydra configuration, 
+Aside the standard key/hydra configuration,
 I copied the external opening from https://gist.github.com/dotemacs/9a0433341e75e01461c9
 and the pretty configuration is adapted from https://ekaschalk.github.io/post/pretty-magit/
 
@@ -4842,6 +4842,40 @@ I am using its extension =metal-archives-shopping-list= to maintain a list of re
     (add-to-list 'org-agenda-files metal-archives-shopping-list-target-file)
     (setq metal-archives-favorite-handle 'metal-archives-shopping-list-add-release-and-alert))
 #+end_src
+** DONE Youtube
+CLOSED: [2021-02-09 Tue 16:12]
+To access youtube from Emacs, I am using =ytdious= which is based on the invidious.
+It is connected to =youtube-dl= to download the video.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ytdious
+    :ensure t
+    :tags '("CONNECTED" "MULTIMEDIA")
+    :commands (ytdious)
+    :bind (("<C-f9>" . ytdious)
+           :map ytdious-mode-map
+           ("<return>" . ytdious-watch)
+           ("d"        . ytdious-download))
+    :custom (ytdious-sort-criterion 'upload_date)
+    :config
+    (setq  ytdious-invidious-api-url "https://invidious.tube")
+
+    (defun ytdious-download ()
+      "Download video at point"
+      (interactive)
+      (let* ((video (ytdious-get-current-video))
+             (id    (ytdious-video-id video)))
+        (youtube-dl (concat "https://www.youtube.com/watch?v=" id))))
+
+    (defun ytdious-watch ()
+      "Stream video at point in mpv."
+      (interactive)
+      (let* ((video (ytdious-get-current-video))
+             (id    (ytdious-video-id-fun video)))
+        (start-process "ytdious mpv" nil
+                       "mpv"
+                       (concat "https://www.youtube.com/watch?v=" id)))))
+#+END_SRC
 
 * Music
 I am playing music in Emacs using EMMS.
