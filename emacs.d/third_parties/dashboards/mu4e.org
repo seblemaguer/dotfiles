@@ -1,9 +1,9 @@
-* Mu for Emacs (mu4e)                                        *[[mu4e:flag:unread|%3d Unread][  0 Unread]]*
+* Mu for Emacs (mu4e)                                        *[[mu:flag:unread|%3d Unread][  0 Unread]]*
 
-[[mu4e:flag:unread][Unread]] /[[mu4e:flag:unread|(%5d)][(    0)]]/ .... [u]  [[mu4e:date:today..now][Today]]      /[[mu4e:date:today..now|(%5d)][(    0)]]/ ...... [t]  *Compose* ...... [C]
-[[mu4e:m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox][Inbox]]  /[[mu4e:m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox|(%5d)][(    0)]]/ .... [i]  [[mu4e:date:2d..today and not date:today..now][Yesterday]]  /[[mu4e:date:2d..today and not date:today..now|(%5d)][(    0)]]/ ...... [y]  *Update* ....... [U]
-[[mu4e:m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts][Drafts]] /[[mu4e:m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts|(%5d)][(    0)]]/ .... [d]  [[mu4e:date:7d..now][Last week]]  /[[mu4e:date:7d..now|(%5d)][(    0)]]/ ...... [w]  *Switch context* [;]
-[[mu4e:m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent][Sent]]   /[[mu4e:m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent|(%5d)][(    0)]]/ .... [s]  [[mu4e:date:4w..now][Last month]] /[[mu4e:date:4w..|(%5d)][(    0)]]/ ...... [m]  *Quit* ......... [q]
+[[mu:flag:unread][Unread]] /[[mu:flag:unread|(%5d)][(    0)]]/ .... [u]  [[mu:date:today..now][Today]]      /[[mu:date:today..now|(%5d)][(    0)]]/ ...... [t]  *Compose* ...... [C]
+[[mu:m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox][Inbox]]  /[[mu:m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox|(%5d)][(    0)]]/ .... [i]  [[mu:date:2d..today and not date:today..now][Yesterday]]  /[[mu:date:2d..today and not date:today..now|(%5d)][(    0)]]/ ...... [y]  *Update* ....... [U]
+[[mu:m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts][Drafts]] /[[mu:m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts|(%5d)][(    0)]]/ .... [d]  [[mu:date:7d..now][Last week]]  /[[mu:date:7d..now|(%5d)][(    0)]]/ ...... [w]  *Switch context* [;]
+[[mu:m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent][Sent]]   /[[mu:m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent|(%5d)][(    0)]]/ .... [s]  [[mu:date:4w..now][Last month]] /[[mu:date:4w..|(%5d)][(    0)]]/ ...... [m]  *Quit* ......... [q]
 
 * Queries
 
@@ -15,19 +15,19 @@ Type *C-c C-c* on the /CALL/ line below to evaluate your query.
 
 * Saved searches
 
-*[[mu4e:flag:flagged][Important]]   /[[mu4e:flag:flagged|(%5d)][(    0)]]/ ...... [[mu4e:flag:flagged||100][100]] - [[mu4e:flag:flagged||500][500]]*
-[[mu4e:flag:attach][Attachments]] /[[mu4e:flag:attach|(%5d)][(    0)]]/ ...... [[mu4e:flag:attach||99999][all]] - [[mu4e:size:10M..][>10M]]
-[[mu4e:flag:encrypted][Encrypted  ]] /[[mu4e:flag:encrypted|(%5d)][(    0)]]/ ...... [[mu4e:flag:encrypted||100][100]] - [[mu4e:flag:encrypted||500][500]]
+*[[mu:flag:flagged][Important]]   /[[mu:flag:flagged|(%5d)][(    0)]]/ ...... [[mu:flag:flagged||100][100]] - [[mu:flag:flagged||500][500]]*
+[[mu:flag:attach][Attachments]] /[[mu:flag:attach|(%5d)][(    0)]]/ ...... [[mu:flag:attach||99999][all]] - [[mu:size:10M..][>10M]]
+[[mu:flag:encrypted][Encrypted  ]] /[[mu:flag:encrypted|(%5d)][(    0)]]/ ...... [[mu:flag:encrypted||100][100]] - [[mu:flag:encrypted||500][500]]
 
 ** People
 
-[[mu4e:from:nharte@tcd.ie][Naomi Harte]] /[[mu4e:from:nharte@tcd.ie|(%4d)][(   0)]]/ ................................. [[mu4e:from:nharte@tcd.ie||100][100]] - [[mu4e:from:nharte@tcd.ie||500][500]] - [[mu4e:from:nharte@tcd.ie||9999][all]]
+[[mu:from:nharte@tcd.ie][Naomi Harte]] /[[mu:from:nharte@tcd.ie|(%4d)][(   0)]]/ ................................. [[mu:from:nharte@tcd.ie||100][100]] - [[mu:from:nharte@tcd.ie||500][500]] - [[mu:from:nharte@tcd.ie||9999][all]]
 
 ** Mailing lists
 
-[[mu4e:list:emacs-devel.gnu.org
-][Emacs development]] /[[mu4e:list:emacs-devel.gnu.org|(%4d)][(   0)]]/ ........................... [[mu4e:list:emacs-devel.gnu.org||100][100]] - [[mu4e:list:emacs-devel.gnu.org||500][500]] - [[mu4e:list:emacs-devel.gnu.org||9999][all]]
-[[mu4e:list:mu-discuss.googlegroups.com][Mu4e discussions]]  /[[mu4e:list:mu-discuss.googlegroups.com|(%4d)][(   0)]]/ ........................... [[mu4e:list:mu-discuss.googlegroups.com||100][100]] - [[mu4e:list:mu-discuss.googlegroups.com||500][500]] - [[mu4e:list:mu-discuss.googlegroups.com||9999][all]]
+[[mu:list:emacs-devel.gnu.org
+][Emacs development]] /[[mu:list:emacs-devel.gnu.org|(%4d)][(   0)]]/ ........................... [[mu:list:emacs-devel.gnu.org||100][100]] - [[mu:list:emacs-devel.gnu.org||500][500]] - [[mu:list:emacs-devel.gnu.org||9999][all]]
+[[mu:list:mu-discuss.googlegroups.com][Mu4e discussions]]  /[[mu:list:mu-discuss.googlegroups.com|(%4d)][(   0)]]/ ........................... [[mu:list:mu-discuss.googlegroups.com||100][100]] - [[mu:list:mu-discuss.googlegroups.com||500][500]] - [[mu:list:mu-discuss.googlegroups.com||9999][all]]
 
 ** SynSIG
 
@@ -57,13 +57,13 @@ Call [[elisp:mu4e-dashboard-deactivate][mu4e-dashboard-deactivate]] before editi
 #+END_SRC
 
 
-#+KEYMAP: S | mu4e-headers-search
-#+KEYMAP: u | mu4e-update-mail-and-index t
+#+KEYMAP: s | mu4e-headers-search
+#+KEYMAP: U | mu4e-update-mail-and-index t
 
-#+KEYMAP: U | mu4e-headers-search "flag:unread"
-#+KEYMAP: i | mu4e-headers-search "m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox"
-#+KEYMAP: d | mu4e-headers-search "m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts"
-#+KEYMAP: s | mu4e-headers-search "m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent"
+#+KEYMAP: u | mu4e-headers-search "flag:unread"
+#+KEYMAP: I | mu4e-headers-search "m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox"
+#+KEYMAP: D | mu4e-headers-search "m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts"
+#+KEYMAP: S | mu4e-headers-search "m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent"
 
 #+KEYMAP: t | mu4e-headers-search "date:today..now"
 #+KEYMAP: y | mu4e-headers-search "date:2d..today and not date:today..now"
@@ -74,4 +74,4 @@ Call [[elisp:mu4e-dashboard-deactivate][mu4e-dashboard-deactivate]] before editi
 #+KEYMAP: g | mu4e-dashboard-update
 #+KEYMAP: ; | mu4e-context-switch
 #+KEYMAP: E | mu4e-dashboard-edit
-#+KEYMAP: q | mu4e-dashboard-quit
+#+KEYMAP: q | kill-buffer

@@ -4412,13 +4412,12 @@ The dashboard is not on melpa but can be retrieved using straight.
       (interactive)
       (setq mu4e-dashboard--buf (find-file mu4e-dashboard-file))
       (with-current-buffer mu4e-dashboard--buf
-        (mu4e-dashboard-activate)))
+        (mu4e-dashboard-mode 1)))
 
     (defun mu4e-dashboard-edit ()
       "Edit dashboard."
       (interactive)
-      (setq buffer-read-only nil)
-      (org-mode)))
+      (mu4e-dashboard-mode 0)))
 #+END_SRC
 **** DONE Notification
 CLOSED: [2021-01-05 Tue 08:52]
