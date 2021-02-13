@@ -4882,7 +4882,7 @@ I am using its extension =metal-archives-shopping-list= to maintain a list of re
     (after-init . metal-archives-load-artists-map)
 
     :custom
-    (metal-archives-shopping-list-target-file (format "%s/perso/music/shopping_list.org" cloud-org-root-dir))
+    (metal-archives-shopping-list-target-file "~/Dropbox/shopping_list.org")
     (metal-archives-shopping-list-root-node "CD")
 
     :config
