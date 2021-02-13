@@ -192,3 +192,7 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/lemagues/.sdkman"
+[[ -s "/home/lemagues/.sdkman/bin/sdkman-init.sh" ]] && source "/home/lemagues/.sdkman/bin/sdkman-init.sh"
