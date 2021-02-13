@@ -4904,9 +4904,10 @@ It is connected to =youtube-dl= to download the video.
            ("<return>" . ytdious-watch)
            ("d"        . ytdious-download))
     :custom (ytdious-sort-criterion 'upload_date)
-    :config
-    (setq  ytdious-invidious-api-url "https://invidious.tube")
+    :init
+    (setq ytdious-invidious-api-url "https://invidious.tube")
 
+    :config
     (defun ytdious-download ()
       "Download video at point"
       (interactive)
