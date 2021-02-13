@@ -4925,6 +4925,19 @@ It is connected to =youtube-dl= to download the video.
                        (concat "https://www.youtube.com/watch?v=" id)))))
 #+END_SRC
 
+** DONE Download
+CLOSED: [2021-02-13 Sat 11:56]
+Aria2 provides an easy way to manage downloads (both direct and peer-to-peer).
+It requires =aria2c= to be available.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package aria2
+    :straight (aria2 :type git :host github :repo "seblemaguer/aria2")
+    :commands aria2-downloads-list
+    :tags '("CONNECTED"))
+#+END_SRC
+
+
 * Music
 I am playing music in Emacs using EMMS.
 The default configuration is already satisfying but I prefered to tweak a couple of part to make it more useable.
