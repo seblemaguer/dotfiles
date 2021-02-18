@@ -2006,6 +2006,7 @@ I also use =flycheck-posframe= to have a quick idea of what is going on at the p
 
   (use-package flycheck-posframe
     :ensure t
+    :disabled t
     :tags '("CORE" "UI")
     :after flycheck
     :hook (flycheck-mode . flycheck-posframe-mode)
