@@ -1836,6 +1836,7 @@ It is a nice extension to =selectrum= which brings to functionalities close to t
     (setq consult-narrow-key "<"
           consult-config `((consult-theme  :preview-key nil)
                            (consult-buffer :preview-key ,(kbd "M-p"))
+                           (consult-recent-file :preview-key ,(kbd "M-p"))
                            (consult-line   :preview-key (list ,(kbd "<S-down>") ,(kbd "<S-up>"))))
           consult-view-open-function #'bookmark-jump
           consult-view-list-function #'bookmark-view-names))
