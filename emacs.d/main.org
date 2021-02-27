@@ -957,6 +957,19 @@ To do so, I am relying the package =org-checklist= which is provided by =org-plu
     :tags '("ORG"))
 #+END_SRC
 
+*** DONE Helpers
+CLOSED: [2021-02-27 Sat 08:38]
+I am using =org-menu= to provide a helper menu to edit org files.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-menu
+    :straight (org-menu :type git :host github :repo "sheijk/org-menu")
+    :tags '("ORG")
+    :after org
+    :bind (:map org-mode-map
+                ("C-c m" . org-menu)))
+#+END_SRC
+
 ** DONE Export [100%]
 CLOSED: [2021-01-03 Sun 13:47]
 This section focuses on configuring the export of org files to some document format.
