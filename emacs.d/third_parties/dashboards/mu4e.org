@@ -61,14 +61,17 @@ Call [[elisp:mu4e-dashboard-deactivate][mu4e-dashboard-deactivate]] before editi
 #+KEYMAP: U | mu4e-update-mail-and-index t
 
 #+KEYMAP: u | mu4e-headers-search "flag:unread"
-#+KEYMAP: I | mu4e-headers-search "m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox"
+#+KEYMAP: i | mu4e-headers-search "m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox"
 #+KEYMAP: D | mu4e-headers-search "m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts"
 #+KEYMAP: S | mu4e-headers-search "m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent"
 
-#+KEYMAP: t | mu4e-headers-search "date:today..now"
-#+KEYMAP: y | mu4e-headers-search "date:2d..today and not date:today..now"
-#+KEYMAP: w | mu4e-headers-search "date:7d..now"
-#+KEYMAP: m | mu4e-headers-search "date:4w..now"
+#+KEYMAP: t | mu4e-headers-search "m:/TCD/inbox"
+#+KEYMAP: a | mu4e-headers-search "m:/AdaptGmail/inbox"
+
+#+KEYMAP: T | mu4e-headers-search "date:today..now"
+#+KEYMAP: Y | mu4e-headers-search "date:2d..today and not date:today..now"
+#+KEYMAP: W | mu4e-headers-search "date:7d..now"
+#+KEYMAP: M | mu4e-headers-search "date:4w..now"
 
 #+KEYMAP: C | mu4e-compose-new
 #+KEYMAP: g | mu4e-dashboard-update
