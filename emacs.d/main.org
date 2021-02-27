@@ -4109,6 +4109,9 @@ I also redesigned the header buffer.
     :tags '("CONNECTED" "MAIL")
     :commands (mu4e)
     :load-path "~/environment/local/share/emacs/site-lisp/mu4e"
+    :hook
+    (after-init . (lambda () (mu4e t)))
+
     :pretty-hydra
     ((:color blue :hint nil)
      ("General"
