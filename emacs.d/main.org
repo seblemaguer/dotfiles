@@ -3018,13 +3018,27 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     (pdf-view-mode-hook . pdf-view-restore-mode))
 #+end_src
 
-*** Grepping
+*** DONE Grepping
+CLOSED: [2021-03-01 Mon 09:45]
+I use =pdfgrep= to be able to search inside the pdf document.
+
 #+begin_src emacs-lisp
   (use-package pdfgrep
-      :tags '("DOCUMENT" "DESKTOP")
+    :tags '("DOCUMENT" "DESKTOP")
     :config
     (pdfgrep-mode))
 #+end_src
+
+*** DONE Connection with org-mode
+CLOSED: [2021-03-01 Mon 09:47]
+PDF files and org-mode are strongly related.
+I use =org-pdftools= to add an org link type for =pdftools=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-pdftools
+    :tags '("DOCUMENT" "DESKTOP" "ORG")
+    :hook (org-mode . org-pdftools-setup-link))
+#+END_SRC
 
 ** DONE Epub
 CLOSED: [2021-02-09 Tue 16:15]
