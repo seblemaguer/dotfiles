@@ -498,6 +498,29 @@ This leads to ensuring the package =vlf= with the use-package header defined to 
     :init (setq vlf-application 'dont-ask))
 #+end_src
 
+** DONE Navigation
+CLOSED: [2021-03-01 Mon 09:27]
+To have a better scrolling/navigation, I rely on two packages =fast-scroll and =goto-last-point=.
+=fast-scroll= disables some hooks while scrolling and therefore makes it smoother.
+=goto-last-point= enables me to go back to the position before the move happened.
+
+#+begin_src emacs-lisp
+  (use-package fast-scroll
+    :tags '("CORE" "NAVIGATION")
+    :hook
+    (fast-scroll-start      . (lambda () (flycheck-mode -1)))
+    (fast-scroll-end        . (lambda () (flycheck-mode 1)))
+
+    :config
+    (fast-scroll-config)
+    (fast-scroll-mode 1))
+
+  (use-package goto-last-point
+    :tags '("CORE" "NAVIGATION")
+    :bind ("C-<" . goto-last-point)
+    :hook (after-init . goto-last-point-mode))
+#+end_src
+
 * Session [100%]
 As I am using emacs as a daemon/client combination,
 my daily routine consists of opening emacs at the beginning of work and switching it off on the evening.
@@ -1783,14 +1806,7 @@ It is a nice extension to =selectrum= which brings to functionalities close to t
            ("C-x r x"  . consult-register)
            ("C-x r b"  . consult-bookmark)
            ("C-x C-r"  . consult-recent-file)
-           ("M-g g"    . consult-goto-line)
-           ("M-g M-g"  . consult-goto-line)
-           ("M-g o"    . consult-outline)     ;; "M-s o" is a good alternative.
-           ("M-g l"    . consult-line)        ;; "M-s l" is a good alternative.
-           ("M-g m"    . consult-mark)        ;; I recommend to bind Consult navigation
-           ("M-g k"    . consult-global-mark) ;; commands under the "M-g" prefix.
-           ("M-g i"    . consult-imenu)
-           ("M-g e"    . consult-error)
+           ("M-g"      . consult-goto-line)
            ("M-s m"    . consult-multi-occur)
            ("M-y"      . consult-yank-pop))
 
