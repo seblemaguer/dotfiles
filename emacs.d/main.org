@@ -337,6 +337,22 @@ I am using it as the entry point of any documentation I want to access.
            ("C-h h" . helpful-at-point)))
 #+end_src
 
+*** DONE Man
+CLOSED: [2021-03-01 Mon 09:28]
+Man is critical for document on unix.
+I simply configured emacs to add my own environment man directories.
+
+#+begin_src emacs-lisp
+  (use-package man
+    :tags '("CORE" "DOCUMENTATION")
+    :config
+    (setq Man-notify-method 'pushy
+          woman-manpath `("/usr/share/man/" "/usr/local/man/" ;; System
+                          ,(format "%s/local/man" user-emacs-directory) ;; Private environment
+                          ,(format "~/environment/local/share/man")
+                          )))
+#+end_src
+
 ** DONE Buffer listing
 CLOSED: [2021-01-03 Sun 11:24]
 Buffer listing is the fundamental navigation tool.
