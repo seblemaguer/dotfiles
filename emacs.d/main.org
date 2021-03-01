@@ -2562,6 +2562,22 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
         (modern-sh-mode))))
 #+end_src
 
+*** DONE Plotting/Graphing
+CLOSED: [2021-03-01 Mon 09:39]
+I tend to use some specific languages to do some plotting.
+For now, I am using only ~graphivz/DOT~ and ~tikz/pgf~.
+This last one is configured on the latex part.
+Therefore, in this section, I add the support of =graphviz-dot-mode=.
+
+#+begin_src emacs-lisp
+  (use-package graphviz-dot-mode
+    :tags '("PROGRAMMING" "PLOTTING")
+    :init
+    (defvar default-tab-width nil)
+
+    :mode ("\\.dot\\'"))
+#+end_src
+
 * Writing / Reading [100%]
 I decided to dissociate programming and writing for more clarity.
 Nonetheless, both sections rely on the same principles.
