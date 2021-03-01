@@ -5354,6 +5354,21 @@ This is functionality is provided by =visual-fill-column=.
     :tags '("VISUAL"))
 #+END_SRC
 
+*** DONE Indentation
+CLOSED: [2021-03-01 Mon 09:17]
+When I am programming, I like seeing clearly at which indentation level I am.
+To see this, I am using =highlight-indent-guides=.
+Its configuration is pretty standard except I prefer the ~column~ method to the ~fill~ one.
+
+#+begin_src emacs-lisp
+  (use-package highlight-indent-guides
+    :tags '("VISUAL")
+    :hook
+    (prog-mode . highlight-indent-guides-mode)
+    :config
+    (setq highlight-indent-guides-method 'column))
+#+end_src
+
 *** DONE Diff
 CLOSED: [2021-01-05 Tue 12:34]
 Due to the amount of modifications, I like having indicators which are reminding me what has been changed.
