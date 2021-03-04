@@ -2492,7 +2492,7 @@ Python is my main programming language, so the one I configured the most intensi
 I strongly rely on LSP and the Microsoft ~pyright~ server.
 I prefer to use ~ipython~ as the interpreter as it is more powerful.
 I also added support =ein= to have a REPL environment.
-Finally, I use =sphinx-mode= to deal with the documentation.
+Finally, I use =numpydoc= to deal with the documentation.
 
 #+begin_src emacs-lisp
   (use-package python
@@ -2525,10 +2525,9 @@ Finally, I use =sphinx-mode= to deal with the documentation.
 
     (setq ein:query-timeout 1000))
 
-  (use-package sphinx-doc
+  (use-package numpydoc
     :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
-    :hook
-    (python-mode . (lambda () (sphinx-doc-mode t))))
+    :after python)
 #+end_src
 
 *** DONE Shell
