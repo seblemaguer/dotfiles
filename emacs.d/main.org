@@ -4260,7 +4260,7 @@ I also redesigned the header buffer.
     :custom
     ;; File management
     (mu4e-maildir "~/mail")
-    (mu4e-attachment-dir "~/Downloads")
+    (mu4e-attachment-dir "~/Downloads/")
     (mu4e-change-filenames-when-moving t)
 
     ;; User interaction
