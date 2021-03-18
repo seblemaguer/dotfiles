@@ -4873,104 +4873,107 @@ I also tweaked the cache and some rendering part as I have a lot of files to nav
 Finally, I activated the browser and assigned the multimedia keys to be understood directly by EMMS.
 
 #+begin_src emacs-lisp
-   (use-package emms
-     :tags '("MULTIMEDIA" "MUSIC")
-     :commands (emms emms-browse-by-artist)
-     :bind
-     (("<f5>"            . emms-browse-by-artist)
-      ("S-<f5>"          . emms-playlist-mode-go)
-      ("<XF86AudioPlay>" . emms-pause)
-      ("<XF86AudioStop>" . emms-stop)
-      ("<XF86AudioPrev>" . emms-previous)
-      ("<XF86AudioNext>" . emms-next))
+  (use-package emms
+    :tags '("MULTIMEDIA" "MUSIC")
+    :commands (emms emms-browse-by-artist)
+    :bind
+    (("<f5>"            . emms-browse-by-artist)
+     ("S-<f5>"          . emms-playlist-mode-go)
+     ("<XF86AudioPlay>" . emms-pause)
+     ("<XF86AudioStop>" . emms-stop)
+     ("<XF86AudioPrev>" . emms-previous)
+     ("<XF86AudioNext>" . emms-next))
 
-     :config
-     (emms-all)
+    :config
+    (emms-all)
 
-     ;; Use mpv player
-     (setq emms-player-list '(emms-player-mpv))
+    ;; Use mpv player
+    (setq emms-player-list '(emms-player-mpv))
 
-     ;; A minor macos adaptation
-     (when (eq system-type 'darwin)
-       (setq emms-source-file-gnu-find "/usr/local/bin/gfind"))
+    ;; A minor macos adaptation
+    (when (eq system-type 'darwin)
+      (setq emms-source-file-gnu-find "/usr/local/bin/gfind"))
 
-     ;; Some behaviour definition
-     (setq later-do-interval 0.0001
-           emms-directory (concat user-emacs-directory "emms")
-           emms-playlist-buffer-name "*Music*"
-           emms-source-file-default-directory (expand-file-name "~/Music")
-           emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find
-           emms-show-format "NP: %s"
-           emms-playlist-default-major-mode 'emms-playlist-mode
-           emms-repeat-playlist t
-           emms-mode-line-mode-line-function nil  ;; Don't want any info in the mode line
-           emms-mode-line-titlebar-function 'emms-mode-line-playlist-current) ;; Put info in the titlebar
+    ;; Some behaviour definition
+    (setq later-do-interval 0.0001
+          emms-directory (concat user-emacs-directory "emms")
+          emms-playlist-buffer-name "*Music*"
+          emms-source-file-default-directory (expand-file-name "~/Music")
+          emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find
+          emms-show-format "NP: %s"
+          emms-playlist-default-major-mode 'emms-playlist-mode
+          emms-repeat-playlist t
+          emms-mode-line-mode-line-function nil  ;; Don't want any info in the mode line
+          emms-mode-line-titlebar-function 'emms-mode-line-playlist-current) ;; Put info in the titlebar
 
-     ;; Visualisation activation/deactivation
-     (emms-mode-line nil)
-     (setq emms-playing-time-display-format " [♪ %s]")
-     ;; (emms-playing-time-disable-display)
+    ;; Visualisation activation/deactivation
+    (emms-mode-line nil)
+    (setq emms-playing-time-display-format " [♪ %s]")
+    ;; (emms-playing-time-disable-display)
 
-     ;; Enable cache
-     (when (fboundp 'emms-cache)
-       (emms-cache 1))
+    ;; Enable cache
+    (when (fboundp 'emms-cache)
+      (emms-cache 1))
 
-     ;; Adapt track description format
-     (defun track-description (track)
-       "Return a description of the current TRACK."
-       (if (and (emms-track-get track 'info-artist)
-                (emms-track-get track 'info-title))
-           (let ((pmin (emms-track-get track 'info-playing-time-min))
-                 (psec (emms-track-get track 'info-playing-time-sec))
-                 (ptot (emms-track-get track 'info-playing-time))
-                 (art  (emms-track-get track 'info-artist))
-                 (tit  (emms-track-get track 'info-title))
-                 (alb  (emms-track-get track 'info-album)))
-             (cond ((and pmin psec) (format "%s - %s - %s [%02d:%02d]" art alb tit pmin psec))
-                   (ptot (format  "%s - %s - %s [%02d:%02d]" art alb tit (/ ptot 60) (% ptot 60)))
-                   (t (emms-track-simple-description track))))
-         (emms-track-simple-description track)))
-     (setq emms-track-description-function 'track-description)
+    ;; Adapt track description format
+    (defun track-description (track)
+      "Return a description of the current TRACK."
+      (if (and (emms-track-get track 'info-artist)
+               (emms-track-get track 'info-title))
+          (let ((pmin (emms-track-get track 'info-playing-time-min))
+                (psec (emms-track-get track 'info-playing-time-sec))
+                (ptot (emms-track-get track 'info-playing-time))
+                (art  (emms-track-get track 'info-artist))
+                (tit  (emms-track-get track 'info-title))
+                (alb  (emms-track-get track 'info-album)))
+            (message "Pmin = %S" pmin)
+            (cond ((and pmin psec) (format "%s - %s - %s [%02d:%02d]" art alb tit pmin psec))
+                  (ptot (format  "%s - %s - %s [%02d:%02d]" art alb tit (/ ptot 60) (% ptot 60)))
+                  (t (emms-track-simple-description track))))
+        (progn
+          (message "wtf?!!!")
+          (emms-track-simple-description track))))
+    (setq emms-track-description-function 'track-description)
 
-     ;; taken from http://emacs.stackexchange.com/questions/21747/emms-how-can-i-have-a-progress-bar?rq=1
-     (defun emms-indicate-seek (_sec)
-       "Show the progress bar when seek."
-       (let* ((total-playing-time (emms-track-get
-                                   (emms-playlist-current-selected-track)
-                                   'info-playing-time))
-              (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
-         (with-temp-message (format "[%-100s] %2d%% ([%02d:%02d]/[%02d:%02d])"
-                                    (make-string elapsed/total ?=)
-                                    elapsed/total
-                                    (/ emms-playing-time 60) (% emms-playing-time 60)
-                                    (/ total-playing-time 60) (% total-playing-time 60))
-           (sit-for 2))))
-     (add-hook 'emms-player-seeked-functions #'emms-indicate-seek 'append))
+    ;; taken from http://emacs.stackexchange.com/questions/21747/emms-how-can-i-have-a-progress-bar?rq=1
+    (defun emms-indicate-seek (_sec)
+      "Show the progress bar when seek."
+      (let* ((total-playing-time (emms-track-get
+                                  (emms-playlist-current-selected-track)
+                                  'info-playing-time))
+             (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
+        (with-temp-message (format "[%-100s] %2d%% ([%02d:%02d]/[%02d:%02d])"
+                                   (make-string elapsed/total ?=)
+                                   elapsed/total
+                                   (/ emms-playing-time 60) (% emms-playing-time 60)
+                                   (/ total-playing-time 60) (% total-playing-time 60))
+          (sit-for 2))))
+    (add-hook 'emms-player-seeked-functions #'emms-indicate-seek 'append))
 
-   (use-package emms-info-libtag
-     :straight nil
-     :requires (emms)
-     :tags '("MULTIMEDIA" "MUSIC")
-     :config
+  (use-package emms-info-libtag
+    :straight nil
+    :requires (emms)
+    :tags '("MULTIMEDIA" "MUSIC")
+    :config
 
-     (setq emms-info-asynchronously nil
-           emms-info-functions '(emms-info-libtag)))
+    (setq emms-info-asynchronously nil
+          emms-info-functions '(emms-info-libtag)))
 
-   (use-package emms-browser
-     :straight nil
-     :requires (emms)
-     :tags '("MULTIMEDIA" "MUSIC")
-     :hook
-     (emms-browser-show-display . (lambda () (hl-line-mode 1)))
+  (use-package emms-browser
+    :straight nil
+    :requires (emms)
+    :tags '("MULTIMEDIA" "MUSIC")
+    :hook
+    (emms-browser-show-display . (lambda () (hl-line-mode 1)))
 
-     :config
-     (emms-browser-make-filter "all-files" (emms-browser-filter-only-type 'file))
+    :config
+    (emms-browser-make-filter "all-files" (emms-browser-filter-only-type 'file))
 
-     (setq emms-browser-info-artist-format "%i☢ %n"
-           emms-browser-info-album-format "%i%cS [%y] %n"
-           emms-browser-info-title-format "%i♪ %T. %t [%d]"
-           emms-browser-playlist-info-album-format "%cS %a - %A : "
-           emms-browser-playlist-info-title-format "%T. %t [%d]"))
+    (setq emms-browser-info-artist-format "%i☢ %n"
+          emms-browser-info-album-format "%i%cS [%y] %n"
+          emms-browser-info-title-format "%i♪ %T. %t [%d]"
+          emms-browser-playlist-info-album-format "%cS %a - %A : "
+          emms-browser-playlist-info-title-format "%T. %t [%d]"))
 #+end_src
 
 * Emacs and the rest of the world [100%]
