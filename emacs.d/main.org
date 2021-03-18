@@ -3307,6 +3307,28 @@ I also added a hack to avoi hanging issues because of tramp (see https://github.
 #+begin_src emacs-lisp
   (use-package projectile
     :tags '("PROJECT")
+    :pretty-hydra
+    ((:color teal :hint nil :title "PROJECTILE: %(projectile-project-root)")
+     ("Find File"
+      (("d"   projectile-find-dir "Find dir")
+       ("s-f" projectile-find-file "Find file")
+       ("ff"  projectile-find-file-dwim "File dwim")
+       ("fd"  projectile-find-file-in-directory "Find file in directory")
+       ("r"   projectile-recentf "Recentf"))
+
+      "Search/Tags"
+      (("a"   projectile-ag "Ag chairs")
+       ("o"   projectile-multi-occur "Multi-occur"))
+
+      "Buffers"
+      (("K"   projectile-kill-buffers "Kill buffers"))
+
+      "Cache"
+      (("p"   projectile-switch-project "Switch to project")
+       ("x"   projectile-remove-known-project "Remove known project")
+       ("X"   projectile-cleanup-known-projects "Clean known projects")
+       ("z"   projectile-cache-current-file "Cache current file"))))
+
     :config
 
     ;; Global configuration
