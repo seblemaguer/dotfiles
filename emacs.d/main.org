@@ -2275,8 +2275,30 @@ I also use =yaml-tomato= to get the path at the current point which helps the ac
       (s-count-matches "[ ]\\{2\\}" (match-string 0)))
 
     (defun yaml-mode-outline-hook ()
+      "See https://github.com/yoshiki/yaml-mode/issues/25#issuecomment-792833669"
       (outline-minor-mode)
-      (setq outline-regexp "^\\([ ]\\{2\\}\\)*\\([-] \\)?\\([\"][^\"]*[\"]\\|[a-zA-Z0-9_-]*\\): *\\([>|]\\|&[a-zA-Z0-9_-]*\\)?$")
+      (setq outline-regexp
+            (rx
+             (seq
+              bol
+              (group (zero-or-more "  ")
+                     (or (group
+                          (seq (or (seq "\"" (*? (not (in "\"" "\n"))) "\"")
+                                   (seq "'" (*? (not (in "'" "\n"))) "'")
+                                   (*? (not (in ":" "\n"))))
+                               ":"
+                               (?? (seq
+                                    (*? " ")
+                                    (or (seq "&" (one-or-more nonl))
+                                        (seq ">-")
+                                        (seq "|"))
+                                    eol))))
+                         (group (seq
+                                 "- "
+                                 (+ (not (in ":" "\n")))
+                                 ":"
+                                 (+ nonl)
+                                 eol)))))))
       (setq outline-level 'yaml-outline-level)))
 
   (use-package yaml-tomato
