@@ -4295,14 +4295,19 @@ I also redesigned the header buffer.
 
     :bind
     (:map mu4e-headers-mode-map
-     ("|" . mu4e-view-pipe)
-     ("." . mu4e-hydra/body)
+          ("<tab>"     . mu4e-headers-toggle-at-point)
+          ("<left>"    . mu4e-headers-fold-at-point)
+          ("<S-left>"  . mu4e-headers-fold-all)
+          ("<right>"   . mu4e-headers-unfold-at-point)
+          ("<S-right>" . mu4e-headers-unfold-all)
+          ("|" . mu4e-view-pipe)
+          ("." . mu4e-hydra/body)
 
-     :map mu4e-main-mode-map
-     ("u" . mu4e-update-mail-and-index)
+          :map mu4e-main-mode-map
+          ("u" . mu4e-update-mail-and-index)
 
-     :map message-mode-map
-     ("C-c C-a" . mail-add-attachment))
+          :map message-mode-map
+          ("C-c C-a" . mail-add-attachment))
 
     :custom
     ;; File management
@@ -4328,12 +4333,6 @@ I also redesigned the header buffer.
     ;; headers
     (mu4e-headers-date-format "%a %d %b %Y")
     (mu4e-headers-time-format "%H:%M:%S")
-    (mu4e-headers-fields      '((:human-date    .  18)
-                                (:size          .   6)
-                                (:flags         .   6)
-                                (:mailing-list  . 10)
-                                (:from          .  22)
-                                (:subject       .  nil)))
 
     :config
     (defun mu4e-eaf-wrapper (msg)
@@ -4400,6 +4399,22 @@ I also redesigned the header buffer.
           'face 'font-lock-builtin-face))
         (:size (mu4e-display-size val))
         (t (mu4e~headers-custom-field msg field)))))
+
+  (use-package mu4e-thread-folding
+    :straight (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
+    :tags '("CONNECTED" "MAIL")
+    :config
+    (add-to-list 'mu4e-header-info-custom
+                 '(:empty . (:name "Empty"
+                                   :shortname ""
+                                   :function (lambda (msg) "  "))))
+    (setq mu4e-headers-fields  '((:empty         .    2)
+                                 (:human-date    .   18)
+                                 (:size          .    6)
+                                 (:flags         .    6)
+                                 (:mailing-list  .   10)
+                                 (:from          .   22)
+                                 (:subject       .  nil))))
 
   (use-package mu4e-context
     :straight nil
