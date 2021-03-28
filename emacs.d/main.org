@@ -4166,7 +4166,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
     (defun format-hook-message ()
       "Specify some formatting rules for email message writing."
       ;; (set-fill-column 100)
-      (footnode-mode t)
+      (footnote-mode t)
       (auto-fill-mode 0)
       (visual-fill-column-mode)
       (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
