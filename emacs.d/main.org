@@ -2038,7 +2038,7 @@ For now it consists of simply removing any trailing whitespace.
 
 * Programming [100%]
 Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
-To do so, I rely mainly on Language Server Protocol (LSP).
+To do so, I rely mainly on Language Server Protocol (LSP) and for the debugging I relay on the Debug Adapter Protocol (DAP).
 
 ** DONE LSP general configuration
 CLOSED: [2021-01-03 Sun 21:28]
@@ -2105,6 +2105,34 @@ I also override some default parameters to make the experience more appealing.
           lsp-ui-sideline-show-diagnostics nil
           lsp-ui-sideline-ignore-duplicate t))
 #+end_src
+
+** DONE DAP general configuration
+CLOSED: [2021-04-06 Tue 08:13]
+The default configuration of =dap-mode= is too "heavy" for me.
+I generally need the variables and the REPL buffer.
+The rest can be activated manually later.
+Finally, I reduced the height of the REPL buffer at the start of the debug session.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package dap-mode
+    :tags '("IDE" "PROGRAMMING" "LSP")
+    :config
+    ;; Disable control (I don't like it)
+    (dap-ui-controls-mode 0)
+
+    ;; Reduce the features to the repl and the local variable information
+    (setq dap-auto-configure-features '(locals repl))
+
+    ;; Redefine the height of the repl buffer
+    (setq dap-ui-buffer-configurations
+          `((,dap-ui--locals-buffer . ((side . right) (slot . 1) (window-width . 0.20)))
+            (,dap-ui--expressions-buffer . ((side . right) (slot . 2) (window-width . 0.20)))
+            (,dap-ui--sessions-buffer . ((side . right) (slot . 3) (window-width . 0.20)))
+            (,dap-ui--breakpoints-buffer . ((side . left) (slot . 2) (window-width . ,treemacs-width)))
+            (,dap-ui--debug-window-buffer . ((side . bottom) (slot . 3) (window-width . 0.20)))
+            (,dap-ui--repl-buffer . ((side . bottom) (slot . 1) (window-height . 0.20))))))
+
+#+END_SRC
 
 ** DONE Data [100%]
 CLOSED: [2021-01-03 Sun 21:49]
@@ -2538,8 +2566,11 @@ Finally, I use =numpydoc= to deal with the documentation.
     :commands (lsp lsp-deferred)
     :tags '("PROGRAMMING" "PYTHON" "LSP")
     :hook (python-mode . (lambda ()
-                            (require 'lsp-pyright)
-                            (lsp))))
+                           (require 'lsp-pyright)
+                           (require 'dap-python)
+                            (lsp)))
+    :custom
+    (dap-python-debugger 'debugpy))
 
   (use-package ein
     :tags '("PROGRAMMING" "PYTHON" "REPL")
