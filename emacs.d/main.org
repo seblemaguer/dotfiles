@@ -361,6 +361,10 @@ This choice has been made due its the simplicity and its recursive nature.
 =bufler= is used in conjunction with =prism= is assumed to be loaded later.
 
 #+begin_src emacs-lisp
+  ;; NOTE: added here to hijacck the built-in project
+  (use-package project
+    :straight (project :type git :host github :repo "emacsmirror/project"))
+
   (use-package bufler
     :tags '("CORE" "BUFFER")
     :bind (("C-x C-b" . bufler)
@@ -3420,165 +3424,42 @@ I also added a hack to avoi hanging issues because of tramp (see https://github.
 #+end_src
 
 * Shell [100%]
-My use of shell is kind of anarchic.
-I alternate between zsh and emacs internal shell (eshell).
-Because I use eshell regularly, I spend some time to configure it in details.
-The main part of the configuration is coming from https://github.com/jcf/emacs.d.
-The rest has been adapted from http://www.modernemacs.com/post/custom-eshell/.
+Sometimes I need to start a terminal inside Emacs (not only for geekery-purposes).
+To do so, I rely now on =vterm= coupled with zsh.
+I have a specific PowerLevel10K theme for emacs vterm which is more compact (see my zshrc configuration).
 
-#+begin_src emacs-lisp
-  (use-package eshell
-    :demand
-    :tags '("ESHELL")
-    :hook
-    (eshell-mode .  (lambda ()
-                      (define-key eshell-mode-map
-                        [remap eshell-pcomplete]
-                        'helm-esh-pcomplete)
-                      (define-key eshell-mode-map
-                        (kbd "M-p")
-                        'helm-eshell-history)
-                      (eshell/export "NODE_NO_READLINE=1")))
-    (eshell-exit . (lambda () (setq esh-prompt-num 0)))
-
-    :functions (eshell/pwd)
-
+#+BEGIN_SRC emacs-lisp
+  (use-package vterm
+    :tags '("TERM")
     :config
-    ;; Define helpers for prompts
-    (defmacro with-face (STR &rest PROPS)
-      "Return STR propertized with PROPS."
-      `(propertize ,STR 'face (list ,@PROPS)))
+    ;; Cleaning
+    (setq vterm-kill-buffer-on-exit t)
 
-    (defmacro esh-section (NAME ICON FORM &rest PROPS)
-      "Build eshell section NAME with ICON prepended to evaled FORM with PROPS."
-      `(setq ,NAME
-             (lambda () (when ,FORM
-                          (-> ,ICON
-                              (concat esh-section-delim ,FORM)
-                              (with-face ,@PROPS))))))
+    ;; Function keys are not used in therm
+    (mapcar (lambda (key)
+              (define-key vterm-mode-map (kbd key) nil))
+            '("<f1>" "<f2>" "<f3>" "<f4>" "<f5>" "<f6>"
+              "<f7>" "<f8>" "<f9>" "<f10>" "<f11>" "<f12>"
+              "<prior>" "<next>"))
 
-    (defun esh-acc (acc x)
-      "Accumulator for evaluating and concatenating esh-sections."
-      (--if-let (funcall x)
-          (if (s-blank? acc)
-              it
-            (concat acc esh-sep it))
-        acc))
+    ;; Better directory tracking
+    (push (list "update-pwd" (lambda (path) (setq default-directory path)))
+          vterm-eval-cmds)
 
-    (defun esh-prompt-func ()
-      "Build `eshell-prompt-function'"
-      (concat esh-header
-              (-reduce-from 'esh-acc "" eshell-funcs)
-              "\n"
-              eshell-prompt-string))
+    ;; Opening file in emacs directly
+    (push (list "find-file-below"
+                (lambda (path)
+                  (if-let* ((buf (find-file-noselect path))
+                            (window (display-buffer-below-selected buf nil)))
+                      (select-window window)
+                    (message "Failed to open file: %s" path))))
+          vterm-eval-cmds))
 
-    (esh-section esh-dir
-                 "\xf07c"  ;  (faicon folder)
-                 (abbreviate-file-name (eshell/pwd))
-                 '(:foreground "blue" :weight ultra-bold :underline t))
-
-    (esh-section esh-git
-                 "\xe907"  ;  (git icon)
-                 (magit-get-current-branch)
-                 '(:foreground "red"))
-
-    (esh-section esh-clock
-                 "\xf017"  ;  (clock icon)
-                 (format-time-string "%H:%M" (current-time))
-                 '(:foreground "forest green"))
-
-    ;; Below I implement a "prompt number" section
-    (setq esh-prompt-num 0)
-    (advice-add 'eshell-send-input :before
-                (lambda (&rest args) (setq esh-prompt-num (incf esh-prompt-num))))
-
-    (esh-section esh-num
-                 "\xf0c9"  ;  (list icon)
-                 (number-to-string esh-prompt-num)
-                 '(:foreground "brown"))
-
-    (setq esh-sep " | " ; "  "  or " | " ;; Separator between esh-sections
-          esh-section-delim " " ;; Separator between an esh-section icon and form
-          esh-header "\n " ;; Eshell prompt header
-
-          ;; Eshell prompt regexp and string. Unless you are varying the prompt by eg.
-          ;; your login, these can be the same.
-          eshell-prompt-regexp "[^└]└─> "
-          eshell-prompt-string "└─> "
-
-          eshell-funcs (list esh-dir esh-git esh-clock esh-num) ;; Choose which eshell-funcs to enable
-          eshell-prompt-function 'esh-prompt-func ;; Enable the new eshell prompt
-          )
-
-    ;; ;; If I ever want my own eshell/foo commands overwrite real commands ...
-    ;; (setq eshell-prefer-lisp-functions t)
-
-    ;; Helpers
-    (defun eshell/clear ()
-      "Clear the eshell buffer."
-      (let ((inhibit-read-only t))
-        (erase-buffer)
-        (eshell-send-input)))
-
-    (defun clipboard/set (astring)
-      "Copy a string to clipboard"
-      (with-temp-buffer
-        (insert astring)
-        (clipboard-kill-region (point-min) (point-max))))
-
-    (defun eshell/copy-pwd ()
-      "Copy current directory to clipboard "
-      (clipboard/set (eshell/pwd)))
-
-    (defun eshell/copy-fpath (fname)
-      "Copy file name with full path to clipboard "
-      (let ((fpath (concat (eshell/pwd) "/" fname)))
-        (clipboard/set fpath)
-        (concat "Copied path: " fpath)))
-    )
-#+end_src
-
-** DONE Some extensions
-CLOSED: [2021-01-04 Mon 18:20]
-The builtin =eshell= package provides enough information to be used.
-Nonetheless, adding some complementary packages helps to have a better UX.
-For now, I restrict this to some visualuation helpers (=eshell-fringe-status= & =eshell-syntax-highlighting=) and some completion helpers (=fish-completion=).
-I also prefer to toggle the shell as I generally use it for quick commands.
-For this, I use the =eshell-toggle= package.
-
-#+begin_src emacs-lisp
-  (use-package eshell-fringe-status
-    :tags '("ESHELL" "ESHELL_EXTENSION")
-    :hook
-    (eshell-mode . eshell-fringe-status-mode))
-
-  (use-package fish-completion
-    :tags '("ESHELL" "ESHELL_EXTENSION")
-    :config
-    (global-fish-completion-mode))
-
-  (use-package eshell-toggle
-    :straight
-    (eshell-toggle :repo "4DA/eshell-toggle" :type git :host github :version original)
-    :tags '("ESHELL" "ESHELL_EXTENSION")
-    :functions (eshell-toggle-init-eshell)
-    :custom
-    (eshell-toggle-size-fraction 3)
-    (eshell-toggle-use-projectile-root t)
-    (eshell-toggle-run-command nil)
-    (eshell-toggle-init-function #'eshell-toggle-init-eshell)
-
+  (use-package multi-vterm
+    :tags '("TERM")
     :bind
-    ("<f6>" . eshell-toggle))
-
-  (use-package eshell-outline
-    :tags '("ESHELL" "ESHELL_EXTENSION")
-    :hook (eshell-mode . eshell-outline-mode))
-
-  (use-package eshell-syntax-highlighting
-    :tags '("ESHELL" "ESHELL_EXTENSION")
-    :hook (eshell-mode . eshell-syntax-highlighting-mode))
-#+end_src
+    ("<f6>" . multi-vterm))
+#+END_SRC
 
 * File manager [100%]
 I am using emacs as my main file manager.
