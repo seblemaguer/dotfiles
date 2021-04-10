@@ -185,6 +185,14 @@ then
         vterm_printf "51;E$vterm_elisp"
     }
 
+    open_file_below() {
+        vterm_cmd find-file-below "$(realpath "${@:-.}")"
+    }
+
+    vterm_set_directory() {
+        vterm_cmd update-pwd "$PWD/"
+    }
+
     alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
 
     if [[ -n ${EMACS_VTERM_PATH} ]] && \
