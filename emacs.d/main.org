@@ -5193,7 +5193,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 #+begin_src emacs-lisp
   (use-package tramp
-    :defer t
+    :straight (:type built-in)
     :tags '("SYSTEM" "SERVER" "CONNECTED")
     :custom (tramp-default-method "ssh"
              password-cache-expiry 60
