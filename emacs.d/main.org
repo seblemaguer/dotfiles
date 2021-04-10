@@ -5560,8 +5560,7 @@ It deals with:
       ("p"   projectile-hydra/body "Projectile"))
 
      "Version Control"
-     (("m"   magit-hydra/body "Magit")
-      ("t"   show-my-travis-projects "Travis"))
+     (("m"   magit-hydra/body "Magit"))
 
      "Checking/Notes"
      (("f"   fic-view-listing "Fixme listing")
