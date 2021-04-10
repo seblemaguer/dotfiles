@@ -2096,8 +2096,8 @@ I also override some default parameters to make the experience more appealing.
     :config
     (setq lsp-ui-doc-enable t
           lsp-ui-doc-use-webkit nil
-          lsp-ui-doc-delay 1.0
-          lsp-ui-sideline-delay 1.0
+          lsp-ui-doc-delay 10000.0
+          lsp-ui-sideline-delay 10000.0
           lsp-ui-doc-include-signature t
           lsp-ui-doc-position 'at-point
           lsp-eldoc-enable-hover nil ; Disable eldoc displays in minibuffer
