@@ -4986,6 +4986,26 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
     (when (fboundp 'emms-cache)
       (emms-cache 1))
 
+    ;; Define routine to update cache without adding tracks to the playlist
+    (defun emms-cache-update (dir)
+      "Routine to update the cache without updating any playlist -either DIR, or the value of
+    `emms-source-file-default-directory'."
+      (interactive (list
+                    (emms-read-directory-name "Play directory tree: "
+                                              (emms-source-file-directory-hint)
+                                              emms-source-file-default-directory
+                                              t)))
+      (let ((files (emms-source-file-directory-tree (expand-file-name dir)
+                                                    (emms-source-file-regex)))
+            (case-fold-search nil))
+        (with-current-emms-playlist
+          (point-max)
+          (mapc (lambda (file)
+                  (unless (or (string-match emms-source-file-exclude-regexp file)
+                              (gethash file emms-cache-db))
+                    (emms-track 'file file)))
+                files))))
+
     ;; Adapt track description format
     (defun track-description (track)
       "Return a description of the current TRACK."
@@ -4997,12 +5017,10 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
                 (art  (emms-track-get track 'info-artist))
                 (tit  (emms-track-get track 'info-title))
                 (alb  (emms-track-get track 'info-album)))
-            (message "Pmin = %S" pmin)
             (cond ((and pmin psec) (format "%s - %s - %s [%02d:%02d]" art alb tit pmin psec))
                   (ptot (format  "%s - %s - %s [%02d:%02d]" art alb tit (/ ptot 60) (% ptot 60)))
                   (t (emms-track-simple-description track))))
         (progn
-          (message "wtf?!!!")
           (emms-track-simple-description track))))
     (setq emms-track-description-function 'track-description)
 
@@ -5029,6 +5047,13 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 
     (setq emms-info-asynchronously nil
           emms-info-functions '(emms-info-libtag)))
+
+  (use-package emms-info-native
+    :straight nil
+    :requires (emms)
+    :tags '("MULTIMEDIA" "MUSIC")
+    :init
+    (add-to-list 'emms-info-functions 'emms-info-native))
 
   (use-package emms-browser
     :straight nil
