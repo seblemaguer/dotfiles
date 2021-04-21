@@ -948,31 +948,30 @@ Jupyter is more powerful than the default python management which is why I chose
 
     ;; Define the list of languages to load
     (org-babel-do-load-languages 'org-babel-load-languages
-                                 '((emacs-lisp . t)
-                                   (dot        . t)
-                                   (ditaa      . t)
-                                   (R          . t)
-                                   (ruby       . t)
-                                   (gnuplot    . t)
-                                   (clojure    . t)
-                                   (shell      . t)
-                                   (ledger     . t)
-                                   (org        . t)
-                                   (plantuml   . t)
-                                   (latex      . t)
-                                   (python     . t)
-                                   (jupyter    . t)))          ; must be last
+				 '((emacs-lisp . t)
+				   (dot        . t)
+				   (ditaa      . t)
+				   (R          . t)
+				   (ruby       . t)
+				   (gnuplot    . t)
+				   (clojure    . t)
+				   (shell      . t)
+				   (ledger     . t)
+				   (org        . t)
+				   (plantuml   . t)
+				   (latex      . t)
+				   (python     . t)))          ; must be last
 
     ;; Predefine header considering
     (setq org-babel-default-header-args:sh      '((:results . "output replace"))
-          org-babel-default-header-args:bash    '((:results . "output replace"))
-          org-babel-default-header-args:shell   '((:results . "output replace"))
-          org-babel-default-header-args:jpython '((:async . "yes")
-                                                  (:session . "py")))
+	  org-babel-default-header-args:bash    '((:results . "output replace"))
+	  org-babel-default-header-args:shell   '((:results . "output replace"))
+	  org-babel-default-header-args:python '((:async . "yes")
+						  (:session . "py")))
 
     ;; Define pathes for some tools
     (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar"
-          org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"))
+	  org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"))
 
 
 #+end_src
