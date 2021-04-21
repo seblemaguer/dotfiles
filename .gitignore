@@ -5,6 +5,7 @@ config/
 emacs.d/*
 !emacs.d/third_parties
 !emacs.d/plugins
+*.elc
 
 # htop part
 system/htoprc

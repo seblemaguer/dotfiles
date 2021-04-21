@@ -135,12 +135,12 @@
 
   ;; Change current level if this one is upper
   (when (> prio sauron-mode-line-current-level)
-    (setq sauron-mode-line-current-level prio))
+    (setq sauron-mode-line-current-level prio)))
 
-  (unless (plist-get props :from-alert)
-    (progn
-      (set-text-properties 0 (length msg) nil msg)
-      (message "%S: %s" origin msg))))
+  ;; (unless (plist-get props :from-alert)
+  ;;   (progn
+  ;;     (set-text-properties 0 (length msg) nil msg)
+  ;;     (message "%S: %s" origin msg))))
 
 (alert-define-style 'sauron-mode-line-style
                      :title "Sauron/flashing mode line style"

@@ -53,6 +53,7 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
 # Cluster aliases
+alias msinfo='sinfo -o "%25N %.3a %.9P %10c  %10m  %25f  %20G %10l %50E"'
 alias msqueue='squeue -o "%.8i %.9P %.20j %.8u %.8T %.10M %.12l %.8C %.15b %.15R"'
 alias check_queue="msqueue | sed 's/[ \t]\+/ /g' | cut -d' ' -f5,6,10 | sed 's/:.*//g' | sort | uniq -c | grep -v 'USER STATE' | sed 's/^[ ]*//g' | sort -h"
 
@@ -192,3 +193,7 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/lemagues/.sdkman"
+[[ -s "/home/lemagues/.sdkman/bin/sdkman-init.sh" ]] && source "/home/lemagues/.sdkman/bin/sdkman-init.sh"

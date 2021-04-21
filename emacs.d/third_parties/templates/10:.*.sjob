@@ -23,7 +23,10 @@
 #SBATCH --mail-user=lemagues@tcd.ie    # Address to notify the end of the job
 
 ${4:# == GPU section
-#SBATCH --gres=gpu:rtx2080ti:1         # GPU Allocation info following the format gpu[:<device>]:<number of devices>}
+#SBATCH --gres=gpu:rtx2080ti:1         # GPU Allocation info following the format gpu[:<device>]:<number of devices>
+
+# log some GPU usage/utilisation
+nvidia-smi dmon -o DT -s um -f ${SLURM_JOB_NAME}-${SLURM_JOB_ID}-smi.log &}
 
 ######################################################################################################
 ## Actual command

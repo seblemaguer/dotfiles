@@ -25,7 +25,7 @@ export TERM="xterm-256color"
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 ########################################################################################
@@ -40,7 +40,7 @@ fi
 # Load Antigen
 export ANTIGEN="$HOME/.antigen/"
 if [[ ! -d $ANTIGEN ]]; then
-  git clone https://github.com/zsh-users/antigen.git $ANTIGEN
+    git clone https://github.com/zsh-users/antigen.git $ANTIGEN
 fi
 source $ANTIGEN/antigen.zsh
 
@@ -157,10 +157,62 @@ HIST_SAVE_NO_DUPS=true
 # = Diverse
 AUTO_CD=true
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.config/zsh/p10k.zsh ]] || source ~/.config/zsh/p10k.zsh
+########################################################################################
+#### Emacs/Vterm specifics
+########################################################################################
 
-# >>> conda initialize >>>
+if [[ "$INSIDE_EMACS" = 'vterm' ]]
+then
+    vterm_printf(){
+        if [ -n "$TMUX" ] && ([ "${TERM%%-*}" = "tmux" ] || [ "${TERM%%-*}" = "screen" ] ); then
+            # Tell tmux to pass the escape sequences through
+            printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+        elif [ "${TERM%%-*}" = "screen" ]; then
+            # GNU screen (screen, screen-256color, screen-256color-bce)
+            printf "\eP\e]%s\007\e\\" "$1"
+        else
+            printf "\e]%s\e\\" "$1"
+        fi
+    }
+
+    vterm_cmd() {
+        local vterm_elisp
+        vterm_elisp=""
+        while [ $# -gt 0 ]; do
+            vterm_elisp="$vterm_elisp""$(printf '"%s" ' "$(printf "%s" "$1" | sed -e 's|\\|\\\\|g' -e 's|"|\\"|g')")"
+            shift
+        done
+        vterm_printf "51;E$vterm_elisp"
+    }
+
+    open_file_below() {
+        vterm_cmd find-file-below "$(realpath "${@:-.}")"
+    }
+
+    vterm_set_directory() {
+        vterm_cmd update-pwd "$PWD/"
+    }
+
+    alias clear='vterm_printf "51;Evterm-clear-scrollback";tput clear'
+
+    if [[ -n ${EMACS_VTERM_PATH} ]] && \
+        [[ -f ${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh ]]
+    then
+        source ${EMACS_VTERM_PATH}/etc/emacs-vterm-bash.sh
+    fi
+
+    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+    [[ ! -f ~/.config/zsh/emacs_p10k.zsh ]] || source ~/.config/zsh/emacs_p10k.zsh
+else
+    # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+    [[ ! -f ~/.config/zsh/default_p10k.zsh ]] || source ~/.config/zsh/default_p10k.zsh
+fi
+
+########################################################################################
+#### Environment toolks
+########################################################################################
+
+## Conda
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/lemagues/environment/local/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
@@ -175,3 +227,6 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+## SDKMAN
+export SDKMAN_DIR="/home/lemagues/.sdkman"
+[[ -s "/home/lemagues/.sdkman/bin/sdkman-init.sh" ]] && source "/home/lemagues/.sdkman/bin/sdkman-init.sh"

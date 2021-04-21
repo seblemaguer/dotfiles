@@ -1,0 +1,80 @@
+* Mu for Emacs (mu4e)                                        *[[mu:flag:unread|%3d Unread][  0 Unread]]*
+
+[[mu:flag:unread][Unread]] /[[mu:flag:unread|(%5d)][(    0)]]/ .... [u]  [[mu:date:today..now][Today]]      /[[mu:date:today..now|(%5d)][(    0)]]/ ...... [t]  *Compose* ...... [C]
+[[mu:m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox][Inbox]]  /[[mu:m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox|(%5d)][(    0)]]/ .... [i]  [[mu:date:2d..today and not date:today..now][Yesterday]]  /[[mu:date:2d..today and not date:today..now|(%5d)][(    0)]]/ ...... [y]  *Update* ....... [U]
+[[mu:m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts][Drafts]] /[[mu:m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts|(%5d)][(    0)]]/ .... [d]  [[mu:date:7d..now][Last week]]  /[[mu:date:7d..now|(%5d)][(    0)]]/ ...... [w]  *Switch context* [;]
+[[mu:m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent][Sent]]   /[[mu:m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent|(%5d)][(    0)]]/ .... [s]  [[mu:date:4w..now][Last month]] /[[mu:date:4w..|(%5d)][(    0)]]/ ...... [m]  *Quit* ......... [q]
+
+* Queries
+
+Type *C-c C-c* on the /CALL/ line below to evaluate your query.
+*NOTE*: dashboard needs to be deactivated first
+
+#+CALL: query("flag:unread", 5)
+#+RESULTS:
+
+* Saved searches
+
+*[[mu:flag:flagged][Important]]   /[[mu:flag:flagged|(%5d)][(    0)]]/ ...... [[mu:flag:flagged||100][100]] - [[mu:flag:flagged||500][500]]*
+[[mu:flag:attach][Attachments]] /[[mu:flag:attach|(%5d)][(    0)]]/ ...... [[mu:flag:attach||99999][all]] - [[mu:size:10M..][>10M]]
+[[mu:flag:encrypted][Encrypted  ]] /[[mu:flag:encrypted|(%5d)][(    0)]]/ ...... [[mu:flag:encrypted||100][100]] - [[mu:flag:encrypted||500][500]]
+
+** People
+
+[[mu:from:nharte@tcd.ie][Naomi Harte]] /[[mu:from:nharte@tcd.ie|(%4d)][(   0)]]/ ................................. [[mu:from:nharte@tcd.ie||100][100]] - [[mu:from:nharte@tcd.ie||500][500]] - [[mu:from:nharte@tcd.ie||9999][all]]
+
+** Mailing lists
+
+[[mu:list:emacs-devel.gnu.org
+][Emacs development]] /[[mu:list:emacs-devel.gnu.org|(%4d)][(   0)]]/ ........................... [[mu:list:emacs-devel.gnu.org||100][100]] - [[mu:list:emacs-devel.gnu.org||500][500]] - [[mu:list:emacs-devel.gnu.org||9999][all]]
+[[mu:list:mu-discuss.googlegroups.com][Mu4e discussions]]  /[[mu:list:mu-discuss.googlegroups.com|(%4d)][(   0)]]/ ........................... [[mu:list:mu-discuss.googlegroups.com||100][100]] - [[mu:list:mu-discuss.googlegroups.com||500][500]] - [[mu:list:mu-discuss.googlegroups.com||9999][all]]
+
+** SynSIG
+
+
+* Information
+
+*Database*  : ~/.cache/mu/xapian
+*Maildir*   : ~/Mail
+*Addresses* : [[mailto:lemagues@tcd.ie][<lemagues@tcd.ie>]] /(TCD)/
+            [[mailto:sebastien.lemaguer@adaptcentre.ie][<sebastien.lemaguer@adaptcentre.ie>]] /(ADAPTCentre)/
+            [[mailto:seb.lemaguer@gmail.com][<seb.lemaguer@gmail.com>]] /(gmail)/
+
+* Configuration
+:PROPERTIES:
+:VISIBILITY: hideall
+:END:
+
+Call [[elisp:mu4e-dashboard-activate][mu4e-dashboard-activate]] to activate automatic update and key bindings.
+Call [[elisp:mu4e-dashboard-deactivate][mu4e-dashboard-deactivate]] before editing the dashboard
+
+#+STARTUP: showall showstars indent
+
+#+NAME: query
+#+BEGIN_SRC sh :results list raw :var query="flag:unread" count=5
+  export LANG="en_US.UTF-8"; export LC_ALL="en_US.UTF-8";
+  mu find -n $count --sortfield=date --reverse --fields "f s" $query
+#+END_SRC
+
+
+#+KEYMAP: s | mu4e-headers-search
+#+KEYMAP: U | mu4e-update-mail-and-index t
+
+#+KEYMAP: u | mu4e-headers-search "flag:unread"
+#+KEYMAP: i | mu4e-headers-search "m:/TCD/inbox or m:/SebGmail/inbox or m:/AdaptGmail/inbox"
+#+KEYMAP: d | mu4e-headers-search "m:/TCD/drafts or m:/SebGmail/drafts or m:/AdaptGmail/drafts or m:/drafts"
+#+KEYMAP: S | mu4e-headers-search "m:/TCD/sent or m:/SebGmail/sent or m:/AdaptGmail/sent"
+
+#+KEYMAP: T | mu4e-headers-search "m:/TCD/inbox"
+#+KEYMAP: A | mu4e-headers-search "m:/AdaptGmail/inbox"
+
+#+KEYMAP: t | mu4e-headers-search "date:today..now"
+#+KEYMAP: y | mu4e-headers-search "date:2d..today and not date:today..now"
+#+KEYMAP: w | mu4e-headers-search "date:7d..now"
+#+KEYMAP: m | mu4e-headers-search "date:4w..now"
+
+#+KEYMAP: C | mu4e-compose-new
+#+KEYMAP: g | mu4e-dashboard-update
+#+KEYMAP: ; | mu4e-context-switch
+#+KEYMAP: E | mu4e-dashboard-edit
+#+KEYMAP: q | kill-buffer
