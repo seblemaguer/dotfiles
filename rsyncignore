@@ -232,3 +232,5 @@ ViberDownloads
 .emacs.d/.cask
 .local/lib
 maildir
+
+__pycache__/
