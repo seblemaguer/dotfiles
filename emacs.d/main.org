@@ -1184,7 +1184,7 @@ The only important bits are:
                                             ,(format "%s/third_parties/icons/wrench.png" user-emacs-directory)
                                             nil nil :ascent center)
 
-                                           ("[Ex]pe\\(riment\\)s?"
+                                           ("[Ee]xpe\\(riment\\)s?"
                                             ,(format "%s/third_parties/icons/expes.png" user-emacs-directory)
                                             nil nil :ascent center)
 
