@@ -180,7 +180,7 @@ The specification respects the following syntax:
     :straight (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
     :config
     (setq use-package-tags-enabled
-          `(("lemagues-surface" . ("ALL" "!MUSIC"))
+          `(("lemagues-surface" . ("ALL" "!MUSIC" "!MAIL"))
             ("sig201"           . ("ALL"))
             ("mackenzie"        . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
             (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
