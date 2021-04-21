@@ -1682,6 +1682,7 @@ CLOSED: [2021-01-03 Sun 17:42]
 In this section, only the global configuration of =company= is provided.
 The configuration associated with each language is done separately and is, as much as possible, buffer local.
 I also use =company-quickhelp= to provide the description of the current candidate.
+I finally use =company-box= to have a better view of the category of the candidates.
 
 #+begin_src emacs-lisp
   (use-package company
@@ -1704,6 +1705,12 @@ I also use =company-quickhelp= to provide the description of the current candida
     :tags '("COMPLETION" "UI")
     :config
     (company-quickhelp-mode 1))
+
+
+  (use-package company-box
+    :after company
+    :tags '("COMPLETION" "UI")
+    :hook (company-mode . company-box-mode))
 #+end_src
 
 *** DONE Selectrum
