@@ -137,6 +137,9 @@ In this section, we are configuring =straight=.
 Therefore, there is no extra-configuration for this to do.
 
  #+begin_src emacs-lisp
+   ;; Save up some time
+   (setq straight-check-for-modifications nil)
+
    (defvar bootstrap-version)
    (let ((bootstrap-file
           (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
