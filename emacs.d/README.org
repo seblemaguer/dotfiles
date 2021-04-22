@@ -95,15 +95,15 @@ CLOSED: [2021-01-03 Sun 10:46]
 :FROM:     https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
 :END:
 This section defines two functions:
-one to generate the emacs init file from =~/.emacs.d/main.org= and one to byte-compile the emacs init file.
+one to generate the emacs init file from =~/.emacs.d/README.org= and one to byte-compile the emacs init file.
 
 #+begin_src emacs-lisp
-  (defun tangle-main-org ()
-    "Tangle ~/.emacs.d/main.org to ~/.emacs.d/init.el."
+  (defun tangle-main-config ()
+    "Tangle ~/.emacs.d/README.org to ~/.emacs.d/init.el."
     (interactive)
 
     ;; Tangle to init.el
-    (with-current-buffer (find-file (concat user-emacs-directory "main.org"))
+    (with-current-buffer (find-file (concat user-emacs-directory "README.org"))
       (org-babel-tangle))
 
     ;; byte-compile plugins
@@ -113,7 +113,7 @@ one to generate the emacs init file from =~/.emacs.d/main.org= and one to byte-c
     "Byte compiles ~/.emacs.d/init.el."
     (interactive)
     (when (equal (buffer-name)
-                 (concat "main.org"))
+                 (concat "README.org"))
       ;; Recompile init file
       (byte-compile-disable-warning  'make-local) ;; NOTE: apparently people says this warning is simply wrong, so ignore it!
       (byte-recompile-file (format "%s/init.el" user-emacs-directory) t 0 nil)))
