@@ -7,13 +7,13 @@ ln -s $PWD/emacs.d $HOME/.emacs.d
 ls -l $HOME/.emacs.d
 
 # Tangling
-echo "Attempting to tangle main.org..."
+echo "Attempting to tangle README.org..."
 ${EMACS:=emacs} -Q --batch --eval "
     (progn
       (require 'ob-tangle)
       (dolist (file command-line-args-left)
         (with-current-buffer (find-file-noselect file)
-          (org-babel-tangle))))" "~/.emacs.d/main.org"
+          (org-babel-tangle))))" "~/.emacs.d/README.org"
 
 # Loading
 echo "Attempting to startup..."
