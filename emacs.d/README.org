@@ -5045,6 +5045,9 @@ In addition, =eaf= is installed externally as it requires additional compilation
 As for =mu4e=, my environment scripts are taking care of the compilation.
 
 #+begin_src emacs-lisp
+  (use-package epc
+    :tags '("DESKTOP"))
+
   (use-package eaf
     :straight nil
     :tags '("DESKTOP")
