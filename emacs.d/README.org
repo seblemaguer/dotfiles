@@ -4725,7 +4725,6 @@ As it requires more investigation, I disabled this packaged for now.
 #+begin_src emacs-lisp
   (use-package md4rd
     :tags '("CONNECTED" "EXCHANGE" "REDDIT")
-    :disabled t
     :pretty-hydra
     ((:color blue :hint none)
      ("Basic"
