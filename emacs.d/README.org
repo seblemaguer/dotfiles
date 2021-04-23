@@ -4723,6 +4723,10 @@ However, there is currently a bug with the hierarchy package which is not embedd
 As it requires more investigation, I disabled this packaged for now.
 
 #+begin_src emacs-lisp
+  ;; Not automatically loaded by md4rd
+  (use-package tree-mode
+    :tags '("CONNECTED" "EXCHANGE" "REDDIT"))
+
   (use-package md4rd
     :tags '("CONNECTED" "EXCHANGE" "REDDIT")
     :pretty-hydra
