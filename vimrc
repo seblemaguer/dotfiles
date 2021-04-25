@@ -114,7 +114,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'vimwiki/vimwiki'
 
 "Theme "
-Plugin 'john2x/flatui.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 
@@ -186,8 +185,8 @@ set novisualbell
 set t_vb=
 set tm=500
 
-set number
-highlight LineNr ctermbg=blue ctermfg=gray
+" set number
+" highlight LineNr ctermbg=blue ctermfg=gray
 
 set cc=+1
 set listchars=nbsp:¬,eol:¶,tab:>-,extends:»,precedes:«,trail:•
@@ -196,7 +195,7 @@ set listchars=nbsp:¬,eol:¶,tab:>-,extends:»,precedes:«,trail:•
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 syntax enable "Enable syntax hl"
-:silent! color flatui
+:silent! color ice-age
 
 set t_Co=256
 
@@ -405,7 +404,7 @@ endtry
 """"""""""""""""""""""""""""""
 set laststatus=2
 let g:airline_powerline_fonts=1
-let g:airline_theme='luna'
+let g:airline_theme='cobalt2'
 let g:airline#extensions#tabline#enabled = 1
 
 
