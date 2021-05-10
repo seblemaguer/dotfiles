@@ -5055,7 +5055,17 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
   (use-package eaf
     :straight nil
     :tags '("DESKTOP")
-    :load-path "~/environment/src/20-tools/emacs/emacs-application-framework/emacs-application-framework")
+    :load-path "~/environment/src/20-tools/emacs/emacs-application-framework/emacs-application-framework"
+    :custom
+    (eaf-browser-continue-where-left-off t)
+    (eaf-pdf-extension-list '("xps" "oxps" "cbz" "epub" "fb2" "fbz"))
+
+    :config
+    (eaf-setq eaf-browser-enable-adblocker "true")
+    (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+    (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+    (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
 #+end_src
 
 ** DONE Emacs and the system [100%]
