@@ -1493,14 +1493,15 @@ To have an overview of what is going on, I am using =org-dashboard=.
 #+end_src
 
 ** DONE Roaming
-CLOSED: [2021-01-03 Sun 15:20]
+CLOSED: [2021-05-18 Tue 16:52]
 I am using =org-roam= to link all the informations I save and archive in org files.
 To visualize everything, I am using =org-roam-server= which is spawning a webserver.
 The visualization is more fancy and the graph is auto-organized which makes everything easier to read.
+Finally, I also use =vulpea= for note taking.
 
 #+begin_src emacs-lisp
   (use-package org-roam
-    :tags '("ORG")
+    :tags '("ORG" "USER")
     :hook
     (after-init . org-roam-mode)
 
@@ -1516,6 +1517,11 @@ The visualization is more fancy and the graph is auto-organized which makes ever
 
   (use-package org-roam-server
     :tags '("ORG" "USER" "DESKTOP"))
+
+  (use-package vulpea
+    :tags '("ORG" "USER")
+    :hook
+    (after-init . vulpea-setup))
 #+end_src
 
 ** DONE Accessing
