@@ -2759,9 +2759,10 @@ The configuration consists mainly of pluging it into auctex and expand the citat
 #+end_src
 
 *** DONE Completion
-CLOSED: [2021-01-04 Mon 12:00]
+CLOSED: [2021-05-18 Tue 16:53]
 For the completion, I need to prepare some proper hook for =company=.
 I use two packages =company-auctex= which provides the enhancement of auctex and =company-reftex= which provides a proper completion support for references.
+I also uses =company-ipa= to have a better integration of phonetic symbols.
 
 #+begin_src emacs-lisp
   (setq TeX-auto-global (format "%s/auctex/style" user-emacs-directory))
@@ -2786,6 +2787,18 @@ I use two packages =company-auctex= which provides the enhancement of auctex and
     (defun company-reftex-hook ()
       (make-local-variable 'company-backends)
       (set 'company-backends (append '(company-reftex-labels company-reftex-citations) company-backends))))
+
+
+    (use-package company-ipa
+      :tags '("WRITING" "COMPLETION")
+      :hook
+      (LaTeX-mode . company-ipa-hook)
+
+      :init
+      (defun company-ipa-hook ()
+        (make-local-variable 'company-backends)
+        (add-to-list 'company-backends 'company-ipa-symbols-unicode)))
+
 #+end_src
 
 *** DONE Compilation
