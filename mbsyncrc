@@ -6,7 +6,7 @@
 
 # Fsync no
 CopyArrivalDate yes # Force the date base on the file date when push
-Create Slave
+Create Near
 Sync All
 Expunge Both
 SyncState *
@@ -32,13 +32,13 @@ Inbox ~/mail/HikoGmail/INBOX
 SubFolders Legacy
 
 Channel HikoGmail-inbox
-Master :HikoGmail-remote:
-Slave :HikoGmail-local:
+Far :HikoGmail-remote:
+Near :HikoGmail-local:
 Patterns "INBOX" "Deleted Items"
 
 Channel HikoGmail-sent
-Master :HikoGmail-remote:"[Gmail]/Messages envoy&AOk-s"
-Slave :HikoGmail-local:"Sent"
+Far :HikoGmail-remote:"[Gmail]/Messages envoy&AOk-s"
+Near :HikoGmail-local:"Sent"
 
 Group HikoGmail
 Channel HikoGmail-inbox
@@ -63,13 +63,13 @@ Path ~/mail/SebGmail/
 Inbox ~/mail/SebGmail/INBOX
 
 Channel SebGmail-inbox
-Master :SebGmail-remote:
-Slave :SebGmail-local:
+Far :SebGmail-remote:
+Near :SebGmail-local:
 Patterns "INBOX"
 
 Channel SebGmail-sent
-Master :SebGmail-remote:"[Gmail]/Messages envoy&AOk-s"
-Slave :SebGmail-local:"Sent"
+Far :SebGmail-remote:"[Gmail]/Messages envoy&AOk-s"
+Near :SebGmail-local:"Sent"
 
 Group SebGmail
 Channel SebGmail-inbox
@@ -99,17 +99,17 @@ Path ~/mail/AdaptGmail/
 Inbox ~/mail/AdaptGmail/INBOX
 
 Channel AdaptGmail-inbox
-Master :AdaptGmail-remote:
-Slave :AdaptGmail-local:
+Far :AdaptGmail-remote:
+Near :AdaptGmail-local:
 Patterns "INBOX"
 
 Channel AdaptGmail-sent
-Master :AdaptGmail-remote:"[Gmail]/Sent Mail"
-Slave :AdaptGmail-local:sent
+Far :AdaptGmail-remote:"[Gmail]/Sent Mail"
+Near :AdaptGmail-local:sent
 
 Channel AdaptGmail-trash
-Master :AdaptGmail-remote:"[Gmail]/Trash"
-Slave :AdaptGmail-local:trash
+Far :AdaptGmail-remote:"[Gmail]/Trash"
+Near :AdaptGmail-local:trash
 
 Group AdaptGmail
 Channel AdaptGmail-inbox
@@ -139,8 +139,8 @@ Inbox ~/mail/TCD/INBOX
 SubFolders Legacy
 
 Channel TCD
-Master :TCD-remote:
-Slave :TCD-local:
+Far :TCD-remote:
+Near :TCD-local:
 Patterns "INBOX" "Deleted Items" "Sent Items"
 
 # ======================================================================================
@@ -167,6 +167,6 @@ Inbox ~/mail/Saarland/INBOX
 SubFolders Legacy
 
 Channel Saarland
-Master :Saarland-remote:
-Slave :Saarland-local:
+Far :Saarland-remote:
+Near :Saarland-local:
 Patterns "INBOX" *
