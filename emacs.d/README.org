@@ -34,9 +34,18 @@ We also provide a helper to shutdown properly the server.
 * Core [100%]
 This section focuses on providing helpers and utilities required for the rest of the configuration.
 
-** DONE Fundamentals [100%]
+** DONE Fundamentals [75%]
 CLOSED: [2021-01-03 Sun 10:46]
 This section define the fundamental variables and helpers which are recurrently used in the configuration.
+
+*** TODO Deal with warning issues in "nativecomp"
+Emacs 28 supports native compilation, but it creates a lot of warnings.
+I preferred to disable the report while waiting for a better solution.
+
+#+BEGIN_SRC emacs-lisp
+  (when (>= emacs-major-version 28)
+    (setq comp-async-report-warnings-errors nil))
+#+END_SRC
 
 *** DONE Define some important variables
 CLOSED: [2021-01-03 Sun 10:39]
