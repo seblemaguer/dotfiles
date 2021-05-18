@@ -2993,7 +2993,7 @@ As a fallback, I am using google-translate via the package =go-translate=.
 #+end_src
 
 ** DONE PDF
-CLOSED: [2021-01-04 Mon 12:57]
+CLOSED: [2021-05-18 Tue 16:53]
 Visualizing PDF files in Emacs is quite useful.
 I am using =pdf-tools= which provides a lot of functionalities.
 The configuration consists mainly of providing proper keyboard based controls using =hydra=.
@@ -3001,6 +3001,7 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
 
 #+begin_src emacs-lisp
   (use-package pdf-tools
+    :straight (pdf-tools :type git :host github :repo "vedang/pdf-tools")
     :tags '("DOCUMENT" "DESKTOP")
     :functions
     (pdf-history-backward
@@ -3112,6 +3113,9 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     :tags '("DOCUMENT" "DESKTOP")
     :hook
     (pdf-view-mode-hook . pdf-view-restore-mode))
+
+  (use-package diffpdf
+    :tags '("DOCUMENT" "DESKTOP"))
 #+end_src
 
 *** DONE Grepping
