@@ -119,7 +119,7 @@
   (alert2sauron info))
 
 
-(defun sauron-mode-line-notifier-from-sauron (origin prio msg props)
+(defun sauron-mode-line-notifier-from-sauron (_ prio _ _)
   "Alert mode-line flashing style notifier."
 
   ;; First time => copy the current mode line face
