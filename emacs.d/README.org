@@ -260,7 +260,7 @@ the upstream has some priority issues with ERC; I would like to ignore some even
                                    :repo "seblemaguer/sauron"
                                    :branch "functional"))
     :tags '("CORE" "NOTIFICATION")
-    :commands (sauron-start-hidden)
+    :commands (sauron-start-hidden sauron-add-event)
 
     :config
     (defun sauron-keep-priority (msg props)
