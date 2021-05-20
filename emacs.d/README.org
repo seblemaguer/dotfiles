@@ -2921,17 +2921,13 @@ CLOSED: [2021-01-04 Mon 12:22]
 Markdown is the main language used to write READMEs in collaborative projects.
 While I prefer it org-mode, I still have to use it for collaborative purposes.
 Consequently, I have to get a proper configuration.
-Luckily, =markdown-mode= and =markdown-mode+= provide more than enough.
+Luckily, =markdown-mode= provide more than enough.
 I just added =grip-mode= to have a proper preview of the file.
 
 #+begin_src emacs-lisp
   (use-package markdown-mode
     :tags '("WRITING" "MARKDOWN")
     :mode ("\\.md$"))
-
-  (use-package markdown-mode+
-    :tags '("WRITING" "MARKDOWN")
-    :after markdown-mode)
 
   (use-package grip-mode
     :tags '("WRITING" "MARKDOWN" "DESKTOP")
