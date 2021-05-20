@@ -793,7 +793,7 @@ While it is mainly a programming/writing language, it involves too many subparts
 ** DONE Global
 CLOSED: [2021-01-03 Sun 12:42]
 This section defines the global configuration for =org-mode=.
-First, it actually relies on =org-plus-contrib=, especially for the bibtex support.
+First, it actually relies on =org-contrib=, especially for the bibtex support.
 Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywords:
   - =CANCELLED= and =POSTPONED= for task which can't be done for whatever reason;
   - =WAITING= for tasks which are blocked by an external event;
@@ -813,7 +813,7 @@ Finally, some keywords are there for note purposes:
 
 #+begin_src emacs-lisp
   (use-package org
-    :straight org-plus-contrib
+    :straight org-contrib
     :tags '("ORG")
     :config
 
@@ -950,7 +950,7 @@ Jupyter is more powerful than the default python management which is why I chose
     (org-babel-jupyter-override-src-block "python"))
 
   (use-package ob
-    :straight org-plus-contrib
+    :straight org-contrib
     :tags '("ORG")
     :config
 
@@ -1003,11 +1003,11 @@ This package aims to provide an equivalent to the "auctex/reftex" label generati
 CLOSED: [2021-01-03 Sun 13:55]
 I am using checklist regularly.
 Consequently, adding its support in org-mode is a big advantage.
-To do so, I am relying the package =org-checklist= which is provided by =org-plus-contrib=.
+To do so, I am relying the package =org-checklist= which is provided by =org-contrib=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-checklist
-    :straight org-plus-contrib
+    :straight org-contrib
     :tags '("ORG"))
 #+END_SRC
 
@@ -1042,7 +1042,7 @@ We also defines additional link to support audios and videos.
     :tags '("ORG"))
 
   (use-package ox-html
-    :straight org-plus-contrib
+    :straight org-contrib
     :after ox
     :requires (htmlize)
     :tags '("ORG")
@@ -1086,7 +1086,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
 
 #+begin_src emacs-lisp
   (use-package ox-latex
-    :straight org-plus-contrib
+    :straight org-contrib
     :tags '("ORG")
     :after ox
     :config
@@ -1095,12 +1095,12 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
           org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 
   (use-package ox-beamer
-    :straight org-plus-contrib
+    :straight org-contrib
     :tags '("ORG")
     :after ox)
 
   (use-package ox-bibtex
-    :straight org-plus-contrib
+    :straight org-contrib
     :tags '("ORG")
     :after ox
     :defer t)
@@ -1132,7 +1132,7 @@ The only important bits are:
 
 #+begin_src emacs-lisp
   (use-package org-agenda
-    :straight org-plus-contrib
+    :straight org-contrib
     :tags '("ORG" "USER")
     :commands (org-agenda)
     :init
@@ -1400,7 +1400,7 @@ This is why I use this configuration.
 
 #+begin_src emacs-lisp
   (use-package org-archive
-    :straight org-plus-contrib
+    :straight org-contrib
     :tags '("ORG")
     :config
     (setq org-archive-default-command 'org-archive-subtree)
@@ -1528,7 +1528,7 @@ Finally, I also use =vulpea= for note taking.
 CLOSED: [2021-01-03 Sun 15:24]
 This section configures packages to access information from the org files.
 =org-ql= is providing commands to query the org files in a SQL manner.
-=org-protocol= is a package of =org-plus-contrib= which provides helper to use emacsclient to access to org files.
+=org-protocol= is a package of =org-contrib= which provides helper to use emacsclient to access to org files.
 This package is mainly use to bookmark webpages from firefox.
 
 #+begin_src emacs-lisp
@@ -1537,7 +1537,7 @@ This package is mainly use to bookmark webpages from firefox.
     :commands (org-ql-search org-ql-view org-ql-view-recent-items))
 
   (use-package org-protocol
-    :straight org-plus-contrib
+    :straight org-contrib
     :tags '("ORG"))
 #+end_src
 
@@ -1554,7 +1554,7 @@ I also use capturing mechanism to save recipes and some interesting websites.
 
   (use-package org-capture
     :tags '("ORG" "CAPTURE" "DESKTOP")
-    :straight org-plus-contrib
+    :straight org-contrib
     :commands (org-capture)
     :config
     (setq org-capture-templates
