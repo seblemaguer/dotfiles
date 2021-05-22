@@ -192,7 +192,7 @@ The specification respects the following syntax:
     :straight (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
     :config
     (setq use-package-tags-enabled
-          `(("lemagues-surface" . ("ALL" "!MUSIC" "!MAIL"))
+          `(("surface" . ("ALL" "!MUSIC" "!MAIL"))
             ("sig201"           . ("ALL"))
             ("mackenzie"        . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
             (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
@@ -5306,7 +5306,7 @@ This is done in the ~config~ part of the package loading.
     :load-path default-plugin-dir
     :tags '("VISUAL")
     :config
-    (when (string= (system-name) "lemagues-surface")
+    (when (string= (system-name) "surface")
       (setq default-frame-alist
             (append (list
                      '(font . "Roboto Mono:style=Light:size=28")
