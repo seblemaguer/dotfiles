@@ -263,6 +263,9 @@ However, I need to use my own fork for two reasons:
 the upstream has some priority issues with ERC; I would like to ignore some events emitted by the *org-agenda*.
 
 #+begin_src emacs-lisp
+  (use-package alert
+    :tags '("CORE" "NOTIFICATION"))
+
   (use-package sauron
     :straight (sauron :type git :host github :repo "djcb/sauron"
                       :fork (:host github
@@ -290,8 +293,7 @@ the upstream has some priority issues with ERC; I would like to ignore some even
                                 ( priority   .   4)
                                 ( message    . nil))
           sauron-org-exclude-todo-states (list "IN PROCESS" "EXEC_STARTED" "PAUSED" "DELEGATED" "WAITING")
-          sauron-insensitivity-handler 'sauron-keep-priority)
-  )
+          sauron-insensitivity-handler 'sauron-keep-priority))
 #+end_src
 
 *** DONE Sauron/Alert/Modeline integration
