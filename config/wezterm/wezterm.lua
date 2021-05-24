@@ -69,7 +69,7 @@ return {
       {
          intensity = 'Bold',
          font = wezterm.font'Roboto Mono',
-         bold = true
+         -- bold = true
       }
    },
    font_size = 10.0,
@@ -91,4 +91,7 @@ return {
       {key="LeftArrow", mods="CTRL", action=wezterm.action{MoveTabRelative=-1}},
       {key="RightArrow", mods="CTRL", action=wezterm.action{MoveTabRelative=1}},
    },
+
+   -- Additional behaviour
+   exit_behavior = "Close",
 }
