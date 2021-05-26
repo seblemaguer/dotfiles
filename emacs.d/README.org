@@ -390,9 +390,10 @@ This choice has been made due its the simplicity and its recursive nature.
     (bufler-vc-state t)
     (bufler-list-group-separators '((0 . "\n")))
     (bufler-initial-face-depth 1)
+    (bufler-filter-buffer-modes nil)
     (bufler-groups (bufler-defgroups
                      (group (group-or "Help/Info"
-                                      (mode-match "*Help*" (rx bos "help-"))
+                                      (mode-match "*Help*" "^help\\(ful\\)?-.*")
                                       (mode-match "*Info*" (rx bos "info-"))
                                       (mode-match "*Apropos*" (rx bos "apropos-"))))
 
@@ -423,7 +424,8 @@ This choice has been made due its the simplicity and its recursive nature.
                                       (name-match "rss.org" (rx bos "rss.org"))))
 
                      (group (group-or "Todo"
-                                      (name-match "Todo" (rx bos "todo.org"))))
+                                      (name-match "Todo" "todo.org")
+                                      (name-match "Shopping List" "shopping_list.org")))
 
                      ;; Subgroup collecting all special buffers (i.e. ones that are not
                      ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
@@ -481,7 +483,6 @@ This choice has been made due its the simplicity and its recursive nature.
                      ;; grouping them by directory.
                      (auto-mode)
                      (auto-directory))))
-
 #+end_src
 
 ** DONE Minibuffer
