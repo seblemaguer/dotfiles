@@ -1790,12 +1790,33 @@ It integrates well with selectrum and company but doesn't support helm (yet?!).
 
   (use-package selectrum-prescient
     :tags '("COMPLETION")
-    :config (selectrum-prescient-mode +1))
+    :config
+    (setq selectrum-prescient-enable-filtering nil)
+    (selectrum-prescient-mode +1))
 
   (use-package company-prescient
     :tags '("COMPLETION")
     :config (company-prescient-mode +1))
 #+end_src
+
+**** DONE Orderless
+CLOSED: [2021-05-27 Thu 18:31]
+=orderless= provides a more flexible way to filter a list of completion candidates.
+I use it in conjunction to =prescient=:
+=prescient= is responsible for the sorting;
+=orderless= of the completion filtering.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package orderless
+    :tags '("COMPLETION")
+    :requires (selectrum)
+    :custom (completion-styles '(orderless))
+    :config
+    ;; Persist history over Emacs restarts
+    (savehist-mode)
+    (setq orderless-skip-highlighting (lambda () selectrum-is-active)
+          selectrum-highlight-candidates-function #'orderless-highlight-matches)
+#+END_SRC
 
 **** DONE Marginalia
 CLOSED: [2021-01-03 Sun 17:49]
