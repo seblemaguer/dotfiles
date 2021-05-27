@@ -1950,6 +1950,45 @@ file type dedicated templates. The templates are available in =~/.emacs.d/third_
     ;; (add-hook 'find-file-hook 'auto-insert)
     )
 #+end_src
+
+** DONE Action triggering
+CLOSED: [2021-05-27 Thu 18:34]
+=embark= provides ways to execute an action to an ~emacs object~ (an URL, a region, ....).
+It is a convenient package to have a more refined control of my workflow.
+=embark= and =consult= also work nicely together, so I use them together.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :tags '("HELPERS"))
+
+  (use-package embark
+    :commands (embark-act embark-collect-snapshot)
+    :tags '("HELPERS")
+    :requires (which-key)
+    :bind
+    (("C-S-a"   . embark-act)
+     ("C-h B"   . embark-bindings)
+
+     :map minibuffer-local-map
+     ("C-c C-o" . embark-collect-snapshot)
+     ("C-c C-c" . embark-act))
+
+     :config
+     (setq embark-action-indicator
+        (lambda (map &optional _target)
+          (which-key--show-keymap "Embark" map nil nil 'no-paging)
+          #'which-key--hide-popup-ignore-command)
+        embark-become-indicator embark-action-indicator))
+
+
+    (use-package embark-consult
+      :tags '("HELPERS")
+      :after (embark consult)
+      :demand t
+      :hook
+      (embark-collect-mode . embark-consult-preview-minor-mode))
+#+END_SRC
+
 * IDE [100%]
 While the environment configuration is fundamental for editing,
 it is necessary to add more features to simplify coding life.
