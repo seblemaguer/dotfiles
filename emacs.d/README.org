@@ -1815,7 +1815,7 @@ I use it in conjunction to =prescient=:
     ;; Persist history over Emacs restarts
     (savehist-mode)
     (setq orderless-skip-highlighting (lambda () selectrum-is-active)
-          selectrum-highlight-candidates-function #'orderless-highlight-matches)
+	  selectrum-highlight-candidates-function #'orderless-highlight-matches))
 #+END_SRC
 
 **** DONE Marginalia
@@ -4421,6 +4421,7 @@ I also redesigned the header buffer.
   (use-package mu4e-thread-folding
     :straight (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
     :tags '("CONNECTED" "MAIL")
+    :after (mu4e)
     :config
     (add-to-list 'mu4e-header-info-custom
                  '(:empty . (:name "Empty"
