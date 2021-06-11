@@ -1273,7 +1273,14 @@ The only important bits are:
                                             ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
                                             nil nil :ascent center)
 
-                                           (".*" '(space . (:width (16)))))))
+                                           (".*" '(space . (:width (16)))))
+          org-agenda-custom-commands '(("c" . "My Custom Agendas")
+                                       ("cu" "Unscheduled TODO"
+                                        ((todo ""
+                                               ((org-agenda-overriding-header "\nUnscheduled TODO")
+                                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp)))))
+                                        nil
+                                        nil))))
 #+end_src
 
 *** DONE Super agenda
