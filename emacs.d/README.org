@@ -4007,6 +4007,9 @@ I rely on subpackages (see subsections) to enhance the experience.
     :tags '("CONNECTED" "RSS")
     :commands (elfeed elfeed-update)
     :no-require t
+    :bind
+    (([f9] . elfeed))
+
     :config
     ;; Change the storage directory
     (setq elfeed-db-directory (format "%s/elfeed" cloud-emacs-root-dir)
@@ -4084,26 +4087,6 @@ I added a couple of primitives to facilitate the interaction between elfeed and 
 
     (defalias 'elfeed-search-youtube-dl-slow
       (expose #'elfeed-search-youtube-dl :slow t)))
-#+end_src
-
-*** DONE Dashboard
-CLOSED: [2021-01-04 Mon 19:53]
-I like to start with a dashboard to get a nice summary.
-So I use =elfeed-dashboard= to have this for elfeed.
-The dashboard template is part of the ~third parties~.
-
-#+begin_src emacs-lisp
-  (use-package elfeed-dashboard
-    :tags '("CONNECTED" "RSS")
-    :commands (elfeed-dashboard)
-    :bind
-    (([f9] . elfeed-dashboard))
-
-    :config
-    (setq elfeed-dashboard-file (concat user-emacs-directory "third_parties/dashboards/elfeed.org"))
-
-    ;; to update feed counts automatically
-    (advice-add 'elfeed-search-quit-window :after #'elfeed-dashboard-update-links))
 #+end_src
 
 *** DONE Notification part
@@ -4247,6 +4230,9 @@ I also redesigned the header buffer.
     :straight nil
     :tags '("CONNECTED" "MAIL")
     :commands (mu4e)
+    :bind
+    (("<f2>" . mu4e))
+
     :load-path "~/environment/local/share/emacs/site-lisp/mu4e"
     :hook
     (after-init . (lambda () (mu4e t)))
@@ -4458,34 +4444,6 @@ I also redesigned the header buffer.
     :load-path "~/environment/local/share/emacs/site-lisp/mu4e")
 #+end_src
 
-**** DONE Dashboard
-CLOSED: [2021-01-22 Fri 22:48]
-I prefer to use the dashboard as the entry proint for emails as it is more configurable.
-The dashboard is not on melpa but can be retrieved using straight.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package mu4e-dashboard
-    :straight (mu4e-dashboard :type git :branch "main" :host github :repo "rougier/mu4e-dashboard")
-    :tags '("CONNECTED" "MAIL" "ORG")
-    :bind
-    (("<f2>" . mu4e-dashboard))
-
-    :commands (mu4e-dashboard-activate)
-    :init
-    (defvar mu4e-dashboard-file "~/.emacs.d/third_parties/dashboards/mu4e.org")
-
-    (defun mu4e-dashboard ()
-      "Main function."
-      (interactive)
-      (setq mu4e-dashboard--buf (find-file mu4e-dashboard-file))
-      (with-current-buffer mu4e-dashboard--buf
-        (mu4e-dashboard-mode 1)))
-
-    (defun mu4e-dashboard-edit ()
-      "Edit dashboard."
-      (interactive)
-      (mu4e-dashboard-mode 0)))
-#+END_SRC
 **** DONE Notification
 CLOSED: [2021-01-05 Tue 08:52]
 I am using =sauron= and =alert= as my notification system.
