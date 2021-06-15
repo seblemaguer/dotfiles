@@ -944,13 +944,28 @@ This is fundamental to have an easy navigation in such files which can be really
           org-superstar-item-bullet-alist '((?+ . ?•) (?* . ?➤) (?- . ?–))))
 #+end_src
 
-*** DONE Babel [50%]
+*** DONE Babel
 CLOSED: [2021-01-03 Sun 13:10]
 Babel is the key feature for litterate programming in =org-mode=.
 This section provides the configuration for babel by first configuring jupyter.
 Jupyter is more powerful than the default python management which is why I chose to use it for python source blocks.
 
 #+begin_src emacs-lisp
+  (use-package company-org-block
+    :tags '("ORG" "COMPLETION")
+    :custom
+    (company-org-block-edit-style 'auto) ;; 'auto, 'prompt, or 'inline
+
+    :hook
+    (org-mode . company-org-block-hook)
+
+    :config
+    (defun company-org-block-hook ()
+      "Hook to add company-org-block support to org-mode."
+      (make-local-variable 'company-backends)
+      (setq company-backends (copy-tree company-backends))
+      (set 'company-backends (append '(company-org-block) company-backends))))
+
   (use-package jupyter
     :tags '("ORG")
     :defer t
@@ -969,30 +984,30 @@ Jupyter is more powerful than the default python management which is why I chose
 
     ;; Define the list of languages to load
     (org-babel-do-load-languages 'org-babel-load-languages
-				 '((emacs-lisp . t)
-				   (dot        . t)
-				   (ditaa      . t)
-				   (R          . t)
-				   (ruby       . t)
-				   (gnuplot    . t)
-				   (clojure    . t)
-				   (shell      . t)
-				   (ledger     . t)
-				   (org        . t)
-				   (plantuml   . t)
-				   (latex      . t)
-				   (python     . t)))          ; must be last
+                                 '((emacs-lisp . t)
+                                   (dot        . t)
+                                   (ditaa      . t)
+                                   (R          . t)
+                                   (ruby       . t)
+                                   (gnuplot    . t)
+                                   (clojure    . t)
+                                   (shell      . t)
+                                   (ledger     . t)
+                                   (org        . t)
+                                   (plantuml   . t)
+                                   (latex      . t)
+                                   (python     . t)))          ; must be last
 
     ;; Predefine header considering
     (setq org-babel-default-header-args:sh      '((:results . "output replace"))
-	  org-babel-default-header-args:bash    '((:results . "output replace"))
-	  org-babel-default-header-args:shell   '((:results . "output replace"))
-	  org-babel-default-header-args:python '((:async . "yes")
-						  (:session . "py")))
+          org-babel-default-header-args:bash    '((:results . "output replace"))
+          org-babel-default-header-args:shell   '((:results . "output replace"))
+          org-babel-default-header-args:python '((:async . "yes")
+                                                 (:session . "py")))
 
     ;; Define pathes for some tools
     (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar"
-	  org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"))
+          org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"))
 
 
 #+end_src
