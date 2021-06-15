@@ -4690,14 +4690,18 @@ Finally, because of a bug in the upstream of emacs-slack (issue [[https://github
     (slack-modeline-formatter           nil)
 
     :hook
-    (slack-mode . company-slack-hook)
+    (slack-mode . slack-define-hooks)
 
     :config
-
-    (defun company-slack-hook ()
+    (defun slack-define-hooks ()
+      "Define some useful slack hooks."
+      ;; Company part
       (make-local-variable 'company-backends)
       (setq company-backends (copy-tree company-backends))
-      (set 'company-backends (append '(company-slack-backend) company-backends)))
+      (set 'company-backends (append '(company-slack-backend) company-backends))
+
+      ;; Disable smart parens
+      (smartparens-mode -1))
 
     ;; Create directory in case of
     (make-directory slack-profile-image-file-directory t)
@@ -4757,7 +4761,8 @@ CLOSED: [2021-05-20 Thu 17:33]
                  telega-company-hashtag)
                (when (and telega-chatbuf--chat (telega-chat-bot-p telega-chatbuf--chat))
                  '(telega-company-botcmd))))
-      (emojify-mode 1)))
+      (emojify-mode 1)
+      (smartparens-mode -1)))
 #+END_SRC
 
 *** DONE Global helpers
@@ -5487,19 +5492,25 @@ It is to be noted than =smartparens= is much more completing than what I describ
 Finally, the package =page-break-lines= provides a nice way to visualize a page break (^L) to be easily spotted.
 
 #+begin_src emacs-lisp
-  (use-package smartparens
+  (use-package smartparens-config
     :tags '("VISUAL")
+    :straight smartparens
+    :hook
+    (after-init  . smartparens-global-mode)
+    (after-init  . show-smartparens-global-mode)
+    (eval-expression-minibuffer-setup . smartparens-mode)
+
+    :init
+    (setq sp-show-pair-delay 0.2
+          sp-show-pair-from-inside nil
+          sp-cancel-autoskip-on-backward-movement nil
+          sp-highlight-pair-overlay nil
+          sp-highlight-wrap-overlay nil
+          sp-highlight-wrap-tag-overlay nil)
+
     :config
-
-    ;; Activate smartparens globally
-    (smartparens-global-mode t)
-    (show-smartparens-global-mode t)
-
-    ;; Activate smartparens in minibuffer
-    (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
-
-    ;; Do not pair simple quotes
-    (sp-pair "'" nil :actions :rem))
+    ;; don't create a pair with single quote in minibuffer
+    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil))
 
   (use-package rainbow-delimiters
     :tags '("VISUAL")
