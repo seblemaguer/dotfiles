@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=SaarlandImapNotify
-GenericName=Saarland mail Synchronizer
-Comment=start imapnotify on the Saarland Account
-Exec=imapnotify -c /home/lemagues/.imapnotify/saarland.js
-Terminal=false
-Type=Application
-Categories=Network;FileTransfer;
-StartupNotify=false
