@@ -244,5 +244,22 @@
   }
 
 #+end_src
+* rsync
+#+begin_src conf :tangle "~/.rsyncignore"
+  # Ignore temporary/bulk files
+  ,*~*
+  .#*
+  ,**.swp
+  .bundle
+  .DS_Store
+
+  # Some generated files
+  coverage
+  tags
+
+  # Some git files
+  .gitmodules
+#+end_src
+
 
 * COMMENT some extra configuration
