@@ -2952,6 +2952,10 @@ Finally, I use bibclean-format to have a clean final bibtex file.
 #+begin_src emacs-lisp
   (use-package bibtex
     :tags '("WRITING" "BIBTEX")
+    :bind
+    (:map bibtex-mode-map
+          ("C-c f" . bibtex-tidy-buffer))
+
     :config
     (defun bibtex-generate-autokey ()
       (let* ((bibtex-autokey-names nil)
@@ -2978,19 +2982,34 @@ Finally, I use bibclean-format to have a clean final bibtex file.
           bibtex-autokey-year-title-separator ""
           bibtex-autokey-titleword-first-ignore '("the" "a" "if" "and" "an")
           bibtex-autokey-titleword-length 100
-          bibtex-autokey-titlewords 1))
+          bibtex-autokey-titlewords 1)
 
-  (use-package bibclean-format
+    (defun bibtex-tidy-buffer ()
+      "Apply bibtex-tidy to clean the current bibtex buffer."
+      (interactive)
+      (shell-command
+       (format "bibtex-tidy %s %s %s %s"
+               "--curly --numeric --space=4 --align=13 --no-escape"
+               "--duplicates=key,doi --trailing-commas --no-remove-dupe-fields"
+               "--sort-fields=title,shorttitle,author,year,month,day,journal,booktitle,location,on,publisher,address,series,volume,number,pages,doi,isbn,issn,url,urldate,copyright,category,note,metadata"
+               (shell-quote-argument (buffer-file-name))))
+      (revert-buffer t t t)))
+#+end_src
+
+*** TODO Add some action helper
+#+begin_src elisp
+  (use-package bibtex-actions
     :tags '("WRITING" "BIBTEX")
-    :hook
-    (bibtex-mode . bibclean-format-on-save-mode)
-
-    :commands (bibclean-format)
-    :bind
-    (:map bibtex-mode-map
-          ("C-c f" . bibclean-format))
+    :bind (("C-c b" . bibtex-actions-insert-citation)
+           :map minibuffer-local-map
+           ("M-b" . bibtex-actions-insert-preset))
+    :after embark
     :config
-    (setq bibclean-format-args '("--max-width" "0" "--align-equal")))
+    ;; Make the 'bibtex-actions' bindings available from `embark-act'.
+    (add-to-list 'embark-keymap-alist '(bibtex . bibtex-actions-map))
+    :custom
+    (bibtex-completion-bibliography '("~/work/websites/seblemaguer.github.io/publis.bib"
+                                      "~/pCloudDrive/org/bibliography/")))
 #+end_src
 
 ** DONE TikZ/PGF
