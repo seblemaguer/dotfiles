@@ -2671,6 +2671,8 @@ Finally, I use =numpydoc= to deal with the documentation.
 #+begin_src emacs-lisp
   (use-package python
     :tags '("PROGRAMMING" "PYTHON")
+    :bind
+    (("C-<f6>"  . run-python))
     :mode
     ("\\.py\\'" . python-mode)
     ("\\.wsgi$" . python-mode)
@@ -3606,8 +3608,26 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
 
   (use-package multi-vterm
     :tags '("TERM")
+    :init
+    (defun new-vterm-and-rename (name)
+      "Create a new vterm and rename it directly"
+      (interactive "sName of the terminal: ")
+      (multi-vterm)
+      (multi-vterm-rename-buffer name))
+
     :bind
-    ("<f6>" . multi-vterm))
+    (:map vterm-mode-map
+          ("M-n"        . new-vterm-and-rename)
+          ("M-r"        . multi-vterm-rename-buffer)))
+
+  (use-package vterm-toggle
+    :tags '("TERM")
+    :bind
+    (("<f6>" . vterm-toggle)
+     :map vterm-mode-map
+     ("C-<return>" . vterm-toggle-insert-cd)
+     ("M-f"        . vterm-toggle-forward)
+     ("M-p"        . vterm-toggle-backward)))
 #+END_SRC
 
 * File manager [100%]
