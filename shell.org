@@ -343,83 +343,34 @@
       export EDITOR=emacs
   fi
 
-  # Load Antigen
-  export ANTIGEN="$HOME/.antigen/"
-  if [[ ! -d $ANTIGEN ]]; then
-      git clone https://github.com/zsh-users/antigen.git $ANTIGEN
+  # Load znap
+  export ZDOTDIR="$HOME/.znap"
+  ZNAPDIR="$ZDOTDIR/zsh-snap"
+  ZNAP_ZSH="$ZNAPDIR/znap.zsh"
+  ZNAP_LOG="$ZNAPDIR/znap.log"
+  if [ ! -d "$ZDOTDIR" ]; then
+      mkdir $ZDOTDIR
+      git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git $ZNAPDIR
+      source $ZNAPDIR/install.zsh
   fi
-  source $ANTIGEN/antigen.zsh
-
-  # VCS bundle
-  antigen bundle git
-  antigen bundle github
-  antigen bundle unixorn/bitbucket-git-helpers.plugin.zsh
-  antigen bundle denolfe/zsh-travis
+  source $ZNAP_ZSH
 
   # Aliases
-  antigen bundle djui/alias-tips
+  znap source djui/alias-tips
 
   # Completion/helpers
-  antigen bundle zsh-users/zsh-completions
-  antigen bundle zsh-users/zsh-autosuggestions
-  antigen bundle sudo
-  antigen bundle command-not-found
-
-  # Antigen Bundles
-  antigen bundle tmuxinator
-  antigen bundle rupa/z
-
-  antigen bundle docker
-  antigen bundle rsync
-
-  antigen bundle colored-man-pages
-  antigen bundle kennethreitz/autoenv
-
-  # For SSH, starting ssh-agent is annoying
-  antigen bundle ssh-agent
-
-  # Node Plugins
-  antigen bundle coffee
-  antigen bundle node
-  antigen bundle npm
-  antigen bundle grunt
-
-  # Python Plugins
-  antigen bundle pip
-  antigen bundle python
-  antigen bundle virtualenv
-
-  # Java & gradle
-  antigen bundle gradle/gradle-completion
-  antigen bundle gvm
+  znap source zsh-users/zsh-completions
+  znap source marlonrichert/zsh-autocomplete
 
   # oh-my-zsh
-  antigen use oh-my-zsh
-
-  # Theme
-  antigen theme romkatv/powerlevel10k
-
-  # Distro specific
-  # OS specific plugins (comming from https://github.com/seagle0128/dotfiles/blob/master/.zshrc)
-  if [[ $OSTYPE == darwin* ]]; then
-      antigen bundle brew
-      antigen bundle brew-cask
-      antigen bundle osx
-  elif [[ $OSTYPE == linux* ]]; then
-      if command -v apt-get >/dev/null 2>&1; then
-          antigen bundle ubuntu
-          alias agua='aguu -y && agar -y && aga -y'
-      elif command -v pacman >/dev/null 2>&1; then
-          antigen bundle archlinux
-      fi
-  fi
+  znap source ohmyzsh/ohmyzsh lib/{git,colored-man-pages,colorize,command-not-found,history,theme-and-appearance} \
+       plugins/{archlinux,docker,docker-compose,python,ripgrep,z}
 
   # Highlighting
-  antigen bundle zsh-users/zsh-syntax-highlighting
+  znap source zsh-users/zsh-syntax-highlighting
 
-  # Tell Antigen that you're done.
-  antigen apply
-
+  # Theme
+  znap prompt romkatv/powerlevel10k
 
   ########################################################################################
   #### Use .ssh/config for completion
