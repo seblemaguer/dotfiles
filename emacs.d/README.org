@@ -1295,7 +1295,7 @@ The only important bits are:
                                        ("cu" "Unscheduled TODO"
                                         ((todo ""
                                                ((org-agenda-overriding-header "\nUnscheduled TODO")
-                                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'timestamp)))))
+                                                (org-agenda-skip-function '(org-agenda-skip-entry-if 'scheduled)))))
                                         nil
                                         nil))))
 #+end_src
@@ -1388,25 +1388,29 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
           org-mru-clock-keep-formatting t
           org-clock-persist t)
 
-    (defun sacha/org-clock-in-if-starting ()
-      "Clock in when the task is marked IN PROCESS."
-      (when (and (string= org-state "IN PROCESS")
-                 (not (string= org-last-state org-state)))
-        (org-clock-in)))
-
     (defadvice org-clock-in (after sacha activate)
       "Set this task's status to 'IN PROCESS'."
       (org-todo "IN PROCESS"))
 
+    (defun sacha/org-clock-in-if-starting ()
+      "Clock in when the task is marked IN PROCESS."
+      (when (member (buffer-file-name)
+                    (mapcar 'file-truename org-agenda-files))
+        (when (and (string= org-state "IN PROCESS")
+                   (not (string= org-last-state org-state)))
+          (org-clock-in))))
+
     (defun sacha/org-clock-out-if-waiting-or-pausing ()
       "Clock in when the task is marked STARTED."
-      (when (and (or (string= org-state "TODO")
-                     (string= org-state "WAITING")
-                     (string= org-state "PAUSED")
-                     (string= org-state "EXEC_STARTED"))
-                 (not (string= org-last-state org-state))
-                 (org-clock-is-active))
-        (org-clock-out)))
+      (when (member (buffer-file-name)
+                    (mapcar 'file-truename org-agenda-files))
+        (when (and (or (string= org-state "TODO")
+                       (string= org-state "WAITING")
+                       (string= org-state "PAUSED")
+                       (string= org-state "EXEC_STARTED"))
+                   (not (string= org-last-state org-state))
+                   (org-clock-is-active))
+          (org-clock-out))))
 
     :hook
     (org-after-todo-state-change . sacha/org-clock-out-if-waiting-or-pausing)
