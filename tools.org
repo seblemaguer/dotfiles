@@ -260,6 +260,32 @@
   # Some git files
   .gitmodules
 #+end_src
+* conda
+#+begin_src yaml :tangle "~/.condarc"
+  # See https://www.anaconda.com/understanding-and-improving-condas-performance/ for more info.
 
+  # help debug channel issues
+  show_channel_urls: true
+
+  # pip will always be installed with python
+  add_pip_as_python_dependency: true
+
+  # strict priority and conda-forge at the top will ensure
+  # that all of your packages will be from conda-forge unless they only exist on defaults
+  channel_priority: strict
+  channels:
+    - conda-forge
+    - defaults
+
+  # when using "conda create" for envs these packages will always be installed
+  # adjust that list according your needs, the packages below are just a suggestion!
+  create_default_packages:
+    - pip
+    - black
+    - ipython
+
+  safety_checks: disabled
+  auto_activate_base: false
+#+end_src
 
 * COMMENT some extra configuration
