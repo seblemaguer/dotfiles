@@ -1,0 +1,125 @@
+% v4.6
+\ProvidesFile{spanish-apa.lbx}
+\InheritBibliographyExtras{spanish}
+
+\setcounter{smartand}{0} % Turn off "smart and" or ampersands will all be replaced
+
+% (APA 6.22) The example abbreviations
+
+\NewBibliographyString{revisededition}
+\NewBibliographyString{typechair}
+\NewBibliographyString{typechairs}
+\NewBibliographyString{typevolume}
+\NewBibliographyString{typevolumes}
+\NewBibliographyString{typeseries}
+\NewBibliographyString{typeseriess}
+\NewBibliographyString{typevolseries}
+\NewBibliographyString{typevolseriess}
+\NewBibliographyString{on}
+\NewBibliographyString{retrieved}
+\NewBibliographyString{available}
+\NewBibliographyString{from}
+\NewBibliographyString{nodate}
+\NewBibliographyString{archivedat}
+\NewBibliographyString{origyear}
+\NewBibliographyString{reviewof}
+
+\DeclareBibliographyStrings{%
+  inherit          = {spanish},
+  inpress          = {{en prensa}{en prensa}},% remove when biblatex has it
+  january          = {{enero}{enero}},
+  february         = {{febrero}{febrero}},
+  march            = {{marzo}{marzo}},
+  april            = {{abril}{abril}},
+  may              = {{mayo}{mayo}},
+  june             = {{junio}{junio}},
+  july             = {{julio}{julio}},
+  august           = {{agosto}{agosto}},
+  september        = {{septiembre}{septiembre}},
+  october          = {{octubre}{octubre}},
+  november         = {{noviembre}{noviembre}},
+  december         = {{diciembre}{diciembre}},
+  mathesis         = {{Tesis\addabbrvspace de\addabbrvspace maestr\'ia}{Tesis\addabbrvspace de\addabbrvspace maestr\'ia}},
+  phdthesis        = {{Tesis\addabbrvspace doctoral}{Tesis\addabbrvspace doctoral}},
+  revisededition   = {{Edici\'on\space Revisada}{\'Ed\adddot\space R\'ev\adddot}},
+  page             = {{P\'agina}{{}p\adddot}},
+  pages            = {{P\'aginas}{{}pp\adddot}},
+  on               = {{el}{el}},
+  retrieved        = {{Recuperado}{Recuperado}},
+  available        = {{disponible}{disponible}},
+  from             = {{desde}{desde}},
+  archivedat       = {{archivado en}{archiv\'es\space \`a}},
+  nodate           = {{sin\space fecha}{{}s\adddot f\adddot}},
+  reviewof         = {{revisi\'on\space de}{revisi\'on\space de}},
+  paragraph        = {{\P}{\P}},
+  paragraphs       = {{\P\P}{\P\P}},
+  origyear         = {{Fecha\space inicial\space de\space publicaci\'on}{Fecha\space inicial\space de\space publicaci\'on}},
+  typechair        = {{Coordinador}{Coord\adddot}},
+  typechairs       = {{Coordinadores}{Coords\adddot}},
+  typevolume       = {{Editor\space del\space volumen}{Ed\adddot\space vol\adddot}},
+  typevolumes      = {{Editores\space del\space volumen}{Eds\adddot\space vol\adddot}},
+  typeseries       = {{Editor\space de\space la\space serie}{Ed\adddot\space ser\adddot}},
+  typeseriess      = {{Editores\space de\space la\space serie}{Eds\adddot\space ser\adddot}},
+  typevolseries    = {{Editor\space de\space la\space serie\space y\space del\space volumen}{Ed\adddot\space vol\space\&\space ser\adddot}},
+  typevolseriess   = {{Editores\space de\space la\space serie\space y\space del\space volumen}{Eds\adddot\space vol\space\&\space ser\adddot}},
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% (APA 7.10 Example 68) Drop end* when they are the same as *
+
+% You must use \printdate to get here otherwise it will be ignored
+\DefineBibliographyExtras{spanish}{%
+  \protected\def\mkbibdateapalong#1#2#3{%
+    \iffieldundef{#1}%
+      {}%
+      {\thefield{#1}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#1}%
+        {}%
+        {\addcomma\addspace}%
+       \mkbibmonth{\thefield{#2}}}%
+    \iffieldundef{#3}%
+      {}%
+      {\ifthenelse{\iffieldundef{#2}\OR\iffieldundef{#1}}%
+        {}%
+        {\addspace}%
+       \stripzeros{\thefield{#3}}}}%
+  \protected\def\mkbibdateapalongextra#1#2#3{%
+    \iffieldundef{#1}%
+      {}%
+      {\thefield{#1}\printfield{extrayear}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#1}%
+        {}%
+        {\addcomma\addspace}%
+       \mkbibmonth{\thefield{#2}}}%
+    \iffieldundef{#3}%
+      {}%
+      {\ifthenelse{\iffieldundef{#2}\OR\iffieldundef{#1}}%
+        {}%
+        {\addspace}%
+       \stripzeros{\thefield{#3}}}}%
+  \protected\def\mkbibdateapalongmdy#1#2#3{%
+    \iffieldundef{#3}%
+      {}%
+      {\stripzeros{\thefield{#3}}}%
+    \iffieldundef{#2}%
+      {}%
+      {\iffieldundef{#3}%
+        {}%
+        {\addspace}%
+       \mkbibmonth{\thefield{#2}}}%
+    \iffieldundef{#1}%
+      {}%
+      {\ifthenelse{\iffieldundef{#2}\OR\iffieldundef{#3}}%
+        {}%
+        {\addspace}%
+       \thefield{#1}}}}
+
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\endinput

@@ -1,0 +1,429 @@
+#+TITLE: Tools configuration
+#+AUTHOR: Sébastien Le Maguer
+#+EMAIL: lemagues@surface
+#+DATE: 19 June 2021
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  fr
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/main.css" />
+
+* ABCDE
+#+begin_src conf :tangle ~/.abcde.conf
+  # System defaults for abcde version 2.2.x
+  # Nothing in this file is uncommented by default.
+  #
+  # If you wish to override these system-wide settings, create your own
+  # .abcde.conf file in your home directory.
+
+  ACTIONS=cddb,read,getalbumart,encode,tag,move,cue,clean
+
+  # CDDB options
+  # Choose whether you want to use CDDB or Musicbrainz. Default is CDDB
+  CDDBMETHOD=musicbrainz
+  # CDDBURL="http://freedb.musicbrainz.org/~cddb/cddb.cgi"
+
+
+  # Specify the path to the application. In most cases the application
+  # should be in your $PATH as I illustrate below, otherwise you will
+  # need to specify the full path. For example: /usr/bin/glyrc
+  GLYRC=glyrc
+  IDENTIFY=identify
+  CONVERT=convert
+  DISPLAYCMD=display
+
+  # album art download options (see glyrc's help for details with more detailed
+  # examples here: https://github.com/sahib/glyr/wiki/Commandline-arguments).
+  # For example use '--formats jpg;jpeg' to only search for JPEG images
+  # These options: '--from <provider>' and '--lang <langcode>' might also be useful
+  GLYRCOPTS=
+  ALBUMARTFILE="cover.jpg"
+  ALBUMARTTYPE="JPEG"
+  IDENTIFYOPTS="-colorspace RGB -size 600x600"
+  CONVERTOPTS=
+  DISPLAYCMDOPTS="-resize 512x512 -title abcde_album_art"
+  ALBUMARTALWAYSCONVERT="y"
+
+  CDDBPROTO=6
+
+  # FLAC:
+  OUTPUTTYPE="flac"
+  FLACOPTS='-s -e -V -8'
+
+  # Give the location of the ripping program and pass any extra options,
+  # if using libcdio set 'CD_PARANOIA=cd-paranoia'.
+  CDPARANOIA=cdparanoia
+  CDPARANOIAOPTS="--never-skip=40"
+
+  # Output format and dirs
+  OUTPUTDIR=$HOME/tmp/music
+  OUTPUTFORMAT='${OUTPUT}/${ARTISTFILE}/${ALBUMFILE}'
+  VAOUTPUTFORMAT='${OUTPUT}/Various/${ALBUMFILE}'
+  ONETRACKOUTPUTFORMAT=$OUTPUTFORMAT
+  VAONETRACKOUTPUTFORMAT=$VAOUTPUTFORMAT
+
+  MAXPROCS=2
+  BATCHNORM=n
+  NOGAP=n
+  EJECTCD=y
+
+
+  #--------------------------------------------------------------------------#
+  #  A post_encode function to embed album art downloaded with abcde 2.7     #
+  #  and greater using the new getalbumart function. OUTPUTTYPE must be      #
+  #  flac and and tagging is with metaflac. To use this function copy the    #
+  #  entire code block and paste it into your ~/.abcde.conf file.            #
+  #                                                                          #
+  #                abcde: Downloading Album Art...                           #
+  #         http://www.andrews-corner.org/getalbumart.html                   #
+  #--------------------------------------------------------------------------#
+  post_encode ()
+  {
+      ARTISTFILE="$(mungefilename "$TRACKARTIST")"
+      ALBUMFILE="$(mungefilename "$DALBUM")"
+
+      if [ "$VARIOUSARTISTS" = "y" ] ; then
+          FINDPATH="$(eval echo "$VAOUTPUTFORMAT")"
+      else
+          FINDPATH="$(eval echo "$OUTPUTFORMAT")"
+      fi
+
+      FINALDIR="$(dirname "$OUTPUTDIR/$FINDPATH")"
+      cd "$FINALDIR"
+
+      if [ "$OUTPUTTYPE" = "flac" ] ; then
+          vecho "Preparing to embed the album art..." >&2
+      else
+          vecho "Not embedding album art, you need flac output.." >&2
+          return 1
+      fi
+
+      if [ -e "cover.jpg" ] ; then
+          for i in *.flac
+          do
+              metaflac --import-picture-from=cover.jpg "$i"
+          done
+
+          mv $ALBUMARTFILE ${ALBUMFILE}.jpg
+          vecho "Your files have had the album art embedded..." >&2
+      else
+          vecho "No album art found so no image embedded..." >&2
+      fi
+  }
+#+end_src
+
+* GIT
+#+begin_src conf :tangle "~/.gitconfig"
+  [user]
+      name = Sebastien Le Maguer
+      email = lemagues@tcd.ie
+
+  [push]
+      default = simple
+
+  [diff "md"]
+      textconv = markdown
+
+  [core]
+      excludesfile = /home/lemagues/.gitignore
+      editor = emacs
+      pager = /home/lemagues/environment/local/bin/delta --theme="GitHub"
+
+  [interactive]
+      diffFilter = /home/lemagues/environment/local/bin/delta --color-only
+
+  # [gpg]
+  # 	program = gpgv2
+
+  # [commit]
+  # 	gpgsign = true
+
+  [include]
+      path = /home/lemagues/.private_git
+
+  [credential]
+      helper = store
+#+end_src
+
+* kitty
+#+begin_src conf :tangle ~/.config/kitty/kitty.conf :mkdirp yes
+  # Theme
+  include themes/flatfluc.conf
+
+  #: Fonts {{{
+  font_family      Monoid
+  # font_family      Fira Code
+  # font_family      Roboto Mono
+  bold_font        auto
+  italic_font      auto
+  bold_italic_font auto
+
+  font_size        10.0
+  #: }}}
+
+  #: Tab bar {{{
+
+  tab_bar_edge bottom
+  tab_bar_margin_width 0.0
+  tab_bar_margin_height 0.0 0.0
+  tab_bar_style fade
+  tab_bar_align left
+  tab_bar_min_tabs 2
+  tab_switch_strategy previous
+  tab_fade 0.25 0.5 0.75 1
+  tab_separator " ┇"
+  tab_powerline_style angled
+  tab_activity_symbol none
+  tab_title_template "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title}"
+  active_tab_title_template none
+  active_tab_font_style   bold-italic
+  inactive_tab_font_style normal
+  tab_bar_background none
+  tab_bar_margin_color none
+
+  map ctrl+shift+t new_tab_with_cwd
+
+  #: }}}
+
+
+  #: Splits {{{
+  # - Do the split
+  map ctrl+shift+o launch --cwd=current --location=hsplit
+  map ctrl+shift+e launch --cwd=current --location=vsplit
+
+  # - Navigate
+  map ctrl+left  neighboring_window left
+  map ctrl+right neighboring_window right
+  map ctrl+up    neighboring_window up
+  map ctrl+down  neighboring_window down
+  #: }}}
+
+  #: shell integration {{{
+  shell_integration disabled
+  #! }}}
+#+end_src
+
+** Theme
+#+begin_src conf :tangle "~/.config/kitty/themes/flatfluc.conf" :mkdirp yes
+  # vim:ft=kitty
+  ## name: flatfluc
+  ## author: Sébastien Le Maguer
+  ## license: MIT
+
+  # Baseline
+  foreground            #425D78
+  background            #ECF0F1
+  selection_foreground  #000000
+  selection_background  #E67E22
+  url_color             #0087BD
+  cursor                #81A1C1
+
+  # Tab color
+  active_tab_foreground   #ECF0F1
+  active_tab_background   #C0392B
+  inactive_tab_foreground #81A1C1
+  inactive_tab_background #425D78
+
+  # Shell specific
+  #   - black
+  color0   #34495E
+  color8   #425D78
+
+  #   - red
+  color1   #BF616A
+  color9   #BF616A
+
+  #   - green
+  color2   #2ECC71
+  color10  #2ECC71
+
+  #   - yellow
+  color3   #F1C40F
+  color11  #F1C40F
+
+  #   - blue
+  color4  #2980B9
+  color12 #3498db
+
+  #   - magenta
+  color5   #B48EAD
+  color13  #B48EAD
+
+  #   - cyan
+  color6   #88C0D0
+  color14  #8FBCBB
+
+  #   - white
+  color7   #E5E9F0
+  color15  #ECEFF4
+#+end_src
+
+* rsync
+#+begin_src conf :tangle "~/.rsyncignore"
+  # Ignore temporary/bulk files
+  ,*~*
+  .#*
+  ,**.swp
+  .bundle
+  .DS_Store
+
+  # Some generated files
+  coverage
+  tags
+
+  # Python
+  __pycache__/
+#+end_src
+
+* conda
+#+begin_src yaml :tangle "~/.condarc"
+  # See https://www.anaconda.com/understanding-and-improving-condas-performance/ for more info.
+
+  # help debug channel issues
+  show_channel_urls: true
+
+  # pip will always be installed with python
+  add_pip_as_python_dependency: true
+
+  # strict priority and conda-forge at the top will ensure
+  # that all of your packages will be from conda-forge unless they only exist on defaults
+  channel_priority: strict
+  channels:
+    - conda-forge
+    - defaults
+
+  # when using "conda create" for envs these packages will always be installed
+  # adjust that list according your needs, the packages below are just a suggestion!
+  create_default_packages:
+    - pip
+    - black
+    - ipython
+
+  safety_checks: disabled
+  auto_activate_base: false
+#+end_src
+
+* aria2c
+#+begin_src conf :tangle ~/.config/aria2/aria2.conf :mkdirp yes
+  ### Basic ###
+  # The directory to store the downloaded file.
+  dir=${HOME}/Torrents
+  # Downloads the URIs listed in FILE.
+  input-file=${HOME}/.cache/aria2/aria2.session
+  # Save error/unfinished downloads to FILE on exit.
+  save-session=${HOME}/.cache/aria2/aria2.session
+  # Save error/unfinished downloads to a file specified by --save-session option every SEC seconds. If 0 is given, file will be saved only when aria2 exits. Default: 0
+  save-session-interval=60
+  # Set the maximum number of parallel downloads for every queue item. See also the --split option. Default: 5
+  max-concurrent-downloads=1
+  # Continue downloading a partially downloaded file.
+  continue=true
+  # Set max overall download speed in bytes/sec. 0 means unrestricted. Default: 0
+  max-overall-download-limit=0
+  # Set max download speed per each download in bytes/sec. 0 means unrestricted. Default: 0
+  max-download-limit=0
+  # Make aria2 quiet (no console output). Default: false
+  quiet=true
+
+
+  ### Advanced ###
+  # Restart download from scratch if the corresponding control file doesn't exist. Default: false
+  allow-overwrite=true
+  # If false is given, aria2 aborts download when a piece length is different from one in a control file. If true is given, you can proceed but some download progress will be lost. Default: false
+  allow-piece-length-change=true
+  # Always resume download. If true is given, aria2 always tries to resume download and if resume is not possible, aborts download. If false is given, when all given URIs do not support resume or aria2 encounters N URIs which does not support resume, aria2 downloads file from scratch. Default: true
+  always-resume=true
+  # Enable asynchronous DNS. Default: true
+  async-dns=false
+  # Rename file name if the same file already exists. This option works only in HTTP(S)/FTP download. Default: true
+  auto-file-renaming=true
+  # Handle quoted string in Content-Disposition header as UTF-8 instead of ISO-8859-1, for example, the filename parameter, but not the extended version filename. Default: false
+  content-disposition-default-utf8=true
+  # Enable disk cache. If SIZE is 0, the disk cache is disabled. This feature caches the downloaded data in memory, which grows to at most SIZE bytes. SIZE can include K or M. Default: 16M
+  disk-cache=64M
+  # Specify file allocation method. none doesn't pre-allocate file space. prealloc pre-allocates file space before download begins. This may take some time depending on the size of the file. If you are using newer file systems such as ext4 (with extents support), btrfs, xfs or NTFS(MinGW build only), falloc is your best choice. It allocates large(few GiB) files almost instantly. Don't use falloc with legacy file systems such as ext3 and FAT32 because it takes almost same time as prealloc and it blocks aria2 entirely until allocation finishes. falloc may not be available if your system doesn't have posix_fallocate(3) function. trunc uses ftruncate(2) system call or platform-specific counterpart to truncate a file to a specified length. Possible Values: none, prealloc, trunc, falloc. Default: prealloc
+  file-allocation=falloc
+  # No file allocation is made for files whose size is smaller than SIZE. Default: 5M
+  no-file-allocation-limit=8M
+  # Set log level to output to console. LEVEL is either debug, info, notice, warn or error. Default: notice
+  # console-log-level=notice
+  # Set log level to output. LEVEL is either debug, info, notice, warn or error. Default: debug
+  # log-level=debug
+  # The file name of the log file. If - is specified, log is written to stdout. If empty string("") is specified, or this option is omitted, no log is written to disk at all.
+  # log=
+
+
+  ### RPC ###
+  # Enable JSON-RPC/XML-RPC server. Default: false
+  enable-rpc=true
+  # Pause download after added. This option is effective only when --enable-rpc=true is given. Default: false
+  # pause=false
+  # Save the uploaded torrent or metalink meta data in the directory specified by --dir option. If false is given to this option, the downloads added will not be saved by --save-session option. Default: true
+  # rpc-save-upload-metadata=true
+  # Add Access-Control-Allow-Origin header field with value * to the RPC response. Default: false
+  rpc-allow-origin-all=true
+  # Listen incoming JSON-RPC/XML-RPC requests on all network interfaces. If false is given, listen only on local loopback interface. Default: false
+  rpc-listen-all=false
+  # Specify a port number for JSON-RPC/XML-RPC server to listen to. Possible Values: 1024 -65535 Default: 6800
+  # rpc-listen-port=50100
+  # Set RPC secret authorization token.
+  # rpc-secret=
+  # Use the certificate in FILE for RPC server. The certificate must be either in PKCS12 (.p12, .pfx) or in PEM format. When using PEM, you have to specify the private key via --rpc-private-key as well. Use --rpc-secure option to enable encryption.
+  # rpc-certificate=
+  # Use the private key in FILE for RPC server. The private key must be decrypted and in PEM format. Use --rpc-secure option to enable encryption.
+  # rpc-private-key=
+  # RPC transport will be encrypted by SSL/TLS. The RPC clients must use https scheme to access the server. For WebSocket client, use wss scheme. Use --rpc-certificate and --rpc-private-key options to specify the server certificate and private key.
+  # rpc-secure=false
+
+
+  ### HTTP/FTP/SFTP ###
+  # The maximum number of connections to one server for each download. Default: 1
+  max-connection-per-server=16
+  # aria2 does not split less than 2*SIZE byte range. Possible Values: 1M -1024M. Default: 20M
+  min-split-size=8M
+  # Download a file using N connections. The number of connections to the same host is restricted by the --max-connection-per-server option. Default: 5
+  split=32
+  # Set user agent for HTTP(S) downloads. Default: aria2/$VERSION, $VERSION is replaced by package version.
+  user-agent=Transmission/2.77
+
+
+  ### BitTorrent ###
+  # Save meta data as ".torrent" file. Default: false
+  # bt-save-metadata=false
+  # Set TCP port number for BitTorrent downloads. Multiple ports can be specified by using ',' and '-'. Default: 6881-6999
+  listen-port=50101-50109
+  # Set max overall upload speed in bytes/sec. 0 means unrestricted. Default: 0
+  # max-overall-upload-limit=256K
+  # Set max upload speed per each torrent in bytes/sec. 0 means unrestricted. Default: 0
+  # max-upload-limit=0
+  # Specify share ratio. Seed completed torrents until share ratio reaches RATIO. Specify 0.0 if you intend to do seeding regardless of share ratio. Default: 1.0
+  seed-ratio=0.1
+  # Specify seeding time in (fractional) minutes. Specifying --seed-time=0 disables seeding after download completed.
+  seed-time=0
+  # Enable Local Peer Discovery. If a private flag is set in a torrent, aria2 doesn't use this feature for that download even if true is given. Default: false
+  # bt-enable-lpd=false
+  # Enable IPv4 DHT functionality. It also enables UDP tracker support. If a private flag is set in a torrent, aria2 doesn't use DHT for that download even if true is given. Default: true
+  enable-dht=true
+  # Enable IPv6 DHT functionality. If a private flag is set in a torrent, aria2 doesn't use DHT for that download even if true is given.
+  enable-dht6=true
+  # Set UDP listening port used by DHT(IPv4, IPv6) and UDP tracker. Default: 6881-6999
+  dht-listen-port=50101-50109
+  # Set host and port as an entry point to IPv4 DHT network.
+  dht-entry-point=dht.transmissionbt.com:6881
+  # Set host and port as an entry point to IPv6 DHT network.
+  dht-entry-point6=dht.transmissionbt.com:6881
+  # Change the IPv4 DHT routing table file to PATH. Default: $HOME/.aria2/dht.dat if present, otherwise $XDG_CACHE_HOME/aria2/dht.dat.
+  dht-file-path=${HOME}/.aria2/dht.dat
+  # Change the IPv6 DHT routing table file to PATH. Default: $HOME/.aria2/dht6.dat if present, otherwise $XDG_CACHE_HOME/aria2/dht6.dat.
+  dht-file-path6=${HOME}/.aria2/dht6.dat
+  # Enable Peer Exchange extension. If a private flag is set in a torrent, this feature is disabled for that download even if true is given. Default: true
+  enable-peer-exchange=true
+  # Specify the prefix of peer ID. Default: A2-$MAJOR-$MINOR-$PATCH-. For instance, aria2 version 1.18.8 has prefix ID A2-1-18-8-.
+  peer-id-prefix=-TR2770-
+  # Specify the string used during the bitorrent extended handshake for the peer’s client version. Default: aria2/$MAJOR.$MINOR.$PATCH, $MAJOR, $MINOR and $PATCH are replaced by major, minor and patch version number respectively. For instance, aria2 version 1.18.8 has peer agent aria2/1.18.8.
+  peer-agent=Transmission/2.77
+#+end_src
+
+* COMMENT some extra configuration

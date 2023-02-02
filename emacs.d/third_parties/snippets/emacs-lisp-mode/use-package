@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: use-package
+# key: use-package
+# --
+(use-package ${1:name}
+  :ensure t
+  :tags '(${2:tags})
+  :config
+  $0)

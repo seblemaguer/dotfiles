@@ -1,0 +1,20 @@
+# Config
+config/
+
+# Emacs
+emacs.d/*
+!emacs.d/third_parties
+!emacs.d/plugins
+*.elc
+
+# htop part
+system/htoprc
+
+# Latex
+texmf/tex/latex/auto/
+
+# Ipython
+ipython/profile_default/db/
+
+# Postprocessing
+postprocessing/

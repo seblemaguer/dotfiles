@@ -1,0 +1,6 @@
+* RELEASE %^{Artist} - %^{Title}
+:LOGBOOK:
+- Added: %U
+:END:
+
+SCHEDULED: %(org-insert-time-stamp (org-read-date nil t))

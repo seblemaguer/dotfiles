@@ -1,0 +1,5 @@
+* MAIL Respond to [[mailto:%:fromaddress][%:fromname]] on %a
+SCHEDULED: %(org-insert-time-stamp (org-read-date nil t) nil nil nil nil)
+:LOGBOOK:
+- Added: %U
+:END:

@@ -1,0 +1,518 @@
+#+TITLE: Programming tools configuration
+#+AUTHOR: Sébastien Le Maguer
+#+EMAIL: lemagues@surface
+#+DATE: 19 June 2021
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  fr
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/default.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
+
+* Python
+** PyLINT
+#+begin_src conf :tangle "~/.pylintrc"
+  # lint Python modules using external checkers.
+  #
+  # This is the main checker controlling the other ones and the reports
+  # generation. It is itself both a raw checker and an astng checker in order
+  # to:
+  # * handle message activation / deactivation at the module level
+  # * handle some basic but necessary stats'data (number of classes, methods...)
+  #
+  [MASTER]
+
+  # Python code to execute, usually for sys.path manipulation such as
+  # pygtk.require().
+  #init-hook=
+
+  # Profiled execution.
+  profile=no
+
+  # Add <file or directory> to the black list. It should be a base name, not a
+  # path. You may set this option multiple times.
+  ignore=CVS
+  ignore=.bzr
+  ignore=.svn
+
+  # Pickle collected data for later comparisons.
+  persistent=yes
+
+  # Set the cache size for astng objects.
+  cache-size=500
+
+  # List of plugins (as comma separated values of python modules names) to load,
+  # usually to register additional checkers.
+  load-plugins=
+
+
+  [MESSAGES CONTROL]
+
+  # Enable only checker(s) with the given id(s). This option conflict with the
+  # disable-checker option
+  #enable-checker=
+
+  # Enable all checker(s) except those with the given id(s). This option
+  # conflicts with the enable-checker option
+  #disable-checker=
+
+  # Enable all messages in the listed categories.
+  #enable-msg-cat=
+
+  # Disable all messages in the listed categories.
+  #disable-msg-cat=
+
+  # Enable the message(s) with the given id(s).
+  #enable-msg=
+
+  # Disable the message(s) with the given id(s).
+  disable-msg=I0011,R0903,C0111,W0612,W0401
+
+
+  [REPORTS]
+
+  # Set the output format. Available formats are text, parseable, colorized, msvs
+  # (visual studio) and html
+  output-format=text
+
+  # Include message's id in output
+  include-ids=yes
+
+  # Put messages in a separate file for each module / package specified on the
+  # command line instead of printing them on stdout. Reports (if any) will be
+  # written in a file name "pylint_global.[txt|html]".
+  files-output=no
+
+  # Tells wether to display a full report or only the messages
+  reports=yes
+
+  # Python expression which should return a note less than 10 (10 is the highest
+  # note). You have access to the variables errors warning, statement which
+  # respectivly contain the number of errors / warnings messages and the total
+  # number of statements analyzed. This is used by the global evaluation report
+  # (R0004).
+  evaluation=10.0 - ((float(5 * error + warning + refactor + convention) / statement) * 10)
+
+  # Add a comment according to your evaluation note. This is used by the global
+  # evaluation report (R0004).
+  comment=no
+
+  # Enable the report(s) with the given id(s).
+  #enable-report=
+
+  # Disable the report(s) with the given id(s).
+  disable-report=C0111
+
+
+  # checks for
+  # * unused variables / imports
+  # * undefined variables
+  # * redefinition of variable from builtins or from an outer scope
+  # * use of variable before assigment
+  #
+  [VARIABLES]
+
+  # Tells wether we should check for unused import in __init__ files.
+  init-import=no
+
+  # A regular expression matching names used for dummy variables (i.e. not used).
+  dummy-variables-rgx=_|dummy
+
+  # List of additional names supposed to be defined in builtins. Remember that
+  # you should avoid to define new builtins when possible.
+  additional-builtins=
+
+
+  # try to find bugs in the code using type inference
+  #
+  [TYPECHECK]
+
+  # Tells wether missing members accessed in mixin class should be ignored. A
+  # mixin class is detected if its name ends with "mixin" (case insensitive).
+  ignore-mixin-members=yes
+
+  # List of classes names for which member attributes should not be checked
+  # (useful for classes with attributes dynamicaly set).
+  ignored-classes=SQLObject
+
+  # When zope mode is activated, add a predefined set of Zope acquired attributes
+  # to generated-members.
+  zope=no
+
+  # List of members which are set dynamically and missed by pylint inference
+  # system, and so shouldn't trigger E0201 when accessed.
+  generated-members=REQUEST,acl_users,aq_parent
+
+
+  # checks for :
+  # * doc strings
+  # * modules / classes / functions / methods / arguments / variables name
+  # * number of arguments, local variables, branchs, returns and statements in
+  # functions, methods
+  # * required module attributes
+  # * dangerous default values as arguments
+  # * redefinition of function / method / class
+  # * uses of the global statement
+  #
+  [BASIC]
+
+  # Required attributes for module, separated by a comma
+  required-attributes=
+
+  # Regular expression which should only match functions or classes name which do
+  # not require a docstring
+  no-docstring-rgx=__.*__
+
+  # Regular expression which should only match correct module names
+  module-rgx=(([a-z_][a-z0-9_]*)|([A-Z][a-zA-Z0-9]+))$
+
+  # Regular expression which should only match correct module level names
+  const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+  # Regular expression which should only match correct class names
+  class-rgx=[A-Z_][a-zA-Z0-9]+$
+
+  # Regular expression which should only match correct function names
+  function-rgx=[a-z_][a-z0-9_]{2,30}$
+
+  # Regular expression which should only match correct method names
+  method-rgx=[a-z_][a-z0-9_]{2,30}$
+
+  # Regular expression which should only match correct instance attribute names
+  attr-rgx=[a-z_][a-z0-9_]{2,30}$
+
+  # Regular expression which should only match correct argument names
+  argument-rgx=[a-z_][a-z0-9_]{2,30}$
+
+  # Regular expression which should only match correct variable names
+  variable-rgx=[a-z_][a-z0-9_]{1,30}$
+
+  # Regular expression which should only match correct list comprehension /
+  # generator expression variable names
+  inlinevar-rgx=[A-Za-z_][A-Za-z0-9_]*$
+
+  # Good variable names which should always be accepted, separated by a comma
+  good-names=i,j,k,e,ex,Run,_
+
+  # Bad variable names which should always be refused, separated by a comma
+  bad-names=foo,bar,baz,toto,tutu,tata
+
+  # List of builtins function names that should not be used, separated by a comma
+  bad-functions=map,filter,apply,input
+
+
+  # checks for
+  # * external modules dependencies
+  # * relative / wildcard imports
+  # * cyclic imports
+  # * uses of deprecated modules
+  #
+  [IMPORTS]
+
+  # Deprecated modules which should not be used, separated by a comma
+  deprecated-modules=regsub,string,TERMIOS,Bastion,rexec
+
+  # Create a graph of every (i.e. internal and external) dependencies in the
+  # given file (report R0402 must not be disabled)
+  import-graph=
+
+  # Create a graph of external dependencies in the given file (report R0402 must
+  # not be disabled)
+  ext-import-graph=
+
+  # Create a graph of internal dependencies in the given file (report R0402 must
+  # not be disabled)
+  int-import-graph=
+
+
+  # checks for sign of poor/misdesign:
+  # * number of methods, attributes, local variables...
+  # * size, complexity of functions, methods
+  #
+  [DESIGN]
+
+  # Maximum number of arguments for function / method
+  max-args=5
+
+  # Maximum number of locals for function / method body
+  max-locals=15
+
+  # Maximum number of return / yield for function / method body
+  max-returns=6
+
+  # Maximum number of branch for function / method body
+  max-branchs=12
+
+  # Maximum number of statements in function / method body
+  max-statements=50
+
+  # Maximum number of parents for a class (see R0901).
+  max-parents=7
+
+  # Maximum number of attributes for a class (see R0902).
+  max-attributes=7
+
+  # Minimum number of public methods for a class (see R0903).
+  min-public-methods=2
+
+  # Maximum number of public methods for a class (see R0904).
+  max-public-methods=20
+
+
+  # checks for :
+  # * methods without self as first argument
+  # * overridden methods signature
+  # * access only to existant members via self
+  # * attributes not defined in the __init__ method
+  # * supported interfaces implementation
+  # * unreachable code
+  #
+  [CLASSES]
+
+  # List of interface methods to ignore, separated by a comma. This is used for
+  # instance to not check methods defines in Zope's Interface base class.
+  ignore-iface-methods=isImplementedBy,deferred,extends,names,namesAndDescriptions,queryDescriptionFor,getBases,getDescriptionFor,getDoc,getName,getTaggedValue,getTaggedValueTags,isEqualOrExtendedBy,setTaggedValue,isImplementedByInstancesOf,adaptWith,is_implemented_by
+
+  # List of method names used to declare (i.e. assign) instance attributes.
+  defining-attr-methods=__init__,__new__,setUp
+
+
+  # checks for :
+  # * unauthorized constructions
+  # * strict indentation
+  # * line length
+  # * use of <> instead of !=
+  #
+  [FORMAT]
+
+  # Maximum number of characters on a single line.
+  max-line-length=100
+
+  # Maximum number of lines in a module
+  max-module-lines=1000
+
+  # String used as indentation unit. This is usually " " (4 spaces) or "\t" (1
+  # tab).
+  indent-string='    '
+
+
+  # checks for similarities and duplicated code. This computation may be
+  # memory / CPU intensive, so you should disable it if you experiments some
+  # problems.
+  #
+  [SIMILARITIES]
+
+  # Minimum lines number of a similarity.
+  min-similarity-lines=4
+
+  # Ignore comments when computing similarities.
+  ignore-comments=yes
+
+  # Ignore docstrings when computing similarities.
+  ignore-docstrings=yes
+
+
+  # checks for:
+  # * warning notes in the code like FIXME, XXX
+  # * PEP 263: source code with non ascii character but no encoding declaration
+  #
+  [MISCELLANEOUS]
+
+  # List of note tags to take in consideration, separated by a comma.
+  notes=FIXME,XXX,TODO,NOTE
+#+end_src
+
+* Javascript
+** NPM
+#+begin_src conf :tangle "~/.npmrc"
+  prefix=${HOME}/environment/local/npm_packages
+#+end_src
+
+* R
+#+begin_src conf :tangle "~/.Rprofile"
+  # Setup repository
+  local({
+    r = getOption("repos")
+    r["CRAN"] = "http://cran.univ-paris1.fr/"
+    options(repos = r)
+  })
+#+end_src
+
+* LaTeX
+** latexmk
+#+begin_src conf :tangle "~/.latexmkrc"
+  #!/bin/env perl
+
+  # coming from: https://collaborating.tuhh.de/alex/latex-cookbook/-/blob/master/.latexmkrc
+
+
+  # This file contains instructions and configurations for the `latexmk` program.
+  # That program is somewhat like `make`, but tailored to LaTeX.
+  # LaTeX has a distinct characteristic of regularly requiring *multiple runs* of
+  # the same program (e.g. `lualatex`) before the build is finished.
+  # It's a *multi-pass* system.
+  # In the intermediary runs, latex generates auxiliary files responsible for resolving
+  # references, links, tables of content etc.
+
+  # `latexmk` knows about these dependencies (otherwise we tell it in this very config
+  # file, see below), detects these and runs latex (and other, outside programs)
+  # accordingly.
+
+  # Now, why do we need *both* `latexmk` and `make`?
+  # Both automate builds.
+
+  # `latexmk` is not powerful enough to cover all use cases.
+  # `make` is more general and more suitable to be integrated in CI.
+  # For our latex needs, `make` basically only delegates to `latexmk`.
+  # We **do not** call e.g. `lualatex` multiple times manually from `make`:
+  # this logic is left to `latexmk` and `.latexmkrc`.
+  # However, `make` can also do much more, e.g. cover `pandoc`, clean-up operations etc.
+  # Therefore, `make` and `latexmkrc` *together* are just super powerful and useful.
+
+
+  # The shebang at the top  is only to get syntax highlighting right across GitLab,
+  # GitHub and IDEs.
+  # This file is not meant to be run, but read by `latexmk`.
+
+  # ======================================================================================
+  # Perl `latexmk` configuration file
+  # ======================================================================================
+
+  # ======================================================================================
+  # PDF Generation/Building/Compilation
+  # ======================================================================================
+
+  # PDF-generating modes are:
+  # 1: pdflatex, as specified by $pdflatex variable (still largely in use)
+  # 2: postscript conversion, as specified by the $ps2pdf variable (useless)
+  # 3: dvi conversion, as specified by the $dvipdf variable (useless)
+  # 4: lualatex, as specified by the $lualatex variable (best)
+  # 5: xelatex, as specified by the $xelatex variable (second best)
+  $pdf_mode = 4;
+
+  # Treat undefined references and citations as well as multiply defined references as
+  # ERRORS instead of WARNINGS.
+  # This is only checked in the *last* run, since naturally, there are undefined references
+  # in initial runs.
+  # This setting is potentially annoying when debugging/editing, but highly desirable
+  # in the CI pipeline, where such a warning should result in a failed pipeline, since the
+  # final document is incomplete/corrupted.
+  #
+  # However, I could not eradicate all warnings, so that `latexmk` currently fails with
+  # this option enabled.
+  # Specifically, `microtype` fails together with `fontawesome`/`fontawesome5`, see:
+  # https://tex.stackexchange.com/a/547514/120853
+  # The fix in that answer did not help.
+  # Setting `verbose=silent` to mute `microtype` warnings did not work.
+  # Switching between `fontawesome` and `fontawesome5` did not help.
+  $warnings_as_errors = 0;
+
+  # Show used CPU time. Looks like: https://tex.stackexchange.com/a/312224/120853
+  $show_time = 1;
+
+  # Default is 5; we seem to need more owed to the complexity of the document.
+  # Actual documents probably don't need this many since they won't use all features,
+  # plus won't be compiling from cold each time.
+  $max_repeat=7;
+
+  # --shell-escape option (execution of code outside of latex) is required for the
+  #'svg' package.
+  # It converts raw SVG files to the PDF+PDF_TEX combo using InkScape.
+  #
+  # SyncTeX allows to jump between source (code) and output (PDF) in IDEs with support
+  # (many have it). A value of `1` is enabled (gzipped), `-1` is enabled but uncompressed,
+  # `0` is off.
+  # Testing in VSCode w/ LaTeX Workshop only worked for the compressed version.
+  # Adjust this as needed. Of course, only relevant for local use, no effect on a remote
+  # CI pipeline (except for slower compilation, probably).
+  #
+  # %O and %S will forward Options and the Source file, respectively, given to latexmk.
+  #
+  # `set_tex_cmds` applies to all *latex commands (latex, xelatex, lualatex, ...), so
+  # no need to specify these each. This allows to simply change `$pdf_mode` to get a
+  # different engine. Check if this works with `latexmk --commands`.
+  set_tex_cmds("--shell-escape --synctex=1 %O %S");
+
+  # option 2 is same as 1 (run biber when necessary), but also deletes the
+  # regeneratable bbl-file in a clenaup (`latexmk -c`). Do not use if original
+  # bib file is not available!
+  $bibtex_use = 2;  # default: 1
+
+  # Change default `biber` call, help catch errors faster/clearer. See
+  # https://web.archive.org/web/20200526101657/https://www.semipol.de/2018/06/12/latex-best-practices.html#database-entries
+  $biber = "biber --validate-datamodel %O %S";
+
+  # ======================================================================================
+  # Auxiliary Files
+  # ======================================================================================
+
+  # Let latexmk know about generated files, so they can be used to detect if a
+  # rerun is required, or be deleted in a cleanup.
+  # loe: List of Examples (KOMAScript)
+  # lol: List of Listings (`listings` and `minted` packages)
+  # run.xml: biber runs
+  # glg: glossaries log
+  # glstex: generated from glossaries-extra
+  push @generated_exts, 'loe', 'lol', 'lor', 'run.xml', 'glg', 'glstex';
+
+  # Also delete the *.glstex files from package glossaries-extra. Problem is,
+  # that that package generates files of the form "basename-digit.glstex" if
+  # multiple glossaries are present. Latexmk looks for "basename.glstex" and so
+  # does not find those. For that purpose, use wildcard.
+  # Also delete files generated by gnuplot/pgfplots contour plots
+  # (.dat, .script, .table).
+  $clean_ext = "%R-*.glstex %R_contourtmp*.*";
+
+  # ======================================================================================
+  # bib2gls as a custom dependency
+  # ======================================================================================
+
+  # Grabbed from latexmk CTAN distribution:
+  # Implementing glossary with bib2gls and glossaries-extra, with the
+  # log file (.glg) analyzed to get dependence on a .bib file.
+  # !!! ONLY WORKS WITH VERSION 4.54 or higher of latexmk
+
+  # Add custom dependency.
+  # latexmk checks whether a file with ending as given in the 2nd
+  # argument exists ('toextension'). If yes, check if file with
+  # ending as in first argument ('fromextension') exists. If yes,
+  # run subroutine as given in fourth argument.
+  # Third argument is whether file MUST exist. If 0, no action taken.
+  add_cus_dep('aux', 'glstex', 0, 'run_bib2gls');
+
+  # PERL subroutine. $_[0] is the argument (filename in this case).
+  # File from author from here: https://tex.stackexchange.com/a/401979/120853
+  sub run_bib2gls {
+      if ( $silent ) {
+      #    my $ret = system "bib2gls --silent --group '$_[0]'"; # Original version
+          my $ret = system "bib2gls --silent --group $_[0]"; # Runs in PowerShell
+      } else {
+      #    my $ret = system "bib2gls --group '$_[0]'"; # Original version
+          my $ret = system "bib2gls --group $_[0]"; # Runs in PowerShell
+      };
+
+      my ($base, $path) = fileparse( $_[0] );
+      if ($path && -e "$base.glstex") {
+          rename "$base.glstex", "$path$base.glstex";
+      }
+
+      # Analyze log file.
+      local *LOG;
+      $LOG = "$_[0].glg";
+      if (!$ret && -e $LOG) {
+          open LOG, "<$LOG";
+      while (<LOG>) {
+              if (/^Reading (.*\.bib)\s$/) {
+          rdb_ensure_file( $rule, $1 );
+          }
+      }
+      close LOG;
+      }
+      return $ret;
+  }
+#+end_src
+
+
+* COMMENT some extra configuration

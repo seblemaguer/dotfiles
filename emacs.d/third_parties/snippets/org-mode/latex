@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: LATEX
+# key: <LA
+# --
+#+LATEX: $1

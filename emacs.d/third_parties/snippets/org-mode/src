@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: #+srcname:..#+begin_src...#+end_src
+# key: src_
+# --
+#+NAME: ${1:name}
+#+BEGIN_SRC ${2:sh} ${3::session session01} ${4::exports both}
+  $0
+#+END_SRC

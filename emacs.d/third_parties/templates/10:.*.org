@@ -1,0 +1,15 @@
+#+TITLE: ${1:Title}
+#+DATE: `(format-time-string "%e %B %Y")`
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  fr
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+COLUMNS: %55ITEM(Details) %8Effort(Effort){:} %8CLOCKSUM(Clocked){:}
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/default.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
+
+$0
+
+* COMMENT some extra configuration

@@ -1,0 +1,41 @@
+#!/bin/sh
+
+######################################################################################################
+## SLURM/SBATCH section
+######################################################################################################
+
+# == General
+#SBATCH -J  ${1:Job Name}                 # Name of the job
+
+# == Scheduling
+#SBATCH -p compute                     # Name of the partition to run the job on
+#SBATCH --nodes=1                      # Number of allocated nodes
+#SBATCH --ntasks-per-node=1            # Number of tasks per node
+#SBATCH --cpus-per-task=${2:Nb cpus}   # Number of CPUs per task
+#SBATCH --mem=${3:memory}              # Maximum memory allocated for the job
+
+# == Logging
+#SBATCH --error="log/err"              # Where to store the standard error messages
+#SBATCH --output="log/out"             # Where to store the standard output messages (could be the same file than the error if everything should be merged)
+
+# == Notification
+#SBATCH --mail-type=END                # Notify at the end of the job
+#SBATCH --mail-user=lemagues@tcd.ie    # Address to notify the end of the job
+
+${4:# == GPU section
+#SBATCH --gres=gpu:rtx2080ti:1         # GPU Allocation info following the format gpu[:<device>]:<number of devices>
+
+# log some GPU usage/utilisation
+nvidia-smi dmon -o DT -s um -f \$\{SLURM_JOB_NAME\}-\$\{SLURM_JOB_ID\}-smi.log &
+}
+
+######################################################################################################
+## Actual command
+######################################################################################################
+
+${5:# Activate conda
+eval "\$(conda shell.bash hook)"
+conda activate ${6:ENVIRONMENT}
+}
+
+$0

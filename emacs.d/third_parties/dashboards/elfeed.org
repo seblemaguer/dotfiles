@@ -1,0 +1,33 @@
+* Basics
+
+ [U] Update Elfeed
+ [s] Search
+ [E] Edit
+ [g] Refresh counts
+ [q] Kill dashboard
+
+* Bookmarks
+
+ [u] Unread      ([[elfeed:+unread][     0]]/[[elfeed:][     0]])
+ [e] Emacs       ([[elfeed:+unread +Emacs][     0]]/[[elfeed:+Emacs][     0]])
+ [g] github      ([[elfeed:+unread +repositories][     0]]/[[elfeed:+repositories][     0]])
+ [p] podcasts    ([[elfeed:+unread +podcasts][     0]]/[[elfeed:+podcasts][     0]])
+ [v] Video       ([[elfeed:+unread +youtube][     0]]/[[elfeed:+youtube][     0]])
+
+* Configuration
+  :PROPERTIES:
+  :VISIBILITY: hideall
+  :END:
+
+  Press "E" to edit and M-x elfeed-dashboard-mode to go back
+
+  #+STARTUP: showall showstars indent
+  #+KEYMAP: u | elfeed-dashboard-query "+unread"
+  #+KEYMAP: e | elfeed-dashboard-query "+unread +Emacs"
+  #+KEYMAP: v | elfeed-dashboard-query "+unread +youtube"
+  #+KEYMAP: p | elfeed-dashboard-query "+unread +podcasts"
+  #+KEYMAP: s | elfeed
+  #+KEYMAP: g | elfeed-dashboard-update-links
+  #+KEYMAP: U | elfeed-dashboard-update
+  #+KEYMAP: E | elfeed-dashboard-edit
+  #+KEYMAP: q | kill-current-buffer

@@ -1,0 +1,65 @@
+/*******************************************************************************************
+ ** Dependencies and meta setup
+ *******************************************************************************************/
+
+apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+    maven {
+        url 'https://oss.jfrog.org/artifactory/oss-snapshot-local'
+    }
+}
+
+dependencies {
+    testCompile group: 'org.testng', name: 'testng', version: '6.8.13'
+}
+
+test {
+    useTestNG()
+ }
+
+/*******************************************************************************************
+ **
+ *******************************************************************************************/
+$0
+
+
+/**********************************************************************************************
+ ** Project meta + publishing part
+***********************************************************************************************/
+version '${1:version}'
+group "${2:group}"
+description "${3:description}"
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier 'sources'
+            }
+        }
+    }
+    repositories {
+        maven {
+            url "$rootProject.buildDir/repo"
+        }
+        maven {
+            url version.endsWith('-SNAPSHOT') ? 'https://oss.jfrog.org/artifactory/oss-snapshot-local' : '${4:repo}'
+            credentials {
+                username = findProperty('bintrayUser')
+                password = findProperty('bintrayApiKey')
+            }
+        }
+    }
+}
