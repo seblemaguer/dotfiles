@@ -6787,10 +6787,19 @@ However, =prodigy= doesn't provide a nice way to start processes automatically.
 Yet =elcontext= is still slightly bugged, so I use my own fork right now.
 Currently, it is mainly used to start/stop emails but it is likely to be expanded in the future.
 
+#+NAME: prodigy-keybindings
+| Key | Function                | Description                     |
+|-----+-------------------------+---------------------------------|
+| ?   | prodigy-display-process | Display the process information |
+
 #+BEGIN_SRC emacs-lisp
   (use-package prodigy
     :demand t
     :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
+    :bind (:map prodigy-mode-map (
+      <<keybindings-gen(table=prodigy-keybindings)>>
+    ))
+
     :hook
     (kill-emacs . prodigy-force-stop-all-service)
 
