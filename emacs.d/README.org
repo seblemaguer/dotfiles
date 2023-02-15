@@ -2789,11 +2789,18 @@ CLOSED: [2023-02-02 Thu 15:55]
 =popper= is a package providing shortcuts for a quick access to some family of buffers.
 I am using it mainly to show/hide my terminal faster.
 
+#+NAME: start-term-hydra-keybindings
+| Key | Function    | Label        | Description |
+|-----+-------------+--------------+-------------|
+| p   | run-python  | Python Shell |             |
+| t   | multi-vterm | VTerm        |             |
+
 #+NAME: popper-entry-keybindings
-| Key    | Function             | Description |
-|--------+----------------------+-------------|
-| <f6>   | popper-toggle-latest |             |
-| S-<f6> | popper-cycle         |             |
+| Key    | Function              | Description |
+|--------+-----------------------+-------------|
+| <f6>   | popper-toggle-latest  |             |
+| S-<f6> | popper-cycle          |             |
+| C-<f6> | start-term-hydra/body |             |
 
 
 #+begin_src emacs-lisp :lexical no
@@ -2803,6 +2810,12 @@ I am using it mainly to show/hide my terminal faster.
       <<keybindings-gen(table=popper-entry-keybindings)>>
     )
 
+    :pretty-hydra (start-term-hydra
+     (:color teal :hint nil)
+     ("Select type of terminal" (
+         <<hydra-keybindings-gen(table=start-term-hydra-keybindings)>>
+    )))
+
     :init
     (setq popper-reference-buffers
           '("\\*Messages\\*"
@@ -2810,7 +2823,9 @@ I am using it mainly to show/hide my terminal faster.
             "\\*Async Shell Command\\*"
             help-mode
             compilation-mode
-            "^\\*vterm.*\\*$"  vterm-mode))
+            "^\\*vterm.*\\*$"  vterm-mode
+            comint-mode
+            prodigy-mode))
     (popper-mode +1)
     (popper-echo-mode +1))
 #+end_src
@@ -3563,17 +3578,9 @@ I prefer to use ~ipython~ as the interpreter as it is more powerful.
 I use =python-mls= to enhance the REPL environment
 Finally, I use =numpydoc= to deal with the documentation.
 
-#+NAME: ipython-entry-keybindings
-| Key    | Functon    | Description |
-|--------+------------+-------------|
-| C-<f6> | run-python |             |
-
 #+begin_src emacs-lisp
   (use-package python
     :tags '("PROGRAMMING" "PYTHON")
-    :bind (
-      <<keybindings-gen(table=ipython-entry-keybindings)>>
-    )
 
     :dash "Python 3" "Pandas" "NumPy" "SciPy" "Matplotlib"
     :mode
