@@ -3282,10 +3282,6 @@ I also use =yaml-tomato= to get the path at the current point which helps the ac
 | C-c M-p | yaml-pro-move-subtree-up   |             |
 | C-c M-n | yaml-pro-move-subtree-down |             |
 
-
-
-
-
 #+begin_src emacs-lisp
   (use-package yaml-mode
     :tags '("PROGRAMMING" "CONFIGURATION")
@@ -5911,8 +5907,8 @@ Therefore, all the packages are installed using =straight=.
     (ement-notify-notify-predicates '(ement-notify--notifications-sauron))
 
     :custom-face
-    (ement-room-read-receipt-marker ((t (:box '(:line-width 0.1) :height 0.1 :background "red" :family "Inconsolata-11"))))
-    (ement-room-fully-read-marker ((t (:box '(:line-width 0.1) :height 0.1 :background "green" :family "Inconsolata-11"))))
+    (ement-room-read-receipt-marker ((t (:box '(:line-width 0.1) :height 0.1 :background "red"))))
+    (ement-room-fully-read-marker ((t (:box '(:line-width 0.1) :height 0.1 :background "green"))))
 
     :commands (ement-connect)
     :config
@@ -6942,20 +6938,17 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
 
   (use-package flatfluc-theme
     :tags '("VISUAL")
-    :config
-    (load-theme 'flatfluc t)
-    ;; No tooltips
+    :init
+    ;; Clean some unused information
     (tooltip-mode -1)
-
-    ;; No scroll bars
     (scroll-bar-mode -1)
-
-    ;; No toolbar
     (tool-bar-mode -1)
 
     ;; Default frame settings
+    (set-frame-font "MesloLGS NF" nil t)
     (setq default-frame-alist
           (append (list
+                   '(font . "MesloLGS NF-10") ;; NOTE: the size needs to be spec. else font is too small
                    '(min-height . 1)  '(height . 45)
                    '(min-width  . 1)  '(width  . 81)
                    '(vertical-scroll-bars  . nil)
@@ -6969,6 +6962,9 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     (setq window-divider-default-right-width 5
           window-divider-default-places 'right-only)
     (window-divider-mode 1)
+
+    :config
+    (load-theme 'flatfluc t)
 
     ;; Nicer glyphs for continuation and wrap
     (defface flatfluc-faded `((t :foreground ,fui-soaring-eagle))
@@ -6998,14 +6994,12 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
                         :background fui-deep-clouds
                         ;; :box '(:line-width 1)
                         :box nil
-                        :family "Inconsolata-11"
                         :height 100)
     (set-face-attribute 'mode-line-inactive nil
                         :foreground fui-fg
                         :background fui-deep-clouds
                         ;; :box '(:line-width 1)
                         :box nil
-                        :family "Inconsolata-11"
                         :height 100)
 
     (set-face-attribute 'nano-modeline-active-name nil
