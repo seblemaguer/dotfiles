@@ -3655,9 +3655,9 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
 *** DONE Plotting/Graphing
 CLOSED: [2021-03-01 Mon 09:39]
 I tend to use some specific languages to do some plotting.
-For now, I am using only ~graphivz/DOT~ and ~tikz/pgf~.
+For now, I am using only ~graphivz/DOT~, =d2= and ~tikz/pgf~.
 This last one is configured on the latex part.
-Therefore, in this section, I add the support of =graphviz-dot-mode=.
+Therefore, in this section, I add the support of =graphviz-dot-mode= and =d2-mode=.
 
 #+begin_src emacs-lisp
   (use-package graphviz-dot-mode
@@ -3666,6 +3666,10 @@ Therefore, in this section, I add the support of =graphviz-dot-mode=.
     (defvar default-tab-width nil)
 
     :mode ("\\.dot\\'"))
+
+  (use-package d2-mode
+    :tags '("PROGRAMMING" "PLOTTING")
+    :mode ("\\.d2\\'"))
 #+end_src
 
 *** DONE Web
