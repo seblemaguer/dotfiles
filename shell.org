@@ -182,8 +182,9 @@
   alias root='sudo su'
   alias dfh='df -h'
   alias watch='watch -x ' # NOTE: this is needed to expand aliases properly
+  alias tangle_emacs_conf=$'~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "(progn (require \'ob-tangle) (setq org-confirm-babel-evaluate nil) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))" "~/.emacs.d/README.org"'
 
-  # = adding colors Color
+  # Adding colors
   alias ls='ls -Ch --color=auto'
   alias grep='grep --color=auto'
   alias fgrep='fgrep --color=auto'
@@ -491,7 +492,7 @@
   alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
 
   # Emacs helper
-  alias tangle_emacs_conf="emacs -Q --batch --eval \"(progn (require 'ob-tangle) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))\" \"~/.emacs.d/README.org\""
+  alias tangle_emacs_conf=$'~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "(progn (require \'ob-tangle) (setq org-confirm-babel-evaluate nil) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))" "~/.emacs.d/README.org"'
 
   # Cluster aliases
   alias msinfo='sinfo -o "%25N %.3a %.9P %10c  %10m  %25f  %20G %10l %50E"'
