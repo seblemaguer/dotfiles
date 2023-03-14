@@ -3605,12 +3605,13 @@ Finally, I use =numpydoc= to deal with the documentation.
     :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
     :after python)
 
-
   (use-package python-mls
     :tags '("PROGRAMMING" "PYTHON")
     :straight (python-mls :host github :repo "jdtsmith/python-mls")
-    :config
-    (python-mls-setup))
+    :custom
+    (python-mls-multiline-history-modifier '(meta shift))
+    :hook
+    (inferior-python-mode . python-mls-mode))
 #+end_src
 
 *** DONE Shell
