@@ -6951,7 +6951,6 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     (tool-bar-mode -1)
 
     ;; Default frame settings
-    (set-frame-font "MesloLGS NF" nil t)
     (setq default-frame-alist
           (append (list
                    '(font . "MesloLGS NF-10") ;; NOTE: the size needs to be spec. else font is too small
