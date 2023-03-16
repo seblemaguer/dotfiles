@@ -794,8 +794,11 @@ leads to this configuration
   (use-package recentf
     :tags '("CORE" "SESSION" "RECENT")
     :hook (after-init . recentf-mode)
+    :custom
+    (recentf-max-saved-items 100)
+    (recentf-max-menu-items 100)
+
     :config
-    (setq recentf-max-menu-items 100)     ;; Increase limit
 
     ;; Ignore
     (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:")
