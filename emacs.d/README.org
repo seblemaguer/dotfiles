@@ -2073,7 +2073,7 @@ CLOSED: [2022-02-10 Thu 07:04]
 
     :config
     (consult-customize consult-org-roam-forward-links
-                       :preview-key (kbd "M-."))
+                       :preview-key "M-.")
     )
 #+end_src
 
@@ -2640,9 +2640,7 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
 
     ;; Optionally configure preview. The default value
     ;; is 'any, such that any key triggers the preview.
-    (setq consult-preview-key 'any
-          consult-preview-key (kbd "M-.")
-          consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+    (setq consult-preview-key "M-.")
 
     ;; For some commands and buffer sources it is useful to configure the
     ;; :preview-key on a per-command basis using the `consult-customize' macro.
@@ -2652,7 +2650,7 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
                        consult-bookmark consult-recent-file consult-xref
                        consult--source-bookmark consult--source-recent-file
                        consult--source-project-recent-file
-                       :preview-key (kbd "M-."))
+                       :preview-key "M-.")
 
     ;; Optionally configure the narrowing key.
     ;; Both < and C-+ work reasonably well.
