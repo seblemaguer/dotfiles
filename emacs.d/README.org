@@ -2991,7 +2991,7 @@ For now it consists of simply removing any trailing whitespace.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
 
-* DONE Programming [100%]
+* TODO Programming [83%]
 Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
 To do so, I rely mainly on Language Server Protocol (LSP) and for the debugging I relay on the Debug Adapter Protocol (DAP).
 
@@ -3413,8 +3413,7 @@ In both cases, backup numbers are as well supported.
     ("syslog\\(?:\\.[0-9]+\\)?\\'" . logview-mode))
 #+end_src
 
-** DONE Programming languages [100%]
-CLOSED: [2021-01-04 Mon 07:42]
+** TODO Programming languages [88%]
 I am using emacs as IDE for multiple languages.
 For my research, I am using mainly on python, shell, java and maths-based languages.
 I, obviously, write some elisp code as well.
@@ -3491,6 +3490,80 @@ I also added a hydra configuration to link properly everything.
     :tags '("PROGRAMMING" "ELISP" "REPL")
     :commands (elpl))
 #+end_src
+
+*** TODO C/C++/CMake
+**** Use google programming style
+#+BEGIN_SRC emacs-lisp
+  (use-package google-c-style
+    :tags '("PROGRAMMING" "C" "CPP")
+    :ensure t
+    :hook
+    (c-mode-common . google-set-c-style)
+    (c-mode-common . google-make-newline-indent))
+#+END_SRC
+
+**** Treat =.h= as C++
+Identify =.h= files as C++ files instead of C. To enable =c++-mode=
+manually, type =M-x c\+\+-mode=.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+#+END_SRC
+
+**** Clang-format
+***** Installation
+#+NAME: clang-format-entry-keybindings
+| Key   | Function            | Description |
+|-------+---------------------+-------------|
+| C-c i | clang-format-region |             |
+| C-c u | clang-format-buffer |             |
+#+BEGIN_SRC emacs-lisp
+  (use-package clang-format
+    :ensure t
+    :tags '("PROGRAMMING" "C" "CPP")
+    :bind (
+      <<keybindings-gen(table=clang-format-entry-keybindings)>>
+    ))
+#+END_SRC
+
+***** Set code style
+Use Google's C++ style.
+#+BEGIN_SRC emacs-lisp
+  (custom-set-variables '(clang-format-style "file"))
+#+END_SRC
+
+**** Doxygen Highlighting
+Add highlighting for doxygen blocks.
+#+BEGIN_SRC emacs-lisp
+  (use-package highlight-doxygen
+    :tags '("PROGRAMMING" "C" "CPP")
+    :ensure t
+    :hook
+    (c-mode-common . highlight-doxygen-mode))
+#+END_SRC
+**** CMake
+#+begin_src emacs-lisp
+  (use-package cmake-mode
+    :tags '("PROGRAMMING" "CMAKE")
+    :ensure t
+    :mode "CMakeLists.txt")
+#+end_src
+
+Eldoc for CMake.
+#+BEGIN_SRC emacs-lisp
+  (use-package eldoc-cmake
+    :tags '("PROGRAMMING" "CMAKE")
+    :ensure t
+    :hook (cmake-mode . eldoc-cmake-enable))
+#+END_SRC
+
+Additional syntax highlighting for CMake. For some reason manual activation is still required.
+#+BEGIN_SRC emacs-lisp
+  (use-package cmake-font-lock
+    :tags '("PROGRAMMING" "CMAKE")
+    :ensure t
+    :init (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
+    :hook (cmake-mode . cmake-font-lock-activate))
+#+END_SRC
 
 *** DONE Java based languages
 CLOSED: [2021-01-04 Mon 07:19]
