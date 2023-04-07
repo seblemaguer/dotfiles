@@ -335,6 +335,12 @@ While alternatives exist, I find this combination more straightforward and clean
     ))
 #+end_src
 
+*** Transient
+#+begin_src emacs-lisp :lexical no
+  (use-package transient
+    :tags '("CORE"))
+#+end_src
+
 *** Documentation
 #+begin_src emacs-lisp
   (use-package dash-docs
@@ -1316,9 +1322,6 @@ For whatever reason, it is required to *explicitly* configure =transient=.
 | C-c m | org-menu |             |
 
 #+BEGIN_SRC emacs-lisp
-  (use-package transient
-    :tags '("ORG"))
-
   (use-package org-menu
     :straight (org-menu :type git :host github :repo "sheijk/org-menu")
     :tags '("ORG")
@@ -2290,8 +2293,9 @@ CLOSED: [2022-02-10 Thu 07:12]
     (org-noter-property-note-location "INTERLEAVE_PAGE_NOTE"))
 #+end_src
 
-*** DONE org-media-noter
-CLOSED: [2023-02-02 Thu 15:53]
+*** TODO org-media-noter
+- Set the shortcuts
+
 #+begin_src emacs-lisp :lexical no
   (use-package org-media-note
     :straight (org-media-note :type git :host github :repo "yuchen-lea/org-media-note"))
@@ -3705,7 +3709,8 @@ I use =web-mode= to edit any kind of web-programming (html, css, and templates).
     )
 #+end_src
 
-*** Sound and Music
+*** DONE Sound and Music
+CLOSED: [2023-03-15 Wed 12:54]
 =csound= is a neat tool to synthesize sound and music.
 The configuration is pretty minimal - just associate the mode to the proper extensions.
 #+begin_src emacs-lisp
@@ -6524,7 +6529,7 @@ I just modified a couple of bindings to fit my French keyboard layout (the other
     (subed-mode . turn-on-auto-fill)
     (subed-mode . (lambda () (setq-local fill-column 40))))
 #+end_src
-* Emacs and the rest of the world [100%]
+* DONE Emacs and the rest of the world [100%]
 As Emacs is the entry point of my numerical life, I connected to a bunch of other external things.
 It can be summarized around three categories:
 the connection to the desktop environment,
