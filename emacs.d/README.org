@@ -3749,6 +3749,12 @@ Therefore, in this section, I add the support of =graphviz-dot-mode= and =d2-mod
   (use-package d2-mode
     :tags '("PROGRAMMING" "PLOTTING")
     :mode ("\\.d2\\'"))
+
+  (use-package ob-d2
+    :init
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((d2 . t))))
 #+end_src
 
 *** DONE Web
