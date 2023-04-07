@@ -6735,6 +6735,23 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
       (eaf-open-mail-as-html)))
 #+end_src
 
+*** DONE Printing
+CLOSED: [2023-04-07 Fri 12:50]
+#+begin_src emacs-lisp :lexical no
+  (use-package transient-extras-lp
+    :tags '("DESKTOP" "PRINT")
+    :config
+    (with-eval-after-load 'dired
+      (define-key
+       dired-mode-map
+       (kbd "C-c C-p") #'transient-extras-lp-menu))
+
+    (with-eval-after-load 'pdf-tools
+      (define-key
+       pdf-misc-minor-mode-map
+         (kbd "C-c C-p") #'transient-extras-lp-menu)))
+#+end_src
+
 ** DONE Emacs and the system [100%]
 CLOSED: [2021-01-05 Tue 13:42]
 In a lower level, I want to have a better access to some system/(non desktop-)environment tools.
