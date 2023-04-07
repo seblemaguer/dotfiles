@@ -6299,7 +6299,7 @@ As it requires more investigation, I disabled this packaged for now.
 
 
     :config
-    (setq md4rd-subs-active '(emacs orgmode)))
+    (setq md4rd-subs-active '(emacs orgmode composer audacity Reaper Musescore AudioProgramming)))
 #+end_src
 
 ** DONE Release
