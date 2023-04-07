@@ -6870,12 +6870,15 @@ Consequently, the configuration consists mainly of defining the path of conda an
       :tags '("SYSTEM" "PYTHON" "R")
       :straight (conda :type git :host github :repo "seblemaguer/conda.el")
       :init
-      (setq conda-anaconda-home (expand-file-name "~/environment/local/miniconda3"))
+      (setq conda-anaconda-home (expand-file-name "~/environment/local/mamba"))
 
       (defun conda-hook ()
         "Conda activation hook."
         (setq conda-message-on-environment-switch nil)
         (conda-env-autoactivate-mode t))
+
+      :config
+      (conda--get-config)
 
       :hook
       (python-mode . conda-hook)
