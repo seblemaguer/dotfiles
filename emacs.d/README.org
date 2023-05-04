@@ -54,6 +54,13 @@ As a result, we have now three routines:
   - hydra-keybindings-gen-with-opt :: same as previously but dedicated to take into account options specificied for hydra
 
 
+#+NAME: comment-keybindings
+| Key     | Function         | Description              |
+|---------+------------------+--------------------------|
+| C-c C-; | comment-region   | Commenting the region    |
+| C-c C-: | uncomment-region | Uncommenting the regiion |
+
+
 #+NAME: keybindings-gen
 #+header: :tangle no :exports code :results value :cache yes
 #+begin_src emacs-lisp :var table=comment-keybindings prefix=""
@@ -122,7 +129,7 @@ We also provide a helper to shutdown properly the server.
   (kill-emacs))
 #+end_src
 
-* TODO Core [90%]
+* TODO Core [88%]
 This section focuses on providing helpers and utilities required for the rest of the configuration.
 
 ** DONE Fundamentals [100%]
@@ -216,52 +223,66 @@ one to generate the emacs init file from =~/.emacs.d/README.org= and one to byte
     (byte-recompile-directory (expand-file-name default-plugin-dir) 0))
 #+end_src
 
-** DONE Package management [100%]
+** TODO Package management [66%]
 My configuration relies on a lot (too-many?) of packages.
 It relies primarly on =use-package= and some extensions.
 The process of how to deal with the packages is the following:
   - by default, if possible, let's use =melpa=
-  - if the package is not on melpa, let's use =straight=
-  - if the package is on melpa but requires extra development, let's use =straight=
+  - if the package is not on melpa, let's use =elpaca=
+  - if the package is on melpa but requires extra development, let's use =elpaca=
 
 Furthermore, each package is tagged with several keywors to have a "machine-dependent" loading scheme.
 
-*** DONE Straight
-CLOSED: [2021-01-03 Sun 10:52]
-In this section, we are configuring =straight=.
-=Straight= supports =use-package= by default.
-Therefore, there is no extra-configuration for this to do.
+*** Elpaca
+#+begin_src emacs-lisp :lexical no
+  (defvar elpaca-installer-version 0.3)
+  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                                :ref nil
+                                :files (:defaults (:exclude "extensions"))
+                                :build (:not elpaca--activate-package)))
+  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+         (build (expand-file-name "elpaca/" elpaca-builds-directory))
+         (order (cdr elpaca-order))
+         (default-directory repo))
+    (add-to-list 'load-path (if (file-exists-p build) build repo))
+    (unless (file-exists-p repo)
+      (make-directory repo t)
+      (condition-case-unless-debug err
+          (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                   ((zerop (call-process "git" nil buffer t "clone"
+                                         (plist-get order :repo) repo)))
+                   ((zerop (call-process "git" nil buffer t "checkout"
+                                         (or (plist-get order :ref) "--"))))
+                   (emacs (concat invocation-directory invocation-name))
+                   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                         "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                   ((require 'elpaca))
+                   ((elpaca-generate-autoloads "elpaca" repo)))
+              (kill-buffer buffer)
+            (error "%s" (with-current-buffer buffer (buffer-string))))
+        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+    (unless (require 'elpaca-autoloads nil t)
+      (require 'elpaca)
+      (elpaca-generate-autoloads "elpaca" repo)
+      (load "./elpaca-autoloads")))
+  (add-hook 'after-init-hook #'elpaca-process-queues)
+  (elpaca `(,@elpaca-order))
+#+end_src
 
- #+begin_src emacs-lisp
-   ;; Save up some time
-   (setq straight-check-for-modifications nil)
+*** TODO Elpaca & use-package
+#+begin_src emacs-lisp :lexical no
+  ;; Install use-package support
+  (elpaca elpaca-use-package
+    ;; Enable :elpaca use-package keyword.
+    (elpaca-use-package-mode)
+    ;; Assume :elpaca t unless otherwise specified.
+    (setq elpaca-use-package-by-default t))
 
-   (defvar bootstrap-version)
-   (let ((bootstrap-file
-          (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-         (bootstrap-version 5))
-     (unless (file-exists-p bootstrap-file)
-       (with-current-buffer
-           (url-retrieve-synchronously
-            "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-            'silent 'inhibit-cookies)
-         (goto-char (point-max))
-         (eval-print-last-sexp)))
-     (load bootstrap-file nil 'nomessage))
-
-   (unless (string= (getenv "TRAVIS") "true")
-     (setq straight-vc-git-default-protocol 'ssh))
- #+end_src
-
-*** DONE Load use-package
-CLOSED: [2021-01-03 Sun 10:51]
-Now that straight is configured, we can tell it to install =use-package=.
-From there, =use-package= will be used as the entry function to configure a new package.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'use-package)
-  (setq straight-use-package-by-default t)
-  ;; (setq use-package-verbose t)
+  ;; Block until current queue processed.
+  (elpaca-wait)
 #+end_src
 
 *** DONE Tagging
@@ -276,24 +297,27 @@ The specification respects the following syntax:
 
 #+begin_src emacs-lisp
   (use-package use-package-tags
-    :straight (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
+    :elpaca (use-package-tags :host github :repo "seblemaguer/use-package-tags")
     :config
 
     (when no-connection
-        (setq use-package-tags-default-tag-list '("!CONNECTED")))
+	(setq use-package-tags-default-tag-list '("!CONNECTED")))
 
     (setq use-package-tags-enabled
-          `(("surface"                      . ("ALL" "!MAIL"))
-            (,work-hostname                 . ("ALL"))
-            ("mackenzie"                    . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
-            (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
+	  `(("surface"                      . ("ALL" "!MAIL"))
+	    (,work-hostname                 . ("ALL"))
+	    ("mackenzie"                    . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
+	    (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
+
+  ;; Block until current queue processed.
+  (elpaca-wait)
 #+end_src
 
 *** DONE Hydra
 CLOSED: [2021-01-03 Sun 11:01]
 I use hydra a lot so it is easier to add its support directly in the use-package configuration part.
 The combination pretty-hydra/major-mode-hydra provides an easy and powerful way to declare hydra.
-While alternatives exist, I find this combination more straightforward and cleaner when it is used in combination with =use-package=.
+While alternatives exist, I find this combination more elpacaforward and cleaner when it is used in combination with =use-package=.
 
 #+NAME: major-mode-hydra-entry-keybindings
 | Key   | Function         | Description |
@@ -321,11 +345,11 @@ While alternatives exist, I find this combination more straightforward and clean
       (s-concat (all-the-icons-octicon icon :v-adjust (or v-adjust 0) :height (or height 1)) " " str))
 
     (when (display-graphic-p)
-        (setq hydra-hint-display-type 'posframe
-              hydra-posframe-show-params
-              '(:internal-border-width 2
-                :internal-border-color "#425d78"
-                :poshandler posframe-poshandler-frame-center))))
+	(setq hydra-hint-display-type 'posframe
+	      hydra-posframe-show-params
+	      '(:internal-border-width 2
+		:internal-border-color "#425d78"
+		:poshandler posframe-poshandler-frame-center))))
 
   (use-package major-mode-hydra
     :demand t
@@ -333,6 +357,9 @@ While alternatives exist, I find this combination more straightforward and clean
     :bind (
       <<keybindings-gen(table=major-mode-hydra-entry-keybindings)>>
     ))
+
+  ;; Block until current queue processed.
+  (elpaca-wait)
 #+end_src
 
 *** Transient
@@ -344,7 +371,7 @@ While alternatives exist, I find this combination more straightforward and clean
 *** Documentation
 #+begin_src emacs-lisp
   (use-package dash-docs
-    :ensure t)
+    :tags '("DOCUMENTATION"))
 #+end_src
 
 ** DONE Load private part
@@ -383,10 +410,9 @@ the upstream has some priority issues with ERC; I would like to ignore some even
     :tags '("CORE" "NOTIFICATION"))
 
   (use-package sauron
-    :straight (sauron :type git :host github :repo "djcb/sauron"
-                      :fork (:host github
-                                   :repo "seblemaguer/sauron"
-                                   :branch "functional"))
+    :elpaca (sauron :host github
+                    :repo "seblemaguer/sauron"
+                    :branch "functional")
     :tags '("CORE" "NOTIFICATION")
     :commands (sauron-start-hidden sauron-add-event)
 
@@ -427,8 +453,9 @@ This plugin is in charge to managing the communication and avoid any cycle.
 | C-<f7> | sauron-mode-line-clear            |             |
 
 #+begin_src emacs-lisp
+  (elpaca-wait) ;; NOTE: needed because sauron-mode-line requires sauron to be available
   (use-package sauron-mode-line
-    :straight nil
+    :elpaca nil
     :load-path default-plugin-dir
     :tags '("CORE" "NOTIFICATION")
     :custom
@@ -440,8 +467,7 @@ This plugin is in charge to managing the communication and avoid any cycle.
       <<keybindings-gen(table=sauron-keybindings)>>
      ))
 #+end_src
-
-** DONE Documentation [100%]
+** DONE Documentation [80%]
 Emacs is dense and provides a lot of features.
 Too many to remember everything.
 This part is there to help to navigate the documentation more easily.
@@ -486,13 +512,14 @@ I am using it as the entry point of any documentation I want to access.
      ))
 #+end_src
 
-*** DONE Man
+*** TODO Man
 CLOSED: [2021-03-01 Mon 09:28]
 Man is critical for document on unix.
 I simply configured emacs to add my own environment man directories.
 
 #+begin_src emacs-lisp
   (use-package man
+    :elpaca nil
     :tags '("CORE" "DOCUMENTATION")
     :config
     (setq Man-notify-method 'pushy
@@ -586,110 +613,111 @@ This choice has been made due its the simplicity and its recursive nature.
     (bufler-initial-face-depth 1)
     (bufler-filter-buffer-modes nil)
     (bufler-groups (bufler-defgroups
-                     (group (group-or "Help/Info"
-                                      (mode-match "*Help*" "^help\\(ful\\)?-.*")
-                                      (mode-match "*Info*" (rx bos "info-"))
-                                      (mode-match "*Apropos*" (rx bos "apropos-"))))
+		     (group (group-or "Help/Info"
+				      (mode-match "*Help*" "^help\\(ful\\)?-.*")
+				      (mode-match "*Info*" (rx bos "info-"))
+				      (mode-match "*Apropos*" (rx bos "apropos-"))))
 
-                     (group (group-or "Mail"
-                                      (mode-match "*Mu4e*" (rx bos "mu4e-"))))
+		     (group (group-or "Mail"
+				      (mode-match "*Mu4e*" (rx bos "mu4e-"))))
 
-                     (group (group-or "Chatty"
-                                      (mode-match "IRC" (rx bos "circe-"))
-                                      (name-match "Slack" (rx bos "*Slack"))
-                                      (mode-match "Telegram" (rx bos "telega-"))
-                                      (mode-match "Matrix" (rx bos "ement-")))
+		     (group (group-or "Chatty"
+				      (mode-match "IRC" (rx bos "circe-"))
+				      (name-match "Slack" (rx bos "*Slack"))
+				      (mode-match "Telegram" (rx bos "telega-"))
+				      (mode-match "Matrix" (rx bos "ement-")))
 
-                            (group (mode-match "IRC" (rx bos "circe"))
-                                   (group (name-match "Query" (rx bos "circe-query")))
-                                   (group (mode-match "Channels" (rx bos "circe-channel")))
-                                   (group (name-match "Servers" (rx bos "circe-server"))))
+			    (group (mode-match "IRC" (rx bos "circe"))
+				   (group (name-match "Query" (rx bos "circe-query")))
+				   (group (mode-match "Channels" (rx bos "circe-channel")))
+				   (group (name-match "Servers" (rx bos "circe-server"))))
 
-                            (group (mode-match "Telegram" (rx bos "telega"))
-                                   (group (mode-match "Channels" (rx bos "telega-chat")))
-                                   (group (group-not "Other" (mode-match "unknown" (rx bos "telega-chat")))))
+			    (group (mode-match "Telegram" (rx bos "telega"))
+				   (group (mode-match "Channels" (rx bos "telega-chat")))
+				   (group (group-not "Other" (mode-match "unknown" (rx bos "telega-chat")))))
 
-                            (group (name-match "Slack" (rx bos "*Slack"))
-                                   (group (group-not "Message" (name-match "Logging" "\\*Slack[^-]*Log -")))
-                                   (group (name-match "Logging" "*Slack[^-]*Log -")))
+			    (group (name-match "Slack" (rx bos "*Slack"))
+				   (group (group-not "Message" (name-match "Logging" "\\*Slack[^-]*Log -")))
+				   (group (name-match "Logging" "*Slack[^-]*Log -")))
 
 
-                            (group (mode-match "Matrix" (rx bos "ement-"))))
+			    (group (mode-match "Matrix" (rx bos "ement-"))))
 
-                     (group (mode-match "EMMS" (rx bos "emms-")))
+		     (group (mode-match "EMMS" (rx bos "emms-")))
 
-                     (group (group-or "RSS"
-                                      (mode-match "*Elfeed*" (rx bos "elfeed-"))
-                                      (name-match "*Elfeed*" (rx bos "*elfeed"))
-                                      (name-match "rss.org" (rx bos "rss.org"))))
+		     (group (group-or "RSS"
+				      (mode-match "*Elfeed*" (rx bos "elfeed-"))
+				      (name-match "*Elfeed*" (rx bos "*elfeed"))
+				      (name-match "rss.org" (rx bos "rss.org"))))
 
-                     (group (group-or "Todo"
-                                      (name-match "Todo" "todo.org")
-                                      (name-match "Shopping List" "shopping_list.org")))
+		     (group (group-or "Todo"
+				      (name-match "Todo" "todo.org")
+				      (name-match "Shopping List" "shopping_list.org")))
 
-                     ;; Subgroup collecting all special buffers (i.e. ones that are not
-                     ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
-                     ;; through to other groups, so they end up grouped with their project buffers).
-                     (group (group-and "*Special*"
-                                       (lambda (buffer)
-                                         (unless (or (funcall (mode-match "Magit" (rx bos "magit-status"))
-                                                              buffer)
-                                                     (funcall (mode-match "Dired" (rx bos "dired"))
-                                                              buffer)
-                                                     (funcall (auto-file) buffer))
-                                           "*Special*")))
+		     ;; Subgroup collecting all special buffers (i.e. ones that are not
+		     ;; file-backed), except `magit-status-mode' buffers (which are allowed to fall
+		     ;; through to other groups, so they end up grouped with their project buffers).
+		     (group (group-and "*Special*"
+				       (lambda (buffer)
+					 (unless (or (funcall (mode-match "Magit" (rx bos "magit-status"))
+							      buffer)
+						     (funcall (mode-match "Dired" (rx bos "dired"))
+							      buffer)
+						     (funcall (auto-file) buffer))
+					   "*Special*")))
 
-                            ;; Subgroup collecting these "special special" buffers separately for convenience.
-                            (group (name-match "**Special**"
-                                               (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*")))
+			    ;; Subgroup collecting these "special special" buffers separately for convenience.
+			    (group (name-match "**Special**"
+					       (rx bos "*" (or "Messages" "Warnings" "scratch" "Backtrace") "*")))
 
-                            ;; For my- calendars
-                            (group (name-match "*Calendar*" "^[*]?[Cc]alendar.*$"))
+			    ;; For my- calendars
+			    (group (name-match "*Calendar*" "^[*]?[Cc]alendar.*$"))
 
-                            ;; Package management
-                            (group (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*"))))
+			    ;; Package management
+			    (group (name-match "*Packages*" (rx bos (or "*Paradox" "*Packages*"))))
 
-                            ;; Processes in background
-                            (group (name-match "*Prodigy*" (rx bos "*prodigy-")))
+			    ;; Processes in background
+			    (group (name-match "*Prodigy*" (rx bos "*prodigy-")))
 
-                            ;; Subgroup collecting all other Magit buffers, grouped by directory.
-                            (group (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
-                                   (auto-directory))
+			    ;; Subgroup collecting all other Magit buffers, grouped by directory.
+			    (group (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
+				   (auto-directory))
 
-                            ;; Subgroup for Helm buffers.
-                            (mode-match "*Helm*" (rx bos "helm-"))
+			    ;; Subgroup for Helm buffers.
+			    (mode-match "*Helm*" (rx bos "helm-"))
 
-                            ;; Remaining special buffers are grouped automatically by mode.
-                            (auto-mode))
+			    ;; Remaining special buffers are grouped automatically by mode.
+			    (auto-mode))
 
-                     ;; Subgroup collecting org-roam related buffers
-                     (group
-                      (dir (if (bound-and-true-p cloud-org-root-dir)
-                               cloud-org-root-dir
-                             "~/org")))
+		     ;; Subgroup collecting org-roam related buffers
+		     (group
+		      (dir (if (bound-and-true-p cloud-org-root-dir)
+			       cloud-org-root-dir
+			     "~/org")))
 
-                     ;; Subgroup collecting buffers per projects
-                     (group (group-and "*Projectile*"
-                                       (lambda (buffer)
-                                         (unless (funcall (lambda (buf)
-                                                            (with-current-buffer buf
-                                                              (string= (projectile-project-name) "-")))
-                                                          buffer)
-                                           "*Projectile*")))
+		     ;; NOTE: should depends on projectile if it is installed!
+		     ;; ;; Subgroup collecting buffers per projects
+		     ;; (group (group-and "*Projectile*"
+		     ;;                   (lambda (buffer)
+		     ;;                     (unless (funcall (lambda (buf)
+		     ;;                                        (with-current-buffer buf
+		     ;;                                          (string= (projectile-project-name) "-")))
+		     ;;                                      buffer)
+		     ;;                       "*Projectile*")))
 
-                            ;; Subgroup collecting buffers in a projectile project.
-                            (auto-projectile)
-                            (auto-mode))
+		     ;;        ;; Subgroup collecting buffers in a projectile project.
+		     ;;        (auto-projectile)
+		     ;;        (auto-mode))
 
-                     ;; Subgroup collecting buffers in a projectile project.
-                     (group
-                      (auto-tramp)
-                      (auto-mode))
+		     ;; Subgroup collecting buffers in a projectile project.
+		     (group
+		      (auto-tramp)
+		      (auto-mode))
 
-                     ;; Subgroup collecting buffers in a version-control project,
-                     ;; grouping them by directory.
-                     (auto-mode)
-                     (auto-directory))))
+		     ;; Subgroup collecting buffers in a version-control project,
+		     ;; grouping them by directory.
+		     (auto-mode)
+		     (auto-directory))))
 #+end_src
 
 ** DONE Minibuffer
@@ -698,7 +726,7 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
 
 #+begin_src emacs-lisp
   (use-package minibuffer
-    :straight nil
+    :elpaca nil
     :tags '("CORE" "MINIBUFFER")
     ;; :hook
     ;; (eval-expression-minibuffer-setup .  #'eldoc-mode)
@@ -719,7 +747,7 @@ This leads to ensuring the package =vlf= with the use-package header defined to 
 
 #+begin_src emacs-lisp
   (use-package vlf-setup
-    :straight  vlf
+    :elpaca  vlf
     :tags '("CORE")
     :init (setq vlf-application 'dont-ask))
 #+end_src
@@ -748,7 +776,8 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
 
   (use-package goto-last-point
     ;; NOTE: the original repo is a pain to access with ssh, using the emacsmirror
-    :straight (goto-last-point :type git :host github :repo "emacsmirror/goto-last-point")
+    :elpaca (goto-last-point :host github
+                             :repo "emacsmirror/goto-last-point")
     :tags '("CORE" "NAVIGATION")
     :hook (after-init . goto-last-point-mode)
     :bind (
@@ -770,7 +799,7 @@ Therefore, I defined the =pinentry-mode= for both EPGA and EPA to =loopback=.
     (pinentry-start))
 
   (use-package epa-file
-    :straight nil
+    :elpaca nil
     :tags '("CORE" "ENCRYPTION")
     :custom
     (epa-pinentry-mode 'loopback)
@@ -778,26 +807,26 @@ Therefore, I defined the =pinentry-mode= for both EPGA and EPA to =loopback=.
     (epa-file-enable))
 
   (use-package org-crypt
-    :straight nil
+    :elpaca nil
     :tags '("CORE" "ENCRYPTION")
     :after org
     :config
     (org-crypt-use-before-save-magic))
 #+end_src
 
-* DONE Session [100%]
+* TODO Session [33%]
 As I am using emacs as a daemon/client combination,
 my daily routine consists of opening emacs at the beginning of work and switching it off on the evening.
 Therefore it is difficult to track what needs to be remembered.
 This section provides helpers which automatises key part to make the transition between two sessions smoother.
 
-** DONE Recent files
-CLOSED: [2021-01-03 Sun 11:31]
+** TODO Recent files
 Opening recent files is always an easy and fast shortcut. Some files should be ignored though. That
 leads to this configuration
 
 #+begin_src emacs-lisp
   (use-package recentf
+    :elpaca nil
     :tags '("CORE" "SESSION" "RECENT")
     :hook (after-init . recentf-mode)
     :custom
@@ -927,6 +956,7 @@ snapshot-timemachine package.
     (when (not (file-exists-p backup-directory))
       (make-directory backup-directory t))
     (setq make-backup-file-name-function #'my-make-backup-file-name)
+
     ;; Auto-save
     (defvar auto-save-directory (concat user-emacs-directory "auto-save/"))
     (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
@@ -1011,8 +1041,7 @@ There are some files which are not desired to be backed up. This part goal is to
     (add-to-list 'auto-minor-mode-alist '("\\.gpg\\'" . sensitive-mode)))
 #+end_src
 
-** DONE Reload file at saved position
-CLOSED: [2021-01-03 Sun 11:35]
+** TODO Reload file at saved position
 :PROPERTIES:
 :FROM:     https://github.com/munen/emacs.d
 :END:
@@ -1021,6 +1050,7 @@ To do so, I am using the package =saveplace=
 
 #+begin_src emacs-lisp
   (use-package saveplace
+    :elpaca nil
     :tags '("CORE" "SESSION")
     :init
     (setq save-place-file (format "%s/saveplace" user-emacs-directory))
@@ -1060,7 +1090,7 @@ Finally, some keywords are there for note purposes:
 
 #+begin_src emacs-lisp
   (use-package org
-    :straight org-contrib
+    :elpaca org-contrib
     :tags '("ORG")
     :hook
     (org-after-todo-statistics . org-summary-todo)
@@ -1195,10 +1225,10 @@ Finally, some keywords are there for note purposes:
           org-babel-results-keyword "results" ;; Display images directly in the buffer
           org-confirm-babel-evaluate nil
           org-startup-with-inline-images t
-          org-return-follows-link  t))
+          org-return-follows-link t))
 #+end_src
 
-** DONE Source [100%]
+** DONE Source [83%]
 CLOSED: [2021-01-03 Sun 13:59]
 The source visualisation of org files can be pretty raw.
 This section provides configurations to help the navigation and the visualisation of such files.
@@ -1240,7 +1270,7 @@ This section provides the configuration for babel by first configuring jupyter.
       (set 'company-backends (append '(company-org-block) company-backends))))
 
   (use-package ob
-    :straight org-contrib
+    :elpaca nil
     :tags '("ORG")
     :config
 
@@ -1250,30 +1280,30 @@ This section provides the configuration for babel by first configuring jupyter.
 
     ;; Define the list of languages to load
     (org-babel-do-load-languages 'org-babel-load-languages
-                                 '((emacs-lisp . t)
-                                   (dot        . t)
-                                   (ditaa      . t)
-                                   (R          . t)
-                                   (ruby       . t)
-                                   (gnuplot    . t)
-                                   (clojure    . t)
-                                   (shell      . t)
-                                   (ledger     . t)
-                                   (org        . t)
-                                   (plantuml   . t)
-                                   (latex      . t)
-                                   (python     . t)))          ; must be last
+				 '((emacs-lisp . t)
+				   (dot        . t)
+				   (ditaa      . t)
+				   (R          . t)
+				   (ruby       . t)
+				   (gnuplot    . t)
+				   (clojure    . t)
+				   (shell      . t)
+				   ;; FIXME: doesn't seem to activate (ledger     . t)
+				   (org        . t)
+				   (plantuml   . t)
+				   (latex      . t)
+				   (python     . t)))          ; must be last
 
     ;; Predefine header considering
     (setq org-babel-default-header-args:sh      '((:results . "output replace"))
-          org-babel-default-header-args:bash    '((:results . "output replace"))
-          org-babel-default-header-args:shell   '((:results . "output replace"))
-          org-babel-default-header-args:python  '((:async . "yes")
-                                                  (:session . "py")))
+	  org-babel-default-header-args:bash    '((:results . "output replace"))
+	  org-babel-default-header-args:shell   '((:results . "output replace"))
+	  org-babel-default-header-args:python  '((:async . "yes")
+						  (:session . "py")))
 
     ;; Define pathes for some tools
     (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar"
-          org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"))
+	  org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"))
 #+end_src
 
 *** DONE ID Generation
@@ -1284,8 +1314,7 @@ To fix this, =org-unique-id= aims to provide an equivalent to the "auctex/reftex
 #+begin_src emacs-lisp
   (use-package org-unique-id
     :after org
-    :straight (org-unique-id :type git
-                             :host github
+    :elpaca (org-unique-id :host github
                              :repo "Phundrak/org-unique-id")
     :init (add-hook 'before-save-hook #'org-unique-id-maybe))
 #+end_src
@@ -1298,7 +1327,7 @@ To do so, I am relying the package =org-checklist= which is provided by =org-con
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-checklist
-    :straight org-contrib
+    :elpaca nil
     :tags '("ORG"))
 #+END_SRC
 
@@ -1311,7 +1340,7 @@ CLOSED: [2022-04-12 Tue 12:22]
     :after org)
 #+end_src
 
-*** DONE Helpers
+*** TODO Helpers
 CLOSED: [2021-02-27 Sat 08:38]
 I am using =org-menu= to provide a helper menu to edit org files.
 For whatever reason, it is required to *explicitly* configure =transient=.
@@ -1323,7 +1352,7 @@ For whatever reason, it is required to *explicitly* configure =transient=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-menu
-    :straight (org-menu :type git :host github :repo "sheijk/org-menu")
+    :elpaca (org-menu :host github :repo "sheijk/org-menu")
     :tags '("ORG")
     :bind (:map org-mode-map (
       <<keybindings-gen(table=org-menu-keybindings)>>
@@ -1340,7 +1369,7 @@ This part contains some extra configurations which allows to write clean org doc
 
 #+begin_src emacs-lisp
   (use-package ox-extra
-    :straight org-contrib
+    :elpaca nil
     :tags '("ORG")
     :after ox
     :config
@@ -1358,7 +1387,7 @@ We also defines additional link to support audios and videos.
     :tags '("ORG"))
 
   (use-package ox-html
-    :straight org-contrib
+    :elpaca nil
     :after ox
     :requires (htmlize)
     :tags '("ORG")
@@ -1407,7 +1436,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
 
 #+begin_src emacs-lisp
   (use-package ox-latex
-    :straight org-contrib
+    :elpaca nil
     :tags '("ORG")
     :after ox
     :config
@@ -1416,7 +1445,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
           org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 
   (use-package ox-beamer
-    :straight org-contrib
+    :elpaca nil
     :tags '("ORG")
     :after ox
     :config
@@ -1426,7 +1455,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
     (add-to-list 'org-export-filter-bold-functions 'my-beamer-bold))
 
   (use-package ox-bibtex
-    :straight org-contrib
+    :elpaca nil
     :tags '("ORG")
     :after ox
     :defer t)
@@ -1477,7 +1506,7 @@ The only important bits are:
 
 #+begin_src emacs-lisp
   (use-package org-agenda
-    :straight org-contrib
+    :elpaca nil
     :tags '("ORG" "USER" "CONNECTED")
     :if (file-directory-p cloud-org-root-dir)
     :commands (org-agenda)
@@ -1561,10 +1590,9 @@ As I have my own way of being organized, I redefined completely the groups.
 
 #+begin_src emacs-lisp
   (use-package org-super-agenda
-    :straight (org-super-agenda :type git :host github :repo "alphapapa/org-super-agenda"
-                                :fork (:host github
-                                             :repo "seblemaguer/org-super-agenda"
-                                             :branch "fix_diary"))
+    :elpaca (org-super-agenda :host github
+                                :repo "seblemaguer/org-super-agenda"
+                                :branch "fix_diary")
     :tags '("ORG")
     :config
 
@@ -1703,9 +1731,10 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
              ("<S-down>" . org-clock-convenience-timestamp-down)))
 #+end_src
 
-**** Webpage overview
+**** TODO Webpage overview
 #+begin_src emacs-lisp
   (use-package org-analyzer
+    :disabled t
     :if (file-directory-p cloud-org-root-dir)
     :custom (org-analyzer-org-directory  (concat cloud-org-root-dir "todo"))
     :commands (org-analyzer-start))
@@ -1721,7 +1750,7 @@ This is why I use this configuration.
 
 #+begin_src emacs-lisp
   (use-package org-archive
-    :straight org-contrib
+    :elpaca nil
     :tags '("ORG")
     :config
     (setq org-archive-default-command 'org-archive-subtree)
@@ -1852,7 +1881,7 @@ This package is mainly use to bookmark webpages from firefox.
     :commands (org-ql-search org-ql-view org-ql-view-recent-items))
 
   (use-package org-protocol
-    :straight org-contrib
+    :elpaca nil
     :tags '("ORG"))
 #+end_src
 
@@ -1870,7 +1899,7 @@ I also use capturing mechanism to save recipes and some interesting websites.
   (use-package org-capture
     :tags '("ORG" "CAPTURE" "DESKTOP")
     :if (file-directory-p cloud-org-root-dir)
-    :straight org-contrib
+    :elpaca nil
     :commands (org-capture)
     :config
     (setq org-capture-templates
@@ -1933,8 +1962,7 @@ format. This is really useful to homogeneise documentation.
     :after (org)
     :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED"))
 #+end_src
-
-* DONE Notes taking & academic organizing [100%]
+* TODO Notes taking & academic organizing [66%]
 My note taking life is split in 2 categories: global note taking and bibliography/reference management.
 The workflow is based on =org-roam= and uses additional packages to enhance the experience.
 
@@ -1985,7 +2013,7 @@ CLOSED: [2022-02-10 Thu 07:04]
 
 #+begin_src emacs-lisp
   (use-package org-roam
-    :straight (:host github :repo "org-roam/org-roam")
+    :elpaca (org-roam :host github :repo "org-roam/org-roam")
     :tags '("ORG" "USER" "CONNECTED")
     :if (file-directory-p cloud-org-root-dir)
     :commands (org-roam-setup)
@@ -2026,7 +2054,7 @@ CLOSED: [2022-02-10 Thu 07:04]
     (org-roam-db-autosync-mode))
 
   (use-package org-roam-protocol
-    :straight (:host github :repo "org-roam/org-roam" :files ("extensions/org-roam-protocol.el"))
+    :elpaca (org-roam-protocol :host github :repo "org-roam/org-roam" :files ("extensions/org-roam-protocol.el"))
     :tags '("ORG" "USER")
     :after org-roam
     :config
@@ -2048,7 +2076,7 @@ CLOSED: [2022-02-10 Thu 07:04]
 
   (use-package org-roam-ui
     :tags '("ORG" "USER" "DESKTOP")
-    :straight (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :elpaca (org-roam-ui :host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
     :after (org-roam eaf-browser)
     :config
     (setq org-roam-ui-sync-theme t
@@ -2057,7 +2085,7 @@ CLOSED: [2022-02-10 Thu 07:04]
           org-roam-ui-open-on-start t))
 
   (use-package citar-org-roam
-    :straight (:type git :host github :repo "emacs-citar/citar-org-roam")
+    :elpaca (citar-org-roam :host github :repo "emacs-citar/citar-org-roam")
     :after citar org-roam
     :tags '("BIBLIOGRAPHY" "USER" "ORG")
     :no-require
@@ -2159,6 +2187,215 @@ For now, I don't really know the power of =vulpea= but I use it to bridge =org-r
       (setq org-agenda-files (append org-agenda-files
                                      org-agenda-default-files))))
 #+end_src
+** TODO Document reading
+*** DONE PDF
+CLOSED: [2021-05-18 Tue 16:53]
+Visualizing PDF files in Emacs is quite useful.
+I am using =pdf-tools= which provides a lot of functionalities.
+The configuration consists mainly of providing proper keyboard based controls using =hydra=.
+I am also using =pdf-view-restore= to keep track of where I was before closing emacs.
+
+#+NAME: pdf-tools-keybindings
+| Key     | Function                             | Description |
+|---------+--------------------------------------+-------------|
+| ?       | pdf-tools-hydra/body                 |             |
+| <s-spc> | pdf-view-scroll-down-or-next-page    |             |
+| <C-s>   | isearch-forward                      |             |
+| g       | pdf-view-first-page                  |             |
+| G       | pdf-view-last-page                   |             |
+| l       | image-forward-hscroll                |             |
+| h       | image-backward-hscroll               |             |
+| j       | pdf-view-next-page                   |             |
+| k       | pdf-view-previous-page               |             |
+| e       | pdf-view-goto-page                   |             |
+| u       | pdf-view-revert-buffer               |             |
+| al      | pdf-annot-list-annotations           |             |
+| ad      | pdf-annot-delete                     |             |
+| aa      | pdf-annot-attachment-dired           |             |
+| am      | pdf-annot-add-markup-annotation      |             |
+| at      | pdf-annot-add-text-annotation        |             |
+| y       | pdf-view-kill-ring-save              |             |
+| i       | pdf-misc-display-metadata            |             |
+| s       | pdf-occur                            |             |
+| b       | pdf-view-set-slice-from-bounding-box |             |
+| r       | pdf-view-reset-slice                 |             |
+
+#+NAME: pdf-tools-hydra-move-keybindings
+| Key | Function                       | Label        | Options    | Description |
+|-----+--------------------------------+--------------+------------+-------------|
+| g   | pdf-view-first-page            | First        |            |             |
+| G   | pdf-view-last-page             | Last         |            |             |
+| p   | pdf-view-previous-page-command | Previous     | :color red |             |
+| n   | pdf-view-next-page-command     | Next         | :color red |             |
+| e   | pdf-view-goto-page             | Page         |            |             |
+| h   | image-backward-hscroll         | Scroll left  | :color red |             |
+| l   | image-forward-hscroll          | Scroll right | :color red |             |
+
+#+NAME: pdf-tools-hydra-history-keybindings
+| Key | Function             | Label    | Options    | Description |
+|-----+----------------------+----------+------------+-------------|
+| B   | pdf-history-backward | Backward | :color red |             |
+| N   | pdf-history-forward  | Forward  | :color red |             |
+
+#+NAME: pdf-tools-hydra-scale-keybindings
+| Key | Function                             | Label                       | Options    | Description |
+|-----+--------------------------------------+-----------------------------+------------+-------------|
+| +   | pdf-view-enlarge                     | Enlarge                     | :color red |             |
+| -   | pdf-view-shrink                      | Shrink                      | :color red |             |
+| 0   | pdf-view-scale-reset                 | Reset                       |            |             |
+| H   | pdf-view-fit-height-to-window        | Fit height                  |            |             |
+| W   | pdf-view-fit-width-to-window         | Fit width                   |            |             |
+| P   | pdf-view-fit-page-to-window          | Fit page                    |            |             |
+| b   | pdf-view-set-slice-from-bounding-box | Set slice from bounding box |            |             |
+| r   | pdf-view-reset-slice                 | Reset slice                 |            |             |
+
+#+NAME: pdf-tools-hydra-annotations-keybindings
+| Key | Function                        | Label  | Description |
+|-----+---------------------------------+--------+-------------|
+| al  | pdf-annot-list-annotations      | List   |             |
+| am  | pdf-annot-add-markup-annotation | Markup |             |
+| at  | pdf-annot-add-text-annotation   | Text   |             |
+| ad  | pdf-annot-delete                | Delete |             |
+| aa  | pdf-annot-attachment-dired      | Dired  |             |
+| y   | pdf-view-kill-ring-save         | Yank   |             |
+
+#+NAME: pdf-tools-hydra-search-keybindings
+| Key | Function                | Label       | Description |
+|-----+-------------------------+-------------+-------------|
+| s   | pdf-occur               | Search      |             |
+| o   | pdf-outline             | Outline     |             |
+| F   | pdf-links-action-perfom | Link        |             |
+| f   | pdf-links-isearch-link  | Search link |             |
+
+#+NAME: pdf-tools-hydra-diverse-keybindings
+| Key | Function                  | Label         | Description |
+|-----+---------------------------+---------------+-------------|
+| d   | pdf-view-dark-minor-mode  | Dark mode     |             |
+| i   | pdf-misc-display-metadata | Info          |             |
+| u   | pdf-view-revert-buffer    | Revert buffer |             |
+
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+    :elpaca (pdf-toos :host github :repo "vedang/pdf-tools")
+    :tags '("DOCUMENT" "DESKTOP")
+    :functions
+    (pdf-history-backward
+     pdf-history-forward
+     pdf-links-action-perfom
+     pdf-links-isearch-link
+     pdf-view-enlarge
+     pdf-view-shrink
+     pdf-view-scale-reset
+     pdf-view-fit-height-to-window
+     pdf-view-fit-width-to-window
+     pdf-view-fit-page-to-window
+     pdf-view-next-page-command
+     pdf-view-previous-page-command
+     pdf-view-dark-minor-mode)
+
+    :hook
+    (pdf-view-mode . (lambda ()
+                       (pdf-misc-size-indication-minor-mode)
+                       (pdf-links-minor-mode)
+                       (pdf-isearch-minor-mode)
+                       (cua-mode 0)))
+
+    :bind (:map pdf-view-mode-map
+      <<keybindings-gen(table=pdf-tools-keybindings)>>
+    )
+
+    :pretty-hydra
+    ((:color blue :hint nil)
+     ("Move" (
+        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-move-keybindings)>>
+      )
+
+      "History" (
+        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-history-keybindings)>>
+      )
+
+      "Scale/Fit" (
+        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-scale-keybindings)>>
+      )
+
+      "Annotations" (
+        <<hydra-keybindings-gen(table=pdf-tools-hydra-annotations-keybindings)>>
+      )
+
+      "Search/Link" (
+        <<hydra-keybindings-gen(table=pdf-tools-hydra-search-keybindings)>>
+      )
+
+      "Other" (
+        <<hydra-keybindings-gen(table=pdf-tools-hydra-diverse-keybindings)>>
+      )))
+
+    :magic ("%PDF" . pdf-view-mode)
+
+    :config
+    ;; Install what need to be installed !
+    (pdf-tools-install t t t)
+
+    ;; open pdfs scaled to fit page
+    (setq-default pdf-view-display-size 'fit-page)
+
+    ;; automatically annotate highlights
+    (setq pdf-annot-activate-created-annotations t)
+
+    ;; more fine-grained zooming
+    (setq pdf-view-resize-factor 1.1))
+
+  (use-package pdf-view-restore
+    :after pdf-tools
+    :tags '("DOCUMENT" "DESKTOP")
+    :hook
+    (pdf-view-mode-hook . pdf-view-restore-mode))
+
+  (when (executable-find "diffpdf")
+    (use-package diffpdf
+      :tags '("DOCUMENT" "DESKTOP")))
+#+end_src
+
+**** DONE Grepping
+CLOSED: [2021-03-01 Mon 09:45]
+I use =pdfgrep= to be able to search inside the pdf document.
+
+#+begin_src emacs-lisp
+  (when (executable-find "pdfgrep")
+    (use-package pdfgrep
+      :tags '("DOCUMENT" "DESKTOP")
+      :config
+      (pdfgrep-mode)))
+#+end_src
+
+**** DONE Connection with org-mode
+CLOSED: [2021-03-01 Mon 09:47]
+PDF files and org-mode are strongly related.
+I use =org-pdftools= to add an org link type for =pdftools=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-pdftools
+    :tags '("DOCUMENT" "DESKTOP" "ORG")
+    :hook (org-mode . org-pdftools-setup-link))
+#+END_SRC
+*** TODO Djvu
+#+BEGIN_SRC emacs-lisp
+  (use-package djvu
+    :tags '("DESKTOP" "DOCUMENT"))
+#+END_SRC
+
+*** DONE Epub
+CLOSED: [2021-02-09 Tue 16:15]
+I am using =nov= to read epub files.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package nov
+    :tags '("DESKTOP" "DOCUMENT")
+    :mode ("\\.epub\\'" . nov-mode)
+    :commands (nov-mode)
+    :config
+    (setq nov-text-width 100))
+#+END_SRC
 
 ** DONE Bibliography management
 CLOSED: [2022-02-10 Thu 07:12]
@@ -2298,14 +2535,13 @@ CLOSED: [2022-02-10 Thu 07:12]
 
 #+begin_src emacs-lisp :lexical no
   (use-package org-media-note
-    :straight (org-media-note :type git :host github :repo "yuchen-lea/org-media-note"))
+    :elpaca (org-media-note :host github :repo "yuchen-lea/org-media-note"))
 
   (use-package org-media-noter
-    :straight (org-media-noter :type git :host github :repo "seblemaguer/org-media-noter")
+    :elpaca (org-media-noter :host github :repo "seblemaguer/org-media-noter")
     :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
     :commands (org-media-noter))
 #+end_src
-
 * DONE Environment [100%]
 In order to have a better editing environment, I configured several fundamental features: undoing, folding, completing and templating.
 
@@ -2321,7 +2557,7 @@ The only configuration here is to activate it globally.
 
 #+begin_src emacs-lisp
   (use-package vundo
-    :straight (:type git :host github :repo "casouri/vundo")
+    :elpaca (vundo :host github :repo "casouri/vundo")
     :tags '("UNDOING")
     :bind (
       <<keybindings-gen(table=vundo-entry-keybindings)>>
@@ -2410,7 +2646,7 @@ I finally use =company-box= to have a better view of the category of the candida
   (use-package company-box
     :after company
     :tags '("COMPLETION" "UI")
-    :straight (company-box :repo "seblemaguer/company-box" :type git :host github :branch "functional")
+    :elpaca (company-box :repo "seblemaguer/company-box" :host github :branch "functional")
     :hook (company-mode . company-box-mode))
 #+end_src
 
@@ -2424,16 +2660,7 @@ Nothing fancy happens here, just its activation and a couple of setups related t
   (use-package vertico
     :tags '("COMPLETION")
     :init
-    (vertico-mode))
-
-  ;; Persist history over Emacs restarts. Vertico sorts by history position.
-  (use-package savehist
-    :init
-    (savehist-mode))
-
-  ;; A few more useful configurations related to vertico
-  (use-package emacs
-    :init
+    (vertico-mode)
     ;; Add prompt indicator to `completing-read-multiple'.
     ;; Alternatively try `consult-completing-read-multiple'.
     (defun crm-indicator (args)
@@ -2452,6 +2679,12 @@ Nothing fancy happens here, just its activation and a couple of setups related t
 
     ;; Enable recursive minibuffers
     (setq enable-recursive-minibuffers t))
+
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+  (use-package savehist
+    :elpaca nil
+    :init
+    (savehist-mode))
 #+end_src
 
 *** DONE Helm
@@ -2710,7 +2943,7 @@ Finally, my own snippets are stored in the directory =~/.emacs.d/third_parties/s
 
   (use-package yasnippet-snippets
     :tags '("COMPLETION")
-    :straight (consult-yasnippet :host github
+    :elpaca (consult-yasnippet :host github
                                  :repo "mohkale/consult-yasnippet"))
 #+end_src
 
@@ -2859,6 +3092,7 @@ I also rely on =fancy-compilation= to enhance the the output in the compilation 
 
 #+begin_src emacs-lisp
   (use-package compile
+    :elpaca nil ;; NOTE: this package is part of the core emacs!
     :tags '("IDE" "COMPILATION")
 
     :pretty-hydra
@@ -3149,7 +3383,7 @@ I developed a dedicated mode for this, so I am using it
 
 #+begin_src emacs-lisp
   (use-package cue-mode
-    :straight (cue-mode :repo "seblemaguer/cue-mode" :type git :host github)
+    :elpaca (cue-mode :repo "seblemaguer/cue-mode" :host github)
     :tags '("PROGRAMMING" "DATA" "RELEASE")
     :mode ("\\.cue$"))
 #+end_src
@@ -3175,7 +3409,7 @@ Praat-mode helps to have a proper visualization of Textgrids in Empacs.
 
 #+begin_src emacs-lisp
   (use-package praat-mode
-    :straight nil
+    :elpaca nil
     :load-path default-plugin-dir
     :tags '("PROGRAMMING" "DATA")
     :mode ("\\.[tT][Gg]"))
@@ -3188,7 +3422,7 @@ However, I had to do extra-configurations to have outline support and a better f
 
 #+begin_src emacs-lisp
   (use-package nxml-mode
-    :straight nil
+    :elpaca nil
     :load-path default-plugin-dir
     :tags '("PROGRAMMING" "DATA" "CONFIGURATION")
     :mode ("\\.xml$" . nxml-mode)
@@ -3245,7 +3479,7 @@ I started to develop =colored-authinfo-mode= to provide a better colorization fo
 
 #+begin_src emacs-lisp
   (use-package colored-authinfo-mode
-    :straight (colored-authinfo-mode :repo "seblemaguer/colored-authinfo-mode" :type git :host github)
+    :elpaca (colored-authinfo-mode :repo "seblemaguer/colored-authinfo-mode" :host github)
     :tags '("PROGRAMMING" "CONFIGURATION")
     :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . colored-authinfo-mode))
 #+end_src
@@ -3458,7 +3692,7 @@ I also added a hydra configuration to link properly everything.
 
 #+begin_src emacs-lisp
   (use-package emacs-lisp-mode
-    :straight nil
+    :elpaca nil
     :mode-hydra
     (emacs-lisp-mode
      ("Eval" (
@@ -3618,7 +3852,7 @@ For R, I rely on =ess= which provides excellent support with a reasonable defaul
 
 #+begin_src emacs-lisp
   (use-package matlab-load
-    :straight matlab-mode
+    :elpaca matlab-mode
     :tags '("PROGRAMMING" "MATH" "MATLAB")
     :defines (matlab-shell-command-switches mlint-programs)
     :no-require t
@@ -3685,7 +3919,7 @@ Finally, I use =numpydoc= to deal with the documentation.
 
   (use-package python-mls
     :tags '("PROGRAMMING" "PYTHON")
-    :straight (python-mls :host github :repo "jdtsmith/python-mls")
+    :elpaca (python-mls :host github :repo "jdtsmith/python-mls")
     :custom
     (python-mls-multiline-history-modifier '(meta shift))
     :hook
@@ -3801,7 +4035,6 @@ The configuration is pretty minimal - just associate the mode to the proper exte
              ("\\.sco\\'" . csound-mode)
              ("\\.udo\\'" . csound-mode))))
 #+end_src
-
 * DONE Writing / Reading [100%]
 I decided to dissociate programming and writing for more clarity.
 Nonetheless, both sections rely on the same principles.
@@ -3818,7 +4051,7 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
 
 #+begin_src emacs-lisp
   (use-package tex-site
-    :straight auctex
+    :elpaca auctex
     :tags '("WRITING" "LATEX")
     :after (tex latex)
     :hook
@@ -3867,40 +4100,41 @@ The configuration consists mainly of pluging it into auctex and expand the citat
 
 #+begin_src emacs-lisp
   (use-package reftex
+    :elpaca nil
     :tags '("WRITING" "LATEX")
     :hook
     (LaTeX-mode . turn-on-reftex)
 
     :config
     (setq reftex-save-parse-info t
-          reftex-enable-partial-scans t
-          reftex-use-multiple-selection-buffers t
-          reftex-plug-into-AUCTeX t
-          reftex-vref-is-default t
-          reftex-cite-format
-          '((?c    . "\\cite[]{%l}")
-            (?t    . "\\textcite{%l}")
-            (?a    . "\\autocite[]{%l}")
-            (?p    . "\\parencite{%l}")
-            (?f    . "\\footcite[][]{%l}")
-            (?F    . "\\fullcite[]{%l}")
-            (?x    . "[]{%l}")
-            (?X    . "{%l}"))
+	  reftex-enable-partial-scans t
+	  reftex-use-multiple-selection-buffers t
+	  reftex-plug-into-AUCTeX t
+	  reftex-vref-is-default t
+	  reftex-cite-format
+	  '((?c    . "\\cite[]{%l}")
+	    (?t    . "\\textcite{%l}")
+	    (?a    . "\\autocite[]{%l}")
+	    (?p    . "\\parencite{%l}")
+	    (?f    . "\\footcite[][]{%l}")
+	    (?F    . "\\fullcite[]{%l}")
+	    (?x    . "[]{%l}")
+	    (?X    . "{%l}"))
 
-          font-latex-match-reference-keywords
-          '(("cite"             "[{")
-            ("cites"            "[{}]")
-            ("footcite"         "[{")
-            ("footcites"        "[{")
-            ("parencite"        "[{")
-            ("textcite"         "[{")
-            ("fullcite"         "[{")
-            ("citetitle"        "[{")
-            ("citetitles"       "[{")
-            ("headlessfullcite" "[{"))
+	  font-latex-match-reference-keywords
+	  '(("cite"             "[{")
+	    ("cites"            "[{}]")
+	    ("footcite"         "[{")
+	    ("footcites"        "[{")
+	    ("parencite"        "[{")
+	    ("textcite"         "[{")
+	    ("fullcite"         "[{")
+	    ("citetitle"        "[{")
+	    ("citetitles"       "[{")
+	    ("headlessfullcite" "[{"))
 
-          reftex-cite-prompt-optional-args nil
-          reftex-cite-cleanup-optional-args t))
+	  reftex-cite-prompt-optional-args nil
+	  reftex-cite-cleanup-optional-args t))
 #+end_src
 
 *** DONE Completion
@@ -3955,7 +4189,7 @@ I could have used the auctex default sequence, but I prefer to have an homogeneo
 #+begin_src emacs-lisp
   (when (executable-find "latexmk")
     (use-package auctex-latexmk
-      :straight (:type git :host github :repo "wang1zhen/auctex-latexmk")
+      :elpaca (auctex-latexmk :host github :repo "wang1zhen/auctex-latexmk")
       :tags '("WRITING" "LATEX" "COMPILATION")
       :config
 
@@ -4004,7 +4238,7 @@ As an academic, I spend a lot of my time in Overleaf, but I prefer to edit in em
 #+begin_src emacs-lisp
   (use-package emacs-overleaf
     :tags '("WRITING" "LATEX" "CONNECTED")
-    :straight (:type git :host github :repo "seblemaguer/emacs-overleaf")
+    :elpaca (emacs-overleaf :host github :repo "seblemaguer/emacs-overleaf")
     :commands (overleaf-setup overleaf-manual-save overleaf-mode)
     :custom (overleaf-auto-sync "never"))
 #+end_src
@@ -4023,7 +4257,7 @@ Finally, I use bibclean-format to have a clean final bibtex file.
 #+begin_src emacs-lisp
   (use-package bibtex
     :tags '("WRITING" "BIBTEX")
-    :straight nil
+    :elpaca nil
     :bind (
       :map bibtex-mode-map (
         <<keybindings-gen(table=bibtex-tidy-entry-keybindings)>>
@@ -4080,7 +4314,7 @@ However, it relies on a side script ~compilePGF~ being in the PATH!
 
 #+begin_src emacs-lisp
   (use-package tikz-mode
-    :straight (tikz-mode :type git :host github :repo "seblemaguer/tikz-mode")
+    :elpaca (tikz-mode :host github :repo "seblemaguer/tikz-mode")
     :tags '("WRITING" "BIBTEX" "DESKTOP"))
 #+end_src
 
@@ -4123,7 +4357,7 @@ I am using =academic-phrases= to provided starting points and =mw-thesaurus= to 
     :commands (academic-phrases))
 
   (use-package mw-thesaurus
-    :straight (mw-thesaurus :type git :fetcher github :repo "agzam/mw-thesaurus.el")
+    :elpaca (mw-thesaurus :fetcher github :repo "agzam/mw-thesaurus.el")
     :tags '("WRITING" "HELPERS" "CONNECTED")
     :commands (mw-thesaurus-lookup-at-point))
 #+end_src
@@ -4156,7 +4390,7 @@ As a fallback, I am using google-translate via the package =go-translate=.
 
 #+begin_src emacs-lisp
   (use-package wordreference
-    :straight (:type git :host github :repo "emacsmirror/wordreference")
+    :elpaca (wordreference :host github :repo "emacsmirror/wordreference")
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :commands (wordreference-search))
 
@@ -4186,209 +4420,6 @@ As a fallback, I am using google-translate via the package =go-translate=.
            )))
 #+end_src
 
-** DONE PDF
-CLOSED: [2021-05-18 Tue 16:53]
-Visualizing PDF files in Emacs is quite useful.
-I am using =pdf-tools= which provides a lot of functionalities.
-The configuration consists mainly of providing proper keyboard based controls using =hydra=.
-I am also using =pdf-view-restore= to keep track of where I was before closing emacs.
-
-#+NAME: pdf-tools-keybindings
-| Key     | Function                             | Description |
-|---------+--------------------------------------+-------------|
-| ?       | pdf-tools-hydra/body                 |             |
-| <s-spc> | pdf-view-scroll-down-or-next-page    |             |
-| <C-s>   | isearch-forward                      |             |
-| g       | pdf-view-first-page                  |             |
-| G       | pdf-view-last-page                   |             |
-| l       | image-forward-hscroll                |             |
-| h       | image-backward-hscroll               |             |
-| j       | pdf-view-next-page                   |             |
-| k       | pdf-view-previous-page               |             |
-| e       | pdf-view-goto-page                   |             |
-| u       | pdf-view-revert-buffer               |             |
-| al      | pdf-annot-list-annotations           |             |
-| ad      | pdf-annot-delete                     |             |
-| aa      | pdf-annot-attachment-dired           |             |
-| am      | pdf-annot-add-markup-annotation      |             |
-| at      | pdf-annot-add-text-annotation        |             |
-| y       | pdf-view-kill-ring-save              |             |
-| i       | pdf-misc-display-metadata            |             |
-| s       | pdf-occur                            |             |
-| b       | pdf-view-set-slice-from-bounding-box |             |
-| r       | pdf-view-reset-slice                 |             |
-
-#+NAME: pdf-tools-hydra-move-keybindings
-| Key | Function                       | Label        | Options    | Description |
-|-----+--------------------------------+--------------+------------+-------------|
-| g   | pdf-view-first-page            | First        |            |             |
-| G   | pdf-view-last-page             | Last         |            |             |
-| p   | pdf-view-previous-page-command | Previous     | :color red |             |
-| n   | pdf-view-next-page-command     | Next         | :color red |             |
-| e   | pdf-view-goto-page             | Page         |            |             |
-| h   | image-backward-hscroll         | Scroll left  | :color red |             |
-| l   | image-forward-hscroll          | Scroll right | :color red |             |
-
-#+NAME: pdf-tools-hydra-history-keybindings
-| Key | Function             | Label    | Options    | Description |
-|-----+----------------------+----------+------------+-------------|
-| B   | pdf-history-backward | Backward | :color red |             |
-| N   | pdf-history-forward  | Forward  | :color red |             |
-
-#+NAME: pdf-tools-hydra-scale-keybindings
-| Key | Function                             | Label                       | Options    | Description |
-|-----+--------------------------------------+-----------------------------+------------+-------------|
-| +   | pdf-view-enlarge                     | Enlarge                     | :color red |             |
-| -   | pdf-view-shrink                      | Shrink                      | :color red |             |
-| 0   | pdf-view-scale-reset                 | Reset                       |            |             |
-| H   | pdf-view-fit-height-to-window        | Fit height                  |            |             |
-| W   | pdf-view-fit-width-to-window         | Fit width                   |            |             |
-| P   | pdf-view-fit-page-to-window          | Fit page                    |            |             |
-| b   | pdf-view-set-slice-from-bounding-box | Set slice from bounding box |            |             |
-| r   | pdf-view-reset-slice                 | Reset slice                 |            |             |
-
-#+NAME: pdf-tools-hydra-annotations-keybindings
-| Key | Function                        | Label  | Description |
-|-----+---------------------------------+--------+-------------|
-| al  | pdf-annot-list-annotations      | List   |             |
-| am  | pdf-annot-add-markup-annotation | Markup |             |
-| at  | pdf-annot-add-text-annotation   | Text   |             |
-| ad  | pdf-annot-delete                | Delete |             |
-| aa  | pdf-annot-attachment-dired      | Dired  |             |
-| y   | pdf-view-kill-ring-save         | Yank   |             |
-
-#+NAME: pdf-tools-hydra-search-keybindings
-| Key | Function                | Label       | Description |
-|-----+-------------------------+-------------+-------------|
-| s   | pdf-occur               | Search      |             |
-| o   | pdf-outline             | Outline     |             |
-| F   | pdf-links-action-perfom | Link        |             |
-| f   | pdf-links-isearch-link  | Search link |             |
-
-#+NAME: pdf-tools-hydra-diverse-keybindings
-| Key | Function                  | Label         | Description |
-|-----+---------------------------+---------------+-------------|
-| d   | pdf-view-dark-minor-mode  | Dark mode     |             |
-| i   | pdf-misc-display-metadata | Info          |             |
-| u   | pdf-view-revert-buffer    | Revert buffer |             |
-
-#+begin_src emacs-lisp
-  (use-package pdf-tools
-    :straight (pdf-tools :type git :host github :repo "vedang/pdf-tools")
-    :tags '("DOCUMENT" "DESKTOP")
-    :functions
-    (pdf-history-backward
-     pdf-history-forward
-     pdf-links-action-perfom
-     pdf-links-isearch-link
-     pdf-view-enlarge
-     pdf-view-shrink
-     pdf-view-scale-reset
-     pdf-view-fit-height-to-window
-     pdf-view-fit-width-to-window
-     pdf-view-fit-page-to-window
-     pdf-view-next-page-command
-     pdf-view-previous-page-command
-     pdf-view-dark-minor-mode)
-
-    :hook
-    (pdf-view-mode . (lambda ()
-                       (pdf-misc-size-indication-minor-mode)
-                       (pdf-links-minor-mode)
-                       (pdf-isearch-minor-mode)
-                       (cua-mode 0)))
-
-    :bind (:map pdf-view-mode-map
-      <<keybindings-gen(table=pdf-tools-keybindings)>>
-    )
-
-    :pretty-hydra
-    ((:color blue :hint nil)
-     ("Move" (
-        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-move-keybindings)>>
-      )
-
-      "History" (
-        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-history-keybindings)>>
-      )
-
-      "Scale/Fit" (
-        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-scale-keybindings)>>
-      )
-
-      "Annotations" (
-        <<hydra-keybindings-gen(table=pdf-tools-hydra-annotations-keybindings)>>
-      )
-
-      "Search/Link" (
-        <<hydra-keybindings-gen(table=pdf-tools-hydra-search-keybindings)>>
-      )
-
-      "Other" (
-        <<hydra-keybindings-gen(table=pdf-tools-hydra-diverse-keybindings)>>
-      )))
-
-    :magic ("%PDF" . pdf-view-mode)
-
-    :config
-    ;; Install what need to be installed !
-    (pdf-tools-install t t t)
-
-    ;; open pdfs scaled to fit page
-    (setq-default pdf-view-display-size 'fit-page)
-
-    ;; automatically annotate highlights
-    (setq pdf-annot-activate-created-annotations t)
-
-    ;; more fine-grained zooming
-    (setq pdf-view-resize-factor 1.1))
-
-  (use-package pdf-view-restore
-    :after pdf-tools
-    :tags '("DOCUMENT" "DESKTOP")
-    :hook
-    (pdf-view-mode-hook . pdf-view-restore-mode))
-
-  (when (executable-find "diffpdf")
-    (use-package diffpdf
-      :tags '("DOCUMENT" "DESKTOP")))
-#+end_src
-
-*** DONE Grepping
-CLOSED: [2021-03-01 Mon 09:45]
-I use =pdfgrep= to be able to search inside the pdf document.
-
-#+begin_src emacs-lisp
-  (when (executable-find "pdfgrep")
-    (use-package pdfgrep
-      :tags '("DOCUMENT" "DESKTOP")
-      :config
-      (pdfgrep-mode)))
-#+end_src
-
-*** DONE Connection with org-mode
-CLOSED: [2021-03-01 Mon 09:47]
-PDF files and org-mode are strongly related.
-I use =org-pdftools= to add an org link type for =pdftools=.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-pdftools
-    :tags '("DOCUMENT" "DESKTOP" "ORG")
-    :hook (org-mode . org-pdftools-setup-link))
-#+END_SRC
-
-** DONE Epub
-CLOSED: [2021-02-09 Tue 16:15]
-I am using =nov= to read epub files.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package nov
-    :tags '("DESKTOP" "DOCUMENT")
-    :mode ("\\.epub\\'" . nov-mode)
-    :commands (nov-mode)
-    :config
-    (setq nov-text-width 100))
-#+END_SRC
 * Version Control / Project Management [100%]
 My code project management is articulated around three key points: GIT, github/gist and =projectile=.
 GIT is used as the version control manager;
@@ -4616,7 +4647,7 @@ To interact with github in emacs, I rely on three packages:
     :tags '("VC" "GIT" "GITHUB" "CONNECTED"))
 
   (use-package gh-notify
-    :straight (:type git :host github :repo "anticomputer/gh-notify"))
+    :elpaca (gh-notify :host github :repo "anticomputer/gh-notify"))
 
   ;; Extracted from https://github.com/anticomputer/gh-notify
   (use-package github-review
@@ -4812,39 +4843,40 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
     :tags '("TERM")
+    :custom
+    (vterm-always-compile-module t)
     :config
     ;; Cleaning
     (setq vterm-kill-buffer-on-exit t)
 
     ;; Function keys are not used in therm
     (mapcar (lambda (key)
-              (define-key vterm-mode-map (kbd key) nil))
-            '("<f1>" "<f2>" "<f3>" "<f4>" "<f5>" "<f6>"
-              "<f7>" "<f8>" "<f9>" "<f10>" "<f11>" "<f12>"
-              "<prior>" "<next>"))
+	      (define-key vterm-mode-map (kbd key) nil))
+	    '("<f1>" "<f2>" "<f3>" "<f4>" "<f5>" "<f6>"
+	      "<f7>" "<f8>" "<f9>" "<f10>" "<f11>" "<f12>"
+	      "<prior>" "<next>"))
 
     ;; Better directory tracking
     (push (list "update-pwd" (lambda (path) (setq default-directory path)))
-          vterm-eval-cmds)
+	  vterm-eval-cmds)
 
     ;; Opening file in emacs directly
     (push (list "find-file-below"
-                (lambda (path)
-                  (if-let* ((buf (find-file-noselect path))
-                            (window (display-buffer-below-selected buf nil)))
-                      (select-window window)
-                    (message "Failed to open file: %s" path))))
-          vterm-eval-cmds))
+		(lambda (path)
+		  (if-let* ((buf (find-file-noselect path))
+			    (window (display-buffer-below-selected buf nil)))
+		      (select-window window)
+		    (message "Failed to open file: %s" path))))
+	  vterm-eval-cmds))
 
   (use-package multi-vterm
     :tags '("TERM")
     :bind (
       :map vterm-mode-map (
-        <<keybindings-gen(table=multi-vterm-mode-keybindings)>>
+	<<keybindings-gen(table=multi-vterm-mode-keybindings)>>
       )
     ))
 #+END_SRC
-
 * DONE File manager [100%]
 I am using emacs as my main file manager.
 To do so, I rely on =dired= which is builtin package which I tweaked massively and I added multiple subpackages to improve UX.
@@ -4980,28 +5012,29 @@ Diff visualization relies mainly on =ediff= but to which I added two primitives 
 
 #+begin_src emacs-lisp
   (use-package ediff
+    :elpaca nil
     :tags '("FILE_MANAGEMENT" "DIFF")
     :config
     (autoload 'diff-mode "diff-mode" "Diff major mode" t)
     (setq diff-switches "-u"
-          ediff-auto-refine-limit (* 2 14000)
-          ediff-window-setup-function 'ediff-setup-windows-plain
-          ediff-split-window-function
-          (lambda (&optional arg)
-            (if (> (frame-width) 160)
-                (split-window-horizontally arg)
-              (split-window-vertically arg)))))
+	  ediff-auto-refine-limit (* 2 14000)
+	  ediff-window-setup-function 'ediff-setup-windows-plain
+	  ediff-split-window-function
+	  (lambda (&optional arg)
+	    (if (> (frame-width) 160)
+		(split-window-horizontally arg)
+	      (split-window-vertically arg)))))
 
   (defun diff-region ()
     "Select a region to compare"
     (interactive)
     (when (use-region-p) ; there is a region
       (let (buf)
-        (setq buf (get-buffer-create "*Diff-regionA*"))
-        (save-current-buffer
-          (set-buffer buf)
-          (erase-buffer))
-        (append-to-buffer buf (region-beginning) (region-end))))
+	(setq buf (get-buffer-create "*Diff-regionA*"))
+	(save-current-buffer
+	  (set-buffer buf)
+	  (erase-buffer))
+	(append-to-buffer buf (region-beginning) (region-end))))
     (message "Now select other region to compare and run `diff-region-now`"))
 
   (defun diff-region-now ()
@@ -5009,13 +5042,13 @@ Diff visualization relies mainly on =ediff= but to which I added two primitives 
     (interactive)
     (when (use-region-p)
       (let (bufa bufb)
-        (setq bufa (get-buffer-create "*Diff-regionA*"))
-        (setq bufb (get-buffer-create "*Diff-regionB*"))
-        (save-current-buffer
-          (set-buffer bufb)
-          (erase-buffer))
-        (append-to-buffer bufb (region-beginning) (region-end))
-        (ediff-buffers bufa bufb))))
+	(setq bufa (get-buffer-create "*Diff-regionA*"))
+	(setq bufb (get-buffer-create "*Diff-regionB*"))
+	(save-current-buffer
+	  (set-buffer bufb)
+	  (erase-buffer))
+	(append-to-buffer bufb (region-beginning) (region-end))
+	(ediff-buffers bufa bufb))))
 #+end_src
 
 ** DONE Treemacs
@@ -5115,7 +5148,7 @@ CLOSED: [2023-02-02 Thu 15:56]
 #+begin_src emacs-lisp :lexical no
     (use-package file-info
       :tags '("FILE_MANAGEMENT")
-      :straight (:host github :repo "artawower/file-info.el")
+      :elpaca (file-info :host github :repo "artawower/file-info.el")
       :bind (("C-c d" . 'file-info-show))
       :config
       (setq hydra-hint-display-type 'posframe)
@@ -5143,10 +5176,8 @@ I rely on =elfeed-org= to store the list of feeds and defines some tags as well 
 
 #+begin_src emacs-lisp
   (use-package elfeed
-    :straight (elfeed :type git :host github :repo "skeeto/elfeed"
-                      :fork (:host github
-                                   :repo "seblemaguer/elfeed"
-                                   :branch "fix_emms_bug"))
+    :elpaca (elfeed :repo "seblemaguer/elfeed"
+		    :branch "fix_emms_bug")
     :tags '("CONNECTED" "RSS")
     :commands (elfeed elfeed-update)
     :no-require t
@@ -5158,8 +5189,8 @@ I rely on =elfeed-org= to store the list of feeds and defines some tags as well 
     ;; Change the storage directory
     (setq elfeed-db-directory (format "%s/elfeed" user-emacs-directory)
 
-          ;; Formatting dates
-          elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left))
+	  ;; Formatting dates
+	  elfeed-search-date-format '("%Y-%m-%d %H:%M" 17 :left))
 
     (when (fboundp 'elfeed-define-faces)
       (elfeed-define-faces)))
@@ -5215,7 +5246,7 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
 
 #+begin_src emacs-lisp
   (use-package elfeed-tube
-    :straight (:type git :host github :repo "karthink/elfeed-tube" :files (:defaults (:exclude "elfeed-tube-mpv.el")))
+    :elpaca (elfeed-tube :host github :repo "karthink/elfeed-tube" :files (:defaults (:exclude "elfeed-tube-mpv.el")))
     :after elfeed
     :tags '("CONNECTED" "RSS" "YOUTUBE")
     :demand t
@@ -5235,7 +5266,7 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
     ))
 
   (use-package elfeed-tube-mpv
-    :straight (:type git :host github :repo "karthink/elfeed-tube" :files ("elfeed-tube-mpv.el"))
+    :elpaca (elfeed-tube-mpv :host github :repo "karthink/elfeed-tube" :files ("elfeed-tube-mpv.el"))
     :tags '("CONNECTED" "RSS" "YOUTUBE")
 
     :bind (
@@ -5252,7 +5283,8 @@ I just need to define a default priority level for each feed.
 
 #+begin_src emacs-lisp
   (use-package sauron-elfeed
-    :straight sauron
+    :elpaca nil
+    :after (sauron)
     :tags '("CONNECTED" "RSS" "NOTIFICATION")
     :commands (elfeed-update-background-start sauron-elfeed-start)
     :hook
@@ -5333,7 +5365,7 @@ This configuration is remaining here for backward compatibility purposes.
 
 #+begin_src emacs-lisp
   (use-package starttls
-    :straight nil
+    :elpaca nil
     :tags '("CONNECTED")
     :if (< emacs-major-version 27)
     :config
@@ -5370,7 +5402,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
 
 #+begin_src emacs-lisp
   (use-package message
-    :straight nil
+    :elpaca nil
     :tags '("CONNECTED" "MAIL")
     :hook
     (message-mode . format-hook-message)
@@ -5434,7 +5466,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
           smtpmail-debug-verbose nil))
 
   (use-package org-msg
-    :straight '(:host github :repo "jeremy-compostella/org-msg")
+    :elpaca (org-msg :host github :repo "jeremy-compostella/org-msg")
     :bind (
       :map org-msg-edit-mode-map (
         <<keybindings-gen(table=org-msg-edit-keybindings)>>
@@ -5582,7 +5614,7 @@ I also redesigned the header buffer.
 
 #+begin_src emacs-lisp
   (use-package mu4e
-    :straight (:host github
+    :elpaca (mu4e  :host github
                      :repo "djcb/mu"
                      :branch "master"
                      :files ("build/mu4e/*.el" "build/mu4e/*.elc" "mu4e/*.el" "mu4e/*.elc")
@@ -5718,7 +5750,7 @@ I also redesigned the header buffer.
         (t (mu4e~headers-custom-field msg field)))))
 
   (use-package mu4e-thread-folding
-    :straight (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
+    :elpaca (mu4e-thread-folding :host github :repo "rougier/mu4e-thread-folding")
     :tags '("CONNECTED" "MAIL")
     :after (mu4e)
     :config
@@ -5735,7 +5767,7 @@ I also redesigned the header buffer.
                                  (:subject       .  nil))))
 
   (use-package mu4e-context
-    :straight mu4e
+    :elpaca mu4e
     :tags '("CONNECTED" "MAIL")
     :config
     ;; Define the contexts (configuration defined in a private file)
@@ -5750,7 +5782,7 @@ I also redesigned the header buffer.
                                                         (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
                                                     mu4e-contexts))))
   (use-package mu4e-bookmarks
-    :straight mu4e
+    :elpaca mu4e
     :tags '("CONNECTED" "MAIL")
     :config
     ;; Define the contexts (configuration defined in a private file)
@@ -5764,7 +5796,7 @@ I also redesigned the header buffer.
 
   (use-package org-mu4e
     :disabled t
-    :straight mu4e
+    :elpaca mu4e
     :tags '("CONNECTED" "MAIL" "ORG"))
 #+end_src
 
@@ -5776,7 +5808,7 @@ It is quite simple but robust enough to not being bother every 5 min.
 
 #+begin_src emacs-lisp
   (use-package mu4e-alert
-    :straight (:host github :repo "seblemaguer/mu4e-alert" :branch "mu-1.7")
+    :elpaca (mu4e-alert :host github :repo "seblemaguer/mu4e-alert" :branch "mu-1.7")
     :after (sauron-mode-line)
     :tags '("CONNECTED" "MAIL" "NOTIFICATION")
     :config
@@ -5795,7 +5827,7 @@ CLOSED: [2021-08-10 Tue 20:14]
 
 #+begin_src emacs-lisp
   (use-package mu4e-column-faces
-    :straight (mu4e-column-faces :type git :host github :repo "Alexander-Miller/mu4e-column-faces")
+    :elpaca (mu4e-column-faces :host github :repo "Alexander-Miller/mu4e-column-faces")
     :tags '("CONNECTED" "MAIL" "VISUAL")
     :after mu4e
     :config (mu4e-column-faces-mode))
@@ -5809,11 +5841,11 @@ I also rely on =org-hyperscheduler= which provides an easier way to move around 
 
 #+BEGIN_SRC emacs-lisp
   (use-package oauth2-auto
-    :straight (oauth2-auto :type git :host github :repo "rhaps0dy/emacs-oauth2-auto"))
+    :elpaca (oauth2-auto :host github :repo "rhaps0dy/emacs-oauth2-auto"))
 
   (use-package org-gcal
     :if (boundp 'my-gcal-client-id) ;; Ensure we have the infos to use org-gcal
-    :straight (org-gcal :type git :host github :repo "kidd/org-gcal.el")
+    :elpaca (org-gcal :host github :repo "kidd/org-gcal.el")
     :tags '("CALENDAR" "CONNECTED")
     :custom
     (org-gcal-client-id my-gcal-client-id)
@@ -5894,12 +5926,14 @@ Finally, the account definition is done in the private configuration file (so it
     (enable-circe-display-images))
 
   (use-package lui-logging
-    :straight circe
+    :elpaca nil
+    :after circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :commands (enable-lui-logging))
 
   (use-package lui-autopaste
-    :straight circe
+    :elpaca nil
+    :after circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :hook (circe-channel-mode . enable-lui-autopaste)
     :config
@@ -5936,7 +5970,8 @@ Finally, the account definition is done in the private configuration file (so it
 
 
   (use-package lui
-    :straight circe
+    :elpaca nil
+    :after circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :hook
     (lui-mode . my-lui-setup)
@@ -5961,7 +5996,8 @@ Finally, the account definition is done in the private configuration file (so it
       :global t))
 
   (use-package lui-irc-colors
-    :straight circe
+    :elpaca nil
+    :after circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :config
     (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
@@ -5983,11 +6019,11 @@ Therefore, all the packages are installed using =straight=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package plz
-    :straight (plz :type git :host github :repo "alphapapa/plz.el")
+    :elpaca (plz :host github :repo "alphapapa/plz.el")
     :tags '("CONNECTED" "CHAT" "MATRIX"))
 
   (use-package ement
-    :straight (ement :host github :repo "seblemaguer/ement.el" :branch "notification")
+    :elpaca (ement :host github :repo "seblemaguer/ement.el" :branch "notification")
     :tags '("CONNECTED" "CHAT" "MATRIX")
     :custom
     (ement-room-timestamp-format "%d-%m-%Y %H:%M:%S")
@@ -6060,8 +6096,7 @@ Because, I prefer to have the completion system, =company=, configured locally f
 
 #+begin_src emacs-lisp
   (use-package slack
-    :straight (slack :type git :host github :repo "yuya373/emacs-slack"
-                      :fork (:host github :repo "seblemaguer/emacs-slack"))
+    :elpaca (slack :host github :repo "seblemaguer/emacs-slack")
     :tags '("CONNECTED" "CHAT" "SLACK")
     :commands (slack-start)
     :no-require t
@@ -6118,7 +6153,7 @@ As an entry point to use slack, I prefer to use =helm-slack= as it provides a ni
 
 #+begin_src emacs-lisp
   (use-package helm-slack
-    :straight (helm-slack :type git :host github :repo "yuya373/helm-slack")
+    :elpaca (helm-slack :host github :repo "yuya373/helm-slack")
     :tags '("CONNECTED" "CHAT" "SLACK" "COMPLETION")
     :after (slack helm))
 #+end_src
@@ -6273,7 +6308,7 @@ As it requires more investigation, I disabled this packaged for now.
     :tags '("CONNECTED" "EXCHANGE" "REDDIT"))
 
   (use-package cl-extra
-    :straight (:type built-in))
+    :elpaca nil)
 
   (use-package md4rd
     :tags '("CONNECTED" "EXCHANGE" "REDDIT")
@@ -6390,11 +6425,10 @@ It requires =aria2c= to be available.
 #+BEGIN_SRC emacs-lisp
   (when (executable-find "aria2c")
     (use-package aria2
-      :straight (aria2 :type git :host github :repo "seblemaguer/aria2")
+      :elpaca (aria2 :host github :repo "seblemaguer/aria2")
       :commands aria2-downloads-list
       :tags '("CONNECTED")))
 #+END_SRC
-
 * DONE Entertainment [100%]
 ** DONE Music
 CLOSED: [2021-12-10 Fri 12:19]
@@ -6509,28 +6543,32 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
     (add-hook 'emms-player-seeked-functions #'emms-indicate-seek 'append))
 
   (use-package emms-info-metaflac
-    :straight emms
+    :elpaca nil
+    :after emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil
           emms-info-functions '(emms-info-metaflac)))
 
   (use-package emms-info-libtag
-    :straight emms
+    :elpaca nil
+    :after emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil)
     (add-to-list 'emms-info-functions 'emms-info-libtag t))
 
   (use-package emms-info-native
-    :straight emms
+    :elpaca nil
+    :after emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :init
     (setq emms-info-asynchronously nil)
     (add-to-list 'emms-info-functions 'emms-info-native t))
 
   (use-package emms-browser
-    :straight emms
+    :elpaca nil
+    :after emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     ;; Formatting
@@ -6571,7 +6609,7 @@ To sort out what I am currently watching, I use =seriestracker=.
 
 #+begin_src emacs-lisp
   (use-package seriestracker
-    :straight (seriestracker :type git :host github :repo "MaximeWack/seriesTracker")
+    :elpaca (seriestracker :host github :repo "MaximeWack/seriesTracker")
     :tags '("MULTIMEDIA" "ENTERTAINMENT")
     :demand                                                   ;;To force load seriestracker
     :config                                                   ;;These are the default
@@ -6596,7 +6634,7 @@ I just modified a couple of bindings to fit my French keyboard layout (the other
 
 #+begin_src emacs-lisp :lexical no
   (use-package subed
-    :straight (subed :type git :host github :repo "sachac/subed" :files ("subed/*.el"))
+    :elpaca (subed :host github :repo "sachac/subed" :files ("subed/*.el"))
     :bind (
       :map subed-mode-map (
           <<keybindings-gen(table=subed-keybindings)>>
@@ -6705,8 +6743,7 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
     :tags '("DESKTOP"))
 
   (use-package eaf
-    :straight (eaf :type git
-                   :host github
+    :elpaca (eaf :host github
                    :repo "emacs-eaf/emacs-application-framework"
                    :files ("eaf.el" "eaf.py" "applications.json" "extension" "core" "img" "sync-eaf-resources.py"))
     :tags '("DESKTOP")
@@ -6804,7 +6841,7 @@ I use =exec-path-from-shell= to force to run a command using the shell environme
   (when (executable-find "dtach")
     (use-package detached
       ;; NOTE: the original repo is a pain to access with ssh, using the emacsmirror
-      :straight (detached :type git :host github :repo "emacsmirror/detached")
+      :elpaca (detached :host github :repo "emacsmirror/detached")
       :tags '("SYSTEM")
       :init
       (detached-init)
@@ -6874,7 +6911,7 @@ Consequently, the configuration consists mainly of defining the path of conda an
   (when (executable-find "conda")
     (use-package conda
       :tags '("SYSTEM" "PYTHON" "R")
-      :straight (conda :type git :host github :repo "seblemaguer/conda.el")
+      :elpaca (conda :host github :repo "seblemaguer/conda.el")
       :init
       (setq conda-anaconda-home (expand-file-name "~/environment/local/mamba"))
 
@@ -6927,7 +6964,7 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
         (prodigy-stop-service service t))))
 
   (use-package elcontext
-    :straight (elcontext :type git :host github :repo "rollacaster/elcontext"
+    :elpaca (elcontext :host github :repo "rollacaster/elcontext"
                          :fork (:host github
                                       :repo "seblemaguer/elcontext"
                                       :branch "fix_missing_hydras_2"))
@@ -6969,7 +7006,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 #+begin_src emacs-lisp
   (use-package tramp
-    :straight (:type built-in)
+    :elpaca nil
     :tags '("SYSTEM" "SERVER" "CONNECTED")
     :custom
     (tramp-default-method "ssh")
@@ -7000,7 +7037,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 
   (use-package slurm-mode
-    :straight (slurm :type git :host github
+    :elpaca (slurm :host github
                      :repo "ffevotte/slurm.el"
                      :fork (:host github
                                   :repo "seblemaguer/slurm.el"
@@ -7288,7 +7325,7 @@ Finally, the package =page-break-lines= provides a nice way to visualize a page 
 #+begin_src emacs-lisp
   (use-package smartparens-config
     :tags '("VISUAL")
-    :straight smartparens
+    :elpaca smartparens
     :hook
     (after-init  . smartparens-global-mode)
     (after-init  . show-smartparens-global-mode)
@@ -7338,7 +7375,7 @@ I also add =xhair= to visualize where I am (line + column) when I need to align 
     (setq-default goggles-pulse t))
 
   (use-package scrollkeeper
-    :straight (scrollkeeper :type git :host github :repo "alphapapa/scrollkeeper.el")
+    :elpaca (scrollkeeper :host github :repo "alphapapa/scrollkeeper.el")
     :tags '("VISUAL")
     :bind (
       <<keybindings-gen(table=scrollkeeper-remap-keybindings)>>
@@ -7575,7 +7612,7 @@ CLOSED: [2021-12-10 Fri 14:17]
 
     (use-package org-rainbow-tags
       :tags '("VISUAL" "ORG")
-      :straight (:host github :repo "KaratasFurkan/org-rainbow-tags")
+      :elpaca (:host github :repo "KaratasFurkan/org-rainbow-tags")
       :custom
       (org-rainbow-tags-hash-start-index 10)
       (org-rainbow-tags-extra-face-attributes
@@ -7812,15 +7849,16 @@ Adding a toggle support for the commenting would be a good idea too
 
 #+begin_src emacs-lisp
   (use-package cc-mode
+    :elpaca nil
     :tags '("CORE" "BINDING")
     :bind
     (;; Global
      <<keybindings-gen(table=comment-keybindings)>>
 
      :map c-mode-base-map
-          <<keybindings-gen(table=comment-keybindings)>>
+	  <<keybindings-gen(table=comment-keybindings)>>
      :map c++-mode-map
-          <<keybindings-gen(table=comment-keybindings)>>))
+	  <<keybindings-gen(table=comment-keybindings)>>))
 #+end_src
 
 *** DONE Mac key remapping
