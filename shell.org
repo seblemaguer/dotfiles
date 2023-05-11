@@ -171,28 +171,30 @@
   ########################################################################################
   #### Aliases
   ########################################################################################
-
-  # Some utilities
-  alias svim='sudo vim'
-  alias h='cd ~'
-  alias ..='cd ..'
-  alias cd..='cd ..'
-  alias ...='cd ../..'
-  alias cim='vim'
-  alias root='sudo su'
-  alias dfh='df -h'
+  # Some helpers
+  alias vi='vim'
   alias watch='watch -x ' # NOTE: this is needed to expand aliases properly
-  alias tangle_emacs_conf=$'~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "(progn (require \'ob-tangle) (setq org-confirm-babel-evaluate nil) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))" "~/.emacs.d/README.org"'
 
-  # Adding colors
-  alias ls='ls -Ch --color=auto'
+  # Coloring some command
+  alias mvn="mvn-color"
   alias grep='grep --color=auto'
   alias fgrep='fgrep --color=auto'
 
+  # Network
+  alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
+
   # Cluster aliases
   alias msinfo='sinfo -o "%25N %.3a %.9P %10c  %10m  %25f  %20G %10l %50E"'
-  alias msqueue='squeue -o "%.8i %.9P %.20j %.8u %.8T %.10M %.12l %.8C %.8m %.25b %.15R"'
+  alias msqueue='squeue -o "%.8i %.9P %.20j %.8u %.8T %.10M %.12l %.8C %.15b %.15R"'
   alias check_queue="msqueue | sed 's/[ \t]\+/ /g' | cut -d' ' -f5,6,10 | sed 's/:.*//g' | sort | uniq -c | grep -v 'USER STATE' | sed 's/^[ ]*//g' | sort -h"
+
+  # Docker cleaning aliases
+  alias clean_exited_cont='docker ps -a | grep Exited | cut -d " " -f 1 | xargs docker rm'
+  alias clean_bulk_images='docker images | grep "<none>" | sed "s/   */:/g" | cut -d ":" -f 3 | xargs docker rmi'
+
+  # Helper aliases
+  alias conda=micromamba
+  alias tangle_emacs_conf=$'~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "(progn (require \'ob-tangle) (setq org-confirm-babel-evaluate nil) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))" "~/.emacs.d/README.org"'
   alias mquota="python ~/environment/local/bin/mquota" # NOTE: needed because boole python's version is 2.7...
 
   # Docker cleaning aliases
@@ -352,27 +354,30 @@
   fi
 
   ########################################################################################
-  #### Environment
+  #### Environment tools
   ########################################################################################
 
-  # >>> conda initialize >>>
-  # !! Contents within this block are managed by 'conda init' !!
-  __conda_setup="$('$HOME/environment/local/miniconda3/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
-  if [ $? -eq 0 ]; then
-      eval "$__conda_setup"
-  else
-      if [ -f "$HOME/environment/local/miniconda3/etc/profile.d/conda.sh" ]; then
-          . "$HOME/environment/local/miniconda3/etc/profile.d/conda.sh"
-      else
-          export PATH="$HOME/environment/local/miniconda3/bin:$PATH"
-      fi
-  fi
-  unset __conda_setup
-  # <<< conda initialize <<<
-
-  #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+  ## SDKMAN
   export SDKMAN_DIR="$HOME/.sdkman"
   [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+
+  # >>> mamba initialize >>>
+  # !! Contents within this block are managed by 'mamba init' !!
+  export MAMBA_EXE="/home/lemagues/.local/bin/micromamba";
+  export MAMBA_ROOT_PREFIX="/home/lemagues/environment/local/mamba";
+  __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+  if [ $? -eq 0 ]; then
+      eval "$__mamba_setup"
+  else
+      if [ -f "/home/lemagues/environment/local/mamba/etc/profile.d/micromamba.sh" ]; then
+          . "/home/lemagues/environment/local/mamba/etc/profile.d/micromamba.sh"
+      else
+          export  PATH="/home/lemagues/environment/local/mamba/bin:$PATH"  # extra space after export prevents interference from conda init
+      fi
+  fi
+  unset __mamba_setup
+  # <<< mamba initialize <<<
 #+end_src
 
 * zsh
@@ -395,15 +400,6 @@
       unfunction preexec
       PS1='$ '
       return
-  fi
-
-  export TERM="xterm-256color"
-
-  # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-  # Initialization code that may require console input (password prompts, [y/n]
-  # confirmations, etc.) must go above this block; everything else may go below.
-  if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-      source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
   fi
 
   ########################################################################################
@@ -491,9 +487,6 @@
   # Network
   alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
 
-  # Emacs helper
-  alias tangle_emacs_conf=$'~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "(progn (require \'ob-tangle) (setq org-confirm-babel-evaluate nil) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))" "~/.emacs.d/README.org"'
-
   # Cluster aliases
   alias msinfo='sinfo -o "%25N %.3a %.9P %10c  %10m  %25f  %20G %10l %50E"'
   alias msqueue='squeue -o "%.8i %.9P %.20j %.8u %.8T %.10M %.12l %.8C %.15b %.15R"'
@@ -502,6 +495,10 @@
   # Docker cleaning aliases
   alias clean_exited_cont='docker ps -a | grep Exited | cut -d " " -f 1 | xargs docker rm'
   alias clean_bulk_images='docker images | grep "<none>" | sed "s/   */:/g" | cut -d ":" -f 3 | xargs docker rmi'
+
+  # Helper aliases
+  alias conda=micromamba
+  alias tangle_emacs_conf=$'~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "(progn (require \'ob-tangle) (setq org-confirm-babel-evaluate nil) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))" "~/.emacs.d/README.org"'
 
 
   ########################################################################################
@@ -607,21 +604,6 @@
   #### Environment tools
   ########################################################################################
 
-  ## Conda
-  # !! Contents within this block are managed by 'conda init' !!
-  __conda_setup="$('$HOME/environment/local/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-  if [ $? -eq 0 ]; then
-      eval "$__conda_setup"
-  else
-      if [ -f "$HOME/environment/local/miniconda3/etc/profile.d/conda.sh" ]; then
-          . "$HOME/environment/local/miniconda3/etc/profile.d/conda.sh"
-      else
-          export PATH="$HOME/environment/local/miniconda3/bin:$PATH"
-      fi
-  fi
-  unset __conda_setup
-  # <<< conda initialize <<<
-
   ## SDKMAN
   export SDKMAN_DIR="$HOME/.sdkman"
   [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
@@ -631,6 +613,36 @@
       autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
       kitty-integration
       unfunction kitty-integration
+  fi
+
+  # >>> mamba initialize >>>
+  # !! Contents within this block are managed by 'mamba init' !!
+  export MAMBA_EXE="/home/lemagues/.local/bin/micromamba";
+  export MAMBA_ROOT_PREFIX="/home/lemagues/environment/local/mamba";
+  __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
+  if [ $? -eq 0 ]; then
+      eval "$__mamba_setup"
+  else
+      if [ -f "/home/lemagues/environment/local/mamba/etc/profile.d/micromamba.sh" ]; then
+          . "/home/lemagues/environment/local/mamba/etc/profile.d/micromamba.sh"
+      else
+          export  PATH="/home/lemagues/environment/local/mamba/bin:$PATH"  # extra space after export prevents interference from conda init
+      fi
+  fi
+  unset __mamba_setup
+  # <<< mamba initialize <<<
+
+  ########################################################################################
+  #### Theme / Visual
+  ########################################################################################
+
+  export TERM="xterm-256color"
+
+  # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+  # Initialization code that may require console input (password prompts, [y/n]
+  # confirmations, etc.) must go above this block; everything else may go below.
+  if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+      source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
   fi
 #+end_src
 
