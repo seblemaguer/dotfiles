@@ -2938,9 +2938,10 @@ For language specific configurations, it is done in the language configuration p
     (defun fic-view-listing ()
       "Use occur to list related FIXME keywords"
       (interactive)
-      (occur "\\<\\(FIXME\\|TODO\\|BUG\\|NOTE\\):?"))
+      (occur "\\<\\(FIXME\\|TO[ ]?DO\\|BUG\\|NOTE\\):?"))
     (setq hl-todo-keyword-faces
           '(("TODO"   . "#FF0000")
+            ("TO DO"  . "#FF0000")
             ("FIXME"  . "#FF0000")
             ("NOTE"   . "#A020F0")
             ("BUG"    . "#FF4500")))
