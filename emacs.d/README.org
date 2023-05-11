@@ -302,30 +302,7 @@ While alternatives exist, I find this combination more straightforward and clean
 
 #+begin_src emacs-lisp
   (use-package pretty-hydra
-    :tags '("CORE")
-    :preface
-    (defun with-alltheicon (icon str &optional height v-adjust)
-      "Displays an icon from all-the-icon."
-      (s-concat (all-the-icons-alltheicon icon :v-adjust (or v-adjust 0) :height (or height 1)) " " str))
-
-    (defun with-faicon (icon str &optional height v-adjust)
-      "Displays an icon from Font Awesome icon."
-      (s-concat (all-the-icons-faicon icon :v-adjust (or v-adjust 0) :height (or height 1)) " " str))
-
-    (defun with-fileicon (icon str &optional height v-adjust)
-      "Displays an icon from the Atom File Icons package."
-      (s-concat (all-the-icons-fileicon icon :v-adjust (or v-adjust 0) :height (or height 1)) " " str))
-
-    (defun with-octicon (icon str &optional height v-adjust)
-      "Displays an icon from the GitHub Octicons."
-      (s-concat (all-the-icons-octicon icon :v-adjust (or v-adjust 0) :height (or height 1)) " " str))
-
-    (when (display-graphic-p)
-        (setq hydra-hint-display-type 'posframe
-              hydra-posframe-show-params
-              '(:internal-border-width 2
-                :internal-border-color "#425d78"
-                :poshandler posframe-poshandler-frame-center))))
+    :tags '("CORE"))
 
   (use-package major-mode-hydra
     :demand t
@@ -5116,14 +5093,7 @@ CLOSED: [2023-02-02 Thu 15:56]
     (use-package file-info
       :tags '("FILE_MANAGEMENT")
       :straight (:host github :repo "artawower/file-info.el")
-      :bind (("C-c d" . 'file-info-show))
-      :config
-      (setq hydra-hint-display-type 'posframe)
-      (setq hydra-posframe-show-params `(:poshandler posframe-poshandler-frame-center
-                                                   :internal-border-width 2
-                                                   :internal-border-color "#61AFEF"
-                                                   :left-fringe 16
-                                                   :right-fringe 16)))
+      :bind (("C-c d" . 'file-info-show)))
 #+end_src
 
 * DONE Online [100%]
