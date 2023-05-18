@@ -428,14 +428,13 @@ This plugin is in charge to managing the communication and avoid any cycle.
 #+begin_src emacs-lisp
   (use-package sauron-mode-line
     :elpaca nil
-    :after (sauron)
     :load-path default-plugin-dir
     ;; :tags '("CORE" "NOTIFICATION")
     :custom
     (sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron)
 
     :commands (sauron-mode-line-start-hidden)
-    :hook (after-init . sauron-mode-line-start-hidden)
+    :hook (elpaca-after-init . sauron-mode-line-start-hidden)
     :bind (
       <<keybindings-gen(table=sauron-keybindings)>>
      ))
@@ -751,7 +750,7 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
     ;; NOTE: the original repo is a pain to access with ssh, using the emacsmirror
     :elpaca (goto-last-point :type git :host github :repo "emacsmirror/goto-last-point")
     ;; :tags '("CORE" "NAVIGATION")
-    :hook (after-init . goto-last-point-mode)
+    :hook (elpaca-after-init . goto-last-point-mode)
     :bind (
       <<keybindings-gen(table=goto-last-point-entry-keybindings)>>
     ))
@@ -800,8 +799,9 @@ leads to this configuration
 #+begin_src emacs-lisp
   (use-package recentf
     :elpaca nil
+    :ensure t
     ;; :tags '("CORE" "SESSION" "RECENT")
-    :hook (after-init . recentf-mode)
+    :hook (elpaca-after-init . recentf-mode)
     :custom
     (recentf-max-saved-items 100)
     (recentf-max-menu-items 100)
@@ -859,97 +859,98 @@ This the global backup configuration. For that I adapted a little bit the wonder
 snapshot-timemachine package.
 
 #+begin_src emacs-lisp
+  (defun my-make-backup-file-name (FILE)
+    (let* ((dirname backup-directory)
+           (backup-filename (concat dirname (file-truename FILE))))
+      (unless (file-exists-p (file-name-directory  backup-filename))
+        (make-directory (file-name-directory backup-filename) t))
+      backup-filename))
+
+  ;; Redefine find-backup-filename to avoid the "!" replacement
+  (defun find-backup-file-name (fn)
+    "Find a file name for a backup file FN, and suggestions for deletions.
+      Value is a list whose car is the name for the backup file
+      and whose cdr is a list of old versions to consider deleting now.
+      If the value is nil, don't make a backup.
+      Uses `backup-directory-alist' in the same way as
+      `make-backup-file-name--default-function' does."
+    (let ((handler (find-file-name-handler fn 'find-backup-file-name)))
+      ;; Run a handler for this function so that ange-ftp can refuse to do it.
+      (if handler
+          (funcall handler 'find-backup-file-name fn)
+        (if (or (eq version-control 'never)
+                ;; We don't support numbered backups on plain MS-DOS
+                ;; when long file names are unavailable.
+                (and (eq system-type 'ms-dos)
+                     (not (msdos-long-file-names))))
+            (list (make-backup-file-name fn))
+          (let* ((basic-name (make-backup-file-name fn))
+                 (base-versions (concat (file-name-nondirectory basic-name)
+                                        ".~"))
+                 (backup-extract-version-start (length base-versions))
+                 (high-water-mark 0)
+                 (number-to-delete 0)
+                 possibilities deserve-versions-p versions)
+            (condition-case ()
+                (setq possibilities (file-name-all-completions
+                                     base-versions
+                                     (file-name-directory basic-name))
+                      versions (sort (mapcar #'backup-extract-version
+                                             possibilities)
+                                     #'<)
+                      high-water-mark (apply 'max 0 versions)
+                      deserve-versions-p (or version-control
+                                             (> high-water-mark 0))
+                      number-to-delete (- (length versions)
+                                          kept-old-versions
+                                          kept-new-versions
+                                          -1))
+              (file-error (setq possibilities nil)))
+            (if (not deserve-versions-p)
+                (list (make-backup-file-name fn))
+              (cons (format "%s.~%d~" basic-name (1+ high-water-mark))
+                    (if (and (> number-to-delete 0)
+                             ;; Delete nothing if there is overflow
+                             ;; in the number of versions to keep.
+                             (>= (+ kept-new-versions kept-old-versions -1) 0))
+                        (mapcar (lambda (n)
+                                  (format "%s.~%d~" basic-name n))
+                                (let ((v (nthcdr kept-old-versions versions)))
+                                  (rplacd (nthcdr (1- number-to-delete) v) ())
+                                  v))))))))))
+
+  ;; Default Backup directory
+  (defvar backup-directory (concat user-emacs-directory "backups/"))
+  (setq backup-directory-alist `((".*" . ,backup-directory)))
+  (when (not (file-exists-p backup-directory))
+    (make-directory backup-directory t))
+  (setq make-backup-file-name-function #'my-make-backup-file-name)
+  ;; Auto-save
+  (defvar auto-save-directory (concat user-emacs-directory "auto-save/"))
+  (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
+  (when (not (file-exists-p auto-save-directory))
+    (make-directory auto-save-directory t))
+
+  ;; Tramp backup
+  (defvar tramp-backup-directory (concat user-emacs-directory "tramp-backups/"))
+  (setq tramp-backup-directory-alist `((".*" . ,tramp-backup-directory)))
+
+  (when (not (file-exists-p tramp-backup-directory))
+    (make-directory tramp-backup-directory t))
+
+  (setq make-backup-files t               ; backup of a file the first time it is saved.
+        backup-by-copying t               ; don't clobber symlinks
+        version-control t                 ; version numbers for backup files
+        delete-old-versions t             ; delete excess backup files silently
+        delete-by-moving-to-trash t
+        kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
+        kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+        )
+
+
   (use-package snapshot-timemachine
     ;; :tags '("CORE" "SESSION" "BACKUP")
     :init
-
-    (defun my-make-backup-file-name (FILE)
-      (let* ((dirname backup-directory)
-             (backup-filename (concat dirname (file-truename FILE))))
-        (unless (file-exists-p (file-name-directory  backup-filename))
-          (make-directory (file-name-directory backup-filename) t))
-        backup-filename))
-
-    ;; Redefine find-backup-filename to avoid the "!" replacement
-    (defun find-backup-file-name (fn)
-      "Find a file name for a backup file FN, and suggestions for deletions.
-    Value is a list whose car is the name for the backup file
-    and whose cdr is a list of old versions to consider deleting now.
-    If the value is nil, don't make a backup.
-    Uses `backup-directory-alist' in the same way as
-    `make-backup-file-name--default-function' does."
-      (let ((handler (find-file-name-handler fn 'find-backup-file-name)))
-        ;; Run a handler for this function so that ange-ftp can refuse to do it.
-        (if handler
-            (funcall handler 'find-backup-file-name fn)
-          (if (or (eq version-control 'never)
-                  ;; We don't support numbered backups on plain MS-DOS
-                  ;; when long file names are unavailable.
-                  (and (eq system-type 'ms-dos)
-                       (not (msdos-long-file-names))))
-              (list (make-backup-file-name fn))
-            (let* ((basic-name (make-backup-file-name fn))
-                   (base-versions (concat (file-name-nondirectory basic-name)
-                                          ".~"))
-                   (backup-extract-version-start (length base-versions))
-                   (high-water-mark 0)
-                   (number-to-delete 0)
-                   possibilities deserve-versions-p versions)
-              (condition-case ()
-                  (setq possibilities (file-name-all-completions
-                                       base-versions
-                                       (file-name-directory basic-name))
-                        versions (sort (mapcar #'backup-extract-version
-                                               possibilities)
-                                       #'<)
-                        high-water-mark (apply 'max 0 versions)
-                        deserve-versions-p (or version-control
-                                               (> high-water-mark 0))
-                        number-to-delete (- (length versions)
-                                            kept-old-versions
-                                            kept-new-versions
-                                            -1))
-                (file-error (setq possibilities nil)))
-              (if (not deserve-versions-p)
-                  (list (make-backup-file-name fn))
-                (cons (format "%s.~%d~" basic-name (1+ high-water-mark))
-                      (if (and (> number-to-delete 0)
-                               ;; Delete nothing if there is overflow
-                               ;; in the number of versions to keep.
-                               (>= (+ kept-new-versions kept-old-versions -1) 0))
-                          (mapcar (lambda (n)
-                                    (format "%s.~%d~" basic-name n))
-                                  (let ((v (nthcdr kept-old-versions versions)))
-                                    (rplacd (nthcdr (1- number-to-delete) v) ())
-                                    v))))))))))
-
-    ;; Default Backup directory
-    (defvar backup-directory (concat user-emacs-directory "backups/"))
-    (setq backup-directory-alist `((".*" . ,backup-directory)))
-    (when (not (file-exists-p backup-directory))
-      (make-directory backup-directory t))
-    (setq make-backup-file-name-function #'my-make-backup-file-name)
-    ;; Auto-save
-    (defvar auto-save-directory (concat user-emacs-directory "auto-save/"))
-    (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
-    (when (not (file-exists-p auto-save-directory))
-      (make-directory auto-save-directory t))
-
-    ;; Tramp backup
-    (defvar tramp-backup-directory (concat user-emacs-directory "tramp-backups/"))
-    (setq tramp-backup-directory-alist `((".*" . ,tramp-backup-directory)))
-
-    (when (not (file-exists-p tramp-backup-directory))
-      (make-directory tramp-backup-directory t))
-
-    (setq make-backup-files t               ; backup of a file the first time it is saved.
-          backup-by-copying t               ; don't clobber symlinks
-          version-control t                 ; version numbers for backup files
-          delete-old-versions t             ; delete excess backup files silently
-          delete-by-moving-to-trash t
-          kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
-          kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
-          )
 
     :config
 
@@ -1199,6 +1200,9 @@ Finally, some keywords are there for note purposes:
           org-confirm-babel-evaluate nil
           org-startup-with-inline-images t
           org-return-follows-link t))
+
+  ;; Elpaca should wait org to be loaded
+  (elpaca-wait)
 #+end_src
 
 ** DONE Source [100%]
@@ -1244,7 +1248,6 @@ This section provides the configuration for babel by first configuring jupyter.
 
   (use-package ob
     :elpaca nil ;; org-contrib
-    :after (org-contrib)
     ;; :tags '("ORG")
     :config
 
@@ -1768,6 +1771,7 @@ CLOSED: [2021-12-10 Fri 14:17]
 #+begin_src emacs-lisp
   (use-package org-modern
     ;; :tags '("VISUAL" "ORG")
+    :demand t
     :hook
     (org-mode . org-modern-mode)
     (org-agenda-finalize . org-modern-agenda)
@@ -1963,7 +1967,6 @@ The only important bits are:
 #+begin_src emacs-lisp
   (use-package org-agenda
     :elpaca nil ;; org-contrib
-    :after (org-contrib)
     ;; :tags '("ORG" "USER" "CONNECTED")
     :if (file-directory-p cloud-org-root-dir)
     :commands (org-agenda)
@@ -3146,7 +3149,7 @@ It is a convenient package to have a more refined control of my workflow.
   (use-package which-key
     ;; :tags '("HELPERS")
     :commands (which-key-mode)
-    :hook (after-init . which-key-mode))
+    :hook (elpaca-after-init . which-key-mode))
 
   (use-package which-key-posframe
     ;; :tags '("HELPERS")
@@ -5363,7 +5366,7 @@ Because I need a break once and a while at work, I load both files on my work ma
   (use-package elfeed-org
     ;; :tags '("CONNECTED" "RSS")
     :if (file-directory-p cloud-org-root-dir)
-    :hook (after-init . loading-elfeed)
+    :hook (elpaca-after-init . loading-elfeed)
     :commands (elfeed-org)
     :init
     (defvar rss-files (list (concat cloud-org-root-dir "perso/configuration/rss.org"))
@@ -5442,8 +5445,8 @@ I just need to define a default priority level for each feed.
     ;; :tags '("CONNECTED" "RSS" "NOTIFICATION")
     :commands (elfeed-update-background-start sauron-elfeed-start)
     :hook
-    (after-init . sauron-elfeed-start)
-    (after-init . elfeed-update-background-start)
+    (elpaca-after-init . sauron-elfeed-start)
+    (elpaca-after-init . elfeed-update-background-start)
 
     :config
     (cl-loop for feed in elfeed-feeds
@@ -5580,6 +5583,8 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
 	  message-fill-column 100))
 
   (use-package smtpmail-multi
+    :elpaca nil
+    :load-path default-plugin-dir
     ;; :tags '("CONNECTED" "MAIL")
     :init
     (defun my-oauth2-fetch-access-token (user)
@@ -5769,10 +5774,10 @@ I also redesigned the header buffer.
 #+begin_src emacs-lisp
   (use-package mu4e
     :elpaca (:host github
-		     :repo "djcb/mu"
-		     :branch "master"
-		     :files ("build/mu4e/*.el" "build/mu4e/*.elc" "mu4e/*.el" "mu4e/*.elc")
-		     :pre-build (("./autogen.sh") ("make")))
+                     :repo "djcb/mu"
+                     :branch "master"
+                     :files ("build/mu4e/*.el" "build/mu4e/*.elc" "mu4e/*.el" "mu4e/*.elc")
+                     :pre-build (("./autogen.sh") ("make")))
     ;; :tags '("CONNECTED" "MAIL")
     :commands (mu4e)
     :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
@@ -5780,42 +5785,42 @@ I also redesigned the header buffer.
       <<keybindings-gen(table=mu4e-entry-keybindings)>>
     )
 
-    :hook
-    (after-init . (lambda () (mu4e t)))
+    ;; :hook
+    ;; (elpaca-after-init . (lambda () (mu4e t)))
 
     :pretty-hydra
     ((:color blue :hint nil)
      ("General" (
-	<<hydra-keybindings-gen(table=mu4e-hydra-general-keybindings)>>
+        <<hydra-keybindings-gen(table=mu4e-hydra-general-keybindings)>>
       )
 
       "Search" (
-	<<hydra-keybindings-gen(table=mu4e-hydra-search-keybindings)>>
+        <<hydra-keybindings-gen(table=mu4e-hydra-search-keybindings)>>
       )
 
       "Mark" (
-	<<hydra-keybindings-gen(table=mu4e-hydra-mark-keybindings)>>
+        <<hydra-keybindings-gen(table=mu4e-hydra-mark-keybindings)>>
       )
 
       "Miscellany" (
-	<<hydra-keybindings-gen(table=mu4e-hydra-misc-keybindings)>>
+        <<hydra-keybindings-gen(table=mu4e-hydra-misc-keybindings)>>
       )
 
       "Switches" (
-	<<hydra-keybindings-gen(table=mu4e-hydra-switches-keybindings)>>
+        <<hydra-keybindings-gen(table=mu4e-hydra-switches-keybindings)>>
       )))
 
     :bind (
       :map mu4e-headers-mode-map (
-	<<keybindings-gen(table=mu4e-headers-mode-keybindings)>>
+        <<keybindings-gen(table=mu4e-headers-mode-keybindings)>>
       )
 
       :map mu4e-main-mode-map (
-	<<keybindings-gen(table=mu4e-main-mode-keybindings)>>
+        <<keybindings-gen(table=mu4e-main-mode-keybindings)>>
       )
 
       :map message-mode-map (
-	<<keybindings-gen(table=message-mode-keybindings)>>
+        <<keybindings-gen(table=message-mode-keybindings)>>
       )
     )
 
@@ -5854,54 +5859,54 @@ I also redesigned the header buffer.
 
     (defun mu4e~headers-field-apply-basic-properties (msg field val width)
       (cl-case field
-	(:subject
-	 (propertize
-	  (concat
-	   (mu4e~headers-thread-prefix (mu4e-message-field msg :thread))
-	   (truncate-string-to-width val 600))
-	  'face
-	  (let ((flags (mu4e-message-field msg :flags)))
-	    (cond
-	     ((memq 'trashed flags) 'mu4e-trashed-face)
-	     ((memq 'draft flags) 'mu4e-draft-face)
-	     ((or (memq 'unread flags) (memq 'new flags))
-	      'mu4e-unread-face)
-	     ((memq 'flagged flags) 'mu4e-flagged-face)
-	     ((memq 'replied flags) 'mu4e-replied-face)
-	     ((memq 'passed flags) 'mu4e-forwarded-face)
-	     (t 'mu4e-header-face)))))
-	(:thread-subject
-	 (propertize
-	  (mu4e~headers-thread-subject msg)
-	  'face 'font-lock-doc-face))
-	((:maildir :path :message-id) val)
-	((:to :from :cc :bcc)
-	 (propertize
-	  (mu4e~headers-contact-str val)
-	  'face 'font-lock-function-name-face))
-	(:from-or-to (mu4e~headers-from-or-to msg))
-	(:date
-	 (propertize
-	  (format-time-string mu4e-headers-date-format val)
-	  'face 'font-lock-string-face))
-	(:mailing-list (mu4e~headers-mailing-list val))
-	(:human-date
-	 (propertize
-	  (mu4e~headers-human-date msg)
-	  'help-echo (format-time-string
-		      mu4e-headers-long-date-format
-		      (mu4e-msg-field msg :date))
-	  'face 'font-lock-string-face))
-	(:flags
-	 (propertize (mu4e~headers-flags-str val)
-		     'help-echo (format "%S" val)
-		     'face 'font-lock-type-face))
-	(:tags
-	 (propertize
-	  (mapconcat 'identity val ", ")
-	  'face 'font-lock-builtin-face))
-	(:size (mu4e-display-size val))
-	(t (mu4e~headers-custom-field msg field)))))
+        (:subject
+         (propertize
+          (concat
+           (mu4e~headers-thread-prefix (mu4e-message-field msg :thread))
+           (truncate-string-to-width val 600))
+          'face
+          (let ((flags (mu4e-message-field msg :flags)))
+            (cond
+             ((memq 'trashed flags) 'mu4e-trashed-face)
+             ((memq 'draft flags) 'mu4e-draft-face)
+             ((or (memq 'unread flags) (memq 'new flags))
+              'mu4e-unread-face)
+             ((memq 'flagged flags) 'mu4e-flagged-face)
+             ((memq 'replied flags) 'mu4e-replied-face)
+             ((memq 'passed flags) 'mu4e-forwarded-face)
+             (t 'mu4e-header-face)))))
+        (:thread-subject
+         (propertize
+          (mu4e~headers-thread-subject msg)
+          'face 'font-lock-doc-face))
+        ((:maildir :path :message-id) val)
+        ((:to :from :cc :bcc)
+         (propertize
+          (mu4e~headers-contact-str val)
+          'face 'font-lock-function-name-face))
+        (:from-or-to (mu4e~headers-from-or-to msg))
+        (:date
+         (propertize
+          (format-time-string mu4e-headers-date-format val)
+          'face 'font-lock-string-face))
+        (:mailing-list (mu4e~headers-mailing-list val))
+        (:human-date
+         (propertize
+          (mu4e~headers-human-date msg)
+          'help-echo (format-time-string
+                      mu4e-headers-long-date-format
+                      (mu4e-msg-field msg :date))
+          'face 'font-lock-string-face))
+        (:flags
+         (propertize (mu4e~headers-flags-str val)
+                     'help-echo (format "%S" val)
+                     'face 'font-lock-type-face))
+        (:tags
+         (propertize
+          (mapconcat 'identity val ", ")
+          'face 'font-lock-builtin-face))
+        (:size (mu4e-display-size val))
+        (t (mu4e~headers-custom-field msg field)))))
 
   (use-package mu4e-thread-folding
     :elpaca (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
@@ -5909,16 +5914,16 @@ I also redesigned the header buffer.
     :after (mu4e)
     :config
     (add-to-list 'mu4e-header-info-custom
-		 '(:empty . (:name "Empty"
-				   :shortname ""
-				   :function (lambda (msg) "  "))))
+                 '(:empty . (:name "Empty"
+                                   :shortname ""
+                                   :function (lambda (msg) "  "))))
     (setq mu4e-headers-fields  '((:empty         .    2)
-				 (:human-date    .   18)
-				 (:size          .    6)
-				 (:flags         .    6)
-				 (:mailing-list  .   10)
-				 (:from          .   22)
-				 (:subject       .  nil))))
+                                 (:human-date    .   18)
+                                 (:size          .    6)
+                                 (:flags         .    6)
+                                 (:mailing-list  .   10)
+                                 (:from          .   22)
+                                 (:subject       .  nil))))
 
   (use-package mu4e-context
     :elpaca nil
@@ -5931,11 +5936,11 @@ I also redesigned the header buffer.
 
     ;; Adapt the environment
     (setq mu4e-context-policy 'pick-first
-	  mu4e-user-mail-address-list (delq nil
-					    (mapcar (lambda (context)
-						      (when (mu4e-context-vars context)
-							(cdr (assq 'user-mail-address (mu4e-context-vars context)))))
-						    mu4e-contexts))))
+          mu4e-user-mail-address-list (delq nil
+                                            (mapcar (lambda (context)
+                                                      (when (mu4e-context-vars context)
+                                                        (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
+                                                    mu4e-contexts))))
   (use-package mu4e-bookmarks
     :elpaca nil
     :after (mu4e)
@@ -5946,9 +5951,9 @@ I also redesigned the header buffer.
       (set-mu4e-bookmarks))
 
     (add-to-list 'mu4e-bookmarks
-		 '(:name  "Drafts"
-			  :query "flag:draft"
-			  :key ?d)))
+                 '(:name  "Drafts"
+                          :query "flag:draft"
+                          :key ?d)))
 
   (use-package org-mu4e
     :disabled t
@@ -5964,6 +5969,7 @@ It is quite simple but robust enough to not being bother every 5 min.
 
 #+begin_src emacs-lisp
   (use-package mu4e-alert
+    :disabled t
     :elpaca (:host github :repo "seblemaguer/mu4e-alert" :branch "mu-1.7")
     :after (sauron-mode-line)
     ;; :tags '("CONNECTED" "MAIL" "NOTIFICATION")
@@ -6083,6 +6089,9 @@ Finally, the account definition is done in the private configuration file (so it
     (enable-circe-color-nicks)
     (enable-circe-display-images))
 
+  ;; Elpaca should wait circe to be ready!
+  (elpaca-wait)
+
   (use-package lui-logging
     :elpaca nil
     ;; :tags '("CONNECTED" "CHAT" "IRC")
@@ -6090,7 +6099,6 @@ Finally, the account definition is done in the private configuration file (so it
 
   (use-package lui-autopaste
     :elpaca nil ;; circe
-    :after (circe)
     ;; :tags '("CONNECTED" "CHAT" "IRC")
     :hook (circe-channel-mode . enable-lui-autopaste)
     :config
@@ -6128,7 +6136,6 @@ Finally, the account definition is done in the private configuration file (so it
 
   (use-package lui
     :elpaca nil ;; circe
-    :after (circe)
     ;; :tags '("CONNECTED" "CHAT" "IRC")
     :hook
     (lui-mode . my-lui-setup)
@@ -6154,7 +6161,6 @@ Finally, the account definition is done in the private configuration file (so it
 
   (use-package lui-irc-colors
     :elpaca nil ;; circe
-    :after (circe)
     ;; :tags '("CONNECTED" "CHAT" "IRC")
     :config
     (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
@@ -6512,7 +6518,7 @@ I am using its extension =metal-archives-shopping-list= to maintain a list of re
                metal-archives-load-artists-map)
     :hook
     ;; (kill-emacs . metal-archives-shopping-list-update)
-    (after-init . metal-archives-load-artists-map)
+    (elpaca-after-init . metal-archives-load-artists-map)
 
     :init
     (when (file-exists-p (concat cloud-org-root-dir "perso/music/shopping_list.org" ))
@@ -6629,15 +6635,15 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 
     ;; Some behaviour definition
     (setq later-do-interval 0.0001
-          emms-directory (concat user-emacs-directory "emms")
-          emms-playlist-buffer-name "*Music*"
-          emms-source-file-default-directory (expand-file-name "~/Music")
-          emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find
-          emms-show-format "NP: %s"
-          emms-playlist-default-major-mode 'emms-playlist-mode
-          emms-repeat-playlist t
-          emms-mode-line-mode-line-function nil  ;; Don't want any info in the mode line
-          emms-mode-line-titlebar-function 'emms-mode-line-playlist-current) ;; Put info in the titlebar
+	  emms-directory (concat user-emacs-directory "emms")
+	  emms-playlist-buffer-name "*Music*"
+	  emms-source-file-default-directory (expand-file-name "~/Music")
+	  emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find
+	  emms-show-format "NP: %s"
+	  emms-playlist-default-major-mode 'emms-playlist-mode
+	  emms-repeat-playlist t
+	  emms-mode-line-mode-line-function nil  ;; Don't want any info in the mode line
+	  emms-mode-line-titlebar-function 'emms-mode-line-playlist-current) ;; Put info in the titlebar
 
     ;; Visualisation activation/deactivation
     (emms-mode-line nil)
@@ -6646,8 +6652,8 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
     (when (fboundp 'emms-cache)
       (emms-cache 1)
       (defun my-emms-cache-set  (type path track)
-        (unless (string-match "^http[s]?://.*" path)
-          (emms-cache-set type path track)))
+	(unless (string-match "^http[s]?://.*" path)
+	  (emms-cache-set type path track)))
       (setq emms-cache-set-function 'my-emms-cache-set))
 
     ;; Define routine to update cache without adding tracks to the playlist
@@ -6655,65 +6661,66 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
       "Routine to update the cache without updating any playlist -either DIR, or the value of
     `emms-source-file-default-directory'."
       (interactive (list
-                    (emms-read-directory-name "Play directory tree: "
-                                              (emms-source-file-directory-hint)
-                                              emms-source-file-default-directory
-                                              t)))
+		    (emms-read-directory-name "Play directory tree: "
+					      (emms-source-file-directory-hint)
+					      emms-source-file-default-directory
+					      t)))
       (let ((files (emms-source-file-directory-tree (expand-file-name dir)
-                                                    (emms-source-file-regex)))
-            (case-fold-search nil))
-        (with-current-emms-playlist
-          (point-max)
-          (mapc (lambda (file)
-                  (unless (or (string-match emms-source-file-exclude-regexp file)
-                              (gethash file emms-cache-db))
-                    (emms-track 'file file)))
-                files))))
+						    (emms-source-file-regex)))
+	    (case-fold-search nil))
+	(with-current-emms-playlist
+	  (point-max)
+	  (mapc (lambda (file)
+		  (unless (or (string-match emms-source-file-exclude-regexp file)
+			      (gethash file emms-cache-db))
+		    (emms-track 'file file)))
+		files))))
 
     ;; Adapt track description format
     (defun track-description (track)
       "Return a description of the current TRACK."
       (if (and (emms-track-get track 'info-artist)
-               (emms-track-get track 'info-title))
-          (let ((pmin (emms-track-get track 'info-playing-time-min))
-                (psec (emms-track-get track 'info-playing-time-sec))
-                (ptot (emms-track-get track 'info-playing-time))
-                (art  (emms-track-get track 'info-artist))
-                (tit  (emms-track-get track 'info-title))
-                (alb  (emms-track-get track 'info-album)))
-            (cond ((and pmin psec) (format "%s - %s - %s [%02d:%02d]" art alb tit pmin psec))
-                  (ptot (format  "%s - %s - %s [%02d:%02d]" art alb tit (/ ptot 60) (% ptot 60)))
-                  (t (emms-track-simple-description track))))
-        (progn
-          (emms-track-simple-description track))))
+	       (emms-track-get track 'info-title))
+	  (let ((pmin (emms-track-get track 'info-playing-time-min))
+		(psec (emms-track-get track 'info-playing-time-sec))
+		(ptot (emms-track-get track 'info-playing-time))
+		(art  (emms-track-get track 'info-artist))
+		(tit  (emms-track-get track 'info-title))
+		(alb  (emms-track-get track 'info-album)))
+	    (cond ((and pmin psec) (format "%s - %s - %s [%02d:%02d]" art alb tit pmin psec))
+		  (ptot (format  "%s - %s - %s [%02d:%02d]" art alb tit (/ ptot 60) (% ptot 60)))
+		  (t (emms-track-simple-description track))))
+	(progn
+	  (emms-track-simple-description track))))
     (setq emms-track-description-function 'track-description)
 
     ;; taken from http://emacs.stackexchange.com/questions/21747/emms-how-can-i-have-a-progress-bar?rq=1
     (defun emms-indicate-seek (_sec)
       "Show the progress bar when seek."
       (let* ((total-playing-time (emms-track-get
-                                  (emms-playlist-current-selected-track)
-                                  'info-playing-time))
-             (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
-        (with-temp-message (format "[%-100s] %2d%% [%02d:%02d]/[%02d:%02d]"
-                                   (make-string (round elapsed/total) ?=)
-                                   (round elapsed/total)
-                                   (/ (round emms-playing-time) 60) (% (round emms-playing-time) 60)
-                                   (/ (round total-playing-time) 60) (% (round total-playing-time) 60))
-          (sit-for 2))))
+				  (emms-playlist-current-selected-track)
+				  'info-playing-time))
+	     (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
+	(with-temp-message (format "[%-100s] %2d%% [%02d:%02d]/[%02d:%02d]"
+				   (make-string (round elapsed/total) ?=)
+				   (round elapsed/total)
+				   (/ (round emms-playing-time) 60) (% (round emms-playing-time) 60)
+				   (/ (round total-playing-time) 60) (% (round total-playing-time) 60))
+	  (sit-for 2))))
     (add-hook 'emms-player-seeked-functions #'emms-indicate-seek 'append))
+
+  ;; Wait for elpaca so that the other packages are ready if necessary !
+  (elpaca-wait)
 
   (use-package emms-info-metaflac
     :elpaca nil ;; emms
-    :after (emms)
     ;; :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil
-          emms-info-functions '(emms-info-metaflac)))
+	  emms-info-functions '(emms-info-metaflac)))
 
   (use-package emms-info-libtag
     :elpaca nil ;; emms
-    :after (emms)
     ;; :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil)
@@ -6721,7 +6728,6 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 
   (use-package emms-info-native
     :elpaca nil ;; emms
-    :after (emms)
     ;; :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :init
     (setq emms-info-asynchronously nil)
@@ -6729,31 +6735,30 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 
   (use-package emms-browser
     :elpaca nil ;; emms
-    :after (emms)
     ;; :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     ;; Formatting
     (setq emms-browser-info-artist-format "%i☢ %n"
-          emms-browser-info-album-format "%i%cS [%y] %n"
-          emms-browser-info-title-format "%i♪ %T. %t [%d]"
-          emms-browser-playlist-info-album-format "%cS %a - %A : "
-          emms-browser-playlist-info-title-format "%i%T. %t [%d]")
+	  emms-browser-info-album-format "%i%cS [%y] %n"
+	  emms-browser-info-title-format "%i♪ %T. %t [%d]"
+	  emms-browser-playlist-info-album-format "%cS %a - %A : "
+	  emms-browser-playlist-info-title-format "%i%T. %t [%d]")
 
     ;; Filtering
     (emms-browser-make-filter "all" #'ignore)
     (emms-browser-make-filter
      "recent - Month"
      (lambda (track) (< 30
-                        (time-to-number-of-days
-                         (time-subtract (current-time)
-                                        (emms-info-track-file-mtime track))))))
+			(time-to-number-of-days
+			 (time-subtract (current-time)
+					(emms-info-track-file-mtime track))))))
 
     (emms-browser-make-filter
      "recent - Trimester"
      (lambda (track) (< (* 3 30)
-                        (time-to-number-of-days
-                         (time-subtract (current-time)
-                                        (emms-info-track-file-mtime track))))))
+			(time-to-number-of-days
+			 (time-subtract (current-time)
+					(emms-info-track-file-mtime track))))))
 
     (emms-browser-make-filter
      "not-played"
@@ -6858,7 +6863,7 @@ Using =atomic-chrome= coupled with the ~GhostText~ firefox addon, I edit such te
   (use-package atomic-chrome
     ;; :tags '("DESKTOP")
     :hook
-    (after-init . atomic-chrome-start-server)
+    (elpaca-after-init . atomic-chrome-start-server)
 
     :commands
     (atomic-chrome-start-server)
@@ -7477,8 +7482,8 @@ Finally, the package =page-break-lines= provides a nice way to visualize a page 
     :elpaca smartparens
     ;; :tags '("VISUAL")
     :hook
-    (after-init  . smartparens-global-mode)
-    (after-init  . show-smartparens-global-mode)
+    (elpaca-after-init  . smartparens-global-mode)
+    (elpaca-after-init  . show-smartparens-global-mode)
     (eval-expression-minibuffer-setup . smartparens-mode)
 
     :init
@@ -7572,7 +7577,7 @@ To do so, I use =abridge-diff=.
 #+begin_src emacs-lisp
   (use-package diff-hl
     ;; :tags '("VISUAL")
-    :hook ((after-init . global-diff-hl-mode)
+    :hook ((elpaca-after-init . global-diff-hl-mode)
            (dired-mode . diff-hl-dired-mode-unless-remote))
 
     :init (setq diff-hl-draw-borders t)
