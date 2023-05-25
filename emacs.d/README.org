@@ -1528,10 +1528,10 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
 **** Webpage overview
 #+begin_src emacs-lisp
   (use-package org-analyzer
-    :disabled t
+    :elpaca (:main "org-analyzer-el/org-analyzer.el")
     ;; :tags '("ORG")
     :if (file-directory-p cloud-org-root-dir)
-    :custom (org-analyzer-org-directory  (concat cloud-org-root-dir "todo"))
+    :custom (org-analyzer-org-directory cloud-org-root-dir)
     :commands (org-analyzer-start))
 #+end_src
 
@@ -1979,9 +1979,6 @@ The only important bits are:
         (add-text-properties (line-beginning-position) (+ (line-end-position) 1)
                              `(face (:background, backcolor)))))
 
-    ;; Agenda is used at startup, it is better
-    (setq initial-buffer-choice '(lambda () (get-buffer org-agenda-buffer-name)))
-
     :mode-hydra
     (org-agenda-mode
      (:color blue)
@@ -2055,6 +2052,8 @@ As I have my own way of being organized, I redefined completely the groups.
                               :branch "fix_diary")
     ;; :tags '("ORG")
     :config
+    ;;
+    (org-super-agenda-mode t)
 
     ;; Create groups
     (setq org-super-agenda-groups
@@ -2108,11 +2107,7 @@ As I have my own way of being organized, I redefined completely the groups.
             (:name "Scheduled in the next couple of days"
                    :and (:scheduled future :not (:todo "PAUSED") :not (:todo "WAITING") :not (:todo "RELEASE"))
                    :order 6)
-            ))
-
-    ;; Activate mode
-    (org-super-agenda-mode t)
-    (org-agenda nil "a"))
+            )))
 #+end_src
 
 *** DONE Sidebar
