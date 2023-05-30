@@ -320,12 +320,12 @@ While alternatives exist, I find this combination more straightforward and clean
 
 #+begin_src emacs-lisp
   (use-package pretty-hydra
-    ;; :tags '("CORE")
+    :tags '("CORE")
     )
 
   (use-package major-mode-hydra
     :demand t
-    ;; :tags '("CORE")
+    :tags '("CORE")
     :bind (
       <<keybindings-gen(table=major-mode-hydra-entry-keybindings)>>
     ))
@@ -336,14 +336,14 @@ While alternatives exist, I find this combination more straightforward and clean
 *** Transient
 #+begin_src emacs-lisp :lexical no
   (use-package transient
-    ;; :tags '("CORE")
+    :tags '("CORE")
     )
 #+end_src
 
 *** Documentation
 #+begin_src emacs-lisp
   (use-package dash-docs
-    ;; :tags '("CORE")
+    :tags '("CORE")
     :ensure t)
 #+end_src
 
@@ -380,12 +380,12 @@ the upstream has some priority issues with ERC; I would like to ignore some even
 
 #+begin_src emacs-lisp
   (use-package alert
-    ;; :tags '("CORE" "NOTIFICATION")
+    :tags '("CORE" "NOTIFICATION")
     )
 
   (use-package sauron
     :elpaca (sauron :type git :host github :repo "seblemaguer/sauron" :branch "functional")
-    ;; :tags '("CORE" "NOTIFICATION")
+    :tags '("CORE" "NOTIFICATION")
     :commands (sauron-start-hidden sauron-add-event)
 
     :config
@@ -429,7 +429,7 @@ This plugin is in charge to managing the communication and avoid any cycle.
   (use-package sauron-mode-line
     :elpaca nil
     :load-path default-plugin-dir
-    ;; :tags '("CORE" "NOTIFICATION")
+    :tags '("CORE" "NOTIFICATION")
     :custom
     (sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron)
 
@@ -456,7 +456,7 @@ CLOSED: [2021-01-03 Sun 11:18]
 
 #+begin_src emacs-lisp
   (use-package helm-descbinds
-    ;; :tags '("CORE" "DOCUMENTATION")
+    :tags '("CORE" "DOCUMENTATION")
     :commands (helm-descbinds)
     :bind (
       <<keybindings-gen(table=helm-descbinds-entry-keybindings)>>
@@ -478,7 +478,7 @@ I am using it as the entry point of any documentation I want to access.
 
 #+begin_src emacs-lisp
   (use-package helpful
-    ;; :tags '("CORE" "DOCUMENTATION")
+    :tags '("CORE" "DOCUMENTATION")
     :commands (helpful-key helpful-symbol helpful-at-point)
     :bind (
       <<keybindings-gen(table=help-keybindings)>>
@@ -493,7 +493,7 @@ I simply configured emacs to add my own environment man directories.
 #+begin_src emacs-lisp
   (use-package man
     :elpaca nil
-    ;; :tags '("CORE" "DOCUMENTATION")
+    :tags '("CORE" "DOCUMENTATION")
     :config
     (setq Man-notify-method 'pushy
 	  woman-manpath `("/usr/share/man/" "/usr/local/man/" ;; System
@@ -514,7 +514,7 @@ Dash (https://www.kapeli.com/dash) provides a set of full documentation to downl
 
 #+begin_src emacs-lisp
   (use-package consult-dash
-    ;; :tags '("CORE" "DOCUMENTATION" "COMPLETION")
+    :tags '("CORE" "DOCUMENTATION" "COMPLETION")
     :bind (
       <<keybindings-gen(table=consult-dash-entry-keybindings)>>
     )
@@ -541,7 +541,7 @@ CLOSED: [2022-10-13 Thu 18:11]
 #+begin_src emacs-lisp
   (when (executable-find "recoll")
     (use-package consult-recoll
-      ;; :tags '("CORE" "DOCUMENTATION" "COMPLETION")
+      :tags '("CORE" "DOCUMENTATION" "COMPLETION")
       :bind (
         <<keybindings-gen(table=consult-recoll-entry-keybindings)>>
       )))
@@ -573,7 +573,7 @@ This choice has been made due its the simplicity and its recursive nature.
 
 #+begin_src emacs-lisp
   (use-package bufler
-    ;; :tags '("CORE" "BUFFER")
+    :tags '("CORE" "BUFFER")
     :bind (
       <<keybindings-gen(table=buffler-entry-keybindings)>>
     )
@@ -699,7 +699,7 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
 #+begin_src emacs-lisp
   (use-package minibuffer
     :elpaca nil
-    ;; :tags '("CORE" "MINIBUFFER")
+    :tags '("CORE" "MINIBUFFER")
     ;; :hook
     ;; (eval-expression-minibuffer-setup .  #'eldoc-mode)
     :config
@@ -720,7 +720,7 @@ This leads to ensuring the package =vlf= with the use-package header defined to 
 #+begin_src emacs-lisp
   (use-package vlf-setup
     :elpaca  vlf
-    ;; :tags '("CORE")
+    :tags '("CORE")
     :init (setq vlf-application 'dont-ask))
 #+end_src
 
@@ -737,7 +737,7 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
 
 #+begin_src emacs-lisp
   (use-package fast-scroll
-    ;; :tags '("CORE" "NAVIGATION")
+    :tags '("CORE" "NAVIGATION")
     :hook
     (fast-scroll-start      . (lambda () (flycheck-mode -1)))
     (fast-scroll-end        . (lambda () (flycheck-mode 1)))
@@ -749,7 +749,7 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
   (use-package goto-last-point
     ;; NOTE: the original repo is a pain to access with ssh, using the emacsmirror
     :elpaca (goto-last-point :type git :host github :repo "emacsmirror/goto-last-point")
-    ;; :tags '("CORE" "NAVIGATION")
+    :tags '("CORE" "NAVIGATION")
     :hook (elpaca-after-init . goto-last-point-mode)
     :bind (
       <<keybindings-gen(table=goto-last-point-entry-keybindings)>>
@@ -763,7 +763,7 @@ Therefore, I defined the =pinentry-mode= for both EPGA and EPA to =loopback=.
 
 #+begin_src emacs-lisp
   (use-package pinentry
-    ;; :tags '("CORE" "ENCRYPTION")
+    :tags '("CORE" "ENCRYPTION")
     :custom
     (epg-pinentry-mode 'loopback)
     :config
@@ -771,7 +771,7 @@ Therefore, I defined the =pinentry-mode= for both EPGA and EPA to =loopback=.
 
   (use-package epa-file
     :elpaca nil
-    ;; :tags '("CORE" "ENCRYPTION")
+    :tags '("CORE" "ENCRYPTION")
     :custom
     (epa-pinentry-mode 'loopback)
     :config
@@ -779,7 +779,7 @@ Therefore, I defined the =pinentry-mode= for both EPGA and EPA to =loopback=.
 
   (use-package org-crypt
     :elpaca nil
-    ;; :tags '("CORE" "ENCRYPTION")
+    :tags '("CORE" "ENCRYPTION")
     :after org
     :config
     (org-crypt-use-before-save-magic))
@@ -800,7 +800,7 @@ leads to this configuration
   (use-package recentf
     :elpaca nil
     :ensure t
-    ;; :tags '("CORE" "SESSION" "RECENT")
+    :tags '("CORE" "SESSION" "RECENT")
     :hook (elpaca-after-init . recentf-mode)
     :custom
     (recentf-max-saved-items 100)
@@ -845,7 +845,7 @@ CLOSED: [2022-07-25 Mon 07:41]
 
 #+begin_src emacs-lisp
   (use-package super-save
-    ;; :tags '("CORE" "SAVE")
+    :tags '("CORE" "SAVE")
     :custom
     (super-save-auto-save-when-idle t)
 
@@ -949,7 +949,7 @@ snapshot-timemachine package.
 
 
   (use-package snapshot-timemachine
-    ;; :tags '("CORE" "SESSION" "BACKUP")
+    :tags '("CORE" "SESSION" "BACKUP")
     :init
 
     :config
@@ -1025,7 +1025,7 @@ To do so, I am using the package =saveplace=
 #+begin_src emacs-lisp
   (use-package saveplace
     :elpaca nil
-    ;; :tags '("CORE" "SESSION")
+    :tags '("CORE" "SESSION")
     :init
     (setq save-place-file (format "%s/saveplace" user-emacs-directory))
     :config
@@ -1065,7 +1065,7 @@ Finally, some keywords are there for note purposes:
 #+begin_src emacs-lisp
   (use-package org
     :elpaca org-contrib
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :hook
     (org-after-todo-statistics . org-summary-todo)
 
@@ -1218,7 +1218,7 @@ This is fundamental to have an easy navigation in such files which can be really
 
 #+begin_src emacs-lisp
   (use-package org-superstar
-    ;; :tags '("ORG" "VISUAL")
+    :tags '("ORG" "VISUAL")
     :hook (org-mode . org-superstar-mode)
     :config
     (setq org-superstar-headline-bullets-list '("◉" "○" "▷" "✸")
@@ -1232,7 +1232,7 @@ This section provides the configuration for babel by first configuring jupyter.
 
 #+begin_src emacs-lisp
   (use-package company-org-block
-    ;; :tags '("ORG" "COMPLETION")
+    :tags '("ORG" "COMPLETION")
     :custom
     (company-org-block-edit-style 'auto) ;; 'auto, 'prompt, or 'inline
 
@@ -1248,7 +1248,7 @@ This section provides the configuration for babel by first configuring jupyter.
 
   (use-package ob
     :elpaca nil ;; org-contrib
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :config
 
     ;; Define specific modes for specific tools
@@ -1306,7 +1306,7 @@ To do so, I am relying the package =org-checklist= which is provided by =org-con
 #+BEGIN_SRC emacs-lisp
     (use-package org-checklist
       :elpaca nil ;; org-contrib
-      ;; :tags '("ORG")
+      :tags '("ORG")
       )
 #+END_SRC
 
@@ -1332,7 +1332,7 @@ For whatever reason, it is required to *explicitly* configure =transient=.
 #+BEGIN_SRC emacs-lisp
   (use-package org-menu
     :elpaca (org-menu :type git :host github :repo "sheijk/org-menu")
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :bind (:map org-mode-map (
       <<keybindings-gen(table=org-menu-keybindings)>>
     )))
@@ -1350,7 +1350,7 @@ This part contains some extra configurations which allows to write clean org doc
   (use-package ox-extra
     :elpaca nil ;; org-contrib
     :after (org-contrib)
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :after ox
     :config
     (ox-extras-activate '(ignore-headlines latex-header-blocks)))
@@ -1364,14 +1364,14 @@ We also defines additional link to support audios and videos.
 
 #+begin_src emacs-lisp
   (use-package htmlize
-    ;; :tags '("ORG")
+    :tags '("ORG")
     )
 
   (use-package ox-html
     :elpaca nil ;; org-contrib
     :after ox
     :requires (htmlize)
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :init
     (defun endless/export-audio-link (path desc format)
       "Export org audio links to hmtl."
@@ -1400,11 +1400,11 @@ We also defines additional link to support audios and videos.
     (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/brave %s")))
 
   (use-package org-re-reveal
-    ;; :tags '("ORG")
+    :tags '("ORG")
     )
 
   (use-package org-re-reveal-citeproc
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :init
     (add-to-list 'org-export-filter-paragraph-functions
                  #'org-re-reveal-citeproc-filter-cite))
@@ -1420,7 +1420,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
   (use-package ox-latex
     :elpaca nil ;; org-contrib
     :after (org-contrib)
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :after ox
     :config
     (setq org-latex-listings t
@@ -1430,7 +1430,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
   (use-package ox-beamer
     :elpaca nil ;; org-contrib
     :after (org-contrib)
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :after ox
     :config
     (defun my-beamer-bold (contents backend info)
@@ -1441,7 +1441,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
   (use-package ox-bibtex
     :elpaca nil ;; org-contrib
     :after (org-contrib)
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :after ox
     :defer t)
 #+end_src
@@ -1453,7 +1453,7 @@ Therefore, I use the package =ox-gfm=
 
 #+begin_src emacs-lisp
   (use-package ox-gfm
-      ;; :tags '("ORG")
+      :tags '("ORG")
       :after ox)
 #+end_src
 
@@ -1478,7 +1478,7 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
 
 #+begin_src emacs-lisp
     (use-package org-mru-clock
-      ;; :tags '("ORG")
+      :tags '("ORG")
       :bind* (
         <<keybindings-gen(table=org-mru-clock-bindings)>>
       )
@@ -1519,7 +1519,7 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
       (org-clock-persistence-insinuate))
 
   (use-package org-clock-convenience
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :bind (:map org-agenda-mode-map
              ("<S-up>" . org-clock-convenience-timestamp-up)
              ("<S-down>" . org-clock-convenience-timestamp-down)))
@@ -1529,7 +1529,7 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
 #+begin_src emacs-lisp
   (use-package org-analyzer
     :elpaca (:main "org-analyzer-el/org-analyzer.el")
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :if (file-directory-p cloud-org-root-dir)
     :custom (org-analyzer-org-directory cloud-org-root-dir)
     :commands (org-analyzer-start))
@@ -1547,7 +1547,7 @@ This is why I use this configuration.
   (use-package org-archive
     :elpaca nil ;; org-contrib
     :after (org-contrib)
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :config
     (setq org-archive-default-command 'org-archive-subtree)
 
@@ -1643,7 +1643,7 @@ To have an overview of what is going on, I am using =org-dashboard=.
 
 #+begin_src emacs-lisp
   (use-package org-dashboard
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :commands (org-dashboard-display))
 #+end_src
 
@@ -1657,7 +1657,7 @@ Configuration remains minimal for now
 
 #+begin_src emacs-lisp
   (use-package org-edna
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :diminish
     :after org
     :config
@@ -1673,13 +1673,13 @@ This package is mainly use to bookmark webpages from firefox.
 
 #+begin_src emacs-lisp
   (use-package org-ql
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :commands (org-ql-search org-ql-view org-ql-view-recent-items))
 
   (use-package org-protocol
     :elpaca nil ;; org-contrib
     :after (org-contrib)
-    ;; :tags '("ORG")
+    :tags '("ORG")
     )
 #+end_src
 
@@ -1691,13 +1691,13 @@ I also use capturing mechanism to save recipes and some interesting websites.
 
 #+begin_src emacs-lisp
   (use-package doct
-    ;; :tags '("ORG" "CAPTURE" "DESKTOP")
+    :tags '("ORG" "CAPTURE" "DESKTOP")
     :commands (doct))
 
   (use-package org-capture
     :elpaca nil ;; org-contrib
     :after (org-contrib)
-    ;; :tags '("ORG" "CAPTURE" "DESKTOP")
+    :tags '("ORG" "CAPTURE" "DESKTOP")
     :if (file-directory-p cloud-org-root-dir)
     :commands (org-capture)
     :config
@@ -1733,7 +1733,7 @@ It supports multiple website so its configuration consists only of providing the
 
 #+begin_src emacs-lisp
   (use-package org-chef
-    ;; :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED")
+    :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED")
     :if (file-directory-p cloud-org-root-dir)
     :after (org-capture)
     :config
@@ -1759,7 +1759,7 @@ format. This is really useful to homogeneise documentation.
 #+begin_src emacs-lisp
   (use-package org-web-tools
     :after (org)
-    ;; :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED")
+    :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED")
     )
 #+end_src
 
@@ -1770,7 +1770,7 @@ The main tweaks are that some specific colors are defined for some specific keyw
 CLOSED: [2021-12-10 Fri 14:17]
 #+begin_src emacs-lisp
   (use-package org-modern
-    ;; :tags '("VISUAL" "ORG")
+    :tags '("VISUAL" "ORG")
     :demand t
     :hook
     (org-mode . org-modern-mode)
@@ -1967,7 +1967,7 @@ The only important bits are:
 #+begin_src emacs-lisp
   (use-package org-agenda
     :elpaca nil ;; org-contrib
-    ;; :tags '("ORG" "USER" "CONNECTED")
+    :tags '("ORG" "USER" "CONNECTED")
     :if (file-directory-p cloud-org-root-dir)
     :commands (org-agenda)
     :init
@@ -2050,7 +2050,7 @@ As I have my own way of being organized, I redefined completely the groups.
     :elpaca (org-super-agenda :host github
                               :repo "seblemaguer/org-super-agenda"
                               :branch "fix_diary")
-    ;; :tags '("ORG")
+    :tags '("ORG")
     :config
     ;;
     (org-super-agenda-mode t)
@@ -2116,7 +2116,7 @@ With =org-sidebar= I have easily access to the todos of the *current* org file.
 
 #+begin_src emacs-lisp
   (use-package org-sidebar
-    ;; :tags '("ORG" "VISUAL")
+    :tags '("ORG" "VISUAL")
     )
 #+end_src
 
@@ -2210,7 +2210,7 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
 #+begin_src emacs-lisp
   (use-package pdf-tools
     :elpaca (pdf-tools :type git :host github :repo "vedang/pdf-tools")
-    ;; :tags '("DOCUMENT" "DESKTOP")
+    :tags '("DOCUMENT" "DESKTOP")
     :functions
     (pdf-history-backward
      pdf-history-forward
@@ -2280,13 +2280,13 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
 
   (use-package pdf-view-restore
     :after pdf-tools
-    ;; :tags '("DOCUMENT" "DESKTOP")
+    :tags '("DOCUMENT" "DESKTOP")
     :hook
     (pdf-view-mode-hook . pdf-view-restore-mode))
 
   (when (executable-find "diffpdf")
     (use-package diffpdf
-      ;; :tags '("DOCUMENT" "DESKTOP")
+      :tags '("DOCUMENT" "DESKTOP")
       ))
 #+end_src
 
@@ -2297,7 +2297,7 @@ I use =pdfgrep= to be able to search inside the pdf document.
 #+begin_src emacs-lisp
   (when (executable-find "pdfgrep")
     (use-package pdfgrep
-      ;; :tags '("DOCUMENT" "DESKTOP")
+      :tags '("DOCUMENT" "DESKTOP")
       :config
       (pdfgrep-mode)))
 #+end_src
@@ -2309,7 +2309,7 @@ I use =org-pdftools= to add an org link type for =pdftools=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-pdftools
-    ;; :tags '("DOCUMENT" "DESKTOP" "ORG")
+    :tags '("DOCUMENT" "DESKTOP" "ORG")
     :hook (org-mode . org-pdftools-setup-link))
 #+END_SRC
 
@@ -2319,7 +2319,7 @@ I am using =nov= to read epub files.
 
 #+BEGIN_SRC emacs-lisp
   (use-package nov
-    ;; :tags '("DESKTOP" "DOCUMENT")
+    :tags '("DESKTOP" "DOCUMENT")
     :mode ("\\.epub\\'" . nov-mode)
     :commands (nov-mode)
     :config
@@ -2378,7 +2378,7 @@ CLOSED: [2022-02-10 Thu 07:04]
 #+begin_src emacs-lisp
   (use-package org-roam
     :elpaca (:host github :repo "org-roam/org-roam")
-    ;; :tags '("ORG" "USER" "CONNECTED")
+    :tags '("ORG" "USER" "CONNECTED")
     :if (file-directory-p cloud-org-root-dir)
     :commands (org-roam-setup)
     :custom
@@ -2419,7 +2419,7 @@ CLOSED: [2022-02-10 Thu 07:04]
 
   (use-package org-roam-protocol
     :elpaca (:host github :repo "org-roam/org-roam" :files ("extensions/org-roam-protocol.el"))
-    ;; :tags '("ORG" "USER")
+    :tags '("ORG" "USER")
     :after org-roam
     :config
     (cl-defmethod org-roam-node-directories ((node org-roam-node))
@@ -2440,7 +2440,7 @@ CLOSED: [2022-02-10 Thu 07:04]
 
   (use-package org-roam-ui
     :elpaca (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-    ;; :tags '("ORG" "USER" "DESKTOP")
+    :tags '("ORG" "USER" "DESKTOP")
     :after (org-roam eaf-browser)
     :config
     (setq org-roam-ui-sync-theme t
@@ -2451,13 +2451,13 @@ CLOSED: [2022-02-10 Thu 07:04]
   (use-package citar-org-roam
     :elpaca (:type git :host github :repo "emacs-citar/citar-org-roam")
     :after citar org-roam
-    ;; :tags '("BIBLIOGRAPHY" "USER" "ORG")
+    :tags '("BIBLIOGRAPHY" "USER" "ORG")
     :no-require
     :config (citar-org-roam-mode))
 
   (use-package consult-org-roam
     :after org-roam
-    ;; :tags '("ORG" "USER" "COMPLETION")
+    :tags '("ORG" "USER" "COMPLETION")
     :commands (consult-org-roam-mode)
     ;; :init
     ;; (consult-org-roam-mode 1)
@@ -2479,7 +2479,7 @@ For now, I don't really know the power of =vulpea= but I use it to bridge =org-r
 #+begin_src emacs-lisp
   (use-package vulpea
     :if (file-directory-p cloud-org-root-dir)
-    ;; :tags '("ORG" "USER" "CONNECTED")
+    :tags '("ORG" "USER" "CONNECTED")
     :after org-roam
     :hook
     (before-save . vulpea-project-update-tag)
@@ -2576,7 +2576,7 @@ These last packages are key to enable the browsing of the document in parallel t
 CLOSED: [2022-02-10 Thu 07:09]
 #+begin_src emacs-lisp
   (use-package ebib
-    ;; :tags '("BIBLIOGRAPHY" "USER")
+    :tags '("BIBLIOGRAPHY" "USER")
     :if (file-directory-p cloud-org-root-dir)
     :custom
     (ebib-preload-bib-files slm~bib-files))
@@ -2586,7 +2586,7 @@ CLOSED: [2022-02-10 Thu 07:09]
 CLOSED: [2022-02-10 Thu 07:09]
 #+begin_src emacs-lisp
   (use-package org-ref
-    ;; :tags '("BIBLIOGRAPHY" "ORG" "USER")
+    :tags '("BIBLIOGRAPHY" "ORG" "USER")
     :if (file-directory-p cloud-org-root-dir)
     :config
     (setq bibtex-completion-bibliography slm~bib-files
@@ -2621,7 +2621,7 @@ CLOSED: [2022-02-10 Thu 07:10]
 #+begin_src emacs-lisp
   (use-package citar
     :if (file-directory-p cloud-org-root-dir)
-    ;; :tags '("BIBLIOGRAPHY" "USER" "ORG")
+    :tags '("BIBLIOGRAPHY" "USER" "ORG")
     :commands (citar-insert-citation citar-select-ref)
     :bind (
       <<keybindings-gen(table=citar-citation-keybindings)>>
@@ -2648,7 +2648,7 @@ CLOSED: [2022-02-10 Thu 07:10]
 CLOSED: [2022-02-10 Thu 07:10]
 #+begin_src emacs-lisp
   (use-package org-roam-bibtex
-    ;; :tags '("BIBLIOGRAPHY" "USER" "ORG")
+    :tags '("BIBLIOGRAPHY" "USER" "ORG")
     :hook (org-roam-mode . org-roam-bibtex-mode)
     :commands (org-roam-bibtex-mode)
     :init
@@ -2677,7 +2677,7 @@ CLOSED: [2022-02-10 Thu 07:10]
 CLOSED: [2022-02-10 Thu 07:12]
 #+begin_src emacs-lisp
   (use-package org-noter
-    ;; :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
+    :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
     :after (:any org pdf-view)
     :custom
     (org-noter-doc-split-fraction '(0.7 . 0.3))
@@ -2690,12 +2690,12 @@ CLOSED: [2022-02-10 Thu 07:12]
 
 #+begin_src emacs-lisp :lexical no
   (use-package org-media-note
-    ;; :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
+    :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
     :elpaca (org-media-note :type git :host github :repo "yuchen-lea/org-media-note"))
 
   (use-package org-media-noter
     :elpaca (org-media-noter :type git :host github :repo "seblemaguer/org-media-noter")
-    ;; :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
+    :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
     :commands (org-media-noter))
 #+end_src
 
@@ -2747,7 +2747,7 @@ For the folding, I am relying on =origami= and its connection to lsp: =lsp-origa
 
 #+begin_src emacs-lisp
   (use-package origami
-    ;; :tags '("FOLDING")
+    :tags '("FOLDING")
     :demand
     :bind (:map origami-mode-map
       <<keybindings-gen(table=origami-keybindings)>>
@@ -2758,7 +2758,7 @@ For the folding, I am relying on =origami= and its connection to lsp: =lsp-origa
     (global-set-key (kbd "C-c @") 'origami-mode-map))
 
   (use-package lsp-origami
-    ;; :tags '("FOLDING")
+    :tags '("FOLDING")
     :hook (lsp-after-open . lsp-origami-try-enable)
     :commands (lsp-origami-try-enable))
 #+end_src
@@ -2779,7 +2779,7 @@ I finally use =company-box= to have a better view of the category of the candida
 
 #+begin_src emacs-lisp
   (use-package company
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :init
     (setq company-backends '(company-capf company-files))
 
@@ -2795,14 +2795,14 @@ I finally use =company-box= to have a better view of the category of the candida
 
   (use-package company-quickhelp
     :after company
-    ;; :tags '("COMPLETION" "UI")
+    :tags '("COMPLETION" "UI")
     :config
     (company-quickhelp-mode 1))
 
 
   (use-package company-box
     :after company
-    ;; :tags '("COMPLETION" "UI")
+    :tags '("COMPLETION" "UI")
     :elpaca (company-box :repo "seblemaguer/company-box" :type git :host github :branch "functional")
     :hook (company-mode . company-box-mode))
 #+end_src
@@ -2815,7 +2815,7 @@ Nothing fancy happens here, just its activation and a couple of setups related t
 #+begin_src emacs-lisp
   ;; Enable vertico
   (use-package vertico
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :init
     (vertico-mode)
     ;; Add prompt indicator to `completing-read-multiple'.
@@ -2856,7 +2856,7 @@ Once again, nothing fancy here, the configuration to have a better UX.
 
 #+begin_src emacs-lisp
   (use-package helm
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :functions helm-show-completion-default-display-function
     :bind (
       <<keybindings-gen(table=helm-info-entry-keybindings)>>
@@ -2886,7 +2886,7 @@ CLOSED: [2021-05-27 Thu 18:31]
 
 #+BEGIN_SRC emacs-lisp
   (use-package orderless
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :init
     (setq completion-styles '(orderless)
           completion-category-defaults nil
@@ -2905,7 +2905,7 @@ For now, I am using the default configuration.
 
 #+begin_src emacs-lisp
   (use-package marginalia
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :after vertico
     :bind (
       :map minibuffer-local-map (
@@ -2992,7 +2992,7 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
 
 #+begin_src emacs-lisp
   (use-package consult
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :bind (
       <<keybindings-gen(table=consult-ctrl-c-keybindings)>>
       <<keybindings-gen(table=consult-ctrl-x-keybindings)>>
@@ -3053,7 +3053,7 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
 
   ;; Optionally add the `consult-flycheck' command.
   (use-package consult-flycheck
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :after (:all consult flycheck)
     :bind (
       :map flycheck-command-map (
@@ -3079,13 +3079,13 @@ Finally, my own snippets are stored in the directory =~/.emacs.d/third_parties/s
 
 #+begin_src emacs-lisp
   (use-package yasnippet
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :init
     (yas-global-mode 1))
 
   ;; Load snippets
   (use-package yasnippet-snippets
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :config
 
     ;; Add third parties snippets
@@ -3099,7 +3099,7 @@ Finally, my own snippets are stored in the directory =~/.emacs.d/third_parties/s
     (eval-after-load 'yasnippet '(third-parties-snippets-initialize)))
 
   (use-package yasnippet-snippets
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :elpaca (consult-yasnippet :host github :repo "mohkale/consult-yasnippet"))
 #+end_src
 
@@ -3110,7 +3110,7 @@ file type dedicated templates. The templates are available in =~/.emacs.d/third_
 
 #+begin_src emacs-lisp
   (use-package yatemplate
-    ;; :tags '("COMPLETION")
+    :tags '("COMPLETION")
     :after yasnippet
     :config
 
@@ -3142,18 +3142,18 @@ It is a convenient package to have a more refined control of my workflow.
 
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
-    ;; :tags '("HELPERS")
+    :tags '("HELPERS")
     :commands (which-key-mode)
     :hook (elpaca-after-init . which-key-mode))
 
   (use-package which-key-posframe
-    ;; :tags '("HELPERS")
+    :tags '("HELPERS")
     :config
     (which-key-posframe-mode))
 
   (use-package embark
     :commands (embark-act embark-collect-snapshot)
-    ;; :tags '("HELPERS")
+    :tags '("HELPERS")
     :after (which-key)
     :bind (
       <<keybindings-gen(table=embark-keybindings)>>
@@ -3171,7 +3171,7 @@ It is a convenient package to have a more refined control of my workflow.
 
 
     (use-package embark-consult
-      ;; :tags '("HELPERS")
+      :tags '("HELPERS")
       :after (:all embark consult)
       :demand t
       :hook
@@ -3199,7 +3199,7 @@ I am using it mainly to show/hide my terminal faster.
 
 #+begin_src emacs-lisp :lexical no
   (use-package popper
-    ;; :tags '("HELPER")
+    :tags '("HELPER")
     :bind (
       <<keybindings-gen(table=popper-entry-keybindings)>>
     )
@@ -3249,7 +3249,7 @@ I also rely on =fancy-compilation= to enhance the the output in the compilation 
 #+begin_src emacs-lisp
   (use-package compile
     :elpaca nil
-    ;; :tags '("IDE" "COMPILATION")
+    :tags '("IDE" "COMPILATION")
 
     :pretty-hydra
     ((:color teal :hint nil)
@@ -3313,7 +3313,7 @@ I also use =flycheck-posframe= to have a quick idea of what is going on at the p
 #+begin_src emacs-lisp
   ;; Disable checking doc
   (use-package flycheck
-    ;; :tags '("CORE" "COMPILATION" "IDE")
+    :tags '("CORE" "COMPILATION" "IDE")
     :commands (flycheck-error-list-set-filter flycheck-next-error flycheck-previous-error flycheck-first-error)
     :pretty-hydra
     ((:pre (progn (setq hydra-hint-display-type t) (flycheck-list-errors))
@@ -3330,7 +3330,7 @@ I also use =flycheck-posframe= to have a quick idea of what is going on at the p
 
   (use-package flycheck-posframe
     :disabled t
-    ;; :tags '("CORE" "UI")
+    :tags '("CORE" "UI")
     :after flycheck
     :hook (flycheck-mode . flycheck-posframe-mode)
     :config
@@ -3345,7 +3345,7 @@ For language specific configurations, it is done in the language configuration p
 
 #+begin_src emacs-lisp
   (use-package hl-todo
-    ;; :tags '("CORE" "IDE")
+    :tags '("CORE" "IDE")
 
     :init
     (defun fic-view-listing ()
@@ -3369,7 +3369,7 @@ In order to format the buffer, it is better to rely on external formatter/linter
 
 #+begin_src emacs-lisp
   (use-package format-all
-    ;; :tags '("IDE" "FORMAT")
+    :tags '("IDE" "FORMAT")
     :commands (format-all-buffer format-all-mode))
 #+end_src
 
@@ -3426,7 +3426,7 @@ I also override some default parameters to make the experience more appealing.
 
 #+begin_src emacs-lisp
   (use-package lsp-mode
-    ;; :tags '("IDE" "PROGRAMMING" "LSP")
+    :tags '("IDE" "PROGRAMMING" "LSP")
     :commands (lsp lsp-deferred)
     :bind (
       :map lsp-mode-map (
@@ -3467,7 +3467,7 @@ I also override some default parameters to make the experience more appealing.
         (lsp-workspace-folders-remove cur-workspace-folder))))
 
   (use-package lsp-ui
-    ;; :tags '("IDE")
+    :tags '("IDE")
     :after lsp-mode
     :commands lsp-ui-mode
     :config
@@ -3496,7 +3496,7 @@ Finally, I reduced the height of the REPL buffer at the start of the debug sessi
 
 #+BEGIN_SRC emacs-lisp
   (use-package dap-mode
-    ;; :tags '("IDE" "PROGRAMMING" "LSP")
+    :tags '("IDE" "PROGRAMMING" "LSP")
     :config
     ;; Disable control (I don't like it)
     (dap-ui-controls-mode 0)
@@ -3525,7 +3525,7 @@ For CSV file, I rely on =csv-mode= but I add more separators.
 
  #+begin_src emacs-lisp
    (use-package csv-mode
-     ;; :tags '("PROGRAMMING" "DATA")
+     :tags '("PROGRAMMING" "DATA")
      :hook
      (csv-mode . csv-align-mode)
 
@@ -3541,7 +3541,7 @@ I developed a dedicated mode for this, so I am using it
 #+begin_src emacs-lisp
   (use-package cue-mode
     :elpaca (cue-mode :repo "seblemaguer/cue-mode" :type git :host github)
-    ;; :tags '("PROGRAMMING" "DATA" "RELEASE")
+    :tags '("PROGRAMMING" "DATA" "RELEASE")
     :mode ("\\.cue$"))
 #+end_src
 
@@ -3552,11 +3552,11 @@ The configuration relies on =json-mode= for the main part and =json-reformat= fo
 
 #+begin_src emacs-lisp
   (use-package json-mode
-    ;; :tags '("PROGRAMMING" "DATA" "CONFIGURATION")
+    :tags '("PROGRAMMING" "DATA" "CONFIGURATION")
     :mode ("\\.json$"))
 
   (use-package json-reformat
-    ;; :tags '("PROGRAMMING" "DATA" "CONFIGURATION" "FORMATTING")
+    :tags '("PROGRAMMING" "DATA" "CONFIGURATION" "FORMATTING")
     )
 #+end_src
 
@@ -3569,7 +3569,7 @@ Praat-mode helps to have a proper visualization of Textgrids in Empacs.
   (use-package praat-mode
     :elpaca nil
     :load-path default-plugin-dir
-    ;; :tags '("PROGRAMMING" "DATA")
+    :tags '("PROGRAMMING" "DATA")
     :mode ("\\.[tT][Gg]"))
 #+end_src
 
@@ -3582,7 +3582,7 @@ However, I had to do extra-configurations to have outline support and a better f
   (use-package nxml-mode
     :elpaca nil
     :load-path default-plugin-dir
-    ;; :tags '("PROGRAMMING" "DATA" "CONFIGURATION")
+    :tags '("PROGRAMMING" "DATA" "CONFIGURATION")
     :mode ("\\.xml$" . nxml-mode)
     :commands (pretty-print-xml-region)
     :init
@@ -3626,7 +3626,7 @@ For now, I know/use only files with extension ~rc~ or ~conf~.
 
 #+begin_src emacs-lisp
   (use-package config-general-mode
-    ;; :tags '("PROGRAMMING" "CONFIGURATION")
+    :tags '("PROGRAMMING" "CONFIGURATION")
     :mode ("\\.conf$" "\\.*rc$"))
 #+end_src
 
@@ -3638,7 +3638,7 @@ I started to develop =colored-authinfo-mode= to provide a better colorization fo
 #+begin_src emacs-lisp
   (use-package colored-authinfo-mode
     :elpaca (colored-authinfo-mode :repo "seblemaguer/colored-authinfo-mode" :type git :host github)
-    ;; :tags '("PROGRAMMING" "CONFIGURATION")
+    :tags '("PROGRAMMING" "CONFIGURATION")
     :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . colored-authinfo-mode))
 #+end_src
 
@@ -3648,7 +3648,7 @@ Nothing fancy here, we just add the support for =apache-mode= for several files 
 Because the configuration of Apache requires root permissions, I assign the category SUDO to this package.
 #+begin_src emacs-lisp
   (use-package apache-mode
-    ;; :tags '("PROGRAMMING" "CONFIGURATION" "SUDO")
+    :tags '("PROGRAMMING" "CONFIGURATION" "SUDO")
     :mode ("\\.htaccess\\'" "httpd\\.conf\\'" "srm\\.conf\\'"
            "access\\.conf\\'" "sites-\\(available\\|enabled\\)/"))
 #+end_src
@@ -3659,7 +3659,7 @@ Nothing fancy here, we just add the support for =ssh-config-mode= for several fi
 
 #+begin_src emacs-lisp
   (use-package ssh-config-mode
-    ;; :tags '("PROGRAMMING" "CONFIGURATION")
+    :tags '("PROGRAMMING" "CONFIGURATION")
     :mode ("/\\.ssh/config\\'" "/system/ssh\\'" "/sshd?_config\\'" "/known_hosts\\'" "/authorized_keys2?\\'")
     :hook (ssh-config-mode . turn-on-font-lock)
 
@@ -3681,7 +3681,7 @@ I also use =yaml-tomato= to get the path at the current point which helps the ac
 
 #+begin_src emacs-lisp
   (use-package yaml-mode
-    ;; :tags '("PROGRAMMING" "CONFIGURATION")
+    :tags '("PROGRAMMING" "CONFIGURATION")
     :mode (".yaml$")
     :hook
     (yaml-mode . yaml-mode-outline-hook)
@@ -3719,11 +3719,11 @@ I also use =yaml-tomato= to get the path at the current point which helps the ac
       (setq outline-level 'yaml-outline-level)))
 
   (use-package yaml-tomato
-    ;; :tags '("PROGRAMMING CONFIGURATION")
+    :tags '("PROGRAMMING CONFIGURATION")
     :commands (yaml-tomato-show-current-path yaml-tomato-copy))
 
   (use-package yaml-pro
-    ;; :tags '("PROGRAMMING CONFIGURATION")
+    :tags '("PROGRAMMING CONFIGURATION")
     :hook (yaml-mode . yaml-pro-mode)
     :bind (
       <<keybindings-gen(table=yaml-pro-keybindings)>>
@@ -3737,7 +3737,7 @@ To do so, I actually use Emacs and rely on =vimrc-mode=.
 
 #+begin_src emacs-lisp
   (use-package vimrc-mode
-    ;; :tags '("PROGRAMMING" "CONFIGURATION")
+    :tags '("PROGRAMMING" "CONFIGURATION")
     :mode ("^\\.vimrc\\'" "/etc/vim/vimrc"))
 #+end_src
 
@@ -3749,7 +3749,7 @@ I use a dedicated mode for each type.
 
 #+begin_src emacs-lisp
   (use-package git-modes
-    ;; :tags '("PROGRAMMING" "CONFIGURATION" "VC")
+    :tags '("PROGRAMMING" "CONFIGURATION" "VC")
     :mode
     ("/\.gitconfig\'"    . gitconfig-mode)
     ("/vcs/gitconfig\'"  . gitconfig-mode)
@@ -3763,7 +3763,7 @@ Consequently, I need a proper node to edit docker build files as I build my own 
 
 #+begin_src emacs-lisp
   (use-package dockerfile-mode
-    ;; :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM")
+    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM")
     )
 #+end_src
 
@@ -3775,7 +3775,7 @@ While I would generally use VIM for such editions, I prefer to use emacs configu
 
 #+begin_src emacs-lisp
   (use-package crontab-mode
-    ;; :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM")
+    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM")
     )
 #+end_src
 
@@ -3788,7 +3788,7 @@ In both cases, backup numbers are as well supported.
 
 #+begin_src emacs-lisp
   (use-package logview
-    ;; :tags '("LANGUAGE")
+    :tags '("LANGUAGE")
     :commands logview-mode
     :mode
     ("\\.log\\(?:\\.[0-9]+\\)?\\'" . logview-mode)
@@ -3865,11 +3865,11 @@ I also added a hydra configuration to link properly everything.
     )))
 
   (use-package package-lint
-    ;; :tags '("PROGRAMMING" "ELISP" "COMPILATION")
+    :tags '("PROGRAMMING" "ELISP" "COMPILATION")
     :commands package-lint-current-buffer)
 
   (use-package elpl
-    ;; :tags '("PROGRAMMING" "ELISP" "REPL")
+    :tags '("PROGRAMMING" "ELISP" "REPL")
     :commands (elpl))
 #+end_src
 
@@ -3877,7 +3877,7 @@ I also added a hydra configuration to link properly everything.
 **** Use google programming style
 #+BEGIN_SRC emacs-lisp
   (use-package google-c-style
-    ;; :tags '("PROGRAMMING" "C" "CPP")
+    :tags '("PROGRAMMING" "C" "CPP")
     :ensure t
     :hook
     (c-mode-common . google-set-c-style)
@@ -3901,7 +3901,7 @@ manually, type =M-x c\+\+-mode=.
 #+BEGIN_SRC emacs-lisp
   (use-package clang-format
     :ensure t
-    ;; :tags '("PROGRAMMING" "C" "CPP")
+    :tags '("PROGRAMMING" "C" "CPP")
     :bind (
       <<keybindings-gen(table=clang-format-entry-keybindings)>>
     ))
@@ -3918,7 +3918,7 @@ Add highlighting for doxygen blocks.
 #+BEGIN_SRC emacs-lisp
   (use-package highlight-doxygen
     :ensure t
-    ;; :tags '("PROGRAMMING" "C" "CPP")
+    :tags '("PROGRAMMING" "C" "CPP")
     :hook
     (c-mode-common . highlight-doxygen-mode))
 #+END_SRC
@@ -3926,7 +3926,7 @@ Add highlighting for doxygen blocks.
 #+begin_src emacs-lisp
   (use-package cmake-mode
     :ensure t
-    ;; :tags '("PROGRAMMING" "CMAKE")
+    :tags '("PROGRAMMING" "CMAKE")
     :mode "CMakeLists.txt")
 #+end_src
 
@@ -3934,7 +3934,7 @@ Eldoc for CMake.
 #+BEGIN_SRC emacs-lisp
   (use-package eldoc-cmake
     :ensure t
-    ;; :tags '("PROGRAMMING" "CMAKE")
+    :tags '("PROGRAMMING" "CMAKE")
     :hook (cmake-mode . eldoc-cmake-enable))
 #+END_SRC
 
@@ -3942,7 +3942,7 @@ Additional syntax highlighting for CMake. For some reason manual activation is s
 #+BEGIN_SRC emacs-lisp
   (use-package cmake-font-lock
     :ensure t
-    ;; :tags '("PROGRAMMING" "CMAKE")
+    :tags '("PROGRAMMING" "CMAKE")
     :init (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
     :hook (cmake-mode . cmake-font-lock-activate))
 #+END_SRC
@@ -3954,7 +3954,7 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
 
 #+begin_src emacs-lisp
   (use-package lsp-java
-    ;; :tags '("PROGRAMMING" "JAVA" "LSP")
+    :tags '("PROGRAMMING" "JAVA" "LSP")
     :hook
     (java-mode . lsp)
 
@@ -3962,11 +3962,11 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
     (setq lsp-java-save-action-organize-imports nil))
 
   (use-package java-snippets
-    ;; :tags '("PROGRAMMING" "JAVA" "COMPLETION")
+    :tags '("PROGRAMMING" "JAVA" "COMPLETION")
     )
 
   (use-package groovy-mode
-    ;; :tags '("PROGRAMMING" "JAVA" "GROOVY")
+    :tags '("PROGRAMMING" "JAVA" "GROOVY")
     :mode ("\.groovy$" "\.gradle$")
     :interpreter ("gradle" "groovy")
     :hook
@@ -3981,11 +3981,11 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
 
   ;; Subpackages
   (use-package groovy-imports
-    ;; :tags '("PROGRAMMING" "JAVA" "GROOVY")
+    :tags '("PROGRAMMING" "JAVA" "GROOVY")
     )
 
   (use-package kotlin-mode
-    ;; :tags '("PROGRAMMING" "JAVA" "KOTLIN")
+    :tags '("PROGRAMMING" "JAVA" "KOTLIN")
     :mode "\\.kts?\\'"
     :hook
     (kotlin-mode . lsp-deferred)
@@ -4003,7 +4003,7 @@ For R, I rely on =ess= which provides excellent support with a reasonable defaul
 #+begin_src emacs-lisp
   (use-package matlab-load
     :elpaca matlab-mode
-    ;; :tags '("PROGRAMMING" "MATH" "MATLAB")
+    :tags '("PROGRAMMING" "MATH" "MATLAB")
     :defines (matlab-shell-command-switches mlint-programs)
     :no-require t
     :mode ("\\.m$" . matlab-mode)
@@ -4023,7 +4023,7 @@ For R, I rely on =ess= which provides excellent support with a reasonable defaul
 
   ;; ESS for R programming
   (use-package ess
-    ;; :tags '("PROGRAMMING" "MATH" "R")
+    :tags '("PROGRAMMING" "MATH" "R")
     :config
     (setq ess-default-style 'RRR+))
 #+end_src
@@ -4038,7 +4038,7 @@ Finally, I use =numpydoc= to deal with the documentation.
 
 #+begin_src emacs-lisp
   (use-package python
-    ;; :tags '("PROGRAMMING" "PYTHON")
+    :tags '("PROGRAMMING" "PYTHON")
     ;; :dash "Python 3" "Pandas" "NumPy" "SciPy" "Matplotlib"
     :mode
     ("\\.py\\'" . python-mode)
@@ -4053,7 +4053,7 @@ Finally, I use =numpydoc= to deal with the documentation.
 	  python-shell-interpreter-args "--simple-prompt --colors=Linux -i"))
 
   (use-package lsp-pyright
-    ;; :tags '("PROGRAMMING" "PYTHON" "LSP")
+    :tags '("PROGRAMMING" "PYTHON" "LSP")
     :commands (lsp lsp-deferred)
     :hook (python-mode . (lambda ()
 			   (require 'lsp-pyright)
@@ -4063,12 +4063,12 @@ Finally, I use =numpydoc= to deal with the documentation.
     (dap-python-debugger 'debugpy))
 
   (use-package numpydoc
-    ;; :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
+    :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
     :after python)
 
   (use-package python-mls
     :elpaca (python-mls :host github :repo "jdtsmith/python-mls")
-    ;; :tags '("PROGRAMMING" "PYTHON")
+    :tags '("PROGRAMMING" "PYTHON")
     :custom
     (python-mls-multiline-history-modifier '(meta shift))
     :hook
@@ -4089,7 +4089,7 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
 
 #+begin_src emacs-lisp
   (use-package company-shell
-    ;; :tags '("PROGRAMMING" "SHELL" "COMPLETION")
+    :tags '("PROGRAMMING" "SHELL" "COMPLETION")
     :hook
     (shell-mode . company-shell-hook)
 
@@ -4100,7 +4100,7 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
 
   (use-package modern-sh
     :disabled t
-    ;; :tags '("PROGRAMMING" "SHELL")
+    :tags '("PROGRAMMING" "SHELL")
     :hook (sh-mode . embed-modern-sh-mode-toggle)
     :bind (
       :map modern-sh-mode-map (
@@ -4123,18 +4123,18 @@ Therefore, in this section, I add the support of =graphviz-dot-mode= and =d2-mod
 
 #+begin_src emacs-lisp
   (use-package graphviz-dot-mode
-    ;; :tags '("PROGRAMMING" "PLOTTING")
+    :tags '("PROGRAMMING" "PLOTTING")
     :init
     (defvar default-tab-width nil)
 
     :mode ("\\.dot\\'"))
 
   (use-package d2-mode
-    ;; :tags '("PROGRAMMING" "PLOTTING")
+    :tags '("PROGRAMMING" "PLOTTING")
     :mode ("\\.d2\\'"))
 
   (use-package ob-d2
-    ;; :tags '("PROGRAMMING" "ORG" ""PLOTTING")
+    :tags '("PROGRAMMING" "ORG" "PLOTTING")
     :init
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -4147,7 +4147,7 @@ I use =web-mode= to edit any kind of web-programming (html, css, and templates).
 
 #+begin_src emacs-lisp
   (use-package web-mode
-    ;; :tags '("PROGRAMMING" "WEB")
+    :tags '("PROGRAMMING" "WEB")
     :mode (".twig$" ".html?$" ".tpl$")
 
     :config
@@ -4180,7 +4180,7 @@ The configuration is pretty minimal - just associate the mode to the proper exte
 #+begin_src emacs-lisp
   (when (executable-find "csound")
     (use-package csound-mode
-      ;; :tags '("PROGRAMMING" "SOUND" "MULTIMEDIA")
+      :tags '("PROGRAMMING" "SOUND" "MULTIMEDIA")
       :mode (("\\.csd\\'" . csound-mode)
              ("\\.orc\\'" . csound-mode)
              ("\\.sco\\'" . csound-mode)
@@ -4204,7 +4204,7 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
 #+begin_src emacs-lisp
   (use-package tex-site
     :elpaca auctex
-    ;; :tags '("WRITING" "LATEX")
+    :tags '("WRITING" "LATEX")
     :after (tex latex)
     :hook
     (LaTeX-mode . turn-off-auto-fill)
@@ -4253,7 +4253,7 @@ The configuration consists mainly of pluging it into auctex and expand the citat
 #+begin_src emacs-lisp
   (use-package reftex
     :elpaca nil
-    ;; :tags '("WRITING" "LATEX")
+    :tags '("WRITING" "LATEX")
     :hook
     (LaTeX-mode . turn-on-reftex)
 
@@ -4299,7 +4299,7 @@ I also uses =company-ipa= to have a better integration of phonetic symbols.
   (setq TeX-auto-global (format "%s/auctex/style" user-emacs-directory))
 
   (use-package company-auctex
-    ;; :tags '("WRITING" "LATEX" "COMPLETION")
+    :tags '("WRITING" "LATEX" "COMPLETION")
     :hook
     (LaTeX-mode . company-auctex-hook)
 
@@ -4309,7 +4309,7 @@ I also uses =company-ipa= to have a better integration of phonetic symbols.
       (company-auctex-init)))
 
   (use-package company-reftex
-    ;; :tags '("WRITING" "LATEX" "ORG" "COMPLETION")
+    :tags '("WRITING" "LATEX" "ORG" "COMPLETION")
     :hook
     (LaTeX-mode . company-reftex-hook)
     (org-mode   . company-reftex-hook)
@@ -4320,7 +4320,7 @@ I also uses =company-ipa= to have a better integration of phonetic symbols.
       (set 'company-backends (append '(company-reftex-labels company-reftex-citations) company-backends))))
 
   (use-package company-ipa
-    ;; :tags '("WRITING" "COMPLETION")
+    :tags '("WRITING" "COMPLETION")
     :hook
     (LaTeX-mode . company-ipa-hook)
 
@@ -4341,7 +4341,7 @@ I could have used the auctex default sequence, but I prefer to have an homogeneo
   (when (executable-find "latexmk")
     (use-package auctex-latexmk
       :elpaca (:type git :host github :repo "wang1zhen/auctex-latexmk")
-      ;; :tags '("WRITING" "LATEX" "COMPILATION")
+      :tags '("WRITING" "LATEX" "COMPILATION")
       :config
 
       ;; Redine TeX-output-mode to get the color !
@@ -4377,7 +4377,7 @@ Therefore, it is activated by default for latex but not for org files.
 
 #+begin_src emacs-lisp
   (use-package xenops
-    ;; :tags '("WRITING" "LATEX" "ORG" "DESKTOP")
+    :tags '("WRITING" "LATEX" "ORG" "DESKTOP")
     :commands (xenops-mode xenops-doctor)
     :hook
     (latex-mode . xenops-mode))
@@ -4389,7 +4389,7 @@ As an academic, I spend a lot of my time in Overleaf, but I prefer to edit in em
 #+begin_src emacs-lisp
   (use-package emacs-overleaf
     :elpaca (:type git :host github :repo "seblemaguer/emacs-overleaf")
-    ;; :tags '("WRITING" "LATEX" "CONNECTED")
+    :tags '("WRITING" "LATEX" "CONNECTED")
     :commands (overleaf-setup overleaf-manual-save overleaf-mode)
     :custom (overleaf-auto-sync "never"))
 #+end_src
@@ -4408,7 +4408,7 @@ Finally, I use bibclean-format to have a clean final bibtex file.
 #+begin_src emacs-lisp
   (use-package bibtex
     :elpaca nil
-    ;; :tags '("WRITING" "BIBTEX")
+    :tags '("WRITING" "BIBTEX")
     :bind (
       :map bibtex-mode-map (
         <<keybindings-gen(table=bibtex-tidy-entry-keybindings)>>
@@ -4466,7 +4466,7 @@ However, it relies on a side script ~compilePGF~ being in the PATH!
 #+begin_src emacs-lisp
   (use-package tikz-mode
     :elpaca (tikz-mode :type git :host github :repo "seblemaguer/tikz-mode")
-    ;; :tags '("WRITING" "BIBTEX" "DESKTOP")
+    :tags '("WRITING" "BIBTEX" "DESKTOP")
     )
 #+end_src
 
@@ -4485,11 +4485,11 @@ I just added =grip-mode= to have a proper preview of the file.
 
 #+begin_src emacs-lisp
   (use-package markdown-mode
-    ;; :tags '("WRITING" "MARKDOWN")
+    :tags '("WRITING" "MARKDOWN")
     :mode ("\\.md$"))
 
   (use-package grip-mode
-    ;; :tags '("WRITING" "MARKDOWN" "DESKTOP")
+    :tags '("WRITING" "MARKDOWN" "DESKTOP")
     :commands (grip-mode)
     :bind (
       :map markdown-mode-command-map (
@@ -4505,12 +4505,12 @@ I am using =academic-phrases= to provided starting points and =mw-thesaurus= to 
 
 #+begin_src emacs-lisp
   (use-package academic-phrases
-    ;; :tags '("WRITING" "HELPERS" "CONNECTED")
+    :tags '("WRITING" "HELPERS" "CONNECTED")
     :commands (academic-phrases))
 
   (use-package mw-thesaurus
     :elpaca (mw-thesaurus :type git :fetcher github :repo "agzam/mw-thesaurus.el")
-    ;; :tags '("WRITING" "HELPERS" "CONNECTED")
+    :tags '("WRITING" "HELPERS" "CONNECTED")
     :commands (mw-thesaurus-lookup-at-point))
 #+end_src
 
@@ -4521,7 +4521,7 @@ The package =grammarly= bring its functionnality into emacs which is a saver for
 
 #+begin_src emacs-lisp
   (use-package flycheck-grammarly
-    ;; :tags '("WRITING" "CONNECTED")
+    :tags '("WRITING" "CONNECTED")
     :init
     (with-eval-after-load 'flycheck
       (flycheck-grammarly-setup))
@@ -4543,11 +4543,11 @@ As a fallback, I am using google-translate via the package =go-translate=.
 #+begin_src emacs-lisp
   (use-package wordreference
     :elpaca (:type git :host github :repo "emacsmirror/wordreference")
-    ;; :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
+    :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :commands (wordreference-search))
 
   (use-package go-translate
-    ;; :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
+    :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :bind (
       <<keybindings-gen(table=gts-translate-entry-keybindings)>>
     )
@@ -4628,7 +4628,7 @@ where:
 
 #+begin_src emacs-lisp
   (use-package magit
-    ;; :tags '("VC" "GIT")
+    :tags '("VC" "GIT")
     :commands (magit magit-hydra/body magit-get-current-branch)
     :pretty-hydra
     ((:color blue)
@@ -4731,7 +4731,7 @@ where:
           (message "opening repo %s" url)))))
 
   (use-package magit-tbdiff
-    ;; :tags '("VC" "GIT")
+    :tags '("VC" "GIT")
     :after magit)
 
   (use-package magit-todos
@@ -4744,7 +4744,7 @@ where:
     (magit-todos-depth 10))
 
   (use-package why-this
-    ;; :tags '("VC" "GIT")
+    :tags '("VC" "GIT")
     )
 #+end_src
 
@@ -4756,16 +4756,16 @@ I use =gitignore-snippets= to provide starting gitignore content;
  and =git-patch= to send a patch via email (if necessary obviously.)
 #+begin_src emacs-lisp
   (use-package gitignore-snippets
-    ;; :tags '("VC" "GIT")
+    :tags '("VC" "GIT")
     )
 
   (use-package git-timemachine
-    ;; :tags '("VC" "GIT")
+    :tags '("VC" "GIT")
     :commands (git-timemachine-toggle)
     )
 
   (use-package gitpatch
-    ;; :tags '("VC" "GIT" "CONNECTED")
+    :tags '("VC" "GIT" "CONNECTED")
     :config
     (setq gitpatch-mail-attach-patch-key "C-c i"))
 #+end_src
@@ -4792,24 +4792,24 @@ To interact with github in emacs, I rely on three packages:
 #+begin_src emacs-lisp
   (use-package forge
     :demand t
-    ;; :tags '("VC" "GIT" "GITHUB" "CONNECTED")
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
     :after magit
     :custom-face
     (forge-topic-closed ((t (:strike-through t :inherit magit-dimmed)))))
 
   (use-package github-explorer
     :disabled t
-    ;; :tags '("VC" "GIT" "GITHUB" "CONNECTED")
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
     )
 
   (use-package gh-notify
     :elpaca (:type git :host github :repo "anticomputer/gh-notify")
-    ;; :tags '("VC" "GIT" "GITHUB" "CONNECTED")
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
     )
 
   ;; Extracted from https://github.com/anticomputer/gh-notify
   (use-package github-review
-    ;; :tags '("VC" "GIT" "GITHUB" "CONNECTED")
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
     :after forge
     :bind (
       <<keybindings-gen(table=github-review-entry-keybindings)>>
@@ -4870,7 +4870,7 @@ The package =gist= provides a nice way of dealing with gists.
 
 #+begin_src emacs-lisp
   (use-package gist
-    ;; :tags '("VC" "GIT" "GITHUB" "CONNECTED")
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
     :mode-hydra
     (gist-list-mode
      (:color red)
@@ -4935,7 +4935,7 @@ I also added a hack to avoi hanging issues because of tramp (see https://github.
 
 #+begin_src emacs-lisp
   (use-package projectile
-    ;; :tags '("PROJECT")
+    :tags '("PROJECT")
     :pretty-hydra
     ((:color teal :hint nil :title "PROJECTILE: %(projectile-project-root)")
      ("Find File" (
@@ -5000,7 +5000,7 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
 
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
-    ;; :tags '("TERM")
+    :tags '("TERM")
     :custom (vterm-always-compile-module t)
 
     :config
@@ -5028,7 +5028,7 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
 	  vterm-eval-cmds))
 
   (use-package multi-vterm
-    ;; :tags '("TERM")
+    :tags '("TERM")
     :bind (
       :map vterm-mode-map (
 	<<keybindings-gen(table=multi-vterm-mode-keybindings)>>
@@ -5079,7 +5079,7 @@ I also replace a base deletion by moving the files/directories to the trash.
 
 #+begin_src emacs-lisp
   (use-package dirvish
-    ;; :tags '("FILE_MANAGEMENT" "DIRED")
+    :tags '("FILE_MANAGEMENT" "DIRED")
     :init
     ;; Let Dirvish take over Dired globally
     (dirvish-override-dired-mode)
@@ -5172,7 +5172,7 @@ Diff visualization relies mainly on =ediff= but to which I added two primitives 
 #+begin_src emacs-lisp
   (use-package ediff
     :elpaca nil
-    ;; :tags '("FILE_MANAGEMENT" "DIFF")
+    :tags '("FILE_MANAGEMENT" "DIFF")
     :config
     (autoload 'diff-mode "diff-mode" "Diff major mode" t)
     (setq diff-switches "-u"
@@ -5225,7 +5225,7 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
 
 #+begin_src emacs-lisp
   (use-package treemacs
-    ;; :tags '("FILE_MANAGEMENT" "TREEMACS")
+    :tags '("FILE_MANAGEMENT" "TREEMACS")
     :bind (
       <<keybindings-gen(table=treemacs-entry-keybindings)>>
     )
@@ -5272,13 +5272,13 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
     (treemacs-filewatch-mode t))
 
   (use-package treemacs-projectile
-    ;; :tags '("FILE_MANAGEMENT" "TREEMACS" "PROJECT")
+    :tags '("FILE_MANAGEMENT" "TREEMACS" "PROJECT")
     :functions treemacs-projectile-create-header
     :config
     (setq treemacs-header-function #'treemacs-projectile-create-header))
 
   (use-package treemacs-magit
-    ;; :tags '("FILE_MANAGEMENT" "TREEMACS" "VC" "GIT")
+    :tags '("FILE_MANAGEMENT" "TREEMACS" "VC" "GIT")
     )
 #+end_src
 
@@ -5290,7 +5290,7 @@ To manage the trash via emacs, =trashed= provides a really interface.
 #+begin_src emacs-lisp
   (when (executable-find "trash")
     (use-package trashed
-      ;; :tags '("FILE_MANAGEMENT" "DIRED")
+      :tags '("FILE_MANAGEMENT" "DIRED")
       :init
       (defun empty-trash()
         "Command to empty the trash (for now gnome/linux specific)"
@@ -5308,7 +5308,7 @@ CLOSED: [2023-02-02 Thu 15:56]
 #+begin_src emacs-lisp :lexical no
     (use-package file-info
       :elpaca (:host github :repo "artawower/file-info.el")
-      ;; :tags '("FILE_MANAGEMENT")
+      :tags '("FILE_MANAGEMENT")
       :bind (("C-c d" . 'file-info-show)))
 #+end_src
 
@@ -5330,7 +5330,7 @@ I rely on =elfeed-org= to store the list of feeds and defines some tags as well 
 #+begin_src emacs-lisp
   (use-package elfeed
     :elpaca (elfeed :type git :host github :repo "skeeto/elfeed")
-    ;; :tags '("CONNECTED" "RSS")
+    :tags '("CONNECTED" "RSS")
     :commands (elfeed elfeed-update)
     :no-require t
     :bind (
@@ -5359,7 +5359,7 @@ Because I need a break once and a while at work, I load both files on my work ma
 
 #+begin_src emacs-lisp
   (use-package elfeed-org
-    ;; :tags '("CONNECTED" "RSS")
+    :tags '("CONNECTED" "RSS")
     :if (file-directory-p cloud-org-root-dir)
     :hook (elpaca-after-init . loading-elfeed)
     :commands (elfeed-org)
@@ -5400,7 +5400,7 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
   (use-package elfeed-tube
     :elpaca (:type git :host github :repo "karthink/elfeed-tube" :files (:defaults (:exclude "elfeed-tube-mpv.el")))
     :after elfeed
-    ;; :tags '("CONNECTED" "RSS" "YOUTUBE")
+    :tags '("CONNECTED" "RSS" "YOUTUBE")
     :demand t
     :config
     ;; (setq elfeed-tube-auto-save-p nil) ; default value
@@ -5419,7 +5419,7 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
 
   (use-package elfeed-tube-mpv
     :elpaca (:type git :host github :repo "karthink/elfeed-tube" :files ("elfeed-tube-mpv.el"))
-    ;; :tags '("CONNECTED" "RSS" "YOUTUBE")
+    :tags '("CONNECTED" "RSS" "YOUTUBE")
 
     :bind (
       :map elfeed-show-mode-map (
@@ -5437,7 +5437,7 @@ I just need to define a default priority level for each feed.
   (use-package sauron-elfeed
     :elpaca nil
     :after (sauron)
-    ;; :tags '("CONNECTED" "RSS" "NOTIFICATION")
+    :tags '("CONNECTED" "RSS" "NOTIFICATION")
     :commands (elfeed-update-background-start sauron-elfeed-start)
     :hook
     (elpaca-after-init . sauron-elfeed-start)
@@ -5455,7 +5455,7 @@ Using =elfeed-score= helps me to organize my feeds to have a better view of what
 
 #+begin_src emacs-lisp
   (use-package elfeed-score
-    ;; :tags '("CONNECTED" "RSS")
+    :tags '("CONNECTED" "RSS")
     :config
     (elfeed-score-enable)
     (define-key elfeed-search-mode-map "=" elfeed-score-map)
@@ -5518,7 +5518,7 @@ This configuration is remaining here for backward compatibility purposes.
 #+begin_src emacs-lisp
   (use-package starttls
     :elpaca nil
-    ;; :tags '("CONNECTED")
+    :tags '("CONNECTED")
     :if (< emacs-major-version 27)
     :config
     (setq starttls-use-gnutls t
@@ -5555,7 +5555,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
 #+begin_src emacs-lisp
   (use-package message
     :elpaca nil
-    ;; :tags '("CONNECTED" "MAIL")
+    :tags '("CONNECTED" "MAIL")
     :hook
     (message-mode . format-hook-message)
 
@@ -5580,7 +5580,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
   (use-package smtpmail-multi
     :elpaca nil
     :load-path default-plugin-dir
-    ;; :tags '("CONNECTED" "MAIL")
+    :tags '("CONNECTED" "MAIL")
     :init
     (defun my-oauth2-fetch-access-token (user)
       (replace-regexp-in-string
@@ -5653,7 +5653,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
 
   (use-package message-attachment-reminder
     :disabled t
-    ;; :tags '("CONNECTED" "MAIL")
+    :tags '("CONNECTED" "MAIL")
     :ensure t)
 #+end_src
 
@@ -5773,7 +5773,7 @@ I also redesigned the header buffer.
                      :branch "master"
                      :files ("build/mu4e/*.el" "build/mu4e/*.elc" "mu4e/*.el" "mu4e/*.elc")
                      :pre-build (("./autogen.sh") ("make")))
-    ;; :tags '("CONNECTED" "MAIL")
+    :tags '("CONNECTED" "MAIL")
     :commands (mu4e)
     :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
     :bind (
@@ -5905,7 +5905,7 @@ I also redesigned the header buffer.
 
   (use-package mu4e-thread-folding
     :elpaca (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
-    ;; :tags '("CONNECTED" "MAIL")
+    :tags '("CONNECTED" "MAIL")
     :after (mu4e)
     :config
     (add-to-list 'mu4e-header-info-custom
@@ -5923,7 +5923,7 @@ I also redesigned the header buffer.
   (use-package mu4e-context
     :elpaca nil
     :after (mu4e)
-    ;; :tags '("CONNECTED" "MAIL")
+    :tags '("CONNECTED" "MAIL")
     :config
     ;; Define the contexts (configuration defined in a private file)
     (when (fboundp 'set-mu4e-contexts)
@@ -5939,7 +5939,7 @@ I also redesigned the header buffer.
   (use-package mu4e-bookmarks
     :elpaca nil
     :after (mu4e)
-    ;; :tags '("CONNECTED" "MAIL")
+    :tags '("CONNECTED" "MAIL")
     :config
     ;; Define the contexts (configuration defined in a private file)
     (when (fboundp 'set-mu4e-bookmarks)
@@ -5967,7 +5967,7 @@ It is quite simple but robust enough to not being bother every 5 min.
     :disabled t
     :elpaca (:host github :repo "seblemaguer/mu4e-alert" :branch "mu-1.7")
     :after (sauron-mode-line)
-    ;; :tags '("CONNECTED" "MAIL" "NOTIFICATION")
+    :tags '("CONNECTED" "MAIL" "NOTIFICATION")
     :config
     ;; Just notify the counting
     (setq mu4e-alert-email-notification-types '(count))
@@ -5985,7 +5985,7 @@ CLOSED: [2021-08-10 Tue 20:14]
 #+begin_src emacs-lisp
   (use-package mu4e-column-faces
     :elpaca (mu4e-column-faces :type git :host github :repo "Alexander-Miller/mu4e-column-faces")
-    ;; :tags '("CONNECTED" "MAIL" "VISUAL")
+    :tags '("CONNECTED" "MAIL" "VISUAL")
     :after mu4e
     :config (mu4e-column-faces-mode))
 #+end_src
@@ -5999,13 +5999,13 @@ I also rely on =org-hyperscheduler= which provides an easier way to move around 
 #+BEGIN_SRC emacs-lisp
   (use-package oauth2-auto
     :elpaca (oauth2-auto :type git :host github :repo "telotortium/emacs-oauth2-auto")
-    ;; :tags '("CALENDAR" "CONNECTED")
+    :tags '("CALENDAR" "CONNECTED")
     )
 
   (use-package org-gcal
     :if (boundp 'my-gcal-client-id) ;; Ensure we have the infos to use org-gcal
     :elpaca (org-gcal :type git :host github :repo "kidd/org-gcal.el")
-    ;; :tags '("CALENDAR" "CONNECTED")
+    :tags '("CALENDAR" "CONNECTED")
     :custom
     (org-gcal-client-id my-gcal-client-id)
     (org-gcal-client-secret my-gcal-client-secret)
@@ -6040,7 +6040,7 @@ Finally, the account definition is done in the private configuration file (so it
 
 #+begin_src emacs-lisp
   (use-package circe
-    ;; :tags '("CONNECTED" "CHAT" "IRC")
+    :tags '("CONNECTED" "CHAT" "IRC")
     :commands (circe circe-server-buffers)
     :hook
     (circe-channel-mode . emojify-mode)
@@ -6089,12 +6089,12 @@ Finally, the account definition is done in the private configuration file (so it
 
   (use-package lui-logging
     :elpaca nil
-    ;; :tags '("CONNECTED" "CHAT" "IRC")
+    :tags '("CONNECTED" "CHAT" "IRC")
     :commands (enable-lui-logging))
 
   (use-package lui-autopaste
     :elpaca nil ;; circe
-    ;; :tags '("CONNECTED" "CHAT" "IRC")
+    :tags '("CONNECTED" "CHAT" "IRC")
     :hook (circe-channel-mode . enable-lui-autopaste)
     :config
     (defvar lui-autopaste-service-gist-url nil
@@ -6131,7 +6131,7 @@ Finally, the account definition is done in the private configuration file (so it
 
   (use-package lui
     :elpaca nil ;; circe
-    ;; :tags '("CONNECTED" "CHAT" "IRC")
+    :tags '("CONNECTED" "CHAT" "IRC")
     :hook
     (lui-mode . my-lui-setup)
 
@@ -6156,12 +6156,12 @@ Finally, the account definition is done in the private configuration file (so it
 
   (use-package lui-irc-colors
     :elpaca nil ;; circe
-    ;; :tags '("CONNECTED" "CHAT" "IRC")
+    :tags '("CONNECTED" "CHAT" "IRC")
     :config
     (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
 
   (use-package circe-notifications
-    ;; :tags '("CONNECTED" "CHAT" "IRC" "NOTIFICATION")
+    :tags '("CONNECTED" "CHAT" "IRC" "NOTIFICATION")
     :commands (enable-circe-notifications)
     :custom (circe-notifications-alert-style 'sauron-mode-line-style)
     :hook
@@ -6178,12 +6178,12 @@ Therefore, all the packages are installed using =straight=.
 #+BEGIN_SRC emacs-lisp
   (use-package plz
     :elpaca (plz :type git :host github :repo "alphapapa/plz.el")
-    ;; :tags '("CONNECTED" "CHAT" "MATRIX")
+    :tags '("CONNECTED" "CHAT" "MATRIX")
     )
 
   (use-package ement
     :elpaca (ement :host github :repo "seblemaguer/ement.el" :branch "notification")
-    ;; :tags '("CONNECTED" "CHAT" "MATRIX")
+    :tags '("CONNECTED" "CHAT" "MATRIX")
     :custom
     (ement-room-timestamp-format "%d-%m-%Y %H:%M:%S")
     (ement-room-message-format-spec "[%t] %S> %B%r")
@@ -6256,7 +6256,7 @@ Because, I prefer to have the completion system, =company=, configured locally f
 #+begin_src emacs-lisp
   (use-package slack
     :elpaca (slack :type git :host github :repo "seblemaguer/emacs-slack")
-    ;; :tags '("CONNECTED" "CHAT" "SLACK")
+    :tags '("CONNECTED" "CHAT" "SLACK")
     :commands (slack-start)
     :no-require t
     :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
@@ -6313,7 +6313,7 @@ As an entry point to use slack, I prefer to use =helm-slack= as it provides a ni
 #+begin_src emacs-lisp
   (use-package helm-slack
     :elpaca (helm-slack :type git :host github :repo "yuya373/helm-slack")
-    ;; :tags '("CONNECTED" "CHAT" "SLACK" "COMPLETION")
+    :tags '("CONNECTED" "CHAT" "SLACK" "COMPLETION")
     :after (slack helm))
 #+end_src
 
@@ -6324,7 +6324,7 @@ CLOSED: [2021-05-20 Thu 17:33]
 #+BEGIN_SRC emacs-lisp
   (use-package telega
     :requires (tracking)
-    ;; :tags '("CONNECTED" "CHAT" "TELEGRAM")
+    :tags '("CONNECTED" "CHAT" "TELEGRAM")
     :commands (telega)
 
     :config
@@ -6409,7 +6409,7 @@ Everything is nicely configured internally to this package, I just binded some k
 
 #+begin_src emacs-lisp
   (use-package sx
-    ;; :tags '("CONNECTED" "EXCHANGE" "STACKEXCHANGE")
+    :tags '("CONNECTED" "EXCHANGE" "STACKEXCHANGE")
     :functions (sx-open-link)
     :config
     (bind-keys :prefix "C-c s"
@@ -6464,7 +6464,7 @@ As it requires more investigation, I disabled this packaged for now.
 #+begin_src emacs-lisp
   ;; Not automatically loaded by md4rd
   (use-package tree-mode
-    ;; :tags '("CONNECTED" "EXCHANGE" "REDDIT")
+    :tags '("CONNECTED" "EXCHANGE" "REDDIT")
     )
 
   (use-package cl-extra
@@ -6506,7 +6506,7 @@ I am using its extension =metal-archives-shopping-list= to maintain a list of re
 
 #+begin_src emacs-lisp
   (use-package metal-archives-shopping-list
-    ;; :tags '("CONNECTED" "RELEASE")
+    :tags '("CONNECTED" "RELEASE")
     :if (file-directory-p cloud-org-root-dir)
     :commands (metal-archives-shopping-list-update
                metal-archives-retrieve-next-releases
@@ -6546,7 +6546,7 @@ It is connected to =youtube-dl= to download the video.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ytdious
-    ;; :tags '("CONNECTED" "MULTIMEDIA")
+    :tags '("CONNECTED" "MULTIMEDIA")
     :commands (ytdious)
     :bind (
       <<keybindings-gen(table=ytdious-entry-keybindings)>>
@@ -6587,7 +6587,7 @@ It requires =aria2c= to be available.
   (when (executable-find "aria2c")
     (use-package aria2
       :elpaca (aria2 :type git :host github :repo "seblemaguer/aria2")
-      ;; :tags '("CONNECTED")
+      :tags '("CONNECTED")
       :commands aria2-downloads-list))
 #+END_SRC
 
@@ -6612,7 +6612,7 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 
 #+begin_src emacs-lisp
   (use-package emms
-    ;; :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
+    :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :commands (emms emms-browse-by-artist with-current-emms-playlist)
     :bind (
       <<keybindings-gen(table=emms-keybindings)>>
@@ -6709,28 +6709,28 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 
   (use-package emms-info-metaflac
     :elpaca nil ;; emms
-    ;; :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
+    :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil
 	  emms-info-functions '(emms-info-metaflac)))
 
   (use-package emms-info-libtag
     :elpaca nil ;; emms
-    ;; :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
+    :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil)
     (add-to-list 'emms-info-functions 'emms-info-libtag t))
 
   (use-package emms-info-native
     :elpaca nil ;; emms
-    ;; :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
+    :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :init
     (setq emms-info-asynchronously nil)
     (add-to-list 'emms-info-functions 'emms-info-native t))
 
   (use-package emms-browser
     :elpaca nil ;; emms
-    ;; :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
+    :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     ;; Formatting
     (setq emms-browser-info-artist-format "%i☢ %n"
@@ -6771,7 +6771,7 @@ To sort out what I am currently watching, I use =seriestracker=.
 #+begin_src emacs-lisp
   (use-package seriestracker
     :elpaca (seriestracker :type git :host github :repo "MaximeWack/seriesTracker")
-    ;; :tags '("MULTIMEDIA" "ENTERTAINMENT")
+    :tags '("MULTIMEDIA" "ENTERTAINMENT")
     :demand                                                   ;;To force load seriestracker
     :config                                                   ;;These are the default
     (setq seriestracker-file (concat user-emacs-directory "seriestracker.el")
@@ -6826,7 +6826,7 @@ Integrate the clipboard to Emacs by using the package =cliphist=.
 #+begin_src emacs-lisp
   (when (executable-find "parcellite")
     (use-package cliphist
-      ;; :tags '("DESKTOP")
+      :tags '("DESKTOP")
       ))
 #+end_src
 
@@ -6837,7 +6837,7 @@ No extra configuration is needed.
 
 #+begin_src emacs-lisp
   (use-package bluetooth
-    ;; :tags '("DESKTOP")
+    :tags '("DESKTOP")
     )
 #+end_src
 
@@ -6856,7 +6856,7 @@ Using =atomic-chrome= coupled with the ~GhostText~ firefox addon, I edit such te
 
 #+begin_src emacs-lisp
   (use-package atomic-chrome
-    ;; :tags '("DESKTOP")
+    :tags '("DESKTOP")
     :hook
     (elpaca-after-init . atomic-chrome-start-server)
 
@@ -6885,7 +6885,7 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
 
 #+begin_src emacs-lisp
   (use-package epc
-    ;; :tags '("DESKTOP")
+    :tags '("DESKTOP")
     )
 
   (use-package eaf
@@ -6893,7 +6893,7 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
                    :host github
                    :repo "emacs-eaf/emacs-application-framework"
                    :files ("eaf.el" "eaf.py" "applications.json" "extension" "core" "img" "sync-eaf-resources.py"))
-    ;; :tags '("DESKTOP")
+    :tags '("DESKTOP")
     :commands (eaf-install-and-update eaf-open eaf-open-browser)
     :custom
     (eaf-pdf-extension-list '("xps" "oxps" "cbz" "epub" "fb2" "fbz"))
@@ -6929,7 +6929,7 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
 CLOSED: [2023-04-07 Fri 12:50]
 #+begin_src emacs-lisp :lexical no
   (use-package transient-extras-lp
-    ;; :tags '("DESKTOP" "PRINT")
+    :tags '("DESKTOP" "PRINT")
     :config
     (with-eval-after-load 'dired
       (define-key
@@ -6961,7 +6961,7 @@ No extra configuration is needed.
 
 #+begin_src emacs-lisp
   (use-package sysctl
-    ;; :tags '("SYSTEM")
+    :tags '("SYSTEM")
     :commands (sysctl))
 #+end_src
 
@@ -6980,7 +6980,7 @@ I use =exec-path-from-shell= to force to run a command using the shell environme
 
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell
-    ;; :tags '("SYSTEM")
+    :tags '("SYSTEM")
     :config
     (setq exec-path-from-shell-arguments nil)
     (exec-path-from-shell-initialize))
@@ -6989,7 +6989,7 @@ I use =exec-path-from-shell= to force to run a command using the shell environme
     (use-package detached
       ;; NOTE: the original repo is a pain to access with ssh, using the emacsmirror
       :elpaca (detached :type git :host github :repo "emacsmirror/detached")
-      ;; :tags '("SYSTEM")
+      :tags '("SYSTEM")
       :init
       (detached-init)
       :bind (
@@ -7043,7 +7043,7 @@ The package =docker= is already configured to provide everything to interact wit
   (when (executable-find "docker")
     (use-package docker
       :commands (docker)
-      ;; :tags '("SYSTEM")
+      :tags '("SYSTEM")
       ))
 #+end_src
 
@@ -7058,7 +7058,7 @@ Consequently, the configuration consists mainly of defining the path of conda an
 #+begin_src emacs-lisp
   (when (executable-find "conda")
     (use-package conda
-      ;; :tags '("SYSTEM" "PYTHON" "R")
+      :tags '("SYSTEM" "PYTHON" "R")
       :elpaca (conda :type git :host github :repo "seblemaguer/conda.el")
       :init
       (setq conda-anaconda-home (expand-file-name "~/environment/local/mamba"))
@@ -7093,7 +7093,7 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
 #+BEGIN_SRC emacs-lisp
   (use-package prodigy
     :demand t
-    ;; :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
+    :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
     :bind (:map prodigy-mode-map (
       <<keybindings-gen(table=prodigy-keybindings)>>
     ))
@@ -7116,7 +7116,7 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
                        :host github
                        :repo "seblemaguer/elcontext"
                        :branch "fix_missing_hydras_2")
-    ;; :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
+    :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
     :config
 
     (defun elcontext-start-prodigy (name)
@@ -7155,7 +7155,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 #+begin_src emacs-lisp
   (use-package tramp
     :elpaca nil
-    ;; :tags '("SYSTEM" "SERVER" "CONNECTED")
+    :tags '("SYSTEM" "SERVER" "CONNECTED")
     :custom
     (tramp-default-method "ssh")
     (password-cache-expiry 60)
@@ -7189,7 +7189,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
                    :host github
                    :repo "seblemaguer/slurm.el"
                    :branch "explicit-username")
-    ;; :tags '("SYSTEM" "SERVER" "CONNECTED")
+    :tags '("SYSTEM" "SERVER" "CONNECTED")
     )
 #+end_src
 
@@ -7198,7 +7198,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 #+begin_src emacs-lisp :lexical no
 (when (executable-find "units")
   (use-package units
-    ;; :tags '("HELPERS")
+    :tags '("HELPERS")
     :hook text-mode
     :config
     (local-set-key (kbd "C-c u") 'units-convert-region-and-insert)))
@@ -7207,7 +7207,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 *** Open Street Map
 #+begin_src emacs-lisp :lexical no
   (use-package osm
-    ;; :tags '("HELPERS" "DESKTOP")
+    :tags '("HELPERS" "DESKTOP")
     :custom
     ;; Take a look at the customization group `osm' for more options.
     (osm-server 'default) ;; Configure the tile server
@@ -7229,11 +7229,11 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
 
 #+begin_src emacs-lisp
   (use-package rainbow-mode
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     )
 
   (use-package flatfluc-theme
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     :init
     ;; Clean some unused information
     (tooltip-mode -1)
@@ -7379,7 +7379,7 @@ Therefore, for now it is here!
 
 #+BEGIN_SRC emacs-lisp
   (use-package prism
-    ;; :tags '("CORE" "BUFFER" "VISUAL")
+    :tags '("CORE" "BUFFER" "VISUAL")
     :config
     (defun load-prism (frame)
       (with-selected-frame frame
@@ -7414,7 +7414,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
 #+begin_src emacs-lisp
   (use-package all-the-icons
     :ensure t
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     :config
     (defun set-icon-fonts (CODE-FONT-ALIST)
       "Utility to associate many unicode points with specified fonts."
@@ -7475,7 +7475,7 @@ Finally, the package =page-break-lines= provides a nice way to visualize a page 
 #+begin_src emacs-lisp
   (use-package smartparens-config
     :elpaca smartparens
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     :hook
     (elpaca-after-init  . smartparens-global-mode)
     (elpaca-after-init  . show-smartparens-global-mode)
@@ -7519,20 +7519,20 @@ I also add =xhair= to visualize where I am (line + column) when I need to align 
 
 #+begin_src emacs-lisp
   (use-package goggles
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     :config
     (goggles-mode)
     (setq-default goggles-pulse t))
 
   (use-package scrollkeeper
     :elpaca (scrollkeeper :type git :host github :repo "alphapapa/scrollkeeper.el")
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     :bind (
       <<keybindings-gen(table=scrollkeeper-remap-keybindings)>>
     ))
 
   (use-package xhair
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     )
 #+end_src
 
@@ -7543,7 +7543,7 @@ This is functionality is provided by =visual-fill-column=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package visual-fill-column
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     )
 #+END_SRC
 
@@ -7555,7 +7555,7 @@ Its configuration is pretty standard except I prefer the ~column~ method to the 
 
 #+begin_src emacs-lisp
   (use-package highlight-indent-guides
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     :hook
     (prog-mode . highlight-indent-guides-mode)
     :config
@@ -7571,7 +7571,7 @@ To do so, I use =abridge-diff=.
 
 #+begin_src emacs-lisp
   (use-package diff-hl
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     :hook ((elpaca-after-init . global-diff-hl-mode)
            (dired-mode . diff-hl-dired-mode-unless-remote))
 
@@ -7587,7 +7587,7 @@ To do so, I use =abridge-diff=.
 
   (use-package abridge-diff
     :after magit ;; optional, if you'd like to use with magit
-    ;; :tags '("VISUAL")
+    :tags '("VISUAL")
     :init (abridge-diff-mode 1))
 #+end_src
 
@@ -7599,7 +7599,7 @@ To do so, I use the package =emojify= which provides everything needed for this.
 
 #+begin_src emacs-lisp
   (use-package emojify
-    ;; :tags '("VISUAL" "DESKTOP")
+    :tags '("VISUAL" "DESKTOP")
     :functions (emojify-set-emoji-data)
     :hook (sauron-mode . emojify-mode)
     :config
@@ -7834,7 +7834,7 @@ Adding a toggle support for the commenting would be a good idea too
 #+begin_src emacs-lisp
   (use-package cc-mode
     :elpaca nil
-    ;; :tags '("CORE" "BINDING")
+    :tags '("CORE" "BINDING")
     :bind
     (;; Global
      <<keybindings-gen(table=comment-keybindings)>>
@@ -7868,7 +7868,7 @@ To do so, I am using =remind-bindings=.
 
 #+begin_src emacs-lisp
   (use-package remind-bindings
-    ;; :tags '("HELPER" "CORE" "BINDING")
+    :tags '("HELPER" "CORE" "BINDING")
     :bind (
        <<keybindings-gen(table=remind-bindings-keybindings)>>
      ))
