@@ -5162,6 +5162,17 @@ I also replace a base deletion by moving the files/directories to the trash.
 
     :config
     (setq dired-launch-default-launcher '("xdg-open")))
+
+  (use-package media-progress
+    :elpaca (media-progress :type git :host github :repo "jumper047/media-progress" :files ("media-progress.el")
+    :tags '("FILE_MANAGEMENT" "DIRED" "DESKTOP")))
+
+  (use-package media-progress-dirvish
+    :elpaca (media-progress-dirvish :type git :host github :repo "jumper047/media-progress" :files ("media-progress-dirvish.el"))
+    :tags '("FILE_MANAGEMENT" "DIRED" "DESKTOP")
+    :after dirvish
+    :config
+    (media-progress-dirvish-setup))
 #+end_src
 
 ** DONE Diff
