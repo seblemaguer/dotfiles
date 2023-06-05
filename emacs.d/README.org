@@ -440,125 +440,6 @@ This plugin is in charge to managing the communication and avoid any cycle.
      ))
 #+end_src
 
-** DONE Documentation [100%]
-Emacs is dense and provides a lot of features.
-Too many to remember everything.
-This part is there to help to navigate the documentation more easily.
-
-*** DONE Key bindinds
-CLOSED: [2021-01-03 Sun 11:18]
-=helm-descbinds= is a useful package which provides a way to list all the shortcuts available in the current buffer.
-
-#+NAME: helm-descbinds-entry-keybindings
-| Key   | Function       | Description |
-|-------+----------------+-------------|
-| C-h b | helm-descbinds |             |
-
-#+begin_src emacs-lisp
-  (use-package helm-descbinds
-    :tags '("CORE" "DOCUMENTATION")
-    :commands (helm-descbinds)
-    :bind (
-      <<keybindings-gen(table=helm-descbinds-entry-keybindings)>>
-    ))
-#+end_src
-
-*** DONE Helpful
-CLOSED: [2021-01-03 Sun 11:19]
-=helpful= is a powerful package to access to the documentation of a key/symbol/...
-It also supports references and back-references.
-I am using it as the entry point of any documentation I want to access.
-
-#+NAME: help-keybindings
-| Key   | Function         | Description |
-|-------+------------------+-------------|
-| C-h k | helpful-key      |             |
-| C-h a | helpful-symbol   |             |
-| C-h h | helpful-at-point |             |
-
-#+begin_src emacs-lisp
-  (use-package helpful
-    :tags '("CORE" "DOCUMENTATION")
-    :commands (helpful-key helpful-symbol helpful-at-point)
-    :bind (
-      <<keybindings-gen(table=help-keybindings)>>
-     ))
-#+end_src
-
-*** DONE Man
-CLOSED: [2021-03-01 Mon 09:28]
-Man is critical for document on unix.
-I simply configured emacs to add my own environment man directories.
-
-#+begin_src emacs-lisp
-  (use-package man
-    :elpaca nil
-    :tags '("CORE" "DOCUMENTATION")
-    :config
-    (setq Man-notify-method 'pushy
-	  woman-manpath `("/usr/share/man/" "/usr/local/man/" ;; System
-			  ,(format "%s/local/man" user-emacs-directory) ;; Private environment
-			  ,(format "~/environment/local/share/man")
-			  )))
-#+end_src
-
-*** DONE Dash/Docsets
-CLOSED: [2022-07-26 Tue 09:48]
-Dash (https://www.kapeli.com/dash) provides a set of full documentation to download.
-=consult-dash= provides an easy way to query them.
-
-#+NAME: consult-dash-entry-keybindings
-| Key   | Functon      | Description |
-|-------+--------------+-------------|
-| M-s d | consult-dash |             |
-
-#+begin_src emacs-lisp
-  (use-package consult-dash
-    :tags '("CORE" "DOCUMENTATION" "COMPLETION")
-    :bind (
-      <<keybindings-gen(table=consult-dash-entry-keybindings)>>
-    )
-
-    :custom
-    (dash-docs-docsets-path "~/shared/docset")
-    (dash-docs-browser-func 'eww)
-
-    :config
-    (consult-customize consult-dash :initial (thing-at-point 'symbol))
-    (when (functionp 'consult-dash)
-      (setq-local consult-dash-docsets '("Python 3" "Pandas" "NumPy" "SciPy" "Matplotlib"))))
-#+end_src
-
-*** DONE Recoll
-CLOSED: [2022-10-13 Thu 18:11]
-=consult-recoll= provides an interface to =recoll= which is handy to "grep" from a db of documents.
-
-#+NAME: consult-recoll-entry-keybindings
-| Key   | Functon        | Description |
-|-------+----------------+-------------|
-| M-g t | consult-recoll |             |
-
-#+begin_src emacs-lisp
-  (when (executable-find "recoll")
-    (use-package consult-recoll
-      :tags '("CORE" "DOCUMENTATION" "COMPLETION")
-      :bind (
-        <<keybindings-gen(table=consult-recoll-entry-keybindings)>>
-      )))
-#+end_src
-
-And the associated configuration is:
-
-#+begin_src conf :tangle ~/.recoll/recoll.conf :mkdirp yes
-  # The system-wide configuration files for recoll are located in:
-  #   /usr/share/recoll/examples
-
-  topdirs = ~
-  skippedPaths = ~/.cache ~/environment ~/tmp/music /media ~/configuration/emacs.d
-  skippedNames+ = .* melpa docset *.wav *.flac
-  noContentSuffixes+ =
-#+end_src
-
 ** DONE Buffer listing
 CLOSED: [2021-01-03 Sun 11:24]
 Buffer listing is the fundamental navigation tool.
@@ -1771,10 +1652,6 @@ CLOSED: [2021-12-10 Fri 14:17]
 #+begin_src emacs-lisp
   (use-package org-modern
     :tags '("VISUAL" "ORG")
-    :demand t
-    :hook
-    (org-mode . org-modern-mode)
-    (org-agenda-finalize . org-modern-agenda)
 
     :custom
     (org-modern-table nil)
@@ -1917,7 +1794,9 @@ CLOSED: [2021-12-10 Fri 14:17]
                                             ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
                                             nil nil :ascent center)
 
-                                           (".*" '(space . (:width (16)))))))
+                                           (".*" '(space . (:width (16))))))
+
+    (with-eval-after-load 'org (global-org-modern-mode)))
 
     (use-package org-rainbow-tags
       :tags '("VISUAL" "ORG")
@@ -2010,6 +1889,15 @@ The only important bits are:
           org-agenda-custom-commands '(("c" . "My Custom Agendas")
                                        ("cu" "Unscheduled TODO"
                                         ((todo ""
+                                               ((org-agenda-overriding-header "\nUnscheduled TODO")
+                                                (org-agenda-skip-function
+                                                 '(org-agenda-skip-entry-if
+                                                   'scheduled
+                                                   'regexp ".*\[[0-9]*%\]\\([ ]*[:].*[:]\\)\?$")))))
+                                        nil
+                                        nil)
+                                       ("cr" "Unscheduled TO-READ"
+                                        ((todo "TO-READ"
                                                ((org-agenda-overriding-header "\nUnscheduled TODO")
                                                 (org-agenda-skip-function
                                                  '(org-agenda-skip-entry-if
@@ -3381,6 +3269,125 @@ For now it consists of simply removing any trailing whitespace.
 #+BEGIN_SRC emacs-lisp
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
+
+* DONE Documentation [100%]
+Emacs is dense and provides a lot of features.
+Too many to remember everything.
+This part is there to help to navigate the documentation more easily.
+
+** DONE Key bindinds
+CLOSED: [2021-01-03 Sun 11:18]
+=helm-descbinds= is a useful package which provides a way to list all the shortcuts available in the current buffer.
+
+#+NAME: helm-descbinds-entry-keybindings
+| Key   | Function       | Description |
+|-------+----------------+-------------|
+| C-h b | helm-descbinds |             |
+
+#+begin_src emacs-lisp
+  (use-package helm-descbinds
+    :tags '("CORE" "DOCUMENTATION")
+    :commands (helm-descbinds)
+    :bind (
+      <<keybindings-gen(table=helm-descbinds-entry-keybindings)>>
+    ))
+#+end_src
+
+** DONE Helpful
+CLOSED: [2021-01-03 Sun 11:19]
+=helpful= is a powerful package to access to the documentation of a key/symbol/...
+It also supports references and back-references.
+I am using it as the entry point of any documentation I want to access.
+
+#+NAME: help-keybindings
+| Key   | Function         | Description |
+|-------+------------------+-------------|
+| C-h k | helpful-key      |             |
+| C-h a | helpful-symbol   |             |
+| C-h h | helpful-at-point |             |
+
+#+begin_src emacs-lisp
+  (use-package helpful
+    :tags '("CORE" "DOCUMENTATION")
+    :commands (helpful-key helpful-symbol helpful-at-point)
+    :bind (
+      <<keybindings-gen(table=help-keybindings)>>
+     ))
+#+end_src
+
+** DONE Man
+CLOSED: [2021-03-01 Mon 09:28]
+Man is critical for document on unix.
+I simply configured emacs to add my own environment man directories.
+
+#+begin_src emacs-lisp
+  (use-package man
+    :elpaca nil
+    :tags '("CORE" "DOCUMENTATION")
+    :config
+    (setq Man-notify-method 'pushy
+	  woman-manpath `("/usr/share/man/" "/usr/local/man/" ;; System
+			  ,(format "%s/local/man" user-emacs-directory) ;; Private environment
+			  ,(format "~/environment/local/share/man")
+			  )))
+#+end_src
+
+** DONE Dash/Docsets
+CLOSED: [2022-07-26 Tue 09:48]
+Dash (https://www.kapeli.com/dash) provides a set of full documentation to download.
+=consult-dash= provides an easy way to query them.
+
+#+NAME: consult-dash-entry-keybindings
+| Key   | Functon      | Description |
+|-------+--------------+-------------|
+| M-s d | consult-dash |             |
+
+#+begin_src emacs-lisp
+  (use-package consult-dash
+    :tags '("CORE" "DOCUMENTATION" "COMPLETION")
+    :bind (
+      <<keybindings-gen(table=consult-dash-entry-keybindings)>>
+    )
+
+    :custom
+    (dash-docs-docsets-path "~/shared/docset")
+    (dash-docs-browser-func 'eww)
+
+    :config
+    (consult-customize consult-dash :initial (thing-at-point 'symbol))
+    (when (functionp 'consult-dash)
+      (setq-local consult-dash-docsets '("Python 3" "Pandas" "NumPy" "SciPy" "Matplotlib"))))
+#+end_src
+
+** DONE Recoll
+CLOSED: [2022-10-13 Thu 18:11]
+=consult-recoll= provides an interface to =recoll= which is handy to "grep" from a db of documents.
+
+#+NAME: consult-recoll-entry-keybindings
+| Key   | Functon        | Description |
+|-------+----------------+-------------|
+| M-g t | consult-recoll |             |
+
+#+begin_src emacs-lisp
+  (when (executable-find "recoll")
+    (use-package consult-recoll
+      :tags '("CORE" "DOCUMENTATION" "COMPLETION")
+      :bind (
+        <<keybindings-gen(table=consult-recoll-entry-keybindings)>>
+      )))
+#+end_src
+
+And the associated configuration is:
+
+#+begin_src conf :tangle ~/.recoll/recoll.conf :mkdirp yes
+  # The system-wide configuration files for recoll are located in:
+  #   /usr/share/recoll/examples
+
+  topdirs = ~
+  skippedPaths = ~/.cache ~/environment ~/tmp/music /media ~/configuration/emacs.d
+  skippedNames+ = .* melpa docset *.wav *.flac
+  noContentSuffixes+ =
+#+end_src
 
 * TODO Programming [83%]
 Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
@@ -5570,7 +5577,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
     :hook
     (message-mode . format-hook-message)
 
-    :init
+    :config
     (defun format-hook-message ()
       "Specify some formatting rules for email message writing."
       (auto-fill-mode -1)
@@ -5579,14 +5586,13 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
       (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
       (visual-line-mode))
 
-    :config
     (setq message-auto-save-directory nil
-	  message-citation-line-function 'message-insert-formatted-citation-line
-	  message-citation-line-format  "\n\n-----------------------\nOn %a, %b %d %Y (%-H:%M %Z), %N wrote:\n"
-	  message-sendmail-f-is-evil nil
-	  message-kill-buffer-on-exit t
-	  message-signature-file nil
-	  message-fill-column 100))
+          message-citation-line-function 'message-insert-formatted-citation-line
+          message-citation-line-format  "\n\n-----------------------\nOn %a, %b %d %Y (%-H:%M %Z), %N wrote:\n"
+          message-sendmail-f-is-evil nil
+          message-kill-buffer-on-exit t
+          message-signature-file nil
+          message-fill-column 100))
 
   (use-package smtpmail-multi
     :elpaca nil
@@ -5597,19 +5603,19 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
       (replace-regexp-in-string
        "\n$" ""
        (with-temp-buffer
-	 (call-process
-	  "oauth2mail" nil t nil
-	  "--encode-xoauth2"
-	  "-c" (expand-file-name oauth2mail-config-file) user)
-	 (buffer-string))))
+         (call-process
+          "oauth2mail" nil t nil
+          "--encode-xoauth2"
+          "-c" (expand-file-name oauth2mail-config-file) user)
+         (buffer-string))))
 
     (cl-defmethod smtpmail-try-auth-method
       (process (_mech (eql my-xoauth2)) user password)
       (let* ((access-token (my-oauth2-fetch-access-token user)))
-	(smtpmail-command-or-throw
-	 process
-	 (concat "AUTH XOAUTH2 " access-token)
-	 235)))
+        (smtpmail-command-or-throw
+         process
+         (concat "AUTH XOAUTH2 " access-token)
+         235)))
 
     ;; Register the method
     (with-eval-after-load 'smtpmail
@@ -5622,21 +5628,21 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
 
     ;; Define default environment
     (setq user-full-name "Sébastien Le Maguer"
-	  smtpmail-multi-default-account 'tcd
-	  message-send-mail-function 'smtpmail-multi-send-it
-	  mail-host-address "tcd.ie"
+          smtpmail-multi-default-account 'tcd
+          message-send-mail-function 'smtpmail-multi-send-it
+          mail-host-address "tcd.ie"
 
-	  ;; Debug part
-	  smtpmail-debug-info nil
-	  smtpmail-debug-verbose nil))
+          ;; Debug part
+          smtpmail-debug-info nil
+          smtpmail-debug-verbose nil))
 
   (use-package org-mgs
     :elpaca (org-msg :host github :repo "jeremy-compostella/org-msg")
     :bind (
-      :map org-msg-edit-mode-map (
-	<<keybindings-gen(table=org-msg-edit-keybindings)>>
-      )
-    )
+           :map org-msg-edit-mode-map (
+                                       <<keybindings-gen(table=org-msg-edit-keybindings)>>
+                                       )
+           )
 
     :hook
     (mu4e-compose-pre . org-msg-mode)
@@ -5648,17 +5654,17 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
       (org-hide-drawer-all))
 
     (setq org-msg-startup "hidestars indent inlineimages"
-	  org-msg-default-alternatives '((new	   	       . (text))
-					 (reply-to-html  . (text html))
-					 (reply-to-text  . (text)))
-	  org-msg-enforce-css nil
-	  org-msg-convert-citation t
-	  org-msg-signature (format
-			     "\n\n#+begin_signature\n--\n%s\n#+end_signature"
-			     (with-temp-buffer
-			       (insert-file-contents
-				(format "%s/third_parties/mail/signature" user-emacs-directory))
-			       (buffer-string))))
+          org-msg-default-alternatives '((new	   	       . (text))
+                                         (reply-to-html  . (text html))
+                                         (reply-to-text  . (text)))
+          org-msg-enforce-css nil
+          org-msg-convert-citation t
+          org-msg-signature (format
+                             "\n\n#+begin_signature\n--\n%s\n#+end_signature"
+                             (with-temp-buffer
+                               (insert-file-contents
+                                (format "%s/third_parties/mail/signature" user-emacs-directory))
+                               (buffer-string))))
 
     (advice-add 'org-msg-post-setup :after 'myorg/mu4e-compose-org-msg))
 
@@ -6053,9 +6059,6 @@ Finally, the account definition is done in the private configuration file (so it
   (use-package circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :commands (circe circe-server-buffers)
-    :hook
-    (circe-channel-mode . emojify-mode)
-
     :init
     (defun circe-network-connected-p (network)
       "Return non-nil if there's any Circe server-buffer whose
@@ -6273,7 +6276,6 @@ Because, I prefer to have the completion system, =company=, configured locally f
     :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
 
     :custom
-    (slack-buffer-emojify               t)
     (slack-modeline-formatter           nil)
     (slack-buffer-create-on-notify      t)
     (slack-display-team-name            t)
@@ -6362,7 +6364,6 @@ CLOSED: [2021-05-20 Thu 17:33]
 
     :hook
     (telega-chat-mode . telega-chat-hook)
-    (telega-root-mode . (lambda () (emojify-mode 1)))
 
     :init
     (defun telega-chat-hook ()
@@ -7250,6 +7251,9 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     (tooltip-mode -1)
     (scroll-bar-mode -1)
     (tool-bar-mode -1)
+    ;;disable splash screen and startup message
+    (setq inhibit-startup-message t)
+    (setq initial-scratch-message nil)
 
     ;; Default frame settings
     (setq default-frame-alist
@@ -7554,6 +7558,7 @@ This is functionality is provided by =visual-fill-column=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package visual-fill-column
+    :elpaca nil
     :tags '("VISUAL")
     )
 #+END_SRC
@@ -7610,9 +7615,16 @@ To do so, I use the package =emojify= which provides everything needed for this.
 
 #+begin_src emacs-lisp
   (use-package emojify
+    :elpaca nil ;; FIXME: temporary way because of stupid slack enforcement
     :tags '("VISUAL" "DESKTOP")
     :functions (emojify-set-emoji-data)
-    :hook (sauron-mode . emojify-mode)
+    :custom
+    (slack-buffer-emojify               t)
+    :hook
+    (sauron-mode . emojify-mode)
+    (telega-root-mode . (lambda () (emojify-mode 1)))
+    (circe-channel-mode . emojify-mode)
+
     :config
     (when (featurep 'emojify)
       (emojify-set-emoji-data)))
