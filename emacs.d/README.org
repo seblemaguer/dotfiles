@@ -3171,13 +3171,19 @@ I also rely on =fancy-compilation= to enhance the the output in the compilation 
     (setcar (nthcdr 5 (assoc 'gcc-include compilation-error-regexp-alist-alist)) 0))
 
   (use-package fancy-compilation
-    ;; :tags '("IDE" "COMPILATION")
+    :tags '("IDE" "COMPILATION")
     :commands (fancy-compilation-mode)
     :custom
     (fancy-compilation-override-colors nil)
     :init
     (with-eval-after-load 'compile
       (fancy-compilation-mode)))
+
+  (use-package compile-multi
+    :elpaca (compile-multi :host github
+                           :repo "mohkale/compile-multi")
+    :tags '("IDE" "COMPILATION")
+    )
 #+end_src
 
 *** DONE Flychecking
@@ -4249,7 +4255,15 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
     (define-key LaTeX-mode-map (kbd "C-c C-=") 'align-current))
 
   (use-package latex-table-wizard
-    :tags '("WRITING" "LATEX"))
+    :tags '("WRITING" "LATEX")
+    )
+
+  (use-package sentex
+    :elpaca (sentex :type git
+                    :repo "https://codeberg.org/martianh/sentex"
+                    :files ("*.el" "*.eld"))
+    :tags '("WRITING" "LATEX")
+    )
 #+end_src
 
 *** DONE Reftex
