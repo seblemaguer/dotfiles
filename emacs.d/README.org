@@ -945,7 +945,6 @@ Finally, some keywords are there for note purposes:
 
 #+begin_src emacs-lisp
   (use-package org
-    :elpaca org-contrib
     :tags '("ORG")
     :hook
     (org-after-todo-statistics . org-summary-todo)
@@ -1084,6 +1083,11 @@ Finally, some keywords are there for note purposes:
 
   ;; Elpaca should wait org to be loaded
   (elpaca-wait)
+
+  (use-package org-contrib)
+
+  ;; Elpaca should wait org-contrib to be loaded
+  (elpaca-wait)
 #+end_src
 
 ** DONE Source [100%]
@@ -1136,6 +1140,7 @@ This section provides the configuration for babel by first configuring jupyter.
 
   (use-package ob
     :elpaca nil ;; org-contrib
+    :after (org-contrib)
     :tags '("ORG")
     :config
 
