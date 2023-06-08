@@ -3395,9 +3395,27 @@ And the associated configuration is:
   noContentSuffixes+ =
 #+end_src
 
-* TODO Programming [83%]
+* TODO Programming [85%]
 Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
 To do so, I rely mainly on Language Server Protocol (LSP) and for the debugging I relay on the Debug Adapter Protocol (DAP).
+
+** DONE Tree sitter general configuration
+CLOSED: [2023-06-08 Thu 18:27]
+
+Tree-sitter is neat way of dealing with syntax highlighting.
+It is fast and configurable.
+I also added the support of =scopeline= which provides an indicator about the score of the current block.
+
+#+begin_src emacs-lisp :lexical no
+  (use-package tree-sitter-langs
+    :ensure t
+    :tags '("IDE" "PROGRAMMING" "TREE-SITTER"))
+
+  (use-package scopeline
+    :tags '("IDE" "PROGRAMMING" "TREE-SITTER")
+    :after tree-sitter
+    :config (add-hook 'tree-sitter-mode-hook #'scopeline-mode))
+#+end_src
 
 ** DONE LSP general configuration
 CLOSED: [2021-01-03 Sun 21:28]
