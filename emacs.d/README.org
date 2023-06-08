@@ -657,13 +657,6 @@ Therefore, I defined the =pinentry-mode= for both EPGA and EPA to =loopback=.
     (epa-pinentry-mode 'loopback)
     :config
     (epa-file-enable))
-
-  (use-package org-crypt
-    :elpaca nil
-    :tags '("CORE" "ENCRYPTION")
-    :after org
-    :config
-    (org-crypt-use-before-save-magic))
 #+end_src
 
 * DONE Session [100%]
@@ -2019,6 +2012,20 @@ With =org-sidebar= I have easily access to the todos of the *current* org file.
   (use-package org-sidebar
     :tags '("ORG" "VISUAL")
     )
+#+end_src
+
+** DONE Encryption
+CLOSED: [2023-06-08 Thu 19:02]
+=org-crypt= provides a nice to encrypt part of an org file.
+This is convenient as it provides a way to understand what the content should be about without showing its actual value.
+
+#+begin_src emacs-lisp :lexical no
+  (use-package org-crypt
+    :elpaca nil
+    :tags '("CORE" "ENCRYPTION")
+    :after org
+    :config
+    (org-crypt-use-before-save-magic))
 #+end_src
 
 * DONE Document [100%]
