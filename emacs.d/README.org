@@ -7307,11 +7307,13 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
                                   (trivial  . "purple")))
     )
 
-
   (use-package nano-modeline
+    :elpaca (nano-modeline :type git :host github :repo "rougier/nano-modeline" :ref "b8795c1")
+    :tags '("VISUAL")
     :custom
     (nano-modeline-prefix-padding t)
     :config
+
     ;; ===== Modeline
     (set-face-attribute 'mode-line nil
                         :foreground fui-fg
