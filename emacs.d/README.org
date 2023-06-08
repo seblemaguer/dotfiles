@@ -1091,11 +1091,13 @@ CLOSED: [2021-01-03 Sun 13:59]
 The source visualisation of org files can be pretty raw.
 This section provides configurations to help the navigation and the visualisation of such files.
 
-*** DONE Pretty bullets
+*** DONE Pretty bullets and better navigation
 CLOSED: [2021-01-03 Sun 12:55]
 The key problem in my opinion is how are visualize the headings.
 =org-superstar= provides a clearer indentation and visualisation of such headings.
 This is fundamental to have an easy navigation in such files which can be really large (see the current one!).
+=org-bulletproof= provides a more convenient way to switch between ordered and unordered list.
+Combined with =org-superstar=, this leads to the ultimate org-mode list management
 
 #+begin_src emacs-lisp
   (use-package org-superstar
@@ -1104,6 +1106,11 @@ This is fundamental to have an easy navigation in such files which can be really
     :config
     (setq org-superstar-headline-bullets-list '("◉" "○" "▷" "✸")
           org-superstar-item-bullet-alist '((?+ . ?•) (?* . ?➤) (?- . ?–))))
+
+  (use-package org-bulletproof
+    :tags '("ORG" "HELPER")
+    :config
+    (global-org-bulletproof-mode +1))
 #+end_src
 
 *** DONE Babel
