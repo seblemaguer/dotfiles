@@ -1881,10 +1881,11 @@ The only important bits are:
           org-agenda-start-with-log-mode t
           org-timeline-show-empty-dates t
           org-agenda-span 'day
-          org-agenda-prefix-format '((agenda . " %i %-15:c%?-15t% s")
-                                     (todo . " %i %-15:c")
-                                     (tags . " %i %-15:c")
-                                     (search . " %i %-15:c"))
+          org-agenda-prefix-format '((agenda  . "  • %i ")
+                                     (timeline  . "  % s")
+                                     (todo  . " %i %-12:c")
+                                     (tags  . " %i %-30:c")
+                                     (search . " %i %-12:c"))
           org-agenda-overriding-columns-format "%TODO %7EFFORT %10CLOCKSUM %PRIORITY     %100ITEM 100%TAGS"
           org-agenda-custom-commands '(("c" . "My Custom Agendas")
                                        ("cu" "Unscheduled TODO"
