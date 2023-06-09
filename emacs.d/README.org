@@ -1886,7 +1886,7 @@ The only important bits are:
           org-agenda-start-with-log-mode t
           org-timeline-show-empty-dates t
           org-agenda-span 'day
-          org-agenda-prefix-format '((agenda  . "  • %i ")
+          org-agenda-prefix-format '((agenda  . "  • %t %i ")
                                      (timeline  . "  % s")
                                      (todo  . " %i %-12:c")
                                      (tags  . " %i %-30:c")
