@@ -228,41 +228,55 @@ Furthermore, each package is tagged with several keywors to have a "machine-depe
 
 *** DONE Straight
 CLOSED: [2021-01-03 Sun 10:52]
-In this section, we are configuring =straight=.
-=Straight= supports =use-package= by default.
-Therefore, there is no extra-configuration for this to do.
 
  #+begin_src emacs-lisp
-   ;; Save up some time
-   (setq straight-check-for-modifications nil)
+   (defvar elpaca-installer-version 0.5)
+   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+   (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+   (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+   (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                                 :ref nil
+                                 :files (:defaults (:exclude "extensions"))
+                                 :build (:not elpaca--activate-package)))
+   (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+          (build (expand-file-name "elpaca/" elpaca-builds-directory))
+          (order (cdr elpaca-order))
+          (default-directory repo))
+     (add-to-list 'load-path (if (file-exists-p build) build repo))
+     (unless (file-exists-p repo)
+       (make-directory repo t)
+       (when (< emacs-major-version 28) (require 'subr-x))
+       (condition-case-unless-debug err
+           (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                    ((zerop (call-process "git" nil buffer t "clone"
+                                          (plist-get order :repo) repo)))
+                    ((zerop (call-process "git" nil buffer t "checkout"
+                                          (or (plist-get order :ref) "--"))))
+                    (emacs (concat invocation-directory invocation-name))
+                    ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                          "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                    ((require 'elpaca))
+                    ((elpaca-generate-autoloads "elpaca" repo)))
+               (kill-buffer buffer)
+             (error "%s" (with-current-buffer buffer (buffer-string))))
+         ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+     (unless (require 'elpaca-autoloads nil t)
+       (require 'elpaca)
+       (elpaca-generate-autoloads "elpaca" repo)
+       (load "./elpaca-autoloads")))
+   (add-hook 'after-init-hook #'elpaca-process-queues)
+   (elpaca `(,@elpaca-order))
 
-   (defvar bootstrap-version)
-   (let ((bootstrap-file
-          (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-         (bootstrap-version 5))
-     (unless (file-exists-p bootstrap-file)
-       (with-current-buffer
-           (url-retrieve-synchronously
-            "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-            'silent 'inhibit-cookies)
-         (goto-char (point-max))
-         (eval-print-last-sexp)))
-     (load bootstrap-file nil 'nomessage))
+   ;; Install use-package support
+   (elpaca elpaca-use-package
+     ;; Enable :elpaca use-package keyword.
+     (elpaca-use-package-mode)
+     ;; Assume :elpaca t unless otherwise specified.
+     (setq elpaca-use-package-by-default t))
 
-   (unless (string= (getenv "TRAVIS") "true")
-     (setq straight-vc-git-default-protocol 'ssh))
+   ;; Block until current queue processed.
+   (elpaca-wait)
  #+end_src
-
-*** DONE Load use-package
-CLOSED: [2021-01-03 Sun 10:51]
-Now that straight is configured, we can tell it to install =use-package=.
-From there, =use-package= will be used as the entry function to configure a new package.
-
-#+begin_src emacs-lisp
-  (straight-use-package 'use-package)
-  (setq straight-use-package-by-default t)
-  ;; (setq use-package-verbose t)
-#+end_src
 
 *** DONE Tagging
 CLOSED: [2021-01-03 Sun 10:58]
@@ -276,7 +290,7 @@ The specification respects the following syntax:
 
 #+begin_src emacs-lisp
   (use-package use-package-tags
-    :straight (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
+    :elpaca (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
     :config
 
     (when no-connection
@@ -287,6 +301,10 @@ The specification respects the following syntax:
             (,work-hostname                 . ("ALL"))
             ("mackenzie"                    . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
             (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
+
+
+  ;; Block until current queue processed.
+  (elpaca-wait)
 #+end_src
 
 *** DONE Hydra
@@ -310,17 +328,21 @@ While alternatives exist, I find this combination more straightforward and clean
     :bind (
       <<keybindings-gen(table=major-mode-hydra-entry-keybindings)>>
     ))
+
+  (elpaca-wait)
 #+end_src
 
 *** Transient
 #+begin_src emacs-lisp :lexical no
   (use-package transient
-    :tags '("CORE"))
+    :tags '("CORE")
+    )
 #+end_src
 
 *** Documentation
 #+begin_src emacs-lisp
   (use-package dash-docs
+    :tags '("CORE")
     :ensure t)
 #+end_src
 
@@ -357,13 +379,11 @@ the upstream has some priority issues with ERC; I would like to ignore some even
 
 #+begin_src emacs-lisp
   (use-package alert
-    :tags '("CORE" "NOTIFICATION"))
+    :tags '("CORE" "NOTIFICATION")
+    )
 
   (use-package sauron
-    :straight (sauron :type git :host github :repo "djcb/sauron"
-                      :fork (:host github
-                                   :repo "seblemaguer/sauron"
-                                   :branch "functional"))
+    :elpaca (sauron :type git :host github :repo "seblemaguer/sauron" :branch "functional")
     :tags '("CORE" "NOTIFICATION")
     :commands (sauron-start-hidden sauron-add-event)
 
@@ -378,16 +398,17 @@ the upstream has some priority issues with ERC; I would like to ignore some even
        (string= (plist-get props :event) "quit")))
 
     (setq sauron-separate-frame nil ;; The notification is on the same window ?
-          sauron-sticky-frame t
-          sauron-max-line-length nil ;; No max. length for the line
-          sauron-modules '(sauron-org sauron-appt) ;; reduced the default modules
-          sauron-column-alist '(( timestamp  .  20)
-                                ( origin     .  20)
-                                ( priority   .   4)
-                                ( message    . nil))
-          sauron-org-exclude-todo-states (list "IN PROCESS" "EXEC-STARTED" "PAUSED" "DELEGATED" "WAITING")
-          sauron-prio-org-minutes-left-list '((15 4))
-          sauron-insensitivity-handler 'sauron-keep-priority))
+	  sauron-sticky-frame t
+	  sauron-max-line-length nil ;; No max. length for the line
+	  sauron-modules '(sauron-org sauron-appt) ;; reduced the default modules
+	  sauron-column-alist '(( timestamp  .  20)
+				( origin     .  20)
+				( priority   .   4)
+				( message    . nil))
+	  sauron-org-exclude-todo-states (list "IN PROCESS" "EXEC-STARTED" "PAUSED" "DELEGATED" "WAITING")
+	  sauron-prio-org-minutes-left-list '((15 4))
+	  sauron-insensitivity-handler 'sauron-keep-priority))
+  (elpaca-wait)
 #+end_src
 
 *** DONE Sauron/Alert/Modeline integration
@@ -405,135 +426,17 @@ This plugin is in charge to managing the communication and avoid any cycle.
 
 #+begin_src emacs-lisp
   (use-package sauron-mode-line
-    :straight nil
+    :elpaca nil
     :load-path default-plugin-dir
     :tags '("CORE" "NOTIFICATION")
     :custom
     (sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron)
 
     :commands (sauron-mode-line-start-hidden)
-    :hook (after-init . sauron-mode-line-start-hidden)
+    :hook (elpaca-after-init . sauron-mode-line-start-hidden)
     :bind (
       <<keybindings-gen(table=sauron-keybindings)>>
      ))
-#+end_src
-
-** DONE Documentation [100%]
-Emacs is dense and provides a lot of features.
-Too many to remember everything.
-This part is there to help to navigate the documentation more easily.
-
-*** DONE Key bindinds
-CLOSED: [2021-01-03 Sun 11:18]
-=helm-descbinds= is a useful package which provides a way to list all the shortcuts available in the current buffer.
-
-#+NAME: helm-descbinds-entry-keybindings
-| Key   | Function       | Description |
-|-------+----------------+-------------|
-| C-h b | helm-descbinds |             |
-
-#+begin_src emacs-lisp
-  (use-package helm-descbinds
-    :tags '("CORE" "DOCUMENTATION")
-    :commands (helm-descbinds)
-    :bind (
-      <<keybindings-gen(table=helm-descbinds-entry-keybindings)>>
-    ))
-#+end_src
-
-*** DONE Helpful
-CLOSED: [2021-01-03 Sun 11:19]
-=helpful= is a powerful package to access to the documentation of a key/symbol/...
-It also supports references and back-references.
-I am using it as the entry point of any documentation I want to access.
-
-#+NAME: help-keybindings
-| Key   | Function         | Description |
-|-------+------------------+-------------|
-| C-h k | helpful-key      |             |
-| C-h a | helpful-symbol   |             |
-| C-h h | helpful-at-point |             |
-
-#+begin_src emacs-lisp
-  (use-package helpful
-    :tags '("CORE" "DOCUMENTATION")
-    :commands (helpful-key helpful-symbol helpful-at-point)
-    :bind (
-      <<keybindings-gen(table=help-keybindings)>>
-     ))
-#+end_src
-
-*** DONE Man
-CLOSED: [2021-03-01 Mon 09:28]
-Man is critical for document on unix.
-I simply configured emacs to add my own environment man directories.
-
-#+begin_src emacs-lisp
-  (use-package man
-    :tags '("CORE" "DOCUMENTATION")
-    :config
-    (setq Man-notify-method 'pushy
-          woman-manpath `("/usr/share/man/" "/usr/local/man/" ;; System
-                          ,(format "%s/local/man" user-emacs-directory) ;; Private environment
-                          ,(format "~/environment/local/share/man")
-                          )))
-#+end_src
-
-*** DONE Dash/Docsets
-CLOSED: [2022-07-26 Tue 09:48]
-Dash (https://www.kapeli.com/dash) provides a set of full documentation to download.
-=consult-dash= provides an easy way to query them.
-
-#+NAME: consult-dash-entry-keybindings
-| Key   | Functon      | Description |
-|-------+--------------+-------------|
-| M-s d | consult-dash |             |
-
-#+begin_src emacs-lisp
-  (use-package consult-dash
-    :tags '("CORE" "DOCUMENTATION" "COMPLETION")
-    :bind (
-      <<keybindings-gen(table=consult-dash-entry-keybindings)>>
-    )
-
-    :custom
-    (dash-docs-docsets-path "~/shared/docset")
-    (dash-docs-browser-func 'eww)
-
-    :config
-    (consult-customize consult-dash :initial (thing-at-point 'symbol))
-    (when (functionp 'consult-dash)
-      (setq-local consult-dash-docsets '("Python 3" "Pandas" "NumPy" "SciPy" "Matplotlib"))))
-#+end_src
-
-*** DONE Recoll
-CLOSED: [2022-10-13 Thu 18:11]
-=consult-recoll= provides an interface to =recoll= which is handy to "grep" from a db of documents.
-
-#+NAME: consult-recoll-entry-keybindings
-| Key   | Functon        | Description |
-|-------+----------------+-------------|
-| M-g t | consult-recoll |             |
-
-#+begin_src emacs-lisp
-  (when (executable-find "recoll")
-    (use-package consult-recoll
-      :tags '("CORE" "DOCUMENTATION" "COMPLETION")
-      :bind (
-        <<keybindings-gen(table=consult-recoll-entry-keybindings)>>
-      )))
-#+end_src
-
-And the associated configuration is:
-
-#+begin_src conf :tangle ~/.recoll/recoll.conf :mkdirp yes
-  # The system-wide configuration files for recoll are located in:
-  #   /usr/share/recoll/examples
-
-  topdirs = ~
-  skippedPaths = ~/.cache ~/environment ~/tmp/music /media ~/configuration/emacs.d
-  skippedNames+ = .* melpa docset *.wav *.flac
-  noContentSuffixes+ =
 #+end_src
 
 ** DONE Buffer listing
@@ -675,7 +578,7 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
 
 #+begin_src emacs-lisp
   (use-package minibuffer
-    :straight nil
+    :elpaca nil
     :tags '("CORE" "MINIBUFFER")
     ;; :hook
     ;; (eval-expression-minibuffer-setup .  #'eldoc-mode)
@@ -696,7 +599,7 @@ This leads to ensuring the package =vlf= with the use-package header defined to 
 
 #+begin_src emacs-lisp
   (use-package vlf-setup
-    :straight  vlf
+    :elpaca  vlf
     :tags '("CORE")
     :init (setq vlf-application 'dont-ask))
 #+end_src
@@ -725,9 +628,9 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
 
   (use-package goto-last-point
     ;; NOTE: the original repo is a pain to access with ssh, using the emacsmirror
-    :straight (goto-last-point :type git :host github :repo "emacsmirror/goto-last-point")
+    :elpaca (goto-last-point :type git :host github :repo "emacsmirror/goto-last-point")
     :tags '("CORE" "NAVIGATION")
-    :hook (after-init . goto-last-point-mode)
+    :hook (elpaca-after-init . goto-last-point-mode)
     :bind (
       <<keybindings-gen(table=goto-last-point-entry-keybindings)>>
     ))
@@ -747,19 +650,12 @@ Therefore, I defined the =pinentry-mode= for both EPGA and EPA to =loopback=.
     (pinentry-start))
 
   (use-package epa-file
-    :straight nil
+    :elpaca nil
     :tags '("CORE" "ENCRYPTION")
     :custom
     (epa-pinentry-mode 'loopback)
     :config
     (epa-file-enable))
-
-  (use-package org-crypt
-    :straight nil
-    :tags '("CORE" "ENCRYPTION")
-    :after org
-    :config
-    (org-crypt-use-before-save-magic))
 #+end_src
 
 * DONE Session [100%]
@@ -775,8 +671,10 @@ leads to this configuration
 
 #+begin_src emacs-lisp
   (use-package recentf
+    :elpaca nil
+    :ensure t
     :tags '("CORE" "SESSION" "RECENT")
-    :hook (after-init . recentf-mode)
+    :hook (elpaca-after-init . recentf-mode)
     :custom
     (recentf-max-saved-items 100)
     (recentf-max-menu-items 100)
@@ -834,97 +732,98 @@ This the global backup configuration. For that I adapted a little bit the wonder
 snapshot-timemachine package.
 
 #+begin_src emacs-lisp
+  (defun my-make-backup-file-name (FILE)
+    (let* ((dirname backup-directory)
+           (backup-filename (concat dirname (file-truename FILE))))
+      (unless (file-exists-p (file-name-directory  backup-filename))
+        (make-directory (file-name-directory backup-filename) t))
+      backup-filename))
+
+  ;; Redefine find-backup-filename to avoid the "!" replacement
+  (defun find-backup-file-name (fn)
+    "Find a file name for a backup file FN, and suggestions for deletions.
+      Value is a list whose car is the name for the backup file
+      and whose cdr is a list of old versions to consider deleting now.
+      If the value is nil, don't make a backup.
+      Uses `backup-directory-alist' in the same way as
+      `make-backup-file-name--default-function' does."
+    (let ((handler (find-file-name-handler fn 'find-backup-file-name)))
+      ;; Run a handler for this function so that ange-ftp can refuse to do it.
+      (if handler
+          (funcall handler 'find-backup-file-name fn)
+        (if (or (eq version-control 'never)
+                ;; We don't support numbered backups on plain MS-DOS
+                ;; when long file names are unavailable.
+                (and (eq system-type 'ms-dos)
+                     (not (msdos-long-file-names))))
+            (list (make-backup-file-name fn))
+          (let* ((basic-name (make-backup-file-name fn))
+                 (base-versions (concat (file-name-nondirectory basic-name)
+                                        ".~"))
+                 (backup-extract-version-start (length base-versions))
+                 (high-water-mark 0)
+                 (number-to-delete 0)
+                 possibilities deserve-versions-p versions)
+            (condition-case ()
+                (setq possibilities (file-name-all-completions
+                                     base-versions
+                                     (file-name-directory basic-name))
+                      versions (sort (mapcar #'backup-extract-version
+                                             possibilities)
+                                     #'<)
+                      high-water-mark (apply 'max 0 versions)
+                      deserve-versions-p (or version-control
+                                             (> high-water-mark 0))
+                      number-to-delete (- (length versions)
+                                          kept-old-versions
+                                          kept-new-versions
+                                          -1))
+              (file-error (setq possibilities nil)))
+            (if (not deserve-versions-p)
+                (list (make-backup-file-name fn))
+              (cons (format "%s.~%d~" basic-name (1+ high-water-mark))
+                    (if (and (> number-to-delete 0)
+                             ;; Delete nothing if there is overflow
+                             ;; in the number of versions to keep.
+                             (>= (+ kept-new-versions kept-old-versions -1) 0))
+                        (mapcar (lambda (n)
+                                  (format "%s.~%d~" basic-name n))
+                                (let ((v (nthcdr kept-old-versions versions)))
+                                  (rplacd (nthcdr (1- number-to-delete) v) ())
+                                  v))))))))))
+
+  ;; Default Backup directory
+  (defvar backup-directory (concat user-emacs-directory "backups/"))
+  (setq backup-directory-alist `((".*" . ,backup-directory)))
+  (when (not (file-exists-p backup-directory))
+    (make-directory backup-directory t))
+  (setq make-backup-file-name-function #'my-make-backup-file-name)
+  ;; Auto-save
+  (defvar auto-save-directory (concat user-emacs-directory "auto-save/"))
+  (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
+  (when (not (file-exists-p auto-save-directory))
+    (make-directory auto-save-directory t))
+
+  ;; Tramp backup
+  (defvar tramp-backup-directory (concat user-emacs-directory "tramp-backups/"))
+  (setq tramp-backup-directory-alist `((".*" . ,tramp-backup-directory)))
+
+  (when (not (file-exists-p tramp-backup-directory))
+    (make-directory tramp-backup-directory t))
+
+  (setq make-backup-files t               ; backup of a file the first time it is saved.
+        backup-by-copying t               ; don't clobber symlinks
+        version-control t                 ; version numbers for backup files
+        delete-old-versions t             ; delete excess backup files silently
+        delete-by-moving-to-trash t
+        kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
+        kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
+        )
+
+
   (use-package snapshot-timemachine
     :tags '("CORE" "SESSION" "BACKUP")
     :init
-
-    (defun my-make-backup-file-name (FILE)
-      (let* ((dirname backup-directory)
-             (backup-filename (concat dirname (file-truename FILE))))
-        (unless (file-exists-p (file-name-directory  backup-filename))
-          (make-directory (file-name-directory backup-filename) t))
-        backup-filename))
-
-    ;; Redefine find-backup-filename to avoid the "!" replacement
-    (defun find-backup-file-name (fn)
-      "Find a file name for a backup file FN, and suggestions for deletions.
-    Value is a list whose car is the name for the backup file
-    and whose cdr is a list of old versions to consider deleting now.
-    If the value is nil, don't make a backup.
-    Uses `backup-directory-alist' in the same way as
-    `make-backup-file-name--default-function' does."
-      (let ((handler (find-file-name-handler fn 'find-backup-file-name)))
-        ;; Run a handler for this function so that ange-ftp can refuse to do it.
-        (if handler
-            (funcall handler 'find-backup-file-name fn)
-          (if (or (eq version-control 'never)
-                  ;; We don't support numbered backups on plain MS-DOS
-                  ;; when long file names are unavailable.
-                  (and (eq system-type 'ms-dos)
-                       (not (msdos-long-file-names))))
-              (list (make-backup-file-name fn))
-            (let* ((basic-name (make-backup-file-name fn))
-                   (base-versions (concat (file-name-nondirectory basic-name)
-                                          ".~"))
-                   (backup-extract-version-start (length base-versions))
-                   (high-water-mark 0)
-                   (number-to-delete 0)
-                   possibilities deserve-versions-p versions)
-              (condition-case ()
-                  (setq possibilities (file-name-all-completions
-                                       base-versions
-                                       (file-name-directory basic-name))
-                        versions (sort (mapcar #'backup-extract-version
-                                               possibilities)
-                                       #'<)
-                        high-water-mark (apply 'max 0 versions)
-                        deserve-versions-p (or version-control
-                                               (> high-water-mark 0))
-                        number-to-delete (- (length versions)
-                                            kept-old-versions
-                                            kept-new-versions
-                                            -1))
-                (file-error (setq possibilities nil)))
-              (if (not deserve-versions-p)
-                  (list (make-backup-file-name fn))
-                (cons (format "%s.~%d~" basic-name (1+ high-water-mark))
-                      (if (and (> number-to-delete 0)
-                               ;; Delete nothing if there is overflow
-                               ;; in the number of versions to keep.
-                               (>= (+ kept-new-versions kept-old-versions -1) 0))
-                          (mapcar (lambda (n)
-                                    (format "%s.~%d~" basic-name n))
-                                  (let ((v (nthcdr kept-old-versions versions)))
-                                    (rplacd (nthcdr (1- number-to-delete) v) ())
-                                    v))))))))))
-
-    ;; Default Backup directory
-    (defvar backup-directory (concat user-emacs-directory "backups/"))
-    (setq backup-directory-alist `((".*" . ,backup-directory)))
-    (when (not (file-exists-p backup-directory))
-      (make-directory backup-directory t))
-    (setq make-backup-file-name-function #'my-make-backup-file-name)
-    ;; Auto-save
-    (defvar auto-save-directory (concat user-emacs-directory "auto-save/"))
-    (setq auto-save-file-name-transforms `((".*" ,auto-save-directory t)))
-    (when (not (file-exists-p auto-save-directory))
-      (make-directory auto-save-directory t))
-
-    ;; Tramp backup
-    (defvar tramp-backup-directory (concat user-emacs-directory "tramp-backups/"))
-    (setq tramp-backup-directory-alist `((".*" . ,tramp-backup-directory)))
-
-    (when (not (file-exists-p tramp-backup-directory))
-      (make-directory tramp-backup-directory t))
-
-    (setq make-backup-files t               ; backup of a file the first time it is saved.
-          backup-by-copying t               ; don't clobber symlinks
-          version-control t                 ; version numbers for backup files
-          delete-old-versions t             ; delete excess backup files silently
-          delete-by-moving-to-trash t
-          kept-old-versions 6               ; oldest versions to keep when a new numbered backup is made (default: 2)
-          kept-new-versions 9               ; newest versions to keep when a new numbered backup is made (default: 2)
-          )
 
     :config
 
@@ -998,6 +897,7 @@ To do so, I am using the package =saveplace=
 
 #+begin_src emacs-lisp
   (use-package saveplace
+    :elpaca nil
     :tags '("CORE" "SESSION")
     :init
     (setq save-place-file (format "%s/saveplace" user-emacs-directory))
@@ -1037,7 +937,6 @@ Finally, some keywords are there for note purposes:
 
 #+begin_src emacs-lisp
   (use-package org
-    :straight org-contrib
     :tags '("ORG")
     :hook
     (org-after-todo-statistics . org-summary-todo)
@@ -1172,7 +1071,15 @@ Finally, some keywords are there for note purposes:
           org-babel-results-keyword "results" ;; Display images directly in the buffer
           org-confirm-babel-evaluate nil
           org-startup-with-inline-images t
-          org-return-follows-link  t))
+          org-return-follows-link t))
+
+  ;; Elpaca should wait org to be loaded
+  (elpaca-wait)
+
+  (use-package org-contrib)
+
+  ;; Elpaca should wait org-contrib to be loaded
+  (elpaca-wait)
 #+end_src
 
 ** DONE Source [100%]
@@ -1180,11 +1087,13 @@ CLOSED: [2021-01-03 Sun 13:59]
 The source visualisation of org files can be pretty raw.
 This section provides configurations to help the navigation and the visualisation of such files.
 
-*** DONE Pretty bullets
+*** DONE Pretty bullets and better navigation
 CLOSED: [2021-01-03 Sun 12:55]
 The key problem in my opinion is how are visualize the headings.
 =org-superstar= provides a clearer indentation and visualisation of such headings.
 This is fundamental to have an easy navigation in such files which can be really large (see the current one!).
+=org-bulletproof= provides a more convenient way to switch between ordered and unordered list.
+Combined with =org-superstar=, this leads to the ultimate org-mode list management
 
 #+begin_src emacs-lisp
   (use-package org-superstar
@@ -1193,6 +1102,11 @@ This is fundamental to have an easy navigation in such files which can be really
     :config
     (setq org-superstar-headline-bullets-list '("◉" "○" "▷" "✸")
           org-superstar-item-bullet-alist '((?+ . ?•) (?* . ?➤) (?- . ?–))))
+
+  (use-package org-bulletproof
+    :tags '("ORG" "HELPER")
+    :config
+    (global-org-bulletproof-mode +1))
 #+end_src
 
 *** DONE Babel
@@ -1217,7 +1131,8 @@ This section provides the configuration for babel by first configuring jupyter.
       (set 'company-backends (append '(company-org-block) company-backends))))
 
   (use-package ob
-    :straight org-contrib
+    :elpaca nil ;; org-contrib
+    :after (org-contrib)
     :tags '("ORG")
     :config
 
@@ -1261,7 +1176,7 @@ To fix this, =org-unique-id= aims to provide an equivalent to the "auctex/reftex
 #+begin_src emacs-lisp
   (use-package org-unique-id
     :after org
-    :straight (org-unique-id :type git
+    :elpaca (org-unique-id :type git
                              :host github
                              :repo "Phundrak/org-unique-id")
     :init (add-hook 'before-save-hook #'org-unique-id-maybe))
@@ -1274,9 +1189,10 @@ Consequently, adding its support in org-mode is a big advantage.
 To do so, I am relying the package =org-checklist= which is provided by =org-contrib=.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package org-checklist
-    :straight org-contrib
-    :tags '("ORG"))
+    (use-package org-checklist
+      :elpaca nil ;; org-contrib
+      :tags '("ORG")
+      )
 #+END_SRC
 
 *** DONE Tranclusion
@@ -1300,7 +1216,7 @@ For whatever reason, it is required to *explicitly* configure =transient=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-menu
-    :straight (org-menu :type git :host github :repo "sheijk/org-menu")
+    :elpaca (org-menu :type git :host github :repo "sheijk/org-menu")
     :tags '("ORG")
     :bind (:map org-mode-map (
       <<keybindings-gen(table=org-menu-keybindings)>>
@@ -1317,7 +1233,8 @@ This part contains some extra configurations which allows to write clean org doc
 
 #+begin_src emacs-lisp
   (use-package ox-extra
-    :straight org-contrib
+    :elpaca nil ;; org-contrib
+    :after (org-contrib)
     :tags '("ORG")
     :after ox
     :config
@@ -1332,10 +1249,11 @@ We also defines additional link to support audios and videos.
 
 #+begin_src emacs-lisp
   (use-package htmlize
-    :tags '("ORG"))
+    :tags '("ORG")
+    )
 
   (use-package ox-html
-    :straight org-contrib
+    :elpaca nil ;; org-contrib
     :after ox
     :requires (htmlize)
     :tags '("ORG")
@@ -1364,10 +1282,11 @@ We also defines additional link to support audios and videos.
     (org-link-set-parameters "video" :export #'endless/export-video-link)
     (org-link-set-parameters "audio" :export #'endless/export-audio-link)
 
-    (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/brave %s")))
+    (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/brave-browser %s")))
 
   (use-package org-re-reveal
-    :tags '("ORG"))
+    :tags '("ORG")
+    )
 
   (use-package org-re-reveal-citeproc
     :tags '("ORG")
@@ -1384,7 +1303,8 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
 
 #+begin_src emacs-lisp
   (use-package ox-latex
-    :straight org-contrib
+    :elpaca nil ;; org-contrib
+    :after (org-contrib)
     :tags '("ORG")
     :after ox
     :config
@@ -1393,7 +1313,8 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
           org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 
   (use-package ox-beamer
-    :straight org-contrib
+    :elpaca nil ;; org-contrib
+    :after (org-contrib)
     :tags '("ORG")
     :after ox
     :config
@@ -1403,7 +1324,8 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
     (add-to-list 'org-export-filter-bold-functions 'my-beamer-bold))
 
   (use-package ox-bibtex
-    :straight org-contrib
+    :elpaca nil ;; org-contrib
+    :after (org-contrib)
     :tags '("ORG")
     :after ox
     :defer t)
@@ -1418,198 +1340,6 @@ Therefore, I use the package =ox-gfm=
   (use-package ox-gfm
       :tags '("ORG")
       :after ox)
-#+end_src
-
-** DONE Agenda [100%]
-In this section, I configure the agenda part of org-mode.
-It is my main source of visualizing the todo tasks.
-I rely on the baseline =org-agenda= package and on =org-super-agenda= for a better visualisation.
-
-*** DONE Baseline configuration
-CLOSED: [2021-01-03 Sun 14:21]
-The baseline configuration is fairly standard.
-The only important bits are:
-  - the todo file is set to =~/pCloudDrive/org/todo/todo.org=
-  - some icons are associated to some categories
-
-#+NAME: org-agenda-entry-keybindings
-| Key   | Functon    | Description |
-|-------+------------+-------------|
-| <f12> | org-agenda |             |
-
-#+NAME: org-agenda-hydra-entry-keybindings
-| Key | Function               | Description |
-|-----+------------------------+-------------|
-| v   | org-agenda-hydra/body  |             |
-
-#+NAME: org-agenda-mode-hydra-keybindings
-| Key | Function                  | label     | Description |
-|-----+---------------------------+-----------+-------------|
-| d   | org-agenda-day-view       | Day       |             |
-| w   | org-agenda-week-view      | Week      |             |
-| t   | org-agenda-fortnight-view | Fortnight |             |
-| m   | org-agenda-month-view     | Month     |             |
-| y   | org-agenda-year-view      | Year      |             |
-
-
-#+begin_src emacs-lisp
-  (use-package org-agenda
-    :straight org-contrib
-    :tags '("ORG" "USER" "CONNECTED")
-    :if (file-directory-p cloud-org-root-dir)
-    :commands (org-agenda)
-    :init
-    (defun color-org-header (tag backcolor)
-      "Highlight the line in org-agenda in the given BACKCOLOR if TAG is present on the line."
-      (interactive)
-      (goto-char (point-min))
-      (while (re-search-forward tag nil t)
-        (add-text-properties (line-beginning-position) (+ (line-end-position) 1)
-                             `(face (:background, backcolor)))))
-
-    ;; Agenda is used at startup, it is better
-    (setq initial-buffer-choice '(lambda () (get-buffer org-agenda-buffer-name)))
-
-    :mode-hydra
-    (org-agenda-mode
-     (:color blue)
-     ("Time window" (
-       <<hydra-keybindings-gen(table=org-agenda-mode-hydra-keybindings)>>
-     )))
-
-    :bind (
-      <<keybindings-gen(table=org-agenda-entry-keybindings)>>
-
-      :map org-agenda-mode-map (
-         <<keybindings-gen(table=org-agenda-entry-keybindings)>>
-      )
-    )
-
-    :config
-
-    ;; Baseline configuration
-    (setq org-deadline-warning-days 7
-          org-agenda-include-diary t
-          org-agenda-start-with-log-mode t
-          org-timeline-show-empty-dates t
-          org-agenda-span 'day
-          org-agenda-prefix-format '((agenda . " %i %-15:c%?-15t% s")
-                                     (todo . " %i %-15:c")
-                                     (tags . " %i %-15:c")
-                                     (search . " %i %-15:c"))
-          org-agenda-overriding-columns-format "%TODO %7EFFORT %10CLOCKSUM %PRIORITY     %100ITEM 100%TAGS"
-          org-agenda-custom-commands '(("c" . "My Custom Agendas")
-                                       ("cu" "Unscheduled TODO"
-                                        ((todo ""
-                                               ((org-agenda-overriding-header "\nUnscheduled TODO")
-                                                (org-agenda-skip-function
-                                                 '(org-agenda-skip-entry-if
-                                                   'scheduled
-                                                   'regexp ".*\[[0-9]*%\]\\([ ]*[:].*[:]\\)\?$")))))
-                                        nil
-                                        nil)
-                                       ("j" "Planning Table"
-                                        agenda ""
-                                        ((org-agenda-overriding-header "")
-                                         (org-agenda-span 1)
-                                         (org-agenda-use-time-grid nil)
-                                         (org-agenda-view-columns-initially t)
-                                         (org-columns-default-format-for-agenda
-                                          "%11AGENDA_TIME(When) %4TODO(Type) %40ITEM(What) %5AGENDA_DURATION(Takes){:}")
-                                         ;; do not show wardings, overdue and overscheduled
-                                         (org-scheduled-past-days 0)
-                                         (org-deadline-past-days 0)
-                                         (org-deadline-warning-days 0)
-
-                                         ;; skip finished entries
-                                         (org-agenda-skip-deadline-if-done t)
-                                         (org-agenda-skip-scheduled-if-done t)))
-                                       )
-
-          ;; Define the diary comment syntax as elisp
-          diary-comment-start ";;"
-          diary-comment-end ""))
-#+end_src
-
-*** DONE Super agenda
-CLOSED: [2021-01-03 Sun 14:22]
-In this section, I confugre =org-super-agenda=.
-As I have my own way of being organized, I redefined completely the groups.
-
-#+begin_src emacs-lisp
-  (use-package org-super-agenda
-    :straight (org-super-agenda :type git :host github :repo "alphapapa/org-super-agenda"
-                                :fork (:host github
-                                             :repo "seblemaguer/org-super-agenda"
-                                             :branch "fix_diary"))
-    :tags '("ORG")
-    :config
-
-    ;; Create groups
-    (setq org-super-agenda-groups
-          '((:name "Today"  ; Optionally specify section name
-                   :time-grid t)  ; Items that appear on the time grid
-
-            ;; CD part
-            (:discard (:and (:category "Release" :tag "noexport")))
-            (:discard (:and (:category "Release" :todo "CANCELLED")))
-            (:name "Today's releases"
-                   :and (:todo "RELEASE" :date today)
-                   :order 8)
-
-            (:name "Releases"
-                   :and (:category "Release" :not (:todo "WAITING"))
-                   :order 8)
-
-            (:name "Ordered Releases"
-                   :and (:category "Release" :todo "WAITING")
-                   :order 9)
-
-
-            ;; Important thing
-            (:name "Important"
-                   :and (:priority "A" :date t :todo "TODO")
-                   :order 2)
-
-            ;; Some standby thingy
-            (:name "In process"
-                   :todo ("PAUSED" "EXEC-STARTED")
-                   :order 7)
-
-            ;; Deadlines
-            (:name "Overdue"
-                   :deadline past
-                   :order 3)
-            (:name "Due Today"
-                   :deadline today
-                   :order 3)
-            (:name "Due Soon"
-                   :deadline future
-                   :order 4)
-
-            ;; Schedule
-            (:name "Scheduled Today"
-                   :and (:scheduled today  :not (:todo "PAUSED") :not (:todo "WAITING") :not (:todo "RELEASE"))
-                   :order 1)
-            (:name "Scheduled, past but opened"
-                   :and (:scheduled past   :not (:todo "PAUSED") :not (:todo "WAITING") :not (:todo "RELEASE"))
-                   :order 5)
-            (:name "Scheduled in the next couple of days"
-                   :and (:scheduled future :not (:todo "PAUSED") :not (:todo "WAITING") :not (:todo "RELEASE"))
-                   :order 6)
-            ))
-
-    ;; Activate mode
-    (org-super-agenda-mode t)
-    (org-agenda nil "a"))
-#+end_src
-
-*** DONE Sidebar
-CLOSED: [2022-02-04 Fri 09:10]
-With =org-sidebar= I have easily access to the todos of the *current* org file.
-
-#+begin_src emacs-lisp
-  (use-package org-sidebar)
 #+end_src
 
 ** DONE GTD [100%]
@@ -1683,8 +1413,10 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
 **** Webpage overview
 #+begin_src emacs-lisp
   (use-package org-analyzer
+    :elpaca (:main "org-analyzer-el/org-analyzer.el")
+    :tags '("ORG")
     :if (file-directory-p cloud-org-root-dir)
-    :custom (org-analyzer-org-directory  (concat cloud-org-root-dir "todo"))
+    :custom (org-analyzer-org-directory cloud-org-root-dir)
     :commands (org-analyzer-start))
 #+end_src
 
@@ -1698,7 +1430,8 @@ This is why I use this configuration.
 
 #+begin_src emacs-lisp
   (use-package org-archive
-    :straight org-contrib
+    :elpaca nil ;; org-contrib
+    :after (org-contrib)
     :tags '("ORG")
     :config
     (setq org-archive-default-command 'org-archive-subtree)
@@ -1829,8 +1562,10 @@ This package is mainly use to bookmark webpages from firefox.
     :commands (org-ql-search org-ql-view org-ql-view-recent-items))
 
   (use-package org-protocol
-    :straight org-contrib
-    :tags '("ORG"))
+    :elpaca nil ;; org-contrib
+    :after (org-contrib)
+    :tags '("ORG")
+    )
 #+end_src
 
 ** DONE Capturing [100%]
@@ -1845,9 +1580,10 @@ I also use capturing mechanism to save recipes and some interesting websites.
     :commands (doct))
 
   (use-package org-capture
+    :elpaca nil ;; org-contrib
+    :after (org-contrib)
     :tags '("ORG" "CAPTURE" "DESKTOP")
     :if (file-directory-p cloud-org-root-dir)
-    :straight org-contrib
     :commands (org-capture)
     :config
     (setq org-capture-templates
@@ -1908,8 +1644,594 @@ format. This is really useful to homogeneise documentation.
 #+begin_src emacs-lisp
   (use-package org-web-tools
     :after (org)
-    :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED"))
+    :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED")
+    )
 #+end_src
+
+** DONE Visual
+The visual configuration for =org-mode= is based on =org-modern=.
+The main tweaks are that some specific colors are defined for some specific keywords and icons are associated to some categories.
+
+CLOSED: [2021-12-10 Fri 14:17]
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :tags '("VISUAL" "ORG")
+
+    :custom
+    (org-modern-table nil)
+    (org-modern-tag nil)
+
+    :init
+
+    ;; Org styling, hide markup etc.
+    (setq org-hide-emphasis-markers t
+          org-pretty-entities t
+          org-ellipsis "…")
+
+    ;; Agenda styling
+    (setq org-agenda-block-separator ?─
+          org-agenda-time-grid '((daily today require-timed)
+                                 (800 1000 1200 1400 1600 1800 2000)
+                                 " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+          org-agenda-current-time-string
+          "⭠ now ─────────────────────────────────────────────────")
+
+    ;; Faces
+    (setq org-modern-todo-faces
+          '(("TODO"          :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("IN PROCESS"    :background "lightgray"     :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("MEETING"       :foreground "red1"                              :weight bold)
+
+            ;; Specific helpers
+            ("TO-READ"       :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("MAIL"          :background "purple"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+
+            ;; I can't really do anything here!
+            ("WAITING"       :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("PAUSED"        :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("EXEC-STARTED"  :background "light green"   :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("DELEGATED"     :background "gold"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+
+            ;; Done but not complete
+            ("CANCELLED"     :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("POSTPONED"     :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+
+            ;; Done and I don't care to be complete
+            ("EVENT"         :foreground "purple"                            :weight bold)
+            ("NOTE"          :foreground "purple"                            :weight bold)
+            ("RELEASE"       :foreground "purple"                            :weight bold)
+            ("MANDATORY"     :foreground "red"                               :weight bold)
+
+            ;; Done and complete
+            ("DONE"          :background "forest green"  :foreground "lightgray" :weight bold :box (:line-width 2 :style released-button))
+            )
+
+          org-priority-faces '((?A . (:foreground "red" :weight bold))
+                               (?B . (:foreground "orange"  :weight bold))
+                               (?C . (:foreground "orange"))
+                               (?D . (:foreground "forest green"))
+                               (?E . (:foreground "forest green")))
+
+          org-agenda-category-icon-alist `(
+                                           ;; Tools / utils
+                                           ("[Ee]macs"
+                                            ,(format "%s/third_parties/icons/emacs24.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("[Oo]rg"
+                                            ,(format "%s/third_parties/icons/org.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("[Ss]ystem"
+                                            ,(format "%s/third_parties/icons/debian.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("\\([Tt]ool\\|[Cc]onfiguration\\)s?"
+                                            ,(format "%s/third_parties/icons/wrench.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("[Ee]xpe\\(riment\\)s?"
+                                            ,(format "%s/third_parties/icons/expes.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ;; Admin / meeting
+                                           ("[Aa]dmin"
+                                            ,(format "%s/third_parties/icons/admin.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("[Aa]ppointments?"
+                                            ,(format "%s/third_parties/icons/appointment.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("[Vv]isitors"
+                                            ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("\\([Ss]ynsig\\|SSW\\)"
+                                            ,(format "%s/third_parties/icons/isca.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("\\([Tt]rip\\|[Dd]eplacement\\)"
+                                            ,(format "%s/third_parties/icons/trip.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ;; Deadlines / dates
+                                           ("\\([Pp]resentations?\\)"
+                                            ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("\\([Pp]apers?\\|[Bb]lio\\|[Aa]rticles?\\|[Rr]eading\\|[Ww]riting\\)"
+                                            ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("[Mm]ails?"
+                                            ,(format "%s/third_parties/icons/email.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("[Rr]eviews?"
+                                            ,(format "%s/third_parties/icons/review.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("[Ss]upervising"
+                                            ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ;; Personnal dates
+                                           ("[rM]edical"
+                                            ,(format "%s/third_parties/icons/medical.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("Anniv"
+                                            ,(format "%s/third_parties/icons/anniversary.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("Concert"
+                                            ,(format "%s/third_parties/icons/music.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ;; Personnal diverse
+                                           ("[Rr]elease"
+                                            ,(format "%s/third_parties/icons/cd.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           ("Book"
+                                            ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
+                                            nil nil :ascent center)
+
+                                           (".*" '(space . (:width (16))))))
+
+    (with-eval-after-load 'org (global-org-modern-mode)))
+
+    (use-package org-rainbow-tags
+      :tags '("VISUAL" "ORG")
+      :elpaca (:host github :repo "KaratasFurkan/org-rainbow-tags")
+      :custom
+      (org-rainbow-tags-hash-start-index 10)
+      (org-rainbow-tags-extra-face-attributes
+       ;; Default is '(:weight 'bold)
+       '(:inverse-video t :box t :weight 'bold))
+      :hook
+      (org-mode . org-rainbow-tags-mode)
+      (org-agenda-finalize . org-rainbow-tags-mode))
+#+end_src
+
+** DONE Agenda [100%]
+In this section, I configure the agenda part of org-mode.
+It is my main source of visualizing the todo tasks.
+I rely on the baseline =org-agenda= package and on =org-super-agenda= for a better visualisation.
+
+*** DONE Baseline configuration
+CLOSED: [2021-01-03 Sun 14:21]
+The baseline configuration is fairly standard.
+The only important bits are:
+  - the todo file is set to =~/pCloudDrive/org/todo/todo.org=
+  - some icons are associated to some categories
+
+#+NAME: org-agenda-entry-keybindings
+| Key   | Functon    | Description |
+|-------+------------+-------------|
+| <f12> | org-agenda |             |
+
+#+NAME: org-agenda-hydra-entry-keybindings
+| Key | Function               | Description |
+|-----+------------------------+-------------|
+| v   | org-agenda-hydra/body  |             |
+
+#+NAME: org-agenda-mode-hydra-keybindings
+| Key | Function                  | label     | Description |
+|-----+---------------------------+-----------+-------------|
+| d   | org-agenda-day-view       | Day       |             |
+| w   | org-agenda-week-view      | Week      |             |
+| t   | org-agenda-fortnight-view | Fortnight |             |
+| m   | org-agenda-month-view     | Month     |             |
+| y   | org-agenda-year-view      | Year      |             |
+
+
+#+begin_src emacs-lisp
+  (use-package org-agenda
+    :elpaca nil ;; org-contrib
+    :tags '("ORG" "USER" "CONNECTED")
+    :if (file-directory-p cloud-org-root-dir)
+    :commands (org-agenda)
+    :init
+    (defun color-org-header (tag backcolor)
+      "Highlight the line in org-agenda in the given BACKCOLOR if TAG is present on the line."
+      (interactive)
+      (goto-char (point-min))
+      (while (re-search-forward tag nil t)
+        (add-text-properties (line-beginning-position) (+ (line-end-position) 1)
+                             `(face (:background, backcolor)))))
+
+    :mode-hydra
+    (org-agenda-mode
+     (:color blue)
+     ("Time window" (
+       <<hydra-keybindings-gen(table=org-agenda-mode-hydra-keybindings)>>
+     )))
+
+    :bind (
+      <<keybindings-gen(table=org-agenda-entry-keybindings)>>
+
+      :map org-agenda-mode-map (
+         <<keybindings-gen(table=org-agenda-entry-keybindings)>>
+      )
+    )
+
+    :config
+
+    ;; Baseline configuration
+    (setq org-deadline-warning-days 7
+          org-agenda-include-diary t
+          org-agenda-start-with-log-mode t
+          org-timeline-show-empty-dates t
+          org-agenda-span 'day
+          org-agenda-prefix-format '((agenda  . "  • %t %i ")
+                                     (timeline  . "  % s")
+                                     (todo  . " %i %-12:c")
+                                     (tags  . " %i %-30:c")
+                                     (search . " %i %-12:c"))
+          org-agenda-overriding-columns-format "%TODO %7EFFORT %10CLOCKSUM %PRIORITY     %100ITEM 100%TAGS"
+          org-agenda-custom-commands '(("c" . "My Custom Agendas")
+                                       ("cu" "Unscheduled TODO"
+                                        ((todo ""
+                                               ((org-agenda-overriding-header "\nUnscheduled TODO")
+                                                (org-agenda-skip-function
+                                                 '(org-agenda-skip-entry-if
+                                                   'scheduled
+                                                   'regexp ".*\[[0-9]*%\]\\([ ]*[:].*[:]\\)\?$")))))
+                                        nil
+                                        nil)
+                                       ("cr" "Unscheduled TO-READ"
+                                        ((todo "TO-READ"
+                                               ((org-agenda-overriding-header "\nUnscheduled TODO")
+                                                (org-agenda-skip-function
+                                                 '(org-agenda-skip-entry-if
+                                                   'scheduled
+                                                   'regexp ".*\[[0-9]*%\]\\([ ]*[:].*[:]\\)\?$")))))
+                                        nil
+                                        nil)
+                                       ("j" "Planning Table"
+                                        agenda ""
+                                        ((org-agenda-overriding-header "")
+                                         (org-agenda-span 1)
+                                         (org-agenda-use-time-grid nil)
+                                         (org-agenda-view-columns-initially t)
+                                         (org-columns-default-format-for-agenda
+                                          "%11AGENDA_TIME(When) %4TODO(Type) %40ITEM(What) %5AGENDA_DURATION(Takes){:}")
+                                         ;; do not show wardings, overdue and overscheduled
+                                         (org-scheduled-past-days 0)
+                                         (org-deadline-past-days 0)
+                                         (org-deadline-warning-days 0)
+
+                                         ;; skip finished entries
+                                         (org-agenda-skip-deadline-if-done t)
+                                         (org-agenda-skip-scheduled-if-done t)))
+                                       )
+
+          ;; Define the diary comment syntax as elisp
+          diary-comment-start ";;"
+          diary-comment-end ""))
+#+end_src
+
+*** DONE Super agenda
+CLOSED: [2021-01-03 Sun 14:22]
+In this section, I confugre =org-super-agenda=.
+As I have my own way of being organized, I redefined completely the groups.
+
+#+begin_src emacs-lisp
+  (use-package org-super-agenda
+    :elpaca (org-super-agenda :host github
+                              :repo "seblemaguer/org-super-agenda"
+                              :branch "fix_diary")
+    :tags '("ORG")
+    :config
+    ;;
+    (org-super-agenda-mode t)
+
+    ;; Create groups
+    (setq org-super-agenda-groups
+          '((:name "Today"  ; Optionally specify section name
+                   :time-grid t)  ; Items that appear on the time grid
+
+            ;; CD part
+            (:discard (:and (:category "Release" :tag "noexport")))
+            (:discard (:and (:category "Release" :todo "CANCELLED")))
+            (:name "Today's releases"
+                   :and (:todo "RELEASE" :date today)
+                   :order 8)
+
+            (:name "Releases"
+                   :and (:category "Release" :not (:todo "WAITING"))
+                   :order 8)
+
+            (:name "Ordered Releases"
+                   :and (:category "Release" :todo "WAITING")
+                   :order 9)
+
+
+            ;; Important thing
+            (:name "Important"
+                   :and (:priority "A" :date t :todo "TODO")
+                   :order 2)
+
+            ;; Some standby thingy
+            (:name "In process"
+                   :todo ("PAUSED" "EXEC-STARTED")
+                   :order 7)
+
+            ;; Deadlines
+            (:name "Overdue"
+                   :deadline past
+                   :order 3)
+            (:name "Due Today"
+                   :deadline today
+                   :order 3)
+            (:name "Due Soon"
+                   :deadline future
+                   :order 4)
+
+            ;; Schedule
+            (:name "Scheduled Today"
+                   :and (:scheduled today  :not (:todo "PAUSED") :not (:todo "WAITING") :not (:todo "RELEASE"))
+                   :order 1)
+            (:name "Scheduled, past but opened"
+                   :and (:scheduled past   :not (:todo "PAUSED") :not (:todo "WAITING") :not (:todo "RELEASE"))
+                   :order 5)
+            (:name "Scheduled in the next couple of days"
+                   :and (:scheduled future :not (:todo "PAUSED") :not (:todo "WAITING") :not (:todo "RELEASE"))
+                   :order 6)
+            )))
+#+end_src
+
+*** DONE Sidebar
+CLOSED: [2022-02-04 Fri 09:10]
+With =org-sidebar= I have easily access to the todos of the *current* org file.
+
+#+begin_src emacs-lisp
+  (use-package org-sidebar
+    :tags '("ORG" "VISUAL")
+    )
+#+end_src
+
+** DONE Encryption
+CLOSED: [2023-06-08 Thu 19:02]
+=org-crypt= provides a nice to encrypt part of an org file.
+This is convenient as it provides a way to understand what the content should be about without showing its actual value.
+
+#+begin_src emacs-lisp :lexical no
+  (use-package org-crypt
+    :elpaca nil
+    :tags '("CORE" "ENCRYPTION")
+    :after org
+    :config
+    (org-crypt-use-before-save-magic))
+#+end_src
+
+* DONE Document [100%]
+** DONE PDF
+CLOSED: [2023-05-16 Tue 21:57]
+Visualizing PDF files in Emacs is quite useful.
+I am using =pdf-tools= which provides a lot of functionalities.
+The configuration consists mainly of providing proper keyboard based controls using =hydra=.
+I am also using =pdf-view-restore= to keep track of where I was before closing emacs.
+
+#+NAME: pdf-tools-keybindings
+| Key     | Function                             | Description |
+|---------+--------------------------------------+-------------|
+| ?       | pdf-tools-hydra/body                 |             |
+| <s-spc> | pdf-view-scroll-down-or-next-page    |             |
+| <C-s>   | isearch-forward                      |             |
+| g       | pdf-view-first-page                  |             |
+| G       | pdf-view-last-page                   |             |
+| l       | image-forward-hscroll                |             |
+| h       | image-backward-hscroll               |             |
+| j       | pdf-view-next-page                   |             |
+| k       | pdf-view-previous-page               |             |
+| e       | pdf-view-goto-page                   |             |
+| u       | pdf-view-revert-buffer               |             |
+| al      | pdf-annot-list-annotations           |             |
+| ad      | pdf-annot-delete                     |             |
+| aa      | pdf-annot-attachment-dired           |             |
+| am      | pdf-annot-add-markup-annotation      |             |
+| at      | pdf-annot-add-text-annotation        |             |
+| y       | pdf-view-kill-ring-save              |             |
+| i       | pdf-misc-display-metadata            |             |
+| s       | pdf-occur                            |             |
+| b       | pdf-view-set-slice-from-bounding-box |             |
+| r       | pdf-view-reset-slice                 |             |
+
+#+NAME: pdf-tools-hydra-move-keybindings
+| Key | Function                       | Label        | Options    | Description |
+|-----+--------------------------------+--------------+------------+-------------|
+| g   | pdf-view-first-page            | First        |            |             |
+| G   | pdf-view-last-page             | Last         |            |             |
+| p   | pdf-view-previous-page-command | Previous     | :color red |             |
+| n   | pdf-view-next-page-command     | Next         | :color red |             |
+| e   | pdf-view-goto-page             | Page         |            |             |
+| h   | image-backward-hscroll         | Scroll left  | :color red |             |
+| l   | image-forward-hscroll          | Scroll right | :color red |             |
+
+#+NAME: pdf-tools-hydra-history-keybindings
+| Key | Function             | Label    | Options    | Description |
+|-----+----------------------+----------+------------+-------------|
+| B   | pdf-history-backward | Backward | :color red |             |
+| N   | pdf-history-forward  | Forward  | :color red |             |
+
+#+NAME: pdf-tools-hydra-scale-keybindings
+| Key | Function                             | Label                       | Options    | Description |
+|-----+--------------------------------------+-----------------------------+------------+-------------|
+| +   | pdf-view-enlarge                     | Enlarge                     | :color red |             |
+| -   | pdf-view-shrink                      | Shrink                      | :color red |             |
+| 0   | pdf-view-scale-reset                 | Reset                       |            |             |
+| H   | pdf-view-fit-height-to-window        | Fit height                  |            |             |
+| W   | pdf-view-fit-width-to-window         | Fit width                   |            |             |
+| P   | pdf-view-fit-page-to-window          | Fit page                    |            |             |
+| b   | pdf-view-set-slice-from-bounding-box | Set slice from bounding box |            |             |
+| r   | pdf-view-reset-slice                 | Reset slice                 |            |             |
+
+#+NAME: pdf-tools-hydra-annotations-keybindings
+| Key | Function                        | Label  | Description |
+|-----+---------------------------------+--------+-------------|
+| al  | pdf-annot-list-annotations      | List   |             |
+| am  | pdf-annot-add-markup-annotation | Markup |             |
+| at  | pdf-annot-add-text-annotation   | Text   |             |
+| ad  | pdf-annot-delete                | Delete |             |
+| aa  | pdf-annot-attachment-dired      | Dired  |             |
+| y   | pdf-view-kill-ring-save         | Yank   |             |
+
+#+NAME: pdf-tools-hydra-search-keybindings
+| Key | Function                | Label       | Description |
+|-----+-------------------------+-------------+-------------|
+| s   | pdf-occur               | Search      |             |
+| o   | pdf-outline             | Outline     |             |
+| F   | pdf-links-action-perfom | Link        |             |
+| f   | pdf-links-isearch-link  | Search link |             |
+
+#+NAME: pdf-tools-hydra-diverse-keybindings
+| Key | Function                  | Label         | Description |
+|-----+---------------------------+---------------+-------------|
+| d   | pdf-view-dark-minor-mode  | Dark mode     |             |
+| i   | pdf-misc-display-metadata | Info          |             |
+| u   | pdf-view-revert-buffer    | Revert buffer |             |
+
+#+begin_src emacs-lisp
+  (use-package pdf-tools
+    :elpaca (pdf-tools :type git :host github :repo "vedang/pdf-tools")
+    :tags '("DOCUMENT" "DESKTOP")
+    :functions
+    (pdf-history-backward
+     pdf-history-forward
+     pdf-links-action-perfom
+     pdf-links-isearch-link
+     pdf-view-enlarge
+     pdf-view-shrink
+     pdf-view-scale-reset
+     pdf-view-fit-height-to-window
+     pdf-view-fit-width-to-window
+     pdf-view-fit-page-to-window
+     pdf-view-next-page-command
+     pdf-view-previous-page-command
+     pdf-view-dark-minor-mode)
+
+    :hook
+    (pdf-view-mode . (lambda ()
+                       (pdf-misc-size-indication-minor-mode)
+                       (pdf-links-minor-mode)
+                       (pdf-isearch-minor-mode)
+                       (cua-mode 0)))
+
+    :bind (:map pdf-view-mode-map
+      <<keybindings-gen(table=pdf-tools-keybindings)>>
+    )
+
+    :pretty-hydra
+    ((:color blue :hint nil)
+     ("Move" (
+        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-move-keybindings)>>
+      )
+
+      "History" (
+        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-history-keybindings)>>
+      )
+
+      "Scale/Fit" (
+        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-scale-keybindings)>>
+      )
+
+      "Annotations" (
+        <<hydra-keybindings-gen(table=pdf-tools-hydra-annotations-keybindings)>>
+      )
+
+      "Search/Link" (
+        <<hydra-keybindings-gen(table=pdf-tools-hydra-search-keybindings)>>
+      )
+
+      "Other" (
+        <<hydra-keybindings-gen(table=pdf-tools-hydra-diverse-keybindings)>>
+      )))
+
+    :magic ("%PDF" . pdf-view-mode)
+
+    :config
+    ;; Install what need to be installed !
+    (pdf-tools-install t t t)
+
+    ;; open pdfs scaled to fit page
+    (setq-default pdf-view-display-size 'fit-page)
+
+    ;; automatically annotate highlights
+    (setq pdf-annot-activate-created-annotations t)
+
+    ;; more fine-grained zooming
+    (setq pdf-view-resize-factor 1.1))
+
+  (use-package pdf-view-restore
+    :after pdf-tools
+    :tags '("DOCUMENT" "DESKTOP")
+    :hook
+    (pdf-view-mode-hook . pdf-view-restore-mode))
+
+  (when (executable-find "diffpdf")
+    (use-package diffpdf
+      :tags '("DOCUMENT" "DESKTOP")
+      ))
+#+end_src
+
+*** DONE Grepping
+CLOSED: [2021-03-01 Mon 09:45]
+I use =pdfgrep= to be able to search inside the pdf document.
+
+#+begin_src emacs-lisp
+  (when (executable-find "pdfgrep")
+    (use-package pdfgrep
+      :tags '("DOCUMENT" "DESKTOP")
+      :config
+      (pdfgrep-mode)))
+#+end_src
+
+*** DONE Connection with org-mode
+CLOSED: [2021-03-01 Mon 09:47]
+PDF files and org-mode are strongly related.
+I use =org-pdftools= to add an org link type for =pdftools=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-pdftools
+    :tags '("DOCUMENT" "DESKTOP" "ORG")
+    :hook (org-mode . org-pdftools-setup-link))
+#+END_SRC
+
+** DONE Epub
+CLOSED: [2021-02-09 Tue 16:15]
+I am using =nov= to read epub files.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package nov
+    :tags '("DESKTOP" "DOCUMENT")
+    :mode ("\\.epub\\'" . nov-mode)
+    :commands (nov-mode)
+    :config
+    (setq nov-text-width 100))
+#+END_SRC
 
 * DONE Notes taking & academic organizing [100%]
 My note taking life is split in 2 categories: global note taking and bibliography/reference management.
@@ -1962,7 +2284,7 @@ CLOSED: [2022-02-10 Thu 07:04]
 
 #+begin_src emacs-lisp
   (use-package org-roam
-    :straight (:host github :repo "org-roam/org-roam")
+    :elpaca (:host github :repo "org-roam/org-roam")
     :tags '("ORG" "USER" "CONNECTED")
     :if (file-directory-p cloud-org-root-dir)
     :commands (org-roam-setup)
@@ -2003,7 +2325,7 @@ CLOSED: [2022-02-10 Thu 07:04]
     (org-roam-db-autosync-mode))
 
   (use-package org-roam-protocol
-    :straight (:host github :repo "org-roam/org-roam" :files ("extensions/org-roam-protocol.el"))
+    :elpaca (:host github :repo "org-roam/org-roam" :files ("extensions/org-roam-protocol.el"))
     :tags '("ORG" "USER")
     :after org-roam
     :config
@@ -2024,8 +2346,8 @@ CLOSED: [2022-02-10 Thu 07:04]
     (setq org-roam-node-display-template "${title:100} ${backlinkscount:4}"))
 
   (use-package org-roam-ui
+    :elpaca (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
     :tags '("ORG" "USER" "DESKTOP")
-    :straight (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
     :after (org-roam eaf-browser)
     :config
     (setq org-roam-ui-sync-theme t
@@ -2034,7 +2356,7 @@ CLOSED: [2022-02-10 Thu 07:04]
           org-roam-ui-open-on-start t))
 
   (use-package citar-org-roam
-    :straight (:type git :host github :repo "emacs-citar/citar-org-roam")
+    :elpaca (:type git :host github :repo "emacs-citar/citar-org-roam")
     :after citar org-roam
     :tags '("BIBLIOGRAPHY" "USER" "ORG")
     :no-require
@@ -2275,10 +2597,11 @@ CLOSED: [2022-02-10 Thu 07:12]
 
 #+begin_src emacs-lisp :lexical no
   (use-package org-media-note
-    :straight (org-media-note :type git :host github :repo "yuchen-lea/org-media-note"))
+    :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
+    :elpaca (org-media-note :type git :host github :repo "yuchen-lea/org-media-note"))
 
   (use-package org-media-noter
-    :straight (org-media-noter :type git :host github :repo "seblemaguer/org-media-noter")
+    :elpaca (org-media-noter :type git :host github :repo "seblemaguer/org-media-noter")
     :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
     :commands (org-media-noter))
 #+end_src
@@ -2298,7 +2621,7 @@ The only configuration here is to activate it globally.
 
 #+begin_src emacs-lisp
   (use-package vundo
-    :straight (:type git :host github :repo "casouri/vundo")
+    ;; :elpaca (:type git :host github :repo "casouri/vundo")
     :tags '("UNDOING")
     :bind (
       <<keybindings-gen(table=vundo-entry-keybindings)>>
@@ -2387,7 +2710,7 @@ I finally use =company-box= to have a better view of the category of the candida
   (use-package company-box
     :after company
     :tags '("COMPLETION" "UI")
-    :straight (company-box :repo "seblemaguer/company-box" :type git :host github :branch "functional")
+    :elpaca (company-box :repo "seblemaguer/company-box" :type git :host github :branch "functional")
     :hook (company-mode . company-box-mode))
 #+end_src
 
@@ -2401,16 +2724,7 @@ Nothing fancy happens here, just its activation and a couple of setups related t
   (use-package vertico
     :tags '("COMPLETION")
     :init
-    (vertico-mode))
-
-  ;; Persist history over Emacs restarts. Vertico sorts by history position.
-  (use-package savehist
-    :init
-    (savehist-mode))
-
-  ;; A few more useful configurations related to vertico
-  (use-package emacs
-    :init
+    (vertico-mode)
     ;; Add prompt indicator to `completing-read-multiple'.
     ;; Alternatively try `consult-completing-read-multiple'.
     (defun crm-indicator (args)
@@ -2419,7 +2733,7 @@ Nothing fancy happens here, just its activation and a couple of setups related t
 
     ;; Do not allow the cursor in the minibuffer prompt
     (setq minibuffer-prompt-properties
-          '(read-only t cursor-intangible t face minibuffer-prompt))
+	  '(read-only t cursor-intangible t face minibuffer-prompt))
     (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
     ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
@@ -2429,6 +2743,12 @@ Nothing fancy happens here, just its activation and a couple of setups related t
 
     ;; Enable recursive minibuffers
     (setq enable-recursive-minibuffers t))
+
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+  (use-package savehist
+    :elpaca nil
+    :init
+    (savehist-mode))
 #+end_src
 
 *** DONE Helm
@@ -2687,8 +3007,7 @@ Finally, my own snippets are stored in the directory =~/.emacs.d/third_parties/s
 
   (use-package yasnippet-snippets
     :tags '("COMPLETION")
-    :straight (consult-yasnippet :host github
-                                 :repo "mohkale/consult-yasnippet"))
+    :elpaca (consult-yasnippet :host github :repo "mohkale/consult-yasnippet"))
 #+end_src
 
 *** DONE File templates
@@ -2732,7 +3051,7 @@ It is a convenient package to have a more refined control of my workflow.
   (use-package which-key
     :tags '("HELPERS")
     :commands (which-key-mode)
-    :hook (after-init . which-key-mode))
+    :hook (elpaca-after-init . which-key-mode))
 
   (use-package which-key-posframe
     :tags '("HELPERS")
@@ -2812,7 +3131,7 @@ I am using it mainly to show/hide my terminal faster.
     (popper-echo-mode +1))
 #+end_src
 
-* IDE [100%]
+* DONE IDE [100%]
 While the environment configuration is fundamental for editing,
 it is necessary to add more features to simplify coding life.
 This section focuses on three components: the compilation, the commenting and the formatting.
@@ -2836,6 +3155,7 @@ I also rely on =fancy-compilation= to enhance the the output in the compilation 
 
 #+begin_src emacs-lisp
   (use-package compile
+    :elpaca nil
     :tags '("IDE" "COMPILATION")
 
     :pretty-hydra
@@ -2877,6 +3197,12 @@ I also rely on =fancy-compilation= to enhance the the output in the compilation 
     :init
     (with-eval-after-load 'compile
       (fancy-compilation-mode)))
+
+  (use-package compile-multi
+    :elpaca (compile-multi :host github
+                           :repo "mohkale/compile-multi")
+    :tags '("IDE" "COMPILATION")
+    )
 #+end_src
 
 *** DONE Flychecking
@@ -2961,7 +3287,7 @@ In order to format the buffer, it is better to rely on external formatter/linter
 #+end_src
 
 ** DONE Sanitizing
-CLOSED: [2021-01-25 Mon 20:21]
+CLOSED: [2023-05-16 Tue 22:07]
 This part contains sanitizing helpers before saving the files.
 For now it consists of simply removing any trailing whitespace.
 
@@ -2969,9 +3295,146 @@ For now it consists of simply removing any trailing whitespace.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+END_SRC
 
-* TODO Programming [83%]
+* DONE Documentation [100%]
+Emacs is dense and provides a lot of features.
+Too many to remember everything.
+This part is there to help to navigate the documentation more easily.
+
+** DONE Key bindinds
+CLOSED: [2021-01-03 Sun 11:18]
+=helm-descbinds= is a useful package which provides a way to list all the shortcuts available in the current buffer.
+
+#+NAME: helm-descbinds-entry-keybindings
+| Key   | Function       | Description |
+|-------+----------------+-------------|
+| C-h b | helm-descbinds |             |
+
+#+begin_src emacs-lisp
+  (use-package helm-descbinds
+    :tags '("CORE" "DOCUMENTATION")
+    :commands (helm-descbinds)
+    :bind (
+      <<keybindings-gen(table=helm-descbinds-entry-keybindings)>>
+    ))
+#+end_src
+
+** DONE Helpful
+CLOSED: [2021-01-03 Sun 11:19]
+=helpful= is a powerful package to access to the documentation of a key/symbol/...
+It also supports references and back-references.
+I am using it as the entry point of any documentation I want to access.
+
+#+NAME: help-keybindings
+| Key   | Function         | Description |
+|-------+------------------+-------------|
+| C-h k | helpful-key      |             |
+| C-h a | helpful-symbol   |             |
+| C-h h | helpful-at-point |             |
+
+#+begin_src emacs-lisp
+  (use-package helpful
+    :tags '("CORE" "DOCUMENTATION")
+    :commands (helpful-key helpful-symbol helpful-at-point)
+    :bind (
+      <<keybindings-gen(table=help-keybindings)>>
+     ))
+#+end_src
+
+** DONE Man
+CLOSED: [2021-03-01 Mon 09:28]
+Man is critical for document on unix.
+I simply configured emacs to add my own environment man directories.
+
+#+begin_src emacs-lisp
+  (use-package man
+    :elpaca nil
+    :tags '("CORE" "DOCUMENTATION")
+    :config
+    (setq Man-notify-method 'pushy
+	  woman-manpath `("/usr/share/man/" "/usr/local/man/" ;; System
+			  ,(format "%s/local/man" user-emacs-directory) ;; Private environment
+			  ,(format "~/environment/local/share/man")
+			  )))
+#+end_src
+
+** DONE Dash/Docsets
+CLOSED: [2022-07-26 Tue 09:48]
+Dash (https://www.kapeli.com/dash) provides a set of full documentation to download.
+=consult-dash= provides an easy way to query them.
+
+#+NAME: consult-dash-entry-keybindings
+| Key   | Functon      | Description |
+|-------+--------------+-------------|
+| M-s d | consult-dash |             |
+
+#+begin_src emacs-lisp
+  (use-package consult-dash
+    :tags '("CORE" "DOCUMENTATION" "COMPLETION")
+    :bind (
+      <<keybindings-gen(table=consult-dash-entry-keybindings)>>
+    )
+
+    :custom
+    (dash-docs-docsets-path "~/shared/docset")
+    (dash-docs-browser-func 'eww)
+
+    :config
+    (consult-customize consult-dash :initial (thing-at-point 'symbol))
+    (when (functionp 'consult-dash)
+      (setq-local consult-dash-docsets '("Python 3" "Pandas" "NumPy" "SciPy" "Matplotlib"))))
+#+end_src
+
+** DONE Recoll
+CLOSED: [2022-10-13 Thu 18:11]
+=consult-recoll= provides an interface to =recoll= which is handy to "grep" from a db of documents.
+
+#+NAME: consult-recoll-entry-keybindings
+| Key   | Functon        | Description |
+|-------+----------------+-------------|
+| M-g t | consult-recoll |             |
+
+#+begin_src emacs-lisp
+  (when (executable-find "recoll")
+    (use-package consult-recoll
+      :tags '("CORE" "DOCUMENTATION" "COMPLETION")
+      :bind (
+        <<keybindings-gen(table=consult-recoll-entry-keybindings)>>
+      )))
+#+end_src
+
+And the associated configuration is:
+
+#+begin_src conf :tangle ~/.recoll/recoll.conf :mkdirp yes
+  # The system-wide configuration files for recoll are located in:
+  #   /usr/share/recoll/examples
+
+  topdirs = ~
+  skippedPaths = ~/.cache ~/environment ~/tmp/music /media ~/configuration/emacs.d
+  skippedNames+ = .* melpa docset *.wav *.flac
+  noContentSuffixes+ =
+#+end_src
+
+* TODO Programming [85%]
 Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
 To do so, I rely mainly on Language Server Protocol (LSP) and for the debugging I relay on the Debug Adapter Protocol (DAP).
+
+** DONE Tree sitter general configuration
+CLOSED: [2023-06-08 Thu 18:27]
+
+Tree-sitter is neat way of dealing with syntax highlighting.
+It is fast and configurable.
+I also added the support of =scopeline= which provides an indicator about the score of the current block.
+
+#+begin_src emacs-lisp :lexical no
+  (use-package tree-sitter-langs
+    :ensure t
+    :tags '("IDE" "PROGRAMMING" "TREE-SITTER"))
+
+  (use-package scopeline
+    :tags '("IDE" "PROGRAMMING" "TREE-SITTER")
+    :after tree-sitter
+    :config (add-hook 'tree-sitter-mode-hook #'scopeline-mode))
+#+end_src
 
 ** DONE LSP general configuration
 CLOSED: [2021-01-03 Sun 21:28]
@@ -3127,7 +3590,7 @@ I developed a dedicated mode for this, so I am using it
 
 #+begin_src emacs-lisp
   (use-package cue-mode
-    :straight (cue-mode :repo "seblemaguer/cue-mode" :type git :host github)
+    :elpaca (cue-mode :repo "seblemaguer/cue-mode" :type git :host github)
     :tags '("PROGRAMMING" "DATA" "RELEASE")
     :mode ("\\.cue$"))
 #+end_src
@@ -3143,7 +3606,8 @@ The configuration relies on =json-mode= for the main part and =json-reformat= fo
     :mode ("\\.json$"))
 
   (use-package json-reformat
-    :tags '("PROGRAMMING" "DATA" "CONFIGURATION" "FORMATTING"))
+    :tags '("PROGRAMMING" "DATA" "CONFIGURATION" "FORMATTING")
+    )
 #+end_src
 
 *** DONE Praat
@@ -3153,7 +3617,7 @@ Praat-mode helps to have a proper visualization of Textgrids in Empacs.
 
 #+begin_src emacs-lisp
   (use-package praat-mode
-    :straight nil
+    :elpaca nil
     :load-path default-plugin-dir
     :tags '("PROGRAMMING" "DATA")
     :mode ("\\.[tT][Gg]"))
@@ -3166,7 +3630,7 @@ However, I had to do extra-configurations to have outline support and a better f
 
 #+begin_src emacs-lisp
   (use-package nxml-mode
-    :straight nil
+    :elpaca nil
     :load-path default-plugin-dir
     :tags '("PROGRAMMING" "DATA" "CONFIGURATION")
     :mode ("\\.xml$" . nxml-mode)
@@ -3223,7 +3687,7 @@ I started to develop =colored-authinfo-mode= to provide a better colorization fo
 
 #+begin_src emacs-lisp
   (use-package colored-authinfo-mode
-    :straight (colored-authinfo-mode :repo "seblemaguer/colored-authinfo-mode" :type git :host github)
+    :elpaca (colored-authinfo-mode :repo "seblemaguer/colored-authinfo-mode" :type git :host github)
     :tags '("PROGRAMMING" "CONFIGURATION")
     :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . colored-authinfo-mode))
 #+end_src
@@ -3342,18 +3806,6 @@ I use a dedicated mode for each type.
     ("/\.dockerignore\'" . gitignore-mode))
 #+end_src
 
-*** DONE Mercurial
-CLOSED: [2021-01-04 Mon 06:59]
-Aside GIT, I sometimes use mercurial. As for GIT, I use a dedicated mode for each type (~hgignore~ and ~hgrc~) of configuration file.
-
-#+begin_src emacs-lisp
-  (use-package hgignore-mode
-    :tags '("PROGRAMMING" "CONFIGURATION" "VC"))
-
-  (use-package hgrc-mode
-    :tags '("PROGRAMMING" "CONFIGURATION" "VC"))
-#+end_src
-
 *** DONE Dockerfile
 CLOSED: [2021-01-04 Mon 07:01]
 I am a constant user of Docker.
@@ -3361,7 +3813,8 @@ Consequently, I need a proper node to edit docker build files as I build my own 
 
 #+begin_src emacs-lisp
   (use-package dockerfile-mode
-    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM"))
+    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM")
+    )
 #+end_src
 
 *** DONE CRON
@@ -3372,7 +3825,8 @@ While I would generally use VIM for such editions, I prefer to use emacs configu
 
 #+begin_src emacs-lisp
   (use-package crontab-mode
-    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM"))
+    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM")
+    )
 #+end_src
 
 ** DONE Logging
@@ -3436,7 +3890,7 @@ I also added a hydra configuration to link properly everything.
 
 #+begin_src emacs-lisp
   (use-package emacs-lisp-mode
-    :straight nil
+    :elpaca nil
     :mode-hydra
     (emacs-lisp-mode
      ("Eval" (
@@ -3513,32 +3967,32 @@ Use Google's C++ style.
 Add highlighting for doxygen blocks.
 #+BEGIN_SRC emacs-lisp
   (use-package highlight-doxygen
-    :tags '("PROGRAMMING" "C" "CPP")
     :ensure t
+    :tags '("PROGRAMMING" "C" "CPP")
     :hook
     (c-mode-common . highlight-doxygen-mode))
 #+END_SRC
 **** CMake
 #+begin_src emacs-lisp
   (use-package cmake-mode
-    :tags '("PROGRAMMING" "CMAKE")
     :ensure t
+    :tags '("PROGRAMMING" "CMAKE")
     :mode "CMakeLists.txt")
 #+end_src
 
 Eldoc for CMake.
 #+BEGIN_SRC emacs-lisp
   (use-package eldoc-cmake
-    :tags '("PROGRAMMING" "CMAKE")
     :ensure t
+    :tags '("PROGRAMMING" "CMAKE")
     :hook (cmake-mode . eldoc-cmake-enable))
 #+END_SRC
 
 Additional syntax highlighting for CMake. For some reason manual activation is still required.
 #+BEGIN_SRC emacs-lisp
   (use-package cmake-font-lock
-    :tags '("PROGRAMMING" "CMAKE")
     :ensure t
+    :tags '("PROGRAMMING" "CMAKE")
     :init (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
     :hook (cmake-mode . cmake-font-lock-activate))
 #+END_SRC
@@ -3558,7 +4012,8 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
     (setq lsp-java-save-action-organize-imports nil))
 
   (use-package java-snippets
-    :tags '("PROGRAMMING" "JAVA" "COMPLETION"))
+    :tags '("PROGRAMMING" "JAVA" "COMPLETION")
+    )
 
   (use-package groovy-mode
     :tags '("PROGRAMMING" "JAVA" "GROOVY")
@@ -3576,7 +4031,8 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
 
   ;; Subpackages
   (use-package groovy-imports
-    :tags '("PROGRAMMING" "JAVA" "GROOVY"))
+    :tags '("PROGRAMMING" "JAVA" "GROOVY")
+    )
 
   (use-package kotlin-mode
     :tags '("PROGRAMMING" "JAVA" "KOTLIN")
@@ -3596,7 +4052,7 @@ For R, I rely on =ess= which provides excellent support with a reasonable defaul
 
 #+begin_src emacs-lisp
   (use-package matlab-load
-    :straight matlab-mode
+    :elpaca matlab-mode
     :tags '("PROGRAMMING" "MATH" "MATLAB")
     :defines (matlab-shell-command-switches mlint-programs)
     :no-require t
@@ -3633,8 +4089,7 @@ Finally, I use =numpydoc= to deal with the documentation.
 #+begin_src emacs-lisp
   (use-package python
     :tags '("PROGRAMMING" "PYTHON")
-
-    :dash "Python 3" "Pandas" "NumPy" "SciPy" "Matplotlib"
+    ;; :dash "Python 3" "Pandas" "NumPy" "SciPy" "Matplotlib"
     :mode
     ("\\.py\\'" . python-mode)
     ("\\.wsgi$" . python-mode)
@@ -3644,16 +4099,16 @@ Finally, I use =numpydoc= to deal with the documentation.
 
     :config
     (setq python-indent-offset 4
-          python-shell-interpreter "ipython"
-          python-shell-interpreter-args "--simple-prompt --colors=Linux -i"))
+	  python-shell-interpreter "ipython"
+	  python-shell-interpreter-args "--simple-prompt --colors=Linux -i"))
 
   (use-package lsp-pyright
-    :commands (lsp lsp-deferred)
     :tags '("PROGRAMMING" "PYTHON" "LSP")
+    :commands (lsp lsp-deferred)
     :hook (python-mode . (lambda ()
-                           (require 'lsp-pyright)
-                           (require 'dap-python)
-                           (lsp)))
+			   (require 'lsp-pyright)
+			   (require 'dap-python)
+			   (lsp)))
     :custom
     (dap-python-debugger 'debugpy))
 
@@ -3662,8 +4117,8 @@ Finally, I use =numpydoc= to deal with the documentation.
     :after python)
 
   (use-package python-mls
+    :elpaca (python-mls :host github :repo "jdtsmith/python-mls")
     :tags '("PROGRAMMING" "PYTHON")
-    :straight (python-mls :host github :repo "jdtsmith/python-mls")
     :custom
     (python-mls-multiline-history-modifier '(meta shift))
     :hook
@@ -3729,6 +4184,7 @@ Therefore, in this section, I add the support of =graphviz-dot-mode= and =d2-mod
     :mode ("\\.d2\\'"))
 
   (use-package ob-d2
+    :tags '("PROGRAMMING" "ORG" "PLOTTING")
     :init
     (org-babel-do-load-languages
      'org-babel-load-languages
@@ -3741,6 +4197,7 @@ I use =web-mode= to edit any kind of web-programming (html, css, and templates).
 
 #+begin_src emacs-lisp
   (use-package web-mode
+    :tags '("PROGRAMMING" "WEB")
     :mode (".twig$" ".html?$" ".tpl$")
 
     :config
@@ -3796,7 +4253,7 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
 
 #+begin_src emacs-lisp
   (use-package tex-site
-    :straight auctex
+    :elpaca auctex
     :tags '("WRITING" "LATEX")
     :after (tex latex)
     :hook
@@ -3835,7 +4292,15 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
     (define-key LaTeX-mode-map (kbd "C-c C-=") 'align-current))
 
   (use-package latex-table-wizard
-    :tags '("WRITING" "LATEX"))
+    :tags '("WRITING" "LATEX")
+    )
+
+  (use-package sentex
+    :elpaca (sentex :type git
+                    :repo "https://codeberg.org/martianh/sentex"
+                    :files ("*.el" "*.eld"))
+    :tags '("WRITING" "LATEX")
+    )
 #+end_src
 
 *** DONE Reftex
@@ -3845,40 +4310,41 @@ The configuration consists mainly of pluging it into auctex and expand the citat
 
 #+begin_src emacs-lisp
   (use-package reftex
+    :elpaca nil
     :tags '("WRITING" "LATEX")
     :hook
     (LaTeX-mode . turn-on-reftex)
 
     :config
     (setq reftex-save-parse-info t
-          reftex-enable-partial-scans t
-          reftex-use-multiple-selection-buffers t
-          reftex-plug-into-AUCTeX t
-          reftex-vref-is-default t
-          reftex-cite-format
-          '((?c    . "\\cite[]{%l}")
-            (?t    . "\\textcite{%l}")
-            (?a    . "\\autocite[]{%l}")
-            (?p    . "\\parencite{%l}")
-            (?f    . "\\footcite[][]{%l}")
-            (?F    . "\\fullcite[]{%l}")
-            (?x    . "[]{%l}")
-            (?X    . "{%l}"))
+	  reftex-enable-partial-scans t
+	  reftex-use-multiple-selection-buffers t
+	  reftex-plug-into-AUCTeX t
+	  reftex-vref-is-default t
+	  reftex-cite-format
+	  '((?c    . "\\cite[]{%l}")
+	    (?t    . "\\textcite{%l}")
+	    (?a    . "\\autocite[]{%l}")
+	    (?p    . "\\parencite{%l}")
+	    (?f    . "\\footcite[][]{%l}")
+	    (?F    . "\\fullcite[]{%l}")
+	    (?x    . "[]{%l}")
+	    (?X    . "{%l}"))
 
-          font-latex-match-reference-keywords
-          '(("cite"             "[{")
-            ("cites"            "[{}]")
-            ("footcite"         "[{")
-            ("footcites"        "[{")
-            ("parencite"        "[{")
-            ("textcite"         "[{")
-            ("fullcite"         "[{")
-            ("citetitle"        "[{")
-            ("citetitles"       "[{")
-            ("headlessfullcite" "[{"))
+	  font-latex-match-reference-keywords
+	  '(("cite"             "[{")
+	    ("cites"            "[{}]")
+	    ("footcite"         "[{")
+	    ("footcites"        "[{")
+	    ("parencite"        "[{")
+	    ("textcite"         "[{")
+	    ("fullcite"         "[{")
+	    ("citetitle"        "[{")
+	    ("citetitles"       "[{")
+	    ("headlessfullcite" "[{"))
 
-          reftex-cite-prompt-optional-args nil
-          reftex-cite-cleanup-optional-args t))
+	  reftex-cite-prompt-optional-args nil
+	  reftex-cite-cleanup-optional-args t))
 #+end_src
 
 *** DONE Completion
@@ -3911,16 +4377,15 @@ I also uses =company-ipa= to have a better integration of phonetic symbols.
       (make-local-variable 'company-backends)
       (set 'company-backends (append '(company-reftex-labels company-reftex-citations) company-backends))))
 
+  (use-package company-ipa
+    :tags '("WRITING" "COMPLETION")
+    :hook
+    (LaTeX-mode . company-ipa-hook)
 
-    (use-package company-ipa
-      :tags '("WRITING" "COMPLETION")
-      :hook
-      (LaTeX-mode . company-ipa-hook)
-
-      :init
-      (defun company-ipa-hook ()
-        (make-local-variable 'company-backends)
-        (add-to-list 'company-backends 'company-ipa-symbols-unicode)))
+    :init
+    (defun company-ipa-hook ()
+      (make-local-variable 'company-backends)
+      (add-to-list 'company-backends 'company-ipa-symbols-unicode)))
 
 #+end_src
 
@@ -3933,7 +4398,7 @@ I could have used the auctex default sequence, but I prefer to have an homogeneo
 #+begin_src emacs-lisp
   (when (executable-find "latexmk")
     (use-package auctex-latexmk
-      :straight (:type git :host github :repo "wang1zhen/auctex-latexmk")
+      :elpaca (:type git :host github :repo "wang1zhen/auctex-latexmk")
       :tags '("WRITING" "LATEX" "COMPILATION")
       :config
 
@@ -3981,8 +4446,8 @@ CLOSED: [2022-03-08 Tue 16:11]
 As an academic, I spend a lot of my time in Overleaf, but I prefer to edit in emacs, so =emacs-overleaf= is key!
 #+begin_src emacs-lisp
   (use-package emacs-overleaf
+    :elpaca (:type git :host github :repo "seblemaguer/emacs-overleaf")
     :tags '("WRITING" "LATEX" "CONNECTED")
-    :straight (:type git :host github :repo "seblemaguer/emacs-overleaf")
     :commands (overleaf-setup overleaf-manual-save overleaf-mode)
     :custom (overleaf-auto-sync "never"))
 #+end_src
@@ -4000,8 +4465,8 @@ Finally, I use bibclean-format to have a clean final bibtex file.
 
 #+begin_src emacs-lisp
   (use-package bibtex
+    :elpaca nil
     :tags '("WRITING" "BIBTEX")
-    :straight nil
     :bind (
       :map bibtex-mode-map (
         <<keybindings-gen(table=bibtex-tidy-entry-keybindings)>>
@@ -4058,8 +4523,9 @@ However, it relies on a side script ~compilePGF~ being in the PATH!
 
 #+begin_src emacs-lisp
   (use-package tikz-mode
-    :straight (tikz-mode :type git :host github :repo "seblemaguer/tikz-mode")
-    :tags '("WRITING" "BIBTEX" "DESKTOP"))
+    :elpaca (tikz-mode :type git :host github :repo "seblemaguer/tikz-mode")
+    :tags '("WRITING" "BIBTEX" "DESKTOP")
+    )
 #+end_src
 
 ** DONE Markdown
@@ -4101,7 +4567,7 @@ I am using =academic-phrases= to provided starting points and =mw-thesaurus= to 
     :commands (academic-phrases))
 
   (use-package mw-thesaurus
-    :straight (mw-thesaurus :type git :fetcher github :repo "agzam/mw-thesaurus.el")
+    :elpaca (mw-thesaurus :type git :fetcher github :repo "agzam/mw-thesaurus.el")
     :tags '("WRITING" "HELPERS" "CONNECTED")
     :commands (mw-thesaurus-lookup-at-point))
 #+end_src
@@ -4134,7 +4600,7 @@ As a fallback, I am using google-translate via the package =go-translate=.
 
 #+begin_src emacs-lisp
   (use-package wordreference
-    :straight (:type git :host github :repo "emacsmirror/wordreference")
+    :elpaca (:type git :host github :repo "emacsmirror/wordreference")
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :commands (wordreference-search))
 
@@ -4163,210 +4629,6 @@ As a fallback, I am using google-translate via the package =go-translate=.
            :splitter (gts-paragraph-splitter)
            )))
 #+end_src
-
-** DONE PDF
-CLOSED: [2021-05-18 Tue 16:53]
-Visualizing PDF files in Emacs is quite useful.
-I am using =pdf-tools= which provides a lot of functionalities.
-The configuration consists mainly of providing proper keyboard based controls using =hydra=.
-I am also using =pdf-view-restore= to keep track of where I was before closing emacs.
-
-#+NAME: pdf-tools-keybindings
-| Key     | Function                             | Description |
-|---------+--------------------------------------+-------------|
-| ?       | pdf-tools-hydra/body                 |             |
-| <s-spc> | pdf-view-scroll-down-or-next-page    |             |
-| <C-s>   | isearch-forward                      |             |
-| g       | pdf-view-first-page                  |             |
-| G       | pdf-view-last-page                   |             |
-| l       | image-forward-hscroll                |             |
-| h       | image-backward-hscroll               |             |
-| j       | pdf-view-next-page                   |             |
-| k       | pdf-view-previous-page               |             |
-| e       | pdf-view-goto-page                   |             |
-| u       | pdf-view-revert-buffer               |             |
-| al      | pdf-annot-list-annotations           |             |
-| ad      | pdf-annot-delete                     |             |
-| aa      | pdf-annot-attachment-dired           |             |
-| am      | pdf-annot-add-markup-annotation      |             |
-| at      | pdf-annot-add-text-annotation        |             |
-| y       | pdf-view-kill-ring-save              |             |
-| i       | pdf-misc-display-metadata            |             |
-| s       | pdf-occur                            |             |
-| b       | pdf-view-set-slice-from-bounding-box |             |
-| r       | pdf-view-reset-slice                 |             |
-
-#+NAME: pdf-tools-hydra-move-keybindings
-| Key | Function                       | Label        | Options    | Description |
-|-----+--------------------------------+--------------+------------+-------------|
-| g   | pdf-view-first-page            | First        |            |             |
-| G   | pdf-view-last-page             | Last         |            |             |
-| p   | pdf-view-previous-page-command | Previous     | :color red |             |
-| n   | pdf-view-next-page-command     | Next         | :color red |             |
-| e   | pdf-view-goto-page             | Page         |            |             |
-| h   | image-backward-hscroll         | Scroll left  | :color red |             |
-| l   | image-forward-hscroll          | Scroll right | :color red |             |
-
-#+NAME: pdf-tools-hydra-history-keybindings
-| Key | Function             | Label    | Options    | Description |
-|-----+----------------------+----------+------------+-------------|
-| B   | pdf-history-backward | Backward | :color red |             |
-| N   | pdf-history-forward  | Forward  | :color red |             |
-
-#+NAME: pdf-tools-hydra-scale-keybindings
-| Key | Function                             | Label                       | Options    | Description |
-|-----+--------------------------------------+-----------------------------+------------+-------------|
-| +   | pdf-view-enlarge                     | Enlarge                     | :color red |             |
-| -   | pdf-view-shrink                      | Shrink                      | :color red |             |
-| 0   | pdf-view-scale-reset                 | Reset                       |            |             |
-| H   | pdf-view-fit-height-to-window        | Fit height                  |            |             |
-| W   | pdf-view-fit-width-to-window         | Fit width                   |            |             |
-| P   | pdf-view-fit-page-to-window          | Fit page                    |            |             |
-| b   | pdf-view-set-slice-from-bounding-box | Set slice from bounding box |            |             |
-| r   | pdf-view-reset-slice                 | Reset slice                 |            |             |
-
-#+NAME: pdf-tools-hydra-annotations-keybindings
-| Key | Function                        | Label  | Description |
-|-----+---------------------------------+--------+-------------|
-| al  | pdf-annot-list-annotations      | List   |             |
-| am  | pdf-annot-add-markup-annotation | Markup |             |
-| at  | pdf-annot-add-text-annotation   | Text   |             |
-| ad  | pdf-annot-delete                | Delete |             |
-| aa  | pdf-annot-attachment-dired      | Dired  |             |
-| y   | pdf-view-kill-ring-save         | Yank   |             |
-
-#+NAME: pdf-tools-hydra-search-keybindings
-| Key | Function                | Label       | Description |
-|-----+-------------------------+-------------+-------------|
-| s   | pdf-occur               | Search      |             |
-| o   | pdf-outline             | Outline     |             |
-| F   | pdf-links-action-perfom | Link        |             |
-| f   | pdf-links-isearch-link  | Search link |             |
-
-#+NAME: pdf-tools-hydra-diverse-keybindings
-| Key | Function                  | Label         | Description |
-|-----+---------------------------+---------------+-------------|
-| d   | pdf-view-dark-minor-mode  | Dark mode     |             |
-| i   | pdf-misc-display-metadata | Info          |             |
-| u   | pdf-view-revert-buffer    | Revert buffer |             |
-
-#+begin_src emacs-lisp
-  (use-package pdf-tools
-    :straight (pdf-tools :type git :host github :repo "vedang/pdf-tools")
-    :tags '("DOCUMENT" "DESKTOP")
-    :functions
-    (pdf-history-backward
-     pdf-history-forward
-     pdf-links-action-perfom
-     pdf-links-isearch-link
-     pdf-view-enlarge
-     pdf-view-shrink
-     pdf-view-scale-reset
-     pdf-view-fit-height-to-window
-     pdf-view-fit-width-to-window
-     pdf-view-fit-page-to-window
-     pdf-view-next-page-command
-     pdf-view-previous-page-command
-     pdf-view-dark-minor-mode)
-
-    :hook
-    (pdf-view-mode . (lambda ()
-                       (pdf-misc-size-indication-minor-mode)
-                       (pdf-links-minor-mode)
-                       (pdf-isearch-minor-mode)
-                       (cua-mode 0)))
-
-    :bind (:map pdf-view-mode-map
-      <<keybindings-gen(table=pdf-tools-keybindings)>>
-    )
-
-    :pretty-hydra
-    ((:color blue :hint nil)
-     ("Move" (
-        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-move-keybindings)>>
-      )
-
-      "History" (
-        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-history-keybindings)>>
-      )
-
-      "Scale/Fit" (
-        <<hydra-keybindings-gen-with-opt(table=pdf-tools-hydra-scale-keybindings)>>
-      )
-
-      "Annotations" (
-        <<hydra-keybindings-gen(table=pdf-tools-hydra-annotations-keybindings)>>
-      )
-
-      "Search/Link" (
-        <<hydra-keybindings-gen(table=pdf-tools-hydra-search-keybindings)>>
-      )
-
-      "Other" (
-        <<hydra-keybindings-gen(table=pdf-tools-hydra-diverse-keybindings)>>
-      )))
-
-    :magic ("%PDF" . pdf-view-mode)
-
-    :config
-    ;; Install what need to be installed !
-    (pdf-tools-install t t t)
-
-    ;; open pdfs scaled to fit page
-    (setq-default pdf-view-display-size 'fit-page)
-
-    ;; automatically annotate highlights
-    (setq pdf-annot-activate-created-annotations t)
-
-    ;; more fine-grained zooming
-    (setq pdf-view-resize-factor 1.1))
-
-  (use-package pdf-view-restore
-    :after pdf-tools
-    :tags '("DOCUMENT" "DESKTOP")
-    :hook
-    (pdf-view-mode-hook . pdf-view-restore-mode))
-
-  (when (executable-find "diffpdf")
-    (use-package diffpdf
-      :tags '("DOCUMENT" "DESKTOP")))
-#+end_src
-
-*** DONE Grepping
-CLOSED: [2021-03-01 Mon 09:45]
-I use =pdfgrep= to be able to search inside the pdf document.
-
-#+begin_src emacs-lisp
-  (when (executable-find "pdfgrep")
-    (use-package pdfgrep
-      :tags '("DOCUMENT" "DESKTOP")
-      :config
-      (pdfgrep-mode)))
-#+end_src
-
-*** DONE Connection with org-mode
-CLOSED: [2021-03-01 Mon 09:47]
-PDF files and org-mode are strongly related.
-I use =org-pdftools= to add an org link type for =pdftools=.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package org-pdftools
-    :tags '("DOCUMENT" "DESKTOP" "ORG")
-    :hook (org-mode . org-pdftools-setup-link))
-#+END_SRC
-
-** DONE Epub
-CLOSED: [2021-02-09 Tue 16:15]
-I am using =nov= to read epub files.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package nov
-    :tags '("DESKTOP" "DOCUMENT")
-    :mode ("\\.epub\\'" . nov-mode)
-    :commands (nov-mode)
-    :config
-    (setq nov-text-width 100))
-#+END_SRC
 * Version Control / Project Management [100%]
 My code project management is articulated around three key points: GIT, github/gist and =projectile=.
 GIT is used as the version control manager;
@@ -4531,7 +4793,7 @@ where:
     :after magit)
 
   (use-package magit-todos
-    :tags '("VC" "GIT")
+    ;;:tags '("VC" "GIT")
     :commands (magit-todos-mode)
     :hook (magit-mode . magit-todos-mode)
     :custom
@@ -4540,7 +4802,8 @@ where:
     (magit-todos-depth 10))
 
   (use-package why-this
-    :tags '("VC" "GIT"))
+    :tags '("VC" "GIT")
+    )
 #+end_src
 
 *** DONE Git helpers
@@ -4551,17 +4814,20 @@ I use =gitignore-snippets= to provide starting gitignore content;
  and =git-patch= to send a patch via email (if necessary obviously.)
 #+begin_src emacs-lisp
   (use-package gitignore-snippets
-    :tags '("VC" "GIT"))
+    :tags '("VC" "GIT")
+    )
 
   (use-package git-timemachine
+    :tags '("VC" "GIT")
     :commands (git-timemachine-toggle)
-    :tags '("VC" "GIT"))
+    )
 
   (use-package gitpatch
     :tags '("VC" "GIT" "CONNECTED")
     :config
     (setq gitpatch-mail-attach-patch-key "C-c i"))
 #+end_src
+
 ** DONE Github
 CLOSED: [2021-01-04 Mon 15:45]
 GIT is the tool I am using for VC.
@@ -4591,10 +4857,13 @@ To interact with github in emacs, I rely on three packages:
 
   (use-package github-explorer
     :disabled t
-    :tags '("VC" "GIT" "GITHUB" "CONNECTED"))
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
+    )
 
   (use-package gh-notify
-    :straight (:type git :host github :repo "anticomputer/gh-notify"))
+    :elpaca (:type git :host github :repo "anticomputer/gh-notify")
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
+    )
 
   ;; Extracted from https://github.com/anticomputer/gh-notify
   (use-package github-review
@@ -4790,35 +5059,37 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
     :tags '("TERM")
+    :custom (vterm-always-compile-module t)
+
     :config
     ;; Cleaning
     (setq vterm-kill-buffer-on-exit t)
 
     ;; Function keys are not used in therm
     (mapcar (lambda (key)
-              (define-key vterm-mode-map (kbd key) nil))
-            '("<f1>" "<f2>" "<f3>" "<f4>" "<f5>" "<f6>"
-              "<f7>" "<f8>" "<f9>" "<f10>" "<f11>" "<f12>"
-              "<prior>" "<next>"))
+	      (define-key vterm-mode-map (kbd key) nil))
+	    '("<f1>" "<f2>" "<f3>" "<f4>" "<f5>" "<f6>"
+	      "<f7>" "<f8>" "<f9>" "<f10>" "<f11>" "<f12>"
+	      "<prior>" "<next>"))
 
     ;; Better directory tracking
     (push (list "update-pwd" (lambda (path) (setq default-directory path)))
-          vterm-eval-cmds)
+	  vterm-eval-cmds)
 
     ;; Opening file in emacs directly
     (push (list "find-file-below"
-                (lambda (path)
-                  (if-let* ((buf (find-file-noselect path))
-                            (window (display-buffer-below-selected buf nil)))
-                      (select-window window)
-                    (message "Failed to open file: %s" path))))
-          vterm-eval-cmds))
+		(lambda (path)
+		  (if-let* ((buf (find-file-noselect path))
+			    (window (display-buffer-below-selected buf nil)))
+		      (select-window window)
+		    (message "Failed to open file: %s" path))))
+	  vterm-eval-cmds))
 
   (use-package multi-vterm
     :tags '("TERM")
     :bind (
       :map vterm-mode-map (
-        <<keybindings-gen(table=multi-vterm-mode-keybindings)>>
+	<<keybindings-gen(table=multi-vterm-mode-keybindings)>>
       )
     ))
 #+END_SRC
@@ -4949,6 +5220,17 @@ I also replace a base deletion by moving the files/directories to the trash.
 
     :config
     (setq dired-launch-default-launcher '("xdg-open")))
+
+  (use-package media-progress
+    :elpaca (media-progress :type git :host github :repo "jumper047/media-progress" :files ("media-progress.el")
+    :tags '("FILE_MANAGEMENT" "DIRED" "DESKTOP")))
+
+  (use-package media-progress-dirvish
+    :elpaca (media-progress-dirvish :type git :host github :repo "jumper047/media-progress" :files ("media-progress-dirvish.el"))
+    :tags '("FILE_MANAGEMENT" "DIRED" "DESKTOP")
+    :after dirvish
+    :config
+    (media-progress-dirvish-setup))
 #+end_src
 
 ** DONE Diff
@@ -4958,28 +5240,29 @@ Diff visualization relies mainly on =ediff= but to which I added two primitives 
 
 #+begin_src emacs-lisp
   (use-package ediff
+    :elpaca nil
     :tags '("FILE_MANAGEMENT" "DIFF")
     :config
     (autoload 'diff-mode "diff-mode" "Diff major mode" t)
     (setq diff-switches "-u"
-          ediff-auto-refine-limit (* 2 14000)
-          ediff-window-setup-function 'ediff-setup-windows-plain
-          ediff-split-window-function
-          (lambda (&optional arg)
-            (if (> (frame-width) 160)
-                (split-window-horizontally arg)
-              (split-window-vertically arg)))))
+	  ediff-auto-refine-limit (* 2 14000)
+	  ediff-window-setup-function 'ediff-setup-windows-plain
+	  ediff-split-window-function
+	  (lambda (&optional arg)
+	    (if (> (frame-width) 160)
+		(split-window-horizontally arg)
+	      (split-window-vertically arg)))))
 
   (defun diff-region ()
     "Select a region to compare"
     (interactive)
     (when (use-region-p) ; there is a region
       (let (buf)
-        (setq buf (get-buffer-create "*Diff-regionA*"))
-        (save-current-buffer
-          (set-buffer buf)
-          (erase-buffer))
-        (append-to-buffer buf (region-beginning) (region-end))))
+	(setq buf (get-buffer-create "*Diff-regionA*"))
+	(save-current-buffer
+	  (set-buffer buf)
+	  (erase-buffer))
+	(append-to-buffer buf (region-beginning) (region-end))))
     (message "Now select other region to compare and run `diff-region-now`"))
 
   (defun diff-region-now ()
@@ -4987,13 +5270,13 @@ Diff visualization relies mainly on =ediff= but to which I added two primitives 
     (interactive)
     (when (use-region-p)
       (let (bufa bufb)
-        (setq bufa (get-buffer-create "*Diff-regionA*"))
-        (setq bufb (get-buffer-create "*Diff-regionB*"))
-        (save-current-buffer
-          (set-buffer bufb)
-          (erase-buffer))
-        (append-to-buffer bufb (region-beginning) (region-end))
-        (ediff-buffers bufa bufb))))
+	(setq bufa (get-buffer-create "*Diff-regionA*"))
+	(setq bufb (get-buffer-create "*Diff-regionB*"))
+	(save-current-buffer
+	  (set-buffer bufb)
+	  (erase-buffer))
+	(append-to-buffer bufb (region-beginning) (region-end))
+	(ediff-buffers bufa bufb))))
 #+end_src
 
 ** DONE Treemacs
@@ -5064,7 +5347,8 @@ for project restriction (=treemacs-projectile=) and adding some icons (=treemacs
     (setq treemacs-header-function #'treemacs-projectile-create-header))
 
   (use-package treemacs-magit
-    :tags '("FILE_MANAGEMENT" "TREEMACS" "VC" "GIT"))
+    :tags '("FILE_MANAGEMENT" "TREEMACS" "VC" "GIT")
+    )
 #+end_src
 
 ** DONE Trashed
@@ -5092,8 +5376,8 @@ To manage the trash via emacs, =trashed= provides a really interface.
 CLOSED: [2023-02-02 Thu 15:56]
 #+begin_src emacs-lisp :lexical no
     (use-package file-info
+      :elpaca (:host github :repo "artawower/file-info.el")
       :tags '("FILE_MANAGEMENT")
-      :straight (:host github :repo "artawower/file-info.el")
       :bind (("C-c d" . 'file-info-show)))
 #+end_src
 
@@ -5114,10 +5398,7 @@ I rely on =elfeed-org= to store the list of feeds and defines some tags as well 
 
 #+begin_src emacs-lisp
   (use-package elfeed
-    :straight (elfeed :type git :host github :repo "skeeto/elfeed"
-                      :fork (:host github
-                                   :repo "seblemaguer/elfeed"
-                                   :branch "fix_emms_bug"))
+    :elpaca (elfeed :type git :host github :repo "skeeto/elfeed")
     :tags '("CONNECTED" "RSS")
     :commands (elfeed elfeed-update)
     :no-require t
@@ -5149,7 +5430,7 @@ Because I need a break once and a while at work, I load both files on my work ma
   (use-package elfeed-org
     :tags '("CONNECTED" "RSS")
     :if (file-directory-p cloud-org-root-dir)
-    :hook (after-init . loading-elfeed)
+    :hook (elpaca-after-init . loading-elfeed)
     :commands (elfeed-org)
     :init
     (defvar rss-files (list (concat cloud-org-root-dir "perso/configuration/rss.org"))
@@ -5186,7 +5467,7 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
 
 #+begin_src emacs-lisp
   (use-package elfeed-tube
-    :straight (:type git :host github :repo "karthink/elfeed-tube" :files (:defaults (:exclude "elfeed-tube-mpv.el")))
+    :elpaca (:type git :host github :repo "karthink/elfeed-tube" :files (:defaults (:exclude "elfeed-tube-mpv.el")))
     :after elfeed
     :tags '("CONNECTED" "RSS" "YOUTUBE")
     :demand t
@@ -5206,7 +5487,7 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
     ))
 
   (use-package elfeed-tube-mpv
-    :straight (:type git :host github :repo "karthink/elfeed-tube" :files ("elfeed-tube-mpv.el"))
+    :elpaca (:type git :host github :repo "karthink/elfeed-tube" :files ("elfeed-tube-mpv.el"))
     :tags '("CONNECTED" "RSS" "YOUTUBE")
 
     :bind (
@@ -5223,17 +5504,18 @@ I just need to define a default priority level for each feed.
 
 #+begin_src emacs-lisp
   (use-package sauron-elfeed
-    :straight sauron
+    :elpaca nil
+    :after (sauron)
     :tags '("CONNECTED" "RSS" "NOTIFICATION")
     :commands (elfeed-update-background-start sauron-elfeed-start)
     :hook
-    (after-init . sauron-elfeed-start)
-    (after-init . elfeed-update-background-start)
+    (elpaca-after-init . sauron-elfeed-start)
+    (elpaca-after-init . elfeed-update-background-start)
 
     :config
     (cl-loop for feed in elfeed-feeds
-             do (when (member 'mustread (cdr feed))
-                  (puthash (car feed) 3 sauron-elfeed-prio-hash))))
+	     do (when (member 'mustread (cdr feed))
+		  (puthash (car feed) 3 sauron-elfeed-prio-hash))))
 #+end_src
 
 *** DONE Scoring support
@@ -5304,7 +5586,7 @@ This configuration is remaining here for backward compatibility purposes.
 
 #+begin_src emacs-lisp
   (use-package starttls
-    :straight nil
+    :elpaca nil
     :tags '("CONNECTED")
     :if (< emacs-major-version 27)
     :config
@@ -5341,12 +5623,12 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
 
 #+begin_src emacs-lisp
   (use-package message
-    :straight nil
+    :elpaca nil
     :tags '("CONNECTED" "MAIL")
     :hook
     (message-mode . format-hook-message)
 
-    :init
+    :config
     (defun format-hook-message ()
       "Specify some formatting rules for email message writing."
       (auto-fill-mode -1)
@@ -5355,7 +5637,6 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
       (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
       (visual-line-mode))
 
-    :config
     (setq message-auto-save-directory nil
           message-citation-line-function 'message-insert-formatted-citation-line
           message-citation-line-format  "\n\n-----------------------\nOn %a, %b %d %Y (%-H:%M %Z), %N wrote:\n"
@@ -5365,6 +5646,8 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
           message-fill-column 100))
 
   (use-package smtpmail-multi
+    :elpaca nil
+    :load-path default-plugin-dir
     :tags '("CONNECTED" "MAIL")
     :init
     (defun my-oauth2-fetch-access-token (user)
@@ -5404,13 +5687,13 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
           smtpmail-debug-info nil
           smtpmail-debug-verbose nil))
 
-  (use-package org-msg
-    :straight '(:host github :repo "jeremy-compostella/org-msg")
+  (use-package org-mgs
+    :elpaca (org-msg :host github :repo "jeremy-compostella/org-msg")
     :bind (
-      :map org-msg-edit-mode-map (
-        <<keybindings-gen(table=org-msg-edit-keybindings)>>
-      )
-    )
+           :map org-msg-edit-mode-map (
+                                       <<keybindings-gen(table=org-msg-edit-keybindings)>>
+                                       )
+           )
 
     :hook
     (mu4e-compose-pre . org-msg-mode)
@@ -5553,7 +5836,7 @@ I also redesigned the header buffer.
 
 #+begin_src emacs-lisp
   (use-package mu4e
-    :straight (:host github
+    :elpaca (:host github
                      :repo "djcb/mu"
                      :branch "master"
                      :files ("build/mu4e/*.el" "build/mu4e/*.elc" "mu4e/*.el" "mu4e/*.elc")
@@ -5565,8 +5848,8 @@ I also redesigned the header buffer.
       <<keybindings-gen(table=mu4e-entry-keybindings)>>
     )
 
-    :hook
-    (after-init . (lambda () (mu4e t)))
+    ;; :hook
+    ;; (elpaca-after-init . (lambda () (mu4e t)))
 
     :pretty-hydra
     ((:color blue :hint nil)
@@ -5689,7 +5972,7 @@ I also redesigned the header buffer.
         (t (mu4e~headers-custom-field msg field)))))
 
   (use-package mu4e-thread-folding
-    :straight (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
+    :elpaca (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
     :tags '("CONNECTED" "MAIL")
     :after (mu4e)
     :config
@@ -5706,7 +5989,8 @@ I also redesigned the header buffer.
                                  (:subject       .  nil))))
 
   (use-package mu4e-context
-    :straight mu4e
+    :elpaca nil
+    :after (mu4e)
     :tags '("CONNECTED" "MAIL")
     :config
     ;; Define the contexts (configuration defined in a private file)
@@ -5721,7 +6005,8 @@ I also redesigned the header buffer.
                                                         (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
                                                     mu4e-contexts))))
   (use-package mu4e-bookmarks
-    :straight mu4e
+    :elpaca nil
+    :after (mu4e)
     :tags '("CONNECTED" "MAIL")
     :config
     ;; Define the contexts (configuration defined in a private file)
@@ -5735,7 +6020,7 @@ I also redesigned the header buffer.
 
   (use-package org-mu4e
     :disabled t
-    :straight mu4e
+    :elpaca mu4e
     :tags '("CONNECTED" "MAIL" "ORG"))
 #+end_src
 
@@ -5747,7 +6032,8 @@ It is quite simple but robust enough to not being bother every 5 min.
 
 #+begin_src emacs-lisp
   (use-package mu4e-alert
-    :straight (:host github :repo "seblemaguer/mu4e-alert" :branch "mu-1.7")
+    :disabled t
+    :elpaca (:host github :repo "seblemaguer/mu4e-alert" :branch "mu-1.7")
     :after (sauron-mode-line)
     :tags '("CONNECTED" "MAIL" "NOTIFICATION")
     :config
@@ -5766,7 +6052,7 @@ CLOSED: [2021-08-10 Tue 20:14]
 
 #+begin_src emacs-lisp
   (use-package mu4e-column-faces
-    :straight (mu4e-column-faces :type git :host github :repo "Alexander-Miller/mu4e-column-faces")
+    :elpaca (mu4e-column-faces :type git :host github :repo "Alexander-Miller/mu4e-column-faces")
     :tags '("CONNECTED" "MAIL" "VISUAL")
     :after mu4e
     :config (mu4e-column-faces-mode))
@@ -5780,11 +6066,13 @@ I also rely on =org-hyperscheduler= which provides an easier way to move around 
 
 #+BEGIN_SRC emacs-lisp
   (use-package oauth2-auto
-    :straight (oauth2-auto :type git :host github :repo "rhaps0dy/emacs-oauth2-auto"))
+    :elpaca (oauth2-auto :type git :host github :repo "telotortium/emacs-oauth2-auto")
+    :tags '("CALENDAR" "CONNECTED")
+    )
 
   (use-package org-gcal
     :if (boundp 'my-gcal-client-id) ;; Ensure we have the infos to use org-gcal
-    :straight (org-gcal :type git :host github :repo "kidd/org-gcal.el")
+    :elpaca (org-gcal :type git :host github :repo "kidd/org-gcal.el")
     :tags '("CALENDAR" "CONNECTED")
     :custom
     (org-gcal-client-id my-gcal-client-id)
@@ -5822,26 +6110,23 @@ Finally, the account definition is done in the private configuration file (so it
   (use-package circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :commands (circe circe-server-buffers)
-    :hook
-    (circe-channel-mode . emojify-mode)
-
     :init
     (defun circe-network-connected-p (network)
       "Return non-nil if there's any Circe server-buffer whose
       `circe-netwok' is NETWORK."
       (catch 'return
-        (dolist (buffer (circe-server-buffers))
-          (with-current-buffer buffer
-            (if (string= network circe-network)
-                (throw 'return t))))))
+	(dolist (buffer (circe-server-buffers))
+	  (with-current-buffer buffer
+	    (if (string= network circe-network)
+		(throw 'return t))))))
 
     (defun circe-maybe-connect (network)
       "Connect to NETWORK, but ask user for confirmation if it's
       already been connected to."
       (interactive "sNetwork: ")
       (if (or (not (circe-network-connected-p network))
-              (y-or-n-p (format "Already connected to %s, reconnect?" network)))
-          (circe network)))
+	      (y-or-n-p (format "Already connected to %s, reconnect?" network)))
+	  (circe network)))
 
     (defun circe-start ()
       "Connect to IRC"
@@ -5864,13 +6149,16 @@ Finally, the account definition is done in the private configuration file (so it
     (enable-circe-color-nicks)
     (enable-circe-display-images))
 
+  ;; Elpaca should wait circe to be ready!
+  (elpaca-wait)
+
   (use-package lui-logging
-    :straight circe
+    :elpaca nil
     :tags '("CONNECTED" "CHAT" "IRC")
     :commands (enable-lui-logging))
 
   (use-package lui-autopaste
-    :straight circe
+    :elpaca nil ;; circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :hook (circe-channel-mode . enable-lui-autopaste)
     :config
@@ -5883,31 +6171,31 @@ Finally, the account definition is done in the private configuration file (so it
       ;; work around that!
       (setq lui-autopaste-service-gist-url 'waiting)
       (with-temp-buffer
-        (insert text)
-        (gist-region (point-min) (point-max) nil
-                     (lambda (gist)
-                       (when (eq lui-autopaste-service-gist-url
-                                 'waiting)
-                         (setq lui-autopaste-service-gist-url
-                               (oref gist :html-url)))))) ;; FIXME: this provokes a Warning: Unknown slot ‘:html-url’
+	(insert text)
+	(gist-region (point-min) (point-max) nil
+		     (lambda (gist)
+		       (when (eq lui-autopaste-service-gist-url
+				 'waiting)
+			 (setq lui-autopaste-service-gist-url
+			       (oref gist :html-url)))))) ;; FIXME: this provokes a Warning: Unknown slot ‘:html-url’
       (let ((wait 0))
-        (while (and (< wait 10)
-                    (eq lui-autopaste-service-gist-url
-                        'waiting))
-          (sit-for 0.1 )
-          (setq wait (1+ wait))))
+	(while (and (< wait 10)
+		    (eq lui-autopaste-service-gist-url
+			'waiting))
+	  (sit-for 0.1 )
+	  (setq wait (1+ wait))))
       (if (eq lui-autopaste-service-gist-url 'waiting)
-          (progn
-            (setq lui-autopaste-service-gist-url nil)
-            (error "Couldn't create gist"))
-        (prog1 lui-autopaste-service-gist-url
-          (setq lui-autopaste-service-gist-url nil))))
+	  (progn
+	    (setq lui-autopaste-service-gist-url nil)
+	    (error "Couldn't create gist"))
+	(prog1 lui-autopaste-service-gist-url
+	  (setq lui-autopaste-service-gist-url nil))))
 
     (setq lui-autopaste-function 'lui-autopaste-service-gist))
 
 
   (use-package lui
-    :straight circe
+    :elpaca nil ;; circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :hook
     (lui-mode . my-lui-setup)
@@ -5915,14 +6203,14 @@ Finally, the account definition is done in the private configuration file (so it
     :init
     (defun my-lui-setup ()
       (setq fringes-outside-margins t
-            right-margin-width 21
-            word-wrap t
-            wrap-prefix "    "))
+	    right-margin-width 21
+	    word-wrap t
+	    wrap-prefix "    "))
 
     :config
     (setq lui-time-stamp-position 'right-margin
-          lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]"
-          lui-fill-type nil)
+	  lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]"
+	  lui-fill-type nil)
 
     ;; Disabled modeline (tracking-mode) when loading lui
     ;; This is incompatible with nano-emacs!
@@ -5932,7 +6220,7 @@ Finally, the account definition is done in the private configuration file (so it
       :global t))
 
   (use-package lui-irc-colors
-    :straight circe
+    :elpaca nil ;; circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :config
     (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
@@ -5954,11 +6242,12 @@ Therefore, all the packages are installed using =straight=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package plz
-    :straight (plz :type git :host github :repo "alphapapa/plz.el")
-    :tags '("CONNECTED" "CHAT" "MATRIX"))
+    :elpaca (plz :type git :host github :repo "alphapapa/plz.el")
+    :tags '("CONNECTED" "CHAT" "MATRIX")
+    )
 
   (use-package ement
-    :straight (ement :host github :repo "seblemaguer/ement.el" :branch "notification")
+    :elpaca (ement :host github :repo "seblemaguer/ement.el" :branch "notification")
     :tags '("CONNECTED" "CHAT" "MATRIX")
     :custom
     (ement-room-timestamp-format "%d-%m-%Y %H:%M:%S")
@@ -6031,15 +6320,13 @@ Because, I prefer to have the completion system, =company=, configured locally f
 
 #+begin_src emacs-lisp
   (use-package slack
-    :straight (slack :type git :host github :repo "yuya373/emacs-slack"
-                      :fork (:host github :repo "seblemaguer/emacs-slack"))
+    :elpaca (slack :type git :host github :repo "seblemaguer/emacs-slack")
     :tags '("CONNECTED" "CHAT" "SLACK")
     :commands (slack-start)
     :no-require t
     :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
 
     :custom
-    (slack-buffer-emojify               t)
     (slack-modeline-formatter           nil)
     (slack-buffer-create-on-notify      t)
     (slack-display-team-name            t)
@@ -6089,7 +6376,7 @@ As an entry point to use slack, I prefer to use =helm-slack= as it provides a ni
 
 #+begin_src emacs-lisp
   (use-package helm-slack
-    :straight (helm-slack :type git :host github :repo "yuya373/helm-slack")
+    :elpaca (helm-slack :type git :host github :repo "yuya373/helm-slack")
     :tags '("CONNECTED" "CHAT" "SLACK" "COMPLETION")
     :after (slack helm))
 #+end_src
@@ -6128,7 +6415,6 @@ CLOSED: [2021-05-20 Thu 17:33]
 
     :hook
     (telega-chat-mode . telega-chat-hook)
-    (telega-root-mode . (lambda () (emojify-mode 1)))
 
     :init
     (defun telega-chat-hook ()
@@ -6241,10 +6527,13 @@ As it requires more investigation, I disabled this packaged for now.
 #+begin_src emacs-lisp
   ;; Not automatically loaded by md4rd
   (use-package tree-mode
-    :tags '("CONNECTED" "EXCHANGE" "REDDIT"))
+    :tags '("CONNECTED" "EXCHANGE" "REDDIT")
+    )
 
   (use-package cl-extra
-    :straight (:type built-in))
+    :elpaca nil
+    :tags '("CONNECTED" "EXCHANGE" "REDDIT")
+    )
 
   (use-package md4rd
     :tags '("CONNECTED" "EXCHANGE" "REDDIT")
@@ -6268,7 +6557,6 @@ As it requires more investigation, I disabled this packaged for now.
       )
     )
 
-
     :config
     (setq md4rd-subs-active '(emacs orgmode composer audacity Reaper Musescore AudioProgramming)))
 #+end_src
@@ -6288,7 +6576,7 @@ I am using its extension =metal-archives-shopping-list= to maintain a list of re
                metal-archives-load-artists-map)
     :hook
     ;; (kill-emacs . metal-archives-shopping-list-update)
-    (after-init . metal-archives-load-artists-map)
+    (elpaca-after-init . metal-archives-load-artists-map)
 
     :init
     (when (file-exists-p (concat cloud-org-root-dir "perso/music/shopping_list.org" ))
@@ -6361,9 +6649,9 @@ It requires =aria2c= to be available.
 #+BEGIN_SRC emacs-lisp
   (when (executable-find "aria2c")
     (use-package aria2
-      :straight (aria2 :type git :host github :repo "seblemaguer/aria2")
-      :commands aria2-downloads-list
-      :tags '("CONNECTED")))
+      :elpaca (aria2 :type git :host github :repo "seblemaguer/aria2")
+      :tags '("CONNECTED")
+      :commands aria2-downloads-list))
 #+END_SRC
 
 * DONE Entertainment [100%]
@@ -6405,15 +6693,15 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 
     ;; Some behaviour definition
     (setq later-do-interval 0.0001
-          emms-directory (concat user-emacs-directory "emms")
-          emms-playlist-buffer-name "*Music*"
-          emms-source-file-default-directory (expand-file-name "~/Music")
-          emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find
-          emms-show-format "NP: %s"
-          emms-playlist-default-major-mode 'emms-playlist-mode
-          emms-repeat-playlist t
-          emms-mode-line-mode-line-function nil  ;; Don't want any info in the mode line
-          emms-mode-line-titlebar-function 'emms-mode-line-playlist-current) ;; Put info in the titlebar
+	  emms-directory (concat user-emacs-directory "emms")
+	  emms-playlist-buffer-name "*Music*"
+	  emms-source-file-default-directory (expand-file-name "~/Music")
+	  emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find
+	  emms-show-format "NP: %s"
+	  emms-playlist-default-major-mode 'emms-playlist-mode
+	  emms-repeat-playlist t
+	  emms-mode-line-mode-line-function nil  ;; Don't want any info in the mode line
+	  emms-mode-line-titlebar-function 'emms-mode-line-playlist-current) ;; Put info in the titlebar
 
     ;; Visualisation activation/deactivation
     (emms-mode-line nil)
@@ -6422,8 +6710,8 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
     (when (fboundp 'emms-cache)
       (emms-cache 1)
       (defun my-emms-cache-set  (type path track)
-        (unless (string-match "^http[s]?://.*" path)
-          (emms-cache-set type path track)))
+	(unless (string-match "^http[s]?://.*" path)
+	  (emms-cache-set type path track)))
       (setq emms-cache-set-function 'my-emms-cache-set))
 
     ;; Define routine to update cache without adding tracks to the playlist
@@ -6431,101 +6719,104 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
       "Routine to update the cache without updating any playlist -either DIR, or the value of
     `emms-source-file-default-directory'."
       (interactive (list
-                    (emms-read-directory-name "Play directory tree: "
-                                              (emms-source-file-directory-hint)
-                                              emms-source-file-default-directory
-                                              t)))
+		    (emms-read-directory-name "Play directory tree: "
+					      (emms-source-file-directory-hint)
+					      emms-source-file-default-directory
+					      t)))
       (let ((files (emms-source-file-directory-tree (expand-file-name dir)
-                                                    (emms-source-file-regex)))
-            (case-fold-search nil))
-        (with-current-emms-playlist
-          (point-max)
-          (mapc (lambda (file)
-                  (unless (or (string-match emms-source-file-exclude-regexp file)
-                              (gethash file emms-cache-db))
-                    (emms-track 'file file)))
-                files))))
+						    (emms-source-file-regex)))
+	    (case-fold-search nil))
+	(with-current-emms-playlist
+	  (point-max)
+	  (mapc (lambda (file)
+		  (unless (or (string-match emms-source-file-exclude-regexp file)
+			      (gethash file emms-cache-db))
+		    (emms-track 'file file)))
+		files))))
 
     ;; Adapt track description format
     (defun track-description (track)
       "Return a description of the current TRACK."
       (if (and (emms-track-get track 'info-artist)
-               (emms-track-get track 'info-title))
-          (let ((pmin (emms-track-get track 'info-playing-time-min))
-                (psec (emms-track-get track 'info-playing-time-sec))
-                (ptot (emms-track-get track 'info-playing-time))
-                (art  (emms-track-get track 'info-artist))
-                (tit  (emms-track-get track 'info-title))
-                (alb  (emms-track-get track 'info-album)))
-            (cond ((and pmin psec) (format "%s - %s - %s [%02d:%02d]" art alb tit pmin psec))
-                  (ptot (format  "%s - %s - %s [%02d:%02d]" art alb tit (/ ptot 60) (% ptot 60)))
-                  (t (emms-track-simple-description track))))
-        (progn
-          (emms-track-simple-description track))))
+	       (emms-track-get track 'info-title))
+	  (let ((pmin (emms-track-get track 'info-playing-time-min))
+		(psec (emms-track-get track 'info-playing-time-sec))
+		(ptot (emms-track-get track 'info-playing-time))
+		(art  (emms-track-get track 'info-artist))
+		(tit  (emms-track-get track 'info-title))
+		(alb  (emms-track-get track 'info-album)))
+	    (cond ((and pmin psec) (format "%s - %s - %s [%02d:%02d]" art alb tit pmin psec))
+		  (ptot (format  "%s - %s - %s [%02d:%02d]" art alb tit (/ ptot 60) (% ptot 60)))
+		  (t (emms-track-simple-description track))))
+	(progn
+	  (emms-track-simple-description track))))
     (setq emms-track-description-function 'track-description)
 
     ;; taken from http://emacs.stackexchange.com/questions/21747/emms-how-can-i-have-a-progress-bar?rq=1
     (defun emms-indicate-seek (_sec)
       "Show the progress bar when seek."
       (let* ((total-playing-time (emms-track-get
-                                  (emms-playlist-current-selected-track)
-                                  'info-playing-time))
-             (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
-        (with-temp-message (format "[%-100s] %2d%% [%02d:%02d]/[%02d:%02d]"
-                                   (make-string (round elapsed/total) ?=)
-                                   (round elapsed/total)
-                                   (/ (round emms-playing-time) 60) (% (round emms-playing-time) 60)
-                                   (/ (round total-playing-time) 60) (% (round total-playing-time) 60))
-          (sit-for 2))))
+				  (emms-playlist-current-selected-track)
+				  'info-playing-time))
+	     (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
+	(with-temp-message (format "[%-100s] %2d%% [%02d:%02d]/[%02d:%02d]"
+				   (make-string (round elapsed/total) ?=)
+				   (round elapsed/total)
+				   (/ (round emms-playing-time) 60) (% (round emms-playing-time) 60)
+				   (/ (round total-playing-time) 60) (% (round total-playing-time) 60))
+	  (sit-for 2))))
     (add-hook 'emms-player-seeked-functions #'emms-indicate-seek 'append))
 
+  ;; Wait for elpaca so that the other packages are ready if necessary !
+  (elpaca-wait)
+
   (use-package emms-info-metaflac
-    :straight emms
+    :elpaca nil ;; emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil
-          emms-info-functions '(emms-info-metaflac)))
+	  emms-info-functions '(emms-info-metaflac)))
 
   (use-package emms-info-libtag
-    :straight emms
+    :elpaca nil ;; emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil)
     (add-to-list 'emms-info-functions 'emms-info-libtag t))
 
   (use-package emms-info-native
-    :straight emms
+    :elpaca nil ;; emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :init
     (setq emms-info-asynchronously nil)
     (add-to-list 'emms-info-functions 'emms-info-native t))
 
   (use-package emms-browser
-    :straight emms
+    :elpaca nil ;; emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     ;; Formatting
     (setq emms-browser-info-artist-format "%i☢ %n"
-          emms-browser-info-album-format "%i%cS [%y] %n"
-          emms-browser-info-title-format "%i♪ %T. %t [%d]"
-          emms-browser-playlist-info-album-format "%cS %a - %A : "
-          emms-browser-playlist-info-title-format "%i%T. %t [%d]")
+	  emms-browser-info-album-format "%i%cS [%y] %n"
+	  emms-browser-info-title-format "%i♪ %T. %t [%d]"
+	  emms-browser-playlist-info-album-format "%cS %a - %A : "
+	  emms-browser-playlist-info-title-format "%i%T. %t [%d]")
 
     ;; Filtering
     (emms-browser-make-filter "all" #'ignore)
     (emms-browser-make-filter
      "recent - Month"
      (lambda (track) (< 30
-                        (time-to-number-of-days
-                         (time-subtract (current-time)
-                                        (emms-info-track-file-mtime track))))))
+			(time-to-number-of-days
+			 (time-subtract (current-time)
+					(emms-info-track-file-mtime track))))))
 
     (emms-browser-make-filter
      "recent - Trimester"
      (lambda (track) (< (* 3 30)
-                        (time-to-number-of-days
-                         (time-subtract (current-time)
-                                        (emms-info-track-file-mtime track))))))
+			(time-to-number-of-days
+			 (time-subtract (current-time)
+					(emms-info-track-file-mtime track))))))
 
     (emms-browser-make-filter
      "not-played"
@@ -6542,7 +6833,7 @@ To sort out what I am currently watching, I use =seriestracker=.
 
 #+begin_src emacs-lisp
   (use-package seriestracker
-    :straight (seriestracker :type git :host github :repo "MaximeWack/seriesTracker")
+    :elpaca (seriestracker :type git :host github :repo "MaximeWack/seriesTracker")
     :tags '("MULTIMEDIA" "ENTERTAINMENT")
     :demand                                                   ;;To force load seriestracker
     :config                                                   ;;These are the default
@@ -6567,7 +6858,7 @@ I just modified a couple of bindings to fit my French keyboard layout (the other
 
 #+begin_src emacs-lisp :lexical no
   (use-package subed
-    :straight (subed :type git :host github :repo "sachac/subed" :files ("subed/*.el"))
+    :elpaca (subed :type git :host github :repo "sachac/subed" :files ("subed/*.el"))
     :bind (
       :map subed-mode-map (
           <<keybindings-gen(table=subed-keybindings)>>
@@ -6579,6 +6870,7 @@ I just modified a couple of bindings to fit my French keyboard layout (the other
     (subed-mode . turn-on-auto-fill)
     (subed-mode . (lambda () (setq-local fill-column 40))))
 #+end_src
+
 * DONE Emacs and the rest of the world [100%]
 As Emacs is the entry point of my numerical life, I connected to a bunch of other external things.
 It can be summarized around three categories:
@@ -6591,24 +6883,6 @@ CLOSED: [2021-01-05 Tue 12:51]
 In this section, I configure a set of packages to control different desktop aspect using Emacs.
 Each subsection focuses on dedicated aspect of the desktop.
 
-*** DONE Desktop environment control
-CLOSED: [2021-01-05 Tue 12:41]
-=desktop-environment= is package which captures bindings in emacs from multimedia keys (mainly).
-I mainly control screen and keyboard brightness using it.
-
-#+begin_src emacs-lisp
-  (use-package desktop-environment
-    :tags '("DESKTOP")
-    :config
-    (setq desktop-environment-brightness-normal-increment "-inc 10"
-          desktop-environment-brightness-normal-decrement "-dec 10"
-          desktop-environment-brightness-small-increment "-inc 5"
-          desktop-environment-brightness-small-decrement "-dec 5"
-          desktop-environment-brightness-get-command "xbacklight -get"
-          desktop-environment-brightness-set-command "xbacklight")
-    (desktop-environment-mode))
-#+end_src
-
 *** DONE Clipboard
 CLOSED: [2021-01-05 Tue 12:39]
 Integrate the clipboard to Emacs by using the package =cliphist=.
@@ -6616,7 +6890,8 @@ Integrate the clipboard to Emacs by using the package =cliphist=.
 #+begin_src emacs-lisp
   (when (executable-find "parcellite")
     (use-package cliphist
-      :tags '("DESKTOP")))
+      :tags '("DESKTOP")
+      ))
 #+end_src
 
 *** DONE Bluetooth
@@ -6626,7 +6901,8 @@ No extra configuration is needed.
 
 #+begin_src emacs-lisp
   (use-package bluetooth
-    :tags '("DESKTOP"))
+    :tags '("DESKTOP")
+    )
 #+end_src
 
 *** DONE Emacs and firefox
@@ -6646,7 +6922,7 @@ Using =atomic-chrome= coupled with the ~GhostText~ firefox addon, I edit such te
   (use-package atomic-chrome
     :tags '("DESKTOP")
     :hook
-    (after-init . atomic-chrome-start-server)
+    (elpaca-after-init . atomic-chrome-start-server)
 
     :commands
     (atomic-chrome-start-server)
@@ -6673,10 +6949,11 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
 
 #+begin_src emacs-lisp
   (use-package epc
-    :tags '("DESKTOP"))
+    :tags '("DESKTOP")
+    )
 
   (use-package eaf
-    :straight (eaf :type git
+    :elpaca (eaf :type git
                    :host github
                    :repo "emacs-eaf/emacs-application-framework"
                    :files ("eaf.el" "eaf.py" "applications.json" "extension" "core" "img" "sync-eaf-resources.py"))
@@ -6775,7 +7052,7 @@ I use =exec-path-from-shell= to force to run a command using the shell environme
   (when (executable-find "dtach")
     (use-package detached
       ;; NOTE: the original repo is a pain to access with ssh, using the emacsmirror
-      :straight (detached :type git :host github :repo "emacsmirror/detached")
+      :elpaca (detached :type git :host github :repo "emacsmirror/detached")
       :tags '("SYSTEM")
       :init
       (detached-init)
@@ -6830,7 +7107,8 @@ The package =docker= is already configured to provide everything to interact wit
   (when (executable-find "docker")
     (use-package docker
       :commands (docker)
-      :tags '("SYSTEM")))
+      :tags '("SYSTEM")
+      ))
 #+end_src
 
 **** DONE Conda
@@ -6845,7 +7123,7 @@ Consequently, the configuration consists mainly of defining the path of conda an
   (when (executable-find "conda")
     (use-package conda
       :tags '("SYSTEM" "PYTHON" "R")
-      :straight (conda :type git :host github :repo "seblemaguer/conda.el")
+      :elpaca (conda :type git :host github :repo "seblemaguer/conda.el")
       :init
       (setq conda-anaconda-home (expand-file-name "~/environment/local/mamba"))
 
@@ -6898,10 +7176,10 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
         (prodigy-stop-service service t))))
 
   (use-package elcontext
-    :straight (elcontext :type git :host github :repo "rollacaster/elcontext"
-                         :fork (:host github
-                                      :repo "seblemaguer/elcontext"
-                                      :branch "fix_missing_hydras_2"))
+    :elpaca (elcontext :type git
+                       :host github
+                       :repo "seblemaguer/elcontext"
+                       :branch "fix_missing_hydras_2")
     :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
     :config
 
@@ -6940,7 +7218,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 #+begin_src emacs-lisp
   (use-package tramp
-    :straight (:type built-in)
+    :elpaca nil
     :tags '("SYSTEM" "SERVER" "CONNECTED")
     :custom
     (tramp-default-method "ssh")
@@ -6971,12 +7249,12 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 
   (use-package slurm-mode
-    :straight (slurm :type git :host github
-                     :repo "ffevotte/slurm.el"
-                     :fork (:host github
-                                  :repo "seblemaguer/slurm.el"
-                                  :branch "explicit-username"))
-    :tags '("SYSTEM" "SERVER" "CONNECTED"))
+    :elpaca (slurm :type git
+                   :host github
+                   :repo "seblemaguer/slurm.el"
+                   :branch "explicit-username")
+    :tags '("SYSTEM" "SERVER" "CONNECTED")
+    )
 #+end_src
 
 ** Conveniencies
@@ -7015,7 +7293,8 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
 
 #+begin_src emacs-lisp
   (use-package rainbow-mode
-    :tags '("VISUAL"))
+    :tags '("VISUAL")
+    )
 
   (use-package flatfluc-theme
     :tags '("VISUAL")
@@ -7024,6 +7303,9 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     (tooltip-mode -1)
     (scroll-bar-mode -1)
     (tool-bar-mode -1)
+    ;;disable splash screen and startup message
+    (setq inhibit-startup-message t)
+    (setq initial-scratch-message nil)
 
     ;; Default frame settings
     (setq default-frame-alist
@@ -7063,11 +7345,13 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
                                   (trivial  . "purple")))
     )
 
-
   (use-package nano-modeline
+    :elpaca (nano-modeline :type git :host github :repo "rougier/nano-modeline" :ref "b8795c1")
+    :tags '("VISUAL")
     :custom
     (nano-modeline-prefix-padding t)
     :config
+
     ;; ===== Modeline
     (set-face-attribute 'mode-line nil
                         :foreground fui-fg
@@ -7199,6 +7483,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
 #+begin_src emacs-lisp
   (use-package all-the-icons
     :ensure t
+    :tags '("VISUAL")
     :config
     (defun set-icon-fonts (CODE-FONT-ALIST)
       "Utility to associate many unicode points with specified fonts."
@@ -7258,11 +7543,11 @@ Finally, the package =page-break-lines= provides a nice way to visualize a page 
 
 #+begin_src emacs-lisp
   (use-package smartparens-config
+    :elpaca smartparens
     :tags '("VISUAL")
-    :straight smartparens
     :hook
-    (after-init  . smartparens-global-mode)
-    (after-init  . show-smartparens-global-mode)
+    (elpaca-after-init  . smartparens-global-mode)
+    (elpaca-after-init  . show-smartparens-global-mode)
     (eval-expression-minibuffer-setup . smartparens-mode)
 
     :init
@@ -7309,14 +7594,15 @@ I also add =xhair= to visualize where I am (line + column) when I need to align 
     (setq-default goggles-pulse t))
 
   (use-package scrollkeeper
-    :straight (scrollkeeper :type git :host github :repo "alphapapa/scrollkeeper.el")
+    :elpaca (scrollkeeper :type git :host github :repo "alphapapa/scrollkeeper.el")
     :tags '("VISUAL")
     :bind (
       <<keybindings-gen(table=scrollkeeper-remap-keybindings)>>
     ))
 
   (use-package xhair
-    :tags '("VISUAL"))
+    :tags '("VISUAL")
+    )
 #+end_src
 
 *** DONE Filling
@@ -7326,7 +7612,9 @@ This is functionality is provided by =visual-fill-column=.
 
 #+BEGIN_SRC emacs-lisp
   (use-package visual-fill-column
-    :tags '("VISUAL"))
+    :elpaca nil
+    :tags '("VISUAL")
+    )
 #+END_SRC
 
 *** DONE Indentation
@@ -7354,7 +7642,7 @@ To do so, I use =abridge-diff=.
 #+begin_src emacs-lisp
   (use-package diff-hl
     :tags '("VISUAL")
-    :hook ((after-init . global-diff-hl-mode)
+    :hook ((elpaca-after-init . global-diff-hl-mode)
            (dired-mode . diff-hl-dired-mode-unless-remote))
 
     :init (setq diff-hl-draw-borders t)
@@ -7381,180 +7669,19 @@ To do so, I use the package =emojify= which provides everything needed for this.
 
 #+begin_src emacs-lisp
   (use-package emojify
+    :elpaca nil ;; FIXME: temporary way because of stupid slack enforcement
     :tags '("VISUAL" "DESKTOP")
     :functions (emojify-set-emoji-data)
-    :hook (sauron-mode . emojify-mode)
+    :custom
+    (slack-buffer-emojify               t)
+    :hook
+    (sauron-mode . emojify-mode)
+    (telega-root-mode . (lambda () (emojify-mode 1)))
+    (circe-channel-mode . emojify-mode)
+
     :config
     (when (featurep 'emojify)
       (emojify-set-emoji-data)))
-#+end_src
-
-*** DONE Org-mode
-The visual configuration for =org-mode= is based on =org-modern=.
-The main tweaks are that some specific colors are defined for some specific keywords and icons are associated to some categories.
-
-CLOSED: [2021-12-10 Fri 14:17]
-#+begin_src emacs-lisp
-  (use-package org-modern
-    :tags '("VISUAL" "ORG")
-    :hook
-    (org-mode . org-modern-mode)
-    (org-agenda-finalize . org-modern-agenda)
-
-    :custom
-    (org-modern-table nil)
-    (org-modern-tag nil)
-
-    :init
-
-    ;; Org styling, hide markup etc.
-    (setq org-hide-emphasis-markers t
-          org-pretty-entities t
-          org-ellipsis "…")
-
-    ;; Agenda styling
-    (setq org-agenda-block-separator ?─
-          org-agenda-time-grid '((daily today require-timed)
-                                 (800 1000 1200 1400 1600 1800 2000)
-                                 " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-          org-agenda-current-time-string
-          "⭠ now ─────────────────────────────────────────────────")
-
-    ;; Faces
-    (setq org-modern-todo-faces
-          '(("TODO"          :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("IN PROCESS"    :background "lightgray"     :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("MEETING"       :foreground "red1"                              :weight bold)
-
-            ;; Specific helpers
-            ("TO-READ"       :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("MAIL"          :background "purple"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-
-            ;; I can't really do anything here!
-            ("WAITING"       :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("PAUSED"        :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("EXEC-STARTED"  :background "light green"   :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("DELEGATED"     :background "gold"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-
-            ;; Done but not complete
-            ("CANCELLED"     :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("POSTPONED"     :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-
-            ;; Done and I don't care to be complete
-            ("EVENT"         :foreground "purple"                            :weight bold)
-            ("NOTE"          :foreground "purple"                            :weight bold)
-            ("RELEASE"       :foreground "purple"                            :weight bold)
-            ("MANDATORY"     :foreground "red"                               :weight bold)
-
-            ;; Done and complete
-            ("DONE"          :background "forest green"  :foreground "lightgray" :weight bold :box (:line-width 2 :style released-button))
-            )
-
-          org-priority-faces '((?A . (:foreground "red" :weight bold))
-                               (?B . (:foreground "orange"  :weight bold))
-                               (?C . (:foreground "orange"))
-                               (?D . (:foreground "forest green"))
-                               (?E . (:foreground "forest green")))
-
-          org-agenda-category-icon-alist `(
-                                           ;; Tools / utils
-                                           ("[Ee]macs"
-                                            ,(format "%s/third_parties/icons/emacs24.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Oo]rg"
-                                            ,(format "%s/third_parties/icons/org.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Ss]ystem"
-                                            ,(format "%s/third_parties/icons/debian.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("\\([Tt]ool\\|[Cc]onfiguration\\)s?"
-                                            ,(format "%s/third_parties/icons/wrench.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Ee]xpe\\(riment\\)s?"
-                                            ,(format "%s/third_parties/icons/expes.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ;; Admin / meeting
-                                           ("[Aa]dmin"
-                                            ,(format "%s/third_parties/icons/admin.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Aa]ppointments?"
-                                            ,(format "%s/third_parties/icons/appointment.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Vv]isitors"
-                                            ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("\\([Ss]ynsig\\|SSW\\)"
-                                            ,(format "%s/third_parties/icons/isca.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("\\([Tt]rip\\|[Dd]eplacement\\)"
-                                            ,(format "%s/third_parties/icons/trip.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ;; Deadlines / dates
-                                           ("\\([Pp]resentations?\\)"
-                                            ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("\\([Pp]apers?\\|[Bb]lio\\|[Aa]rticles?\\|[Rr]eading\\|[Ww]riting\\)"
-                                            ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Mm]ails?"
-                                            ,(format "%s/third_parties/icons/email.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Rr]eviews?"
-                                            ,(format "%s/third_parties/icons/review.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Ss]upervising"
-                                            ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ;; Personnal dates
-                                           ("[rM]edical"
-                                            ,(format "%s/third_parties/icons/medical.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("Anniv"
-                                            ,(format "%s/third_parties/icons/anniversary.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("Concert"
-                                            ,(format "%s/third_parties/icons/music.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ;; Personnal diverse
-                                           ("[Rr]elease"
-                                            ,(format "%s/third_parties/icons/cd.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("Book"
-                                            ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           (".*" '(space . (:width (16)))))))
-
-    (use-package org-rainbow-tags
-      :tags '("VISUAL" "ORG")
-      :straight (:host github :repo "KaratasFurkan/org-rainbow-tags")
-      :custom
-      (org-rainbow-tags-hash-start-index 10)
-      (org-rainbow-tags-extra-face-attributes
-       ;; Default is '(:weight 'bold)
-       '(:inverse-video t :box t :weight 'bold))
-      :hook
-      (org-mode . org-rainbow-tags-mode)
-      (org-agenda-finalize . org-rainbow-tags-mode))
 #+end_src
 
 * Key bindings [100%]
@@ -7783,15 +7910,16 @@ Adding a toggle support for the commenting would be a good idea too
 
 #+begin_src emacs-lisp
   (use-package cc-mode
+    :elpaca nil
     :tags '("CORE" "BINDING")
     :bind
     (;; Global
      <<keybindings-gen(table=comment-keybindings)>>
 
      :map c-mode-base-map
-          <<keybindings-gen(table=comment-keybindings)>>
+	  <<keybindings-gen(table=comment-keybindings)>>
      :map c++-mode-map
-          <<keybindings-gen(table=comment-keybindings)>>))
+	  <<keybindings-gen(table=comment-keybindings)>>))
 #+end_src
 
 *** DONE Mac key remapping
