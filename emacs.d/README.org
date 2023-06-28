@@ -230,7 +230,7 @@ Furthermore, each package is tagged with several keywors to have a "machine-depe
 CLOSED: [2021-01-03 Sun 10:52]
 
  #+begin_src emacs-lisp
-   (defvar elpaca-installer-version 0.4)
+   (defvar elpaca-installer-version 0.5)
    (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
    (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
    (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -6871,6 +6871,7 @@ I just modified a couple of bindings to fit my French keyboard layout (the other
     (subed-mode . turn-on-auto-fill)
     (subed-mode . (lambda () (setq-local fill-column 40))))
 #+end_src
+
 * DONE Emacs and the rest of the world [100%]
 As Emacs is the entry point of my numerical life, I connected to a bunch of other external things.
 It can be summarized around three categories:
