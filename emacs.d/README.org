@@ -320,8 +320,7 @@ While alternatives exist, I find this combination more straightforward and clean
 
 #+begin_src emacs-lisp
   (use-package pretty-hydra
-    :tags '("CORE")
-    )
+    :tags '("CORE"))
 
   (use-package major-mode-hydra
     :demand t
