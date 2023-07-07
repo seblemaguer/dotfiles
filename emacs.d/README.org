@@ -3053,11 +3053,6 @@ It is a convenient package to have a more refined control of my workflow.
     :commands (which-key-mode)
     :hook (elpaca-after-init . which-key-mode))
 
-  (use-package which-key-posframe
-    :tags '("HELPERS")
-    :config
-    (which-key-posframe-mode))
-
   (use-package embark
     :commands (embark-act embark-collect-snapshot)
     :tags '("HELPERS")
