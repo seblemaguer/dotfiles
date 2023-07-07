@@ -56,7 +56,6 @@
   export PATH=$HOME/.local/bin:$PATH
   export PATH=$USER_ENV_DIR/go/bin:$PATH
   export PATH=$NPM_PACKAGES/bin:$PATH
-  export PATH=$HOME/.emacs.d/straight/repos/mu/build/mu:$PATH
 
   # Libraries
   export DYLD_LIBRARY_PATH=$USER_ENV_DIR/lib:$USER_WORKTOOLS_DIR/lib:$USER_WORKOWNTOOLS_DIR/lib:/usr/local/opt/icu4c/lib/:$HOME/.local/lib:$DYLD_LIBRARY_PATH

@@ -5831,14 +5831,17 @@ I also redesigned the header buffer.
 
 #+begin_src emacs-lisp
   (use-package mu4e
-    :elpaca (:host github
-                     :repo "djcb/mu"
-                     :branch "master"
-                     :files ("build/mu4e/*.el" "build/mu4e/*.elc" "mu4e/*.el" "mu4e/*.elc")
-                     :pre-build (("./autogen.sh") ("make")))
+    :elpaca (mu4e :host github
+                  :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el"
+                          "build/mu4e/mu4e.info")
+                  :repo "djcb/mu"
+                  :main "mu4e/mu4e.el"
+                  :pre-build (("./autogen.sh") ("ninja" "-C" "build")
+                              (make-symbolic-link (expand-file-name "./build/mu/mu")
+                                                  (expand-file-name "~/environment/local/bin/mu") 'ok-if-exists))
+                  :build (:not elpaca--compile-info))
     :tags '("CONNECTED" "MAIL")
     :commands (mu4e)
-    :custom   (mu4e-mu-binary (expand-file-name "build/mu/mu" (straight--repos-dir "mu")))
     :bind (
       <<keybindings-gen(table=mu4e-entry-keybindings)>>
     )
