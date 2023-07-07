@@ -309,6 +309,7 @@
 #+end_src
 
 * aria2c
+** Configuration
 #+begin_src conf :tangle ~/.config/aria2/aria2.conf :mkdirp yes
   ### Basic ###
   # The directory to store the downloaded file.
@@ -427,6 +428,24 @@
   peer-id-prefix=-TR2770-
   # Specify the string used during the bitorrent extended handshake for the peer’s client version. Default: aria2/$MAJOR.$MINOR.$PATCH, $MAJOR, $MINOR and $PATCH are replaced by major, minor and patch version number respectively. For instance, aria2 version 1.18.8 has peer agent aria2/1.18.8.
   peer-agent=Transmission/2.77
+#+end_src
+
+** Systemd service
+#+begin_src conf :tangle ~/.config/systemd/user/aria2cd.service :mkdirp yes
+  [Unit]
+  Description=aria2 Daemon
+
+  [Service]
+  Type=forking
+  ExecStart=/usr/bin/aria2c --conf-path=/home/lemagues/.config/aria2/aria2.conf
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+
+you can then active as follow
+#+begin_src sh
+  systemctl --user enable aria2cd
 #+end_src
 
 * COMMENT some extra configuration
