@@ -7111,31 +7111,29 @@ The package =docker= is already configured to provide everything to interact wit
 
 **** DONE Conda
 CLOSED: [2021-01-05 Tue 13:18]
-I am using conda to configure different environment for ~Python~ and ~R~.
-The package =conda= provides all the necessary XXX to integrate conda into Emacs.
-I am using my own scripts to install and configure conda into my environment directory.
-Consequently, the configuration consists mainly of defining the path of conda and activating =conda= for different modes:
-~python-mode~ and ~ess-mode~.
+I am using micromamba (more efficient than conda) to configure different environment for ~Python~ and ~R~.
+While =conda.el= provide a nice environment management, it is not compatible with micromamba.
+However =SqrtMinusOne= developped the package =micromamba.el= which provides a nice support for this tools.
 
 #+begin_src emacs-lisp
-  (when (executable-find "conda")
-    (use-package conda
-      :tags '("SYSTEM" "PYTHON" "R")
-      :elpaca (conda :type git :host github :repo "seblemaguer/conda.el")
-      :init
-      (setq conda-anaconda-home (expand-file-name "~/environment/local/mamba"))
+  (when (executable-find "micromamba")
+    (use-package micromamba
+      :elpaca (micromamba :host github :repo "SqrtMinusOne/micromamba.el")
+      ;; :init
+      ;; (setq conda-anaconda-home (expand-file-name "~/environment/local/mamba"))
 
-      (defun conda-hook ()
-        "Conda activation hook."
-        (setq conda-message-on-environment-switch nil)
-        (conda-env-autoactivate-mode t))
+      ;; (defun conda-hook ()
+      ;;   "Conda activation hook."
+      ;;   (setq conda-message-on-environment-switch nil)
+      ;;   (conda-env-autoactivate-mode t))
 
-      :config
-      (conda--get-config)
+      ;; :config
+      ;; (conda--get-config)
 
-      :hook
-      (python-mode . conda-hook)
-      (ess-mode    . conda-hook)))
+      ;; :hook
+      ;; (python-mode . conda-hook)
+      ;; (ess-mode    . conda-hook)
+      ))
 #+end_src
 
 *** DONE Dealing with processes
