@@ -4247,8 +4247,9 @@ These tweaks concerns mainly of using =outline= to deal with folding,
 using the ~enquote~ command to do some quotation in latex and prepare a proper pdf compilation/synchronization.
 
 #+begin_src emacs-lisp
-  (use-package tex-site
-    :elpaca auctex
+  (use-package tex
+    :elpaca (:package "auctex" :repo "https://git.savannah.gnu.org/git/auctex.git" :local-repo "auctex" :files ("*" :exclude ".git") :protocol https :inherit t :depth 1
+                      :pre-build (("chmod" "775" "autogen.sh") ("./autogen.sh") ("./configure") ("make")))
     :tags '("WRITING" "LATEX")
     :after (tex latex)
     :hook
