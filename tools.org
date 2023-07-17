@@ -147,12 +147,18 @@
       helper = store
 
   [alias]
-     rebase-last = "!b=\"$(git branch --no-color | cut -c3-)\" ; h=\"$(git rev-parse $b)\" ; echo \"Current branch: $b $h\" ; c=\"$(git rev-parse $b)\" ; echo \"Recreating $b branch with initial commit $c ...\" ; git checkout --orphan new-start $c ; git commit -C $c ; git rebase --onto new-start $c $b ; git branch -d new-start ; git gc"
+      rebase-last = "!b=\"$(git branch --no-color | cut -c3-)\" ; h=\"$(git rev-parse $b)\" ; echo \"Current branch: $b $h\" ; c=\"$(git rev-parse $b)\" ; echo \"Recreating $b branch with initial commit $c ...\" ; git checkout --orphan new-start $c ; git commit -C $c ; git rebase --onto new-start $c $b ; git branch -d new-start ; git gc"
 
   [delta]
-     line-numbers = true        # show line numbers
-     navigate = true            # use n and N to move between diff sections
-     light = true               # set to true if you're in a terminal w/ a light background color
+      line-numbers = true        # show line numbers
+      navigate = true            # use n and N to move between diff sections
+      light = true               # set to true if you're in a terminal w/ a light background color
+
+  [url "https://git.sv.gnu.org/git"]
+      insteadOf = git://git.sv.gnu.org
+
+  [url "https://"]
+      insteadOf = git://
 #+end_src
 
 * kitty
