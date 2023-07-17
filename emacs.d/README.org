@@ -5682,7 +5682,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
           smtpmail-debug-info nil
           smtpmail-debug-verbose nil))
 
-  (use-package org-mgs
+  (use-package org-msg
     :elpaca (org-msg :host github :repo "jeremy-compostella/org-msg")
     :bind (
            :map org-msg-edit-mode-map (
