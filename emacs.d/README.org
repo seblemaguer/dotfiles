@@ -7342,83 +7342,47 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     )
 
   (use-package nano-modeline
-    :elpaca (nano-modeline :type git :host github :repo "rougier/nano-modeline" :ref "b8795c1")
+    :elpaca (nano-modeline :type git :host github :repo "rougier/nano-modeline")
     :tags '("VISUAL")
-    :custom
-    (nano-modeline-prefix-padding t)
+    ;; :custom
+    ;; (nano-modeline-prefix-padding t)
+    :hook
+    (prog-mode . nano-modeline-prog-mode)
+    (text-mode . nano-modeline-text-mode)
+    (org-mode . nano-modeline-org-mode)
+    (pdf-view-mode . nano-modeline-pdf-mode)
+    (mu4e-headers-mode . nano-modeline-mu4e-headers-mode)
+    (mu4e-view-mode . nano-modeline-mu4e-message-mode)
+    (elfeed-show-mode . nano-modeline-elfeed-entry-mode)
+    (elfeed-search-mode . nano-modeline-elfeed-search-mode)
+    (term-mode . nano-modeline-term-mode)
+    (xwidget-webkit-mode . nano-modeline-xwidget-mode)
+    (messages-buffer-mode . nano-modeline-message-mode)
+    (org-capture-mode . nano-modeline-org-capture-mode)
+    (org-agenda-mode . nano-modeline-org-agenda-mode)
+
     :config
 
     ;; ===== Modeline
     (set-face-attribute 'mode-line nil
                         :foreground fui-fg
                         :background fui-deep-clouds
-                        ;; :box '(:line-width 1)
-                        :box nil
-                        :height 100)
+                        :box '(:line-width 1)
+                        ;; :box nil
+                        :height 1)
     (set-face-attribute 'mode-line-inactive nil
                         :foreground fui-fg
                         :background fui-deep-clouds
                         ;; :box '(:line-width 1)
                         :box nil
-                        :height 100)
+                        :height 1)
 
-    (set-face-attribute 'nano-modeline-active-name nil
-                        :weight 'bold
-                        :box nil)
-    (set-face-attribute 'nano-modeline-active-primary nil
-                        :weight 'bold
-                        :box nil)
-    (set-face-attribute 'nano-modeline-active-secondary nil
-                        :weight 'bold
-                        :box nil)
-
-    (set-face-attribute 'nano-modeline-active-status-RW nil
-                        :weight 'bold
-                        :foreground fui-dark-asphalt
-                        :background fui-emerald
-                        :box nil)
-    (set-face-attribute 'nano-modeline-active-status-** nil
-                        :foreground "white"
-                        :background fui-dark-alizarin
-                        :weight 'bold
-                        :box nil)
-    (set-face-attribute 'nano-modeline-active-status-RO nil
-                        :foreground "white"
-                        :background "#311B92"
-                        :weight 'bold
-                        :box nil)
-
-    (set-face-attribute 'nano-modeline-inactive-name nil
-                        :foreground "grey45"
-                        :background fui-deep-clouds
-                        :box nil)
-    (set-face-attribute 'nano-modeline-inactive-primary nil
-                        :foreground "grey45"
-                        :background fui-deep-clouds
-                        :box nil)
-    (set-face-attribute 'nano-modeline-inactive-secondary nil
-                        :foreground "grey45"
-                        :background fui-deep-clouds
-                        :box nil)
-
-    (set-face-attribute 'nano-modeline-inactive-status-RW nil
-                        :foreground "grey45"
-                        :background fui-deep-clouds
-                        :box nil)
-    (set-face-attribute 'nano-modeline-inactive-status-** nil
-                        :foreground "grey45"
-                        :background fui-deep-clouds
-                        :box nil)
-    (set-face-attribute 'nano-modeline-inactive-status-RO nil
-                        :foreground "grey45"
-                        :background fui-deep-clouds
-                        :box nil)
 
     (defun my/thin-modeline ()
       "Transform the modeline in a thin faded line"
 
-      (nano-modeline-face-clear 'mode-line)
-      (nano-modeline-face-clear 'mode-line-inactive)
+      ;; (nano-modeline-face-clear 'mode-line)
+      ;; (nano-modeline-face-clear 'mode-line-inactive)
       (setq mode-line-format (list ""))
       (setq-default mode-line-format (list ""))
       (set-face-attribute 'mode-line nil
@@ -7433,8 +7397,7 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
                           :height 0.1))
 
     ;; (add-hook 'nano-modeline-mode-hook #'my/thin-modeline)
-
-    (nano-modeline-mode 1))
+    )
 #+end_src
 
 ** DONE Prism
