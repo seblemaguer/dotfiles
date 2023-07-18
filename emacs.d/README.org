@@ -7159,7 +7159,7 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
 #+BEGIN_SRC emacs-lisp
   (use-package prodigy
     :demand t
-    :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
+    :tags '("CONNECTED" "SYSTEM" "PROCESSES")
     :bind (:map prodigy-mode-map (
       <<keybindings-gen(table=prodigy-keybindings)>>
     ))
@@ -7168,8 +7168,10 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
     (kill-emacs . prodigy-force-stop-all-service)
 
     :config
+
     ;; Define services
-    (when (fboundp 'define-mail-services)
+    (when (and (string= work-hostname (system-name))
+               (fboundp 'define-mail-services))
       (define-mail-services))
 
     (defun prodigy-force-stop-all-service ()
@@ -7182,13 +7184,16 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
                        :host github
                        :repo "seblemaguer/elcontext"
                        :branch "fix_missing_hydras_2")
-    :tags '("CONNECTED" "SYSTEM" "PROCESSES" "MAIL")
+    :tags '("CONNECTED" "SYSTEM" "PROCESSES")
     :config
 
     (defun elcontext-start-prodigy (name)
       "Helper to start properly the prodigy service NAME via elcontext."
       (prodigy-start-service
           (prodigy-find-service name)))
+
+    (when (and (string= work-hostname (system-name))
+               (fboundp 'list-mail-services))
 
     (when (fboundp 'list-mail-services)
       (dolist (name (list-mail-services))
