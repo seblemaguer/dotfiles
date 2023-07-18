@@ -1950,8 +1950,18 @@ As I have my own way of being organized, I redefined completely the groups.
 
     ;; Create groups
     (setq org-super-agenda-groups
-          '((:name "Today"  ; Optionally specify section name
+          '(
+            (:name "Today"  ; Optionally specify section name
                    :time-grid t)  ; Items that appear on the time grid
+
+            ;; Important thing
+            (:name "Important"
+                   :priority "A")
+
+            ;; Important thing
+            (:name "Important but unscheduled"
+                   :priority "A"
+                   :scheduled nil)
 
             ;; CD part
             (:discard (:and (:category "Release" :tag "noexport")))
@@ -1968,11 +1978,6 @@ As I have my own way of being organized, I redefined completely the groups.
                    :and (:category "Release" :todo "WAITING")
                    :order 9)
 
-
-            ;; Important thing
-            (:name "Important"
-                   :and (:priority "A" :date t :todo "TODO")
-                   :order 2)
 
             ;; Some standby thingy
             (:name "In process"
