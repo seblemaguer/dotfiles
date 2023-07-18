@@ -429,14 +429,14 @@ This plugin is in charge to managing the communication and avoid any cycle.
     :elpaca nil
     :load-path default-plugin-dir
     :tags '("CORE" "NOTIFICATION")
-    :custom
-    (sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron)
-
-    :commands (sauron-mode-line-start-hidden)
     :hook (elpaca-after-init . sauron-mode-line-start-hidden)
     :bind (
       <<keybindings-gen(table=sauron-keybindings)>>
-     ))
+     )
+
+    :config
+    (setq sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron)
+    )
 #+end_src
 
 ** DONE Buffer listing
