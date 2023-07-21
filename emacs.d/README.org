@@ -3130,6 +3130,19 @@ I am using it mainly to show/hide my terminal faster.
     (popper-echo-mode +1))
 #+end_src
 
+** DONE Autoscratch
+CLOSED: [2023-07-21 Fri 22:48]
+=autoscratch= provides a neat way to adapt the scratch buffer to the needed mode pretty quickly.
+It is really convenient for quick note taking.
+
+#+begin_src emacs-lisp :lexical no
+  (use-package autoscratch
+    :tags '("HELPERS")
+    :ensure t
+    :config
+    (setq initial-major-mode 'autoscratch-mode))
+#+end_src
+
 * DONE IDE [100%]
 While the environment configuration is fundamental for editing,
 it is necessary to add more features to simplify coding life.
