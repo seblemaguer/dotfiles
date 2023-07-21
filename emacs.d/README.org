@@ -7364,19 +7364,19 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     ;; :custom
     ;; (nano-modeline-prefix-padding t)
     :hook
-    (prog-mode . nano-modeline-prog-mode)
-    (text-mode . nano-modeline-text-mode)
-    (org-mode . nano-modeline-org-mode)
-    (pdf-view-mode . nano-modeline-pdf-mode)
-    (mu4e-headers-mode . nano-modeline-mu4e-headers-mode)
-    (mu4e-view-mode . nano-modeline-mu4e-message-mode)
-    (elfeed-show-mode . nano-modeline-elfeed-entry-mode)
-    (elfeed-search-mode . nano-modeline-elfeed-search-mode)
-    (term-mode . nano-modeline-term-mode)
-    (xwidget-webkit-mode . nano-modeline-xwidget-mode)
+    (prog-mode            . nano-modeline-prog-mode)
+    (text-mode            . nano-modeline-text-mode)
+    (org-mode             . nano-modeline-org-mode)
+    (pdf-view-mode        . nano-modeline-pdf-mode)
+    (mu4e-headers-mode    . nano-modeline-mu4e-headers-mode)
+    (mu4e-view-mode       . nano-modeline-mu4e-message-mode)
+    (elfeed-show-mode     . nano-modeline-elfeed-entry-mode)
+    (elfeed-search-mode   . nano-modeline-elfeed-search-mode)
+    (term-mode            . nano-modeline-term-mode)
+    (xwidget-webkit-mode  . nano-modeline-xwidget-mode)
     (messages-buffer-mode . nano-modeline-message-mode)
-    (org-capture-mode . nano-modeline-org-capture-mode)
-    (org-agenda-mode . nano-modeline-org-agenda-mode)
+    (org-capture-mode     . nano-modeline-org-capture-mode)
+    (org-agenda-mode      . nano-modeline-org-agenda-mode)
 
     :config
 
@@ -7413,8 +7413,52 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
                           ;; :background "black"
                           :height 0.1))
 
-    ;; (add-hook 'nano-modeline-mode-hook #'my/thin-modeline)
-    )
+
+    (defun nano-modeline-emms-track-description (track)
+      "Return a description of the current TRACK."
+      (if (and (emms-track-get track 'info-artist)
+               (emms-track-get track 'info-title))
+          (let ((art (emms-track-get track 'info-artist))
+                (tit  (emms-track-get track 'info-title))
+                (track-number  (emms-track-get track 'info-tracknumber))
+                (alb  (emms-track-get track 'info-album)))
+            (format "%s: %s / %02d - %s" art alb (string-to-number track-number) tit))
+        (progn
+          (emms-track-simple-description track))))
+
+    (defun nano-modeline-emms-playlist-current (&optional name)
+      "Buffer name"
+      (propertize
+       (nano-modeline-emms-track-description (emms-playlist-current-selected-track))
+       'face (nano-modeline-face 'name)))
+
+    (defun nano-emms-playing-time ()
+      emms-playing-time-string)
+
+    (defun nano-modeline-emms-playlist-mode (&optional default)
+      "Nano line for text mode. Can be made DEFAULT mode."
+
+      (add-hook 'post-command-hook #'force-mode-line-update)
+      (funcall nano-modeline-position
+               '((nano-modeline-buffer-status) " "
+                 (nano-modeline-buffer-name))
+
+               '((nano-modeline-emms-playlist-current) " "
+                 (nano-emms-playing-time))
+               default))
+
+  (defun nano-modeline-emms-mode ()
+    "Nano line for org agenda mode"
+
+    (add-hook 'post-command-hook #'force-mode-line-update)
+    (funcall nano-modeline-position
+             '((nano-modeline-buffer-status "EMMS") " "
+               (nano-modeline-buffer-name))
+             '()))
+
+    ;; Add emms support
+    (add-hook 'emms-browser-mode-hook #'nano-modeline-emms-browser-mode)
+    (add-hook 'emms-playlist-mode-hook #'nano-modeline-emms-playlist-mode))
 #+end_src
 
 ** DONE Prism
