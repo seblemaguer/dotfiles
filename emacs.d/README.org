@@ -5304,68 +5304,38 @@ This is necessary in order to avoid issues with the modeline I use.
 I added support for visualizing the git status (=treemacs-magit=),
 for project restriction (=treemacs-projectile=) and adding some icons (=treemacs-icons-dired=).
 
-#+NAME: treemacs-entry-keybindings
-| Key  | Function | Description |
-|------+----------+-------------|
-| <f8> | treemacs |             |
+#+NAME: imenu-list-entry-keybindings
+| Key  | Function                    | Description |
+|------+-----------------------------+-------------|
+| <f8> | my/imenu-list-smart-toggle  |             |
 
 #+begin_src emacs-lisp
-  (use-package treemacs
-    :tags '("FILE_MANAGEMENT" "TREEMACS")
+  (use-package imenu-list
+    :ensure t
     :bind (
-      <<keybindings-gen(table=treemacs-entry-keybindings)>>
-    )
-
-    :functions (treemacs-follow-mode treemacs-filewatch-mode)
+       <<keybindings-gen(table=imenu-list-entry-keybindings)>>
+     )
     :config
-    (setq treemacs-collapse-dirs                 (if treemacs-python-executable 3 0)
-          treemacs-deferred-git-apply-delay      0.5
-          treemacs-display-in-side-window        t
-          treemacs-eldoc-display                 t
-          treemacs-file-event-delay              5000
-          treemacs-file-follow-delay             0.2
-          treemacs-follow-after-init             t
-          treemacs-git-integration               t
-          treemacs-git-command-pipe              ""
-          treemacs-goto-tag-strategy             'refetch-index
-          treemacs-indentation                   2
-          treemacs-indentation-string            " "
-          treemacs-is-never-other-window         nil
-          treemacs-max-git-entries               5000
-          treemacs-missing-project-action        'ask
-          treemacs-no-png-images                 nil
-          treemacs-no-delete-other-windows       t
-          treemacs-project-follow-cleanup        nil
-          treemacs-persist-file                  (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
-          treemacs-position                      'left
-          treemacs-recenter-distance             0.1
-          treemacs-recenter-after-file-follow    nil
-          treemacs-recenter-after-tag-follow     nil
-          treemacs-recenter-after-project-jump   'always
-          treemacs-recenter-after-project-expand 'on-distance
-          treemacs-show-cursor                   nil
-          treemacs-show-hidden-files             t
-          treemacs-silent-filewatch              nil
-          treemacs-silent-refresh                nil
-          treemacs-sorting                       'alphabetic-desc
-          treemacs-space-between-root-nodes      t
-          treemacs-tag-follow-cleanup            t
-          treemacs-tag-follow-delay              1.5
-          treemacs-width                         35)
 
-    (defun treemacs--setup-mode-line () "Redefined modeline function to not do anything.")
-    (treemacs-follow-mode t)
-    (treemacs-filewatch-mode t))
+    (defun my/imenu-list-jump-to-window ()
+      "Jump to imenu-list window if visible, otherwise create it and jump."
+      (interactive)
+      (if (get-buffer-window imenu-list-buffer-name)
+          (select-window (get-buffer-window imenu-list-buffer-name))
+        (progn
+          (imenu-list-minor-mode)
+          (select-window (get-buffer-window imenu-list-buffer-name)))))
 
-  (use-package treemacs-projectile
-    :tags '("FILE_MANAGEMENT" "TREEMACS" "PROJECT")
-    :functions treemacs-projectile-create-header
-    :config
-    (setq treemacs-header-function #'treemacs-projectile-create-header))
+    (defun my/imenu-list-smart-toggle ()
+      "If imenu-list window doesn't exist, create it and jump. If if does but
+  it is not the current buffer, jump there. If it exists and it's the current
+  buffer, close it."
+      (interactive)
+      (if (eq (current-buffer) (get-buffer imenu-list-buffer-name))
+          (imenu-list-quit-window)
+        (my/imenu-list-jump-to-window)))
 
-  (use-package treemacs-magit
-    :tags '("FILE_MANAGEMENT" "TREEMACS" "VC" "GIT")
-    )
+    (setq imenu-list-size 40))
 #+end_src
 
 ** DONE Trashed
