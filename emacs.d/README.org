@@ -40,7 +40,8 @@ For now, only the option =--no-connection= is defined in order enforce the loadi
     (setq no-connection t))
 #+end_src
 
-* TODO Definition of no-web helper routines
+* DONE Definition of no-web helper routines
+CLOSED: [2023-07-19 Wed 20:41]
 
 I found the strategy of defining tables to store keybindings proposed by [[https://config.phundrak.com/][phundrak]] pretty interesting.
 It has two main advantages.
@@ -52,7 +53,6 @@ As a result, we have now three routines:
   - keybindings-gen :: generate the elisp for the keybindings from a given table
   - hydra-keybindings-gen :: generate the elisp for the *hydra* keybindings from a given table
   - hydra-keybindings-gen-with-opt :: same as previously but dedicated to take into account options specificied for hydra
-
 
 #+NAME: keybindings-gen
 #+header: :tangle no :exports code :results value :cache yes
@@ -68,7 +68,6 @@ As a result, we have now three routines:
              "\n")
 #+end_src
 
-
 #+NAME: hydra-keybindings-gen
 #+header: :tangle no :exports code :results value :cache yes
 #+begin_src emacs-lisp :var table=comment-keybindings prefix=""
@@ -82,7 +81,6 @@ As a result, we have now three routines:
              table
              "\n")
 #+end_src
-
 
 #+NAME: hydra-keybindings-gen-with-opt
 #+header: :tangle no :exports code :results value :cache yes
@@ -2231,6 +2229,7 @@ I am using =nov= to read epub files.
 
 #+BEGIN_SRC emacs-lisp
   (use-package nov
+    :disabled t
     :tags '("DESKTOP" "DOCUMENT")
     :mode ("\\.epub\\'" . nov-mode)
     :commands (nov-mode)
@@ -3972,6 +3971,7 @@ Add highlighting for doxygen blocks.
     :hook
     (c-mode-common . highlight-doxygen-mode))
 #+END_SRC
+
 **** CMake
 #+begin_src emacs-lisp
   (use-package cmake-mode
@@ -4253,7 +4253,10 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
 
 #+begin_src emacs-lisp
   (use-package tex
-    :elpaca (:package "auctex" :repo "https://git.savannah.gnu.org/git/auctex.git" :local-repo "auctex" :files ("*" :exclude ".git") :protocol https :inherit t :depth 1
+    :elpaca (:package "auctex"
+                      :repo "https://git.savannah.gnu.org/git/auctex.git"
+                      :local-repo "auctex" :files ("*" :exclude ".git")
+                      :protocol https :inherit t :depth 1
                       :pre-build (("chmod" "775" "autogen.sh") ("./autogen.sh") ("./configure") ("make")))
     :tags '("WRITING" "LATEX")
     :after (tex latex)
@@ -7310,6 +7313,7 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     (tooltip-mode -1)
     (scroll-bar-mode -1)
     (tool-bar-mode -1)
+
     ;;disable splash screen and startup message
     (setq inhibit-startup-message t)
     (setq initial-scratch-message nil)
@@ -7331,6 +7335,8 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     (setq window-divider-default-right-width 5
           window-divider-default-places 'right-only)
     (window-divider-mode 1)
+
+    (global-hl-line-mode)
 
     :config
     (load-theme 'flatfluc t)
