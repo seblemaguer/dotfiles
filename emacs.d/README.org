@@ -6700,15 +6700,15 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 
     ;; Some behaviour definition
     (setq later-do-interval 0.0001
-	  emms-directory (concat user-emacs-directory "emms")
-	  emms-playlist-buffer-name "*Music*"
-	  emms-source-file-default-directory (expand-file-name "~/Music")
-	  emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find
-	  emms-show-format "NP: %s"
-	  emms-playlist-default-major-mode 'emms-playlist-mode
-	  emms-repeat-playlist t
-	  emms-mode-line-mode-line-function nil  ;; Don't want any info in the mode line
-	  emms-mode-line-titlebar-function 'emms-mode-line-playlist-current) ;; Put info in the titlebar
+          emms-directory (concat user-emacs-directory "emms")
+          emms-playlist-buffer-name "*Music*"
+          emms-source-file-default-directory (expand-file-name "~/Music")
+          emms-source-file-directory-tree-function 'emms-source-file-directory-tree-find
+          emms-show-format "NP: %s"
+          emms-playlist-default-major-mode 'emms-playlist-mode
+          emms-repeat-playlist t
+          emms-mode-line-mode-line-function nil  ;; Don't want any info in the mode line
+          emms-mode-line-titlebar-function 'emms-mode-line-playlist-current) ;; Put info in the titlebar
 
     ;; Visualisation activation/deactivation
     (emms-mode-line nil)
@@ -6717,8 +6717,8 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
     (when (fboundp 'emms-cache)
       (emms-cache 1)
       (defun my-emms-cache-set  (type path track)
-	(unless (string-match "^http[s]?://.*" path)
-	  (emms-cache-set type path track)))
+        (unless (string-match "^http[s]?://.*" path)
+          (emms-cache-set type path track)))
       (setq emms-cache-set-function 'my-emms-cache-set))
 
     ;; Define routine to update cache without adding tracks to the playlist
@@ -6726,52 +6726,52 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
       "Routine to update the cache without updating any playlist -either DIR, or the value of
     `emms-source-file-default-directory'."
       (interactive (list
-		    (emms-read-directory-name "Play directory tree: "
-					      (emms-source-file-directory-hint)
-					      emms-source-file-default-directory
-					      t)))
+        	    (emms-read-directory-name "Play directory tree: "
+        				      (emms-source-file-directory-hint)
+        				      emms-source-file-default-directory
+        				      t)))
       (let ((files (emms-source-file-directory-tree (expand-file-name dir)
-						    (emms-source-file-regex)))
-	    (case-fold-search nil))
-	(with-current-emms-playlist
-	  (point-max)
-	  (mapc (lambda (file)
-		  (unless (or (string-match emms-source-file-exclude-regexp file)
-			      (gethash file emms-cache-db))
-		    (emms-track 'file file)))
-		files))))
+        					    (emms-source-file-regex)))
+            (case-fold-search nil))
+        (with-current-emms-playlist
+          (point-max)
+          (mapc (lambda (file)
+        	  (unless (or (string-match emms-source-file-exclude-regexp file)
+        		      (gethash file emms-cache-db))
+        	    (emms-track 'file file)))
+        	files))))
 
     ;; Adapt track description format
     (defun track-description (track)
       "Return a description of the current TRACK."
       (if (and (emms-track-get track 'info-artist)
-	       (emms-track-get track 'info-title))
-	  (let ((pmin (emms-track-get track 'info-playing-time-min))
-		(psec (emms-track-get track 'info-playing-time-sec))
-		(ptot (emms-track-get track 'info-playing-time))
-		(art  (emms-track-get track 'info-artist))
-		(tit  (emms-track-get track 'info-title))
-		(alb  (emms-track-get track 'info-album)))
-	    (cond ((and pmin psec) (format "%s - %s - %s [%02d:%02d]" art alb tit pmin psec))
-		  (ptot (format  "%s - %s - %s [%02d:%02d]" art alb tit (/ ptot 60) (% ptot 60)))
-		  (t (emms-track-simple-description track))))
-	(progn
-	  (emms-track-simple-description track))))
+               (emms-track-get track 'info-title))
+          (let ((pmin (emms-track-get track 'info-playing-time-min))
+        	(psec (emms-track-get track 'info-playing-time-sec))
+        	(ptot (emms-track-get track 'info-playing-time))
+        	(art  (emms-track-get track 'info-artist))
+        	(tit  (emms-track-get track 'info-title))
+        	(alb  (emms-track-get track 'info-album)))
+            (cond ((and pmin psec) (format "%s - %s - %s [%02d:%02d]" art alb tit pmin psec))
+        	  (ptot (format  "%s - %s - %s [%02d:%02d]" art alb tit (/ ptot 60) (% ptot 60)))
+        	  (t (emms-track-simple-description track))))
+        (progn
+          (emms-track-simple-description track))))
     (setq emms-track-description-function 'track-description)
 
     ;; taken from http://emacs.stackexchange.com/questions/21747/emms-how-can-i-have-a-progress-bar?rq=1
     (defun emms-indicate-seek (_sec)
       "Show the progress bar when seek."
       (let* ((total-playing-time (emms-track-get
-				  (emms-playlist-current-selected-track)
-				  'info-playing-time))
-	     (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
-	(with-temp-message (format "[%-100s] %2d%% [%02d:%02d]/[%02d:%02d]"
-				   (make-string (round elapsed/total) ?=)
-				   (round elapsed/total)
-				   (/ (round emms-playing-time) 60) (% (round emms-playing-time) 60)
-				   (/ (round total-playing-time) 60) (% (round total-playing-time) 60))
-	  (sit-for 2))))
+        			  (emms-playlist-current-selected-track)
+        			  'info-playing-time))
+             (elapsed/total (/ (* 100 emms-playing-time) total-playing-time)))
+        (with-temp-message (format "[%-100s] %2d%% [%02d:%02d]/[%02d:%02d]"
+        			   (make-string (round elapsed/total) ?=)
+        			   (round elapsed/total)
+        			   (/ (round emms-playing-time) 60) (% (round emms-playing-time) 60)
+        			   (/ (round total-playing-time) 60) (% (round total-playing-time) 60))
+          (sit-for 2))))
     (add-hook 'emms-player-seeked-functions #'emms-indicate-seek 'append))
 
   ;; Wait for elpaca so that the other packages are ready if necessary !
@@ -6782,7 +6782,7 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil
-	  emms-info-functions '(emms-info-metaflac)))
+          emms-info-functions '(emms-info-metaflac)))
 
   (use-package emms-info-libtag
     :elpaca nil ;; emms
@@ -6804,26 +6804,26 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
     :config
     ;; Formatting
     (setq emms-browser-info-artist-format "%i☢ %n"
-	  emms-browser-info-album-format "%i%cS [%y] %n"
-	  emms-browser-info-title-format "%i♪ %T. %t [%d]"
-	  emms-browser-playlist-info-album-format "%cS %a - %A : "
-	  emms-browser-playlist-info-title-format "%i%T. %t [%d]")
+          emms-browser-info-album-format "%i%cS [%y] %n"
+          emms-browser-info-title-format "%i♪ %T. %t [%d]"
+          emms-browser-playlist-info-album-format "%cS %a - %A : "
+          emms-browser-playlist-info-title-format "%i%T. %t [%d]")
 
     ;; Filtering
     (emms-browser-make-filter "all" #'ignore)
     (emms-browser-make-filter
      "recent - Month"
      (lambda (track) (< 30
-			(time-to-number-of-days
-			 (time-subtract (current-time)
-					(emms-info-track-file-mtime track))))))
+        		(time-to-number-of-days
+        		 (time-subtract (current-time)
+        				(emms-info-track-file-mtime track))))))
 
     (emms-browser-make-filter
      "recent - Trimester"
      (lambda (track) (< (* 3 30)
-			(time-to-number-of-days
-			 (time-subtract (current-time)
-					(emms-info-track-file-mtime track))))))
+        		(time-to-number-of-days
+        		 (time-subtract (current-time)
+        				(emms-info-track-file-mtime track))))))
 
     (emms-browser-make-filter
      "not-played"
@@ -7197,8 +7197,6 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
 
     (when (and (string= work-hostname (system-name))
                (fboundp 'list-mail-services))
-
-    (when (fboundp 'list-mail-services)
       (dolist (name (list-mail-services))
         (setq elcontext--context-id name
               elcontext--context-current (ht (:name name)
@@ -7413,9 +7411,8 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
                           ;; :background "black"
                           :height 0.1))
 
-
     (defun nano-modeline-emms-track-description (track)
-      "Return a description of the current TRACK."
+      "Return a description of the current TRACK tuned for nano-modeline."
       (if (and (emms-track-get track 'info-artist)
                (emms-track-get track 'info-title))
           (let ((art (emms-track-get track 'info-artist))
@@ -7427,16 +7424,17 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
           (emms-track-simple-description track))))
 
     (defun nano-modeline-emms-playlist-current (&optional name)
-      "Buffer name"
+      "Wrapper to get the current track from the playlist."
       (propertize
        (nano-modeline-emms-track-description (emms-playlist-current-selected-track))
        'face (nano-modeline-face 'name)))
 
     (defun nano-emms-playing-time ()
+      "Wrapper to get the EMMS playing time."
       emms-playing-time-string)
 
-    (defun nano-modeline-emms-playlist-mode (&optional default)
-      "Nano line for text mode. Can be made DEFAULT mode."
+    (defun nano-modeline-emms-playlist-mode ()
+      "Nano line for EMMS browser mode"
 
       (add-hook 'post-command-hook #'force-mode-line-update)
       (funcall nano-modeline-position
@@ -7444,17 +7442,16 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
                  (nano-modeline-buffer-name))
 
                '((nano-modeline-emms-playlist-current) " "
-                 (nano-emms-playing-time))
-               default))
+                 (nano-emms-playing-time))))
 
-  (defun nano-modeline-emms-mode ()
-    "Nano line for org agenda mode"
+    (defun nano-modeline-emms-browser-mode ()
+      "Nano line for EMMS browser mode"
 
-    (add-hook 'post-command-hook #'force-mode-line-update)
-    (funcall nano-modeline-position
-             '((nano-modeline-buffer-status "EMMS") " "
-               (nano-modeline-buffer-name))
-             '()))
+      (add-hook 'post-command-hook #'force-mode-line-update)
+      (funcall nano-modeline-position
+               '((nano-modeline-buffer-status "EMMS") " "
+                 (nano-modeline-buffer-name))
+               '()))
 
     ;; Add emms support
     (add-hook 'emms-browser-mode-hook #'nano-modeline-emms-browser-mode)
