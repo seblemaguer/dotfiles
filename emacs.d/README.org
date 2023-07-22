@@ -2669,7 +2669,7 @@ The only configuration here is to activate it globally.
 
 ** DONE Folding
 CLOSED: [2021-01-04 Mon 09:00]
-For the folding, I am relying on =origami= and its connection to lsp: =lsp-origami=
+For the folding, I am relying on =origami=.
 
 #+NAME: origami-keybindings
 | Key | Function                        | Description |
@@ -2698,11 +2698,6 @@ For the folding, I am relying on =origami= and its connection to lsp: =lsp-origa
     :config
     (define-prefix-command 'origami-mode-map)
     (global-set-key (kbd "C-c @") 'origami-mode-map))
-
-  (use-package lsp-origami
-    :tags '("FOLDING")
-    :hook (lsp-after-open . lsp-origami-try-enable)
-    :commands (lsp-origami-try-enable))
 #+end_src
 
 ** DONE Completing [100%]
@@ -3475,132 +3470,20 @@ I also added the support of =scopeline= which provides an indicator about the sc
 
 ** DONE LSP general configuration
 CLOSED: [2021-01-03 Sun 21:28]
-The general configuration of LSP is centered around two key parts: the UI and the keys.
-I also override some default parameters to make the experience more appealing.
-
-
-#+NAME: lsp-mode-hydra-entry-keybindings
-| Key     | Functon             | Description |
-|---------+---------------------+-------------|
-| C-h M-h | lsp-mode-hydra/body |             |
-
-#+NAME: lsp-mode-hydra-buffer-keybindings
-| Key | Function                | Label         | Description |
-|-----+-------------------------+---------------+-------------|
-| f   | lsp-format-buffer       | Format        |             |
-| m   | lsp-ui-imenu            | IMenu         |             |
-| x   | lsp-execute-code-action | Excute action |             |
-
-#+NAME: lsp-mode-hydra-server-keybindings
-| Key | Function               | Label    | Description |
-|-----+------------------------+----------+-------------|
-| M-s | lsp-describe-session   | Describe |             |
-| M-r | lsp-restart-workspace  | Restart  |             |
-| S   | lsp-shutdown-workspace | Shutdown |             |
-
-#+NAME: lsp-mode-hydra-symbol-keybindings
-| Key | Function                        | Label          | Description |
-|-----+---------------------------------+----------------+-------------|
-| d   | lsp-find-declaration            | Declaration    |             |
-| D   | lsp-ui-peek-find-definitions    | Definition     |             |
-| R   | lsp-ui-peek-find-references     | References     |             |
-| i   | lsp-ui-peek-find-implementation | Implementation |             |
-| t   | lsp-find-type-definition        | Type           |             |
-| s   | lsp-signature-help              | Signature      |             |
-| o   | lsp-describe-thing-at-point     | Documentation  |             |
-| r   | lsp-rename                      | Rename         |             |
-
-
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :tags '("IDE" "PROGRAMMING" "LSP")
-    :commands (lsp lsp-deferred)
-    :bind (
-      :map lsp-mode-map (
-        <<keybindings-gen(table=lsp-mode-hydra-entry-keybindings)>>
-      )
+  (defun my-eglot-organize-imports () (interactive)
+         (eglot-code-actions nil nil "source.organizeImports" t))
+
+  (use-package project :demand t)
+
+  (use-package eglot
+    :demand t
+    :after (project)
+    :config
+    (add-hook 'before-save-hook 'my-eglot-organize-imports nil t)
+    (add-hook 'before-save-hook 'eglot-format-buffer)
     )
-
-    :mode-hydra
-    (lsp-mode
-     (:color red)
-     ("Buffer" (
-       <<hydra-keybindings-gen(table=lsp-mode-hydra-buffer-keybindings)>>
-      )
-
-      "Server"(
-       <<hydra-keybindings-gen(table=lsp-mode-hydra-server-keybindings)>>
-      )
-
-      "Symbol"(
-       <<hydra-keybindings-gen(table=lsp-mode-hydra-symbol-keybindings)>>
-      )
-    ))
-
-    :init
-    (setq lsp-before-save-edits t
-          lsp-inhibit-message t
-          lsp-eldoc-render-all nil
-          lsp-highlight-symbol-at-point nil
-          lsp-prefer-flymake nil
-          read-process-output-max (* 1024 1024)
-          lsp-idle-delay 0.500)
-    :config
-
-    (defun lsp-clean-workspace-folders ()
-      "Clean the list of workspace folders to restart from scratch. Useful when you had a rush a created a lot of projects and want to restart from scratch."
-      (interactive)
-      (dolist (cur-workspace-folder (lsp-session-folders (lsp-session)))
-        (lsp-workspace-folders-remove cur-workspace-folder))))
-
-  (use-package lsp-ui
-    :tags '("IDE")
-    :after lsp-mode
-    :commands lsp-ui-mode
-    :config
-    (setq lsp-ui-doc-enable t
-          lsp-ui-doc-use-webkit nil
-          lsp-ui-doc-delay 10000.0
-          lsp-ui-sideline-delay 10000.0
-          lsp-ui-doc-include-signature t
-          lsp-ui-doc-position 'at-point
-          lsp-eldoc-enable-hover nil ; Disable eldoc displays in minibuffer
-          lsp-headerline-breadcrumb-enable nil
-          lsp-modeline-code-actions-enable nil
-          lsp-modeline-diagnostics-enable nil
-          lsp-ui-sideline-enable t
-          lsp-ui-sideline-show-hover nil
-          lsp-ui-sideline-show-diagnostics nil
-          lsp-ui-sideline-ignore-duplicate t))
 #+end_src
-
-** DONE DAP general configuration
-CLOSED: [2021-04-06 Tue 08:13]
-The default configuration of =dap-mode= is too "heavy" for me.
-I generally need the variables and the REPL buffer.
-The rest can be activated manually later.
-Finally, I reduced the height of the REPL buffer at the start of the debug session.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package dap-mode
-    :tags '("IDE" "PROGRAMMING" "LSP")
-    :config
-    ;; Disable control (I don't like it)
-    (dap-ui-controls-mode 0)
-
-    ;; Reduce the features to the repl and the local variable information
-    (setq dap-auto-configure-features '(locals repl))
-
-    ;; Redefine the height of the repl buffer
-    (setq dap-ui-buffer-configurations
-          `((,dap-ui--locals-buffer . ((side . right) (slot . 1) (window-width . 0.20)))
-            (,dap-ui--expressions-buffer . ((side . right) (slot . 2) (window-width . 0.20)))
-            (,dap-ui--sessions-buffer . ((side . right) (slot . 3) (window-width . 0.20)))
-            (,dap-ui--breakpoints-buffer . ((side . left) (slot . 2) (window-width . ,treemacs-width)))
-            (,dap-ui--debug-window-buffer . ((side . bottom) (slot . 3) (window-width . 0.20)))
-            (,dap-ui--repl-buffer . ((side . bottom) (slot . 1) (window-height . 0.20))))))
-
-#+END_SRC
 
 ** DONE Data [100%]
 CLOSED: [2021-01-03 Sun 21:49]
@@ -3851,7 +3734,8 @@ Consequently, I need a proper node to edit docker build files as I build my own 
 #+begin_src emacs-lisp
   (use-package dockerfile-mode
     :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM")
-    )
+    :hook
+    (dockerfile-mode . eglot-ensure))
 #+end_src
 
 *** DONE CRON
@@ -3862,8 +3746,7 @@ While I would generally use VIM for such editions, I prefer to use emacs configu
 
 #+begin_src emacs-lisp
   (use-package crontab-mode
-    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM")
-    )
+    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM"))
 #+end_src
 
 ** DONE Logging
@@ -3961,6 +3844,21 @@ I also added a hydra configuration to link properly everything.
 #+end_src
 
 *** TODO C/C++/CMake
+**** Overall part
+#+begin_src elisp :lexical no
+  (use-package c-mode
+    :elpaca nil
+    :tags '("PROGRAMMING" "C" "CPP")
+    :hook
+    (c-mode . eglot-ensure))
+
+  (use-package c++-mode
+    :elpaca nil
+    :tags '("PROGRAMMING" "C" "CPP")
+    :hook
+    (c++-mode . eglot-ensure))
+#+end_src
+
 **** Use google programming style
 #+BEGIN_SRC emacs-lisp
   (use-package google-c-style
@@ -3972,8 +3870,7 @@ I also added a hydra configuration to link properly everything.
 #+END_SRC
 
 **** Treat =.h= as C++
-Identify =.h= files as C++ files instead of C. To enable =c++-mode=
-manually, type =M-x c\+\+-mode=.
+Identify =.h= files as C++ files instead of C. To enable =c++-mode= manually, type =M-x c\+\+-mode=.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 #+END_SRC
@@ -3985,6 +3882,7 @@ manually, type =M-x c\+\+-mode=.
 |-------+---------------------+-------------|
 | C-c i | clang-format-region |             |
 | C-c u | clang-format-buffer |             |
+
 #+BEGIN_SRC emacs-lisp
   (use-package clang-format
     :ensure t
@@ -4041,13 +3939,6 @@ I use Java and two dialects based on Java: Groovy and Kotlin.
 I strongly rely on LSP, so the configuration consists mainly on loading major mode and configuring the LSP servers.
 
 #+begin_src emacs-lisp
-  (use-package lsp-java
-    :tags '("PROGRAMMING" "JAVA" "LSP")
-    :hook
-    (java-mode . lsp)
-
-    :config
-    (setq lsp-java-save-action-organize-imports nil))
 
   (use-package java-snippets
     :tags '("PROGRAMMING" "JAVA" "COMPLETION")
@@ -4059,13 +3950,10 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
     :interpreter ("gradle" "groovy")
     :hook
     (groovy-mode .  (lambda () (inf-groovy-keys)))
-    (groovy-mode . lsp-deferred)
 
     :config
     (autoload 'run-groovy "inf-groovy" "Run an inferior Groovy process")
-    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode")
-
-    (setq lsp-groovy-server-file "~/environment/local/lib/groovy-language-server-all.jar"))
+    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode"))
 
   ;; Subpackages
   (use-package groovy-imports
@@ -4075,8 +3963,6 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
   (use-package kotlin-mode
     :tags '("PROGRAMMING" "JAVA" "KOTLIN")
     :mode "\\.kts?\\'"
-    :hook
-    (kotlin-mode . lsp-deferred)
 
     :config
     (setq kotlin-tab-width 4))
@@ -4119,7 +4005,6 @@ For R, I rely on =ess= which provides excellent support with a reasonable defaul
 *** DONE Python
 CLOSED: [2021-01-04 Mon 07:42]
 Python is my main programming language, so the one I configured the most intensively.
-I strongly rely on LSP and the Microsoft ~pyright~ server.
 I prefer to use ~ipython~ as the interpreter as it is more powerful.
 I use =python-mls= to enhance the REPL environment
 Finally, I use =numpydoc= to deal with the documentation.
@@ -4132,23 +4017,17 @@ Finally, I use =numpydoc= to deal with the documentation.
     ("\\.py\\'" . python-mode)
     ("\\.wsgi$" . python-mode)
 
+    :hook
+    (python-mode . eglot-ensure)
+
     :init
     (setq-default indent-tabs-mode nil)
 
     :config
     (setq python-indent-offset 4
-	  python-shell-interpreter "ipython"
-	  python-shell-interpreter-args "--simple-prompt --colors=Linux -i"))
+          python-shell-interpreter "ipython"
+          python-shell-interpreter-args "--simple-prompt --colors=Linux -i"))
 
-  (use-package lsp-pyright
-    :tags '("PROGRAMMING" "PYTHON" "LSP")
-    :commands (lsp lsp-deferred)
-    :hook (python-mode . (lambda ()
-			   (require 'lsp-pyright)
-			   (require 'dap-python)
-			   (lsp)))
-    :custom
-    (dap-python-debugger 'debugpy))
 
   (use-package numpydoc
     :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
@@ -4168,12 +4047,6 @@ CLOSED: [2021-01-04 Mon 07:25]
 Editing bash/zsh files is relatively straightforward using Emacs' default configuration.
 Nonetheless, a proper completion support is lacking and some helpers are always welcomed.
 To do so, I use =company-shell= to add shell support using the =company= completion system.
-I am using =modern-sh= to enhance the experience (modern syntax highlighting, REPL, ...).
-
-#+NAME: modern-sh-entry-keybindings
-| Key    | Function       | Description |
-|--------+----------------+-------------|
-| C-<f6> | modern-sh-menu |             |
 
 #+begin_src emacs-lisp
   (use-package company-shell
@@ -4186,20 +4059,11 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
       (make-local-variable 'company-backends)
       (set 'company-backends (append '(company-shell company-shell-env company-fish-shell) company-backends))))
 
-  (use-package modern-sh
-    :disabled t
+  (use-package sh-script
+    :elpaca nil
     :tags '("PROGRAMMING" "SHELL")
-    :hook (sh-mode . embed-modern-sh-mode-toggle)
-    :bind (
-      :map modern-sh-mode-map (
-        <<keybindings-gen(table=modern-sh-entry-keybindings)>>
-      )
-    )
-
-    :init
-    (defun embed-modern-sh-mode-toggle ()
-      (when (buffer-file-name)
-        (modern-sh-mode))))
+    :hook
+    (sh-mode . eglot-ensure))
 #+end_src
 
 *** DONE Plotting/Graphing
@@ -4620,13 +4484,12 @@ To help to deal with my poor English, I am using grammarly to check my text.
 The package =grammarly= bring its functionnality into emacs which is a saver for me.
 
 #+begin_src emacs-lisp
-  (use-package flycheck-grammarly
-    :tags '("WRITING" "CONNECTED")
-    :init
-    (with-eval-after-load 'flycheck
-      (flycheck-grammarly-setup))
-    :custom
-    (flycheck-grammarly-check-time 0.8))
+  (use-package eglot-grammarly
+    :elpaca (:host github :repo "emacs-grammarly/eglot-grammarly")
+    :defer t  ; defer package loading
+    :hook ((text-mode markdown-mode). (lambda ()
+                                        (require 'eglot-grammarly)
+                                        (eglot-ensure))))
 #+end_src
 
 ** DONE Translation
