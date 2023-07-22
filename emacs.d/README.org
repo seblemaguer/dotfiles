@@ -3519,11 +3519,7 @@ CLOSED: [2021-01-03 Sun 21:28]
 
   (use-package eglot
     :demand t
-    :after (project)
-    :config
-    (add-hook 'before-save-hook 'my-eglot-organize-imports nil t)
-    (add-hook 'before-save-hook 'eglot-format-buffer)
-    )
+    :after (project))
 #+end_src
 
 ** DONE Data [100%]
