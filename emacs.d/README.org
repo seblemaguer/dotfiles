@@ -331,7 +331,7 @@ While alternatives exist, I find this combination more straightforward and clean
 #+end_src
 
 *** Transient
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package transient
     :tags '("CORE")
     )
@@ -2052,7 +2052,7 @@ CLOSED: [2023-06-08 Thu 19:02]
 =org-crypt= provides a nice to encrypt part of an org file.
 This is convenient as it provides a way to understand what the content should be about without showing its actual value.
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package org-crypt
     :elpaca nil
     :tags '("CORE" "ENCRYPTION")
@@ -2630,7 +2630,7 @@ CLOSED: [2022-02-10 Thu 07:12]
 *** TODO org-media-noter
 - Set the shortcuts
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package org-media-note
     :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
     :elpaca (org-media-note :type git :host github :repo "yuchen-lea/org-media-note"))
@@ -3123,7 +3123,7 @@ I am using it mainly to show/hide my terminal faster.
 | C-<f6> | start-term-hydra/body |             |
 
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package popper
     :tags '("HELPER")
     :bind (
@@ -3155,7 +3155,7 @@ CLOSED: [2023-07-21 Fri 22:48]
 =autoscratch= provides a neat way to adapt the scratch buffer to the needed mode pretty quickly.
 It is really convenient for quick note taking.
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package autoscratch
     :tags '("HELPERS")
     :ensure t
@@ -3457,7 +3457,7 @@ Tree-sitter is neat way of dealing with syntax highlighting.
 It is fast and configurable.
 I also added the support of =scopeline= which provides an indicator about the score of the current block.
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package tree-sitter-langs
     :ensure t
     :tags '("IDE" "PROGRAMMING" "TREE-SITTER"))
@@ -3845,7 +3845,7 @@ I also added a hydra configuration to link properly everything.
 
 *** TODO C/C++/CMake
 **** Overall part
-#+begin_src elisp :lexical no
+#+begin_src emacs-lisp
   (use-package c-mode
     :elpaca nil
     :tags '("PROGRAMMING" "C" "CPP")
@@ -5249,7 +5249,7 @@ To manage the trash via emacs, =trashed= provides a really interface.
 
 ** DONE Current File Information
 CLOSED: [2023-02-02 Thu 15:56]
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
     (use-package file-info
       :elpaca (:host github :repo "artawower/file-info.el")
       :tags '("FILE_MANAGEMENT")
@@ -6734,7 +6734,7 @@ I just modified a couple of bindings to fit my French keyboard layout (the other
 | M-i     | subed-insert-subtitle               | Insert a new subtitle "line"                                    |
 | C-c C-v | subed-mpv-play-from-file            | Open a video file to synchronize with the current subtitle file |
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package subed
     :elpaca (subed :type git :host github :repo "sachac/subed" :files ("subed/*.el"))
     :bind (
@@ -6869,7 +6869,7 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
 
 *** DONE Printing
 CLOSED: [2023-04-07 Fri 12:50]
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package transient-extras-lp
     :tags '("DESKTOP" "PRINT")
     :config
@@ -7138,7 +7138,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 ** Conveniencies
 *** Unit conversion
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
 (when (executable-find "units")
   (use-package units
     :tags '("HELPERS")
@@ -7148,7 +7148,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 #+end_src
 
 *** Open Street Map
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package osm
     :tags '("HELPERS" "DESKTOP")
     :custom
