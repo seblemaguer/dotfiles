@@ -4527,10 +4527,8 @@ The package =grammarly= bring its functionnality into emacs which is a saver for
 #+begin_src emacs-lisp
   (use-package eglot-grammarly
     :elpaca (:host github :repo "emacs-grammarly/eglot-grammarly")
-    :defer t  ; defer package loading
-    :hook ((text-mode markdown-mode). (lambda ()
-                                        (require 'eglot-grammarly)
-                                        (eglot-ensure))))
+    :tags '("WRITING" "HELPERS" "CONNECTED")
+    :defer t)
 #+end_src
 
 ** DONE Translation
@@ -5129,7 +5127,8 @@ I also replace a base deletion by moving the files/directories to the trash.
 
     ;; When deleting, send actually to the trash!
     (setq dired-recursive-deletes 'always
-          delete-by-moving-to-trash t)
+          delete-by-moving-to-trash t
+          dirvish-use-mode-line nil)
 
     ;; Enable mouse drag-and-drop files to other applications
     (setq dired-mouse-drag-files t                    ; added in Emacs 29
