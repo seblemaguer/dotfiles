@@ -2062,6 +2062,45 @@ This is convenient as it provides a way to understand what the content should be
 #+end_src
 
 * DONE Document [100%]
+** DONE Formatting for better reading
+CLOSED: [2023-07-22 Sat 23:18]
+=olivetti= provides a nice way to read document without distraction.
+
+#+begin_src emacs-lisp
+  (use-package olivetti
+    :preface
+    ;; Body width
+    (setq fk/olivetti-body-width-default 120)
+    (setq fk/olivetti-body-width-large 180)
+    (setq olivetti-body-width fk/olivetti-body-width-default)
+    ;; Borders
+    (setq olivetti-enable-borders t)
+
+    :custom
+    (olivetti-enable-visual-line-mode nil)
+    (olivetti-window-local t)
+
+    :bind
+    ("C-1" . fk/smart-C-x-1)
+
+    :hook
+    (Info-mode . olivetti-mode)
+    (ewww . olivetti-mode)
+
+    :config
+    (defun fk/smart-C-x-1 ()
+      (interactive)
+      (if (= (count-windows) 1)
+          (if (and global-olivetti-mode
+                   (= olivetti-body-width fk/olivetti-body-width-default))
+              (progn
+                (setq olivetti-body-width fk/olivetti-body-width-large)
+                (olivetti-mode))
+            (call-interactively 'global-olivetti-mode)
+            (setq olivetti-body-width fk/olivetti-body-width-default))
+        (delete-other-windows))))
+#+end_src
+
 ** DONE PDF
 CLOSED: [2023-05-16 Tue 21:57]
 Visualizing PDF files in Emacs is quite useful.
@@ -2260,12 +2299,14 @@ I am using =nov= to read epub files.
 
 #+BEGIN_SRC emacs-lisp
   (use-package nov
-    :disabled t
+    :elpaca (nov :depth nil)
     :tags '("DESKTOP" "DOCUMENT")
-    :mode ("\\.epub\\'" . nov-mode)
     :commands (nov-mode)
+    :custom
+    (nov-text-width t)
+    :mode ((rx ".epub" eos) . nov-mode)
     :config
-    (setq nov-text-width 100))
+    (add-hook 'nov-mode-hook 'olivetti-mode))
 #+END_SRC
 
 * DONE Notes taking & academic organizing [100%]
