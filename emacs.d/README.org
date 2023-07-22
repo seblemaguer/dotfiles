@@ -613,6 +613,14 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
 |-----+-----------------+-------------|
 | C-< | goto-last-point |             |
 
+#+NAME: trail-entry-keybindings
+| Key   | Functon                      | Description |
+|-------+------------------------------+-------------|
+| C-M-= | trail-mark                   |             |
+| C-M-' | trail-list                   |             |
+| C-M-[ | trail-find-and-jump-previous |             |
+| C-M-] | trail-find-and-jump-next     |             |
+
 #+begin_src emacs-lisp
   (use-package fast-scroll
     :tags '("CORE" "NAVIGATION")
@@ -632,6 +640,29 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
     :bind (
       <<keybindings-gen(table=goto-last-point-entry-keybindings)>>
     ))
+
+  (use-package trail
+    :elpaca (:host github :repo "gitrj95/trail.el")
+    ;; if using a persistence/restoration mechanism, the restoration of
+    ;; trail-ring must happen before trail-mode is enabled
+    :after savehist
+    :custom
+    (trail-mark-around-functions '(xref-find-definitions xref-find-references))
+    (trail-ring-max 100)
+
+    :init
+    (trail-mode)
+
+    :bind(
+      <<keybindings-gen(table=trail-entry-keybindings)>>
+    ))
+
+  (use-package savehist
+    :elpaca nil
+    :init
+    (savehist-mode)
+    (setq savehist-additional-variables
+	  '(trail-ring)))
 #+end_src
 
 * DONE Encryption part
@@ -2747,12 +2778,6 @@ Nothing fancy happens here, just its activation and a couple of setups related t
 
     ;; Enable recursive minibuffers
     (setq enable-recursive-minibuffers t))
-
-  ;; Persist history over Emacs restarts. Vertico sorts by history position.
-  (use-package savehist
-    :elpaca nil
-    :init
-    (savehist-mode))
 #+end_src
 
 *** DONE Helm
