@@ -1617,27 +1617,34 @@ I also use capturing mechanism to save recipes and some interesting websites.
     :config
     (setq org-capture-templates
           (doct `(
-             ("Calendar"
-              :keys "C"
-              :type entry
-              :file ,(format "%s/calendars/adapt.org" user-emacs-directory)
-              :template-file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory))
+                  ("Calendar"
+                   :keys "c"
+                   :type entry
+                   :file ,(format "%s/calendars/adapt.org" user-emacs-directory)
+                   :template-file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory))
 
-             ("TODO"
-              :keys "t"
-              :type entry
-              :file ,(concat cloud-org-root-dir "todo/todo.org")
-              :headline "To sort"
-              :template-file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory)
-              :empty-lines-before 1)
+                  ("TODO"
+                   :keys "t"
+                   :type entry
+                   :file ,(concat cloud-org-root-dir "todo/todo.org")
+                   :headline "To sort"
+                   :template-file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory)
+                   :empty-lines-before 1)
 
-             ("Mail"
-              :keys "m"
-              :type entry
-              :file ,(concat cloud-org-root-dir "todo/todo.org")
-              :headline "Mailing"
-              :template-file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory))
-             ))))
+                  ("Mail"
+                   :keys "m"
+                   :type entry
+                   :file ,(concat cloud-org-root-dir "todo/todo.org")
+                   :headline "Mailing"
+                   :template-file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory))
+
+                  ("Slack"
+                   :keys "s"
+                   :type entry
+                   :file ,(concat cloud-org-root-dir "todo/todo.org")
+                   :headline "To Sort"
+                   :template-file ,(format "%s/third_parties/org-capture-templates/slack.org" user-emacs-directory)))))
+    )
 #+end_src
 
 *** DONE Cooking
@@ -6262,6 +6269,11 @@ Because, I prefer to have the completion system, =company=, configured locally f
       :map slack-message-buffer-mode-map (
         <<keybindings-gen(table=slack-message-keybindings)>>
       )
+
+      :map slack-thread-message-buffer-mode-map (
+        <<keybindings-gen(table=slack-mode-keybindings)>>
+        <<keybindings-gen(table=slack-message-keybindings)>>
+      )
     )
 
     :config
@@ -6282,13 +6294,11 @@ Because, I prefer to have the completion system, =company=, configured locally f
     ;; Register the teams (configuration defined in a private file)
     (when (fboundp 'slack-register-teams)
       (slack-register-teams)))
-#+end_src
 
-**** DONE Helm-slack
-CLOSED: [2021-01-05 Tue 09:21]
-As an entry point to use slack, I prefer to use =helm-slack= as it provides a nice view of everthing in one place.
+  (use-package ol-emacs-slack
+    :elpaca (:host github :repo "ag91/ol-emacs-slack")
+    :tags '("CONNECTED" "CHAT" "SLACK"))
 
-#+begin_src emacs-lisp
   (use-package helm-slack
     :elpaca (helm-slack :type git :host github :repo "yuya373/helm-slack")
     :tags '("CONNECTED" "CHAT" "SLACK" "COMPLETION")
