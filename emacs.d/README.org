@@ -7296,27 +7296,25 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     :config
 
     ;; ===== Modeline
+    (setq mode-line-format (list ""))
+    (setq-default mode-line-format (list ""))
     (set-face-attribute 'mode-line nil
-                        :foreground fui-fg
+                        :foreground fui-deep-clouds
                         :background fui-deep-clouds
                         :box '(:line-width 1)
                         ;; :box nil
-                        :height 1)
+                        :height 40)
     (set-face-attribute 'mode-line-inactive nil
-                        :foreground fui-fg
+                        :foreground fui-deep-clouds
                         :background fui-deep-clouds
                         ;; :box '(:line-width 1)
                         :box nil
-                        :height 1)
+                        :height 40)
 
 
     (defun my/thin-modeline ()
       "Transform the modeline in a thin faded line"
 
-      ;; (nano-modeline-face-clear 'mode-line)
-      ;; (nano-modeline-face-clear 'mode-line-inactive)
-      (setq mode-line-format (list ""))
-      (setq-default mode-line-format (list ""))
       (set-face-attribute 'mode-line nil
                           :box '(:line-width 1)
                           ;; :foreground (face-background 'nano-subtle)
