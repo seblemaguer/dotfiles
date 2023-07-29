@@ -6247,6 +6247,12 @@ Because, I prefer to have the completion system, =company=, configured locally f
     :no-require t
     :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
 
+    :custom-face
+    (slack-message-output-reaction-pressed ((t (:background "Lightskyblue1"))))
+    (slack-message-mention-face ((t (:background unspecified :foreground "SeaGreen" :weight bold))))
+    (slack-message-mention-me-face ((t (:background unspecified :foreground "Red3" :weight extra-bold))))
+    (slack-message-mention-keyword-face ((t (:background unspecified :foreground "Red3" :underline t))))
+
     :custom
     (slack-modeline-formatter           nil)
     (slack-buffer-create-on-notify      t)
