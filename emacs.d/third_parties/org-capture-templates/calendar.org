@@ -1,7 +1,2 @@
 * %?
- :PROPERTIES:
- :calendar-id: sebastien.lemaguer@adaptcentre.ie
- :END:
-:org-gcal:
 %^T
-:END:
