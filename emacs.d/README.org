@@ -7282,8 +7282,6 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
   (use-package nano-modeline
     :elpaca (nano-modeline :type git :host github :repo "rougier/nano-modeline")
     :tags '("VISUAL")
-    ;; :custom
-    ;; (nano-modeline-prefix-padding t)
     :hook
     (prog-mode            . nano-modeline-prog-mode)
     (text-mode            . nano-modeline-text-mode)
@@ -7304,6 +7302,13 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     ;; ===== Modeline
     (setq mode-line-format (list ""))
     (setq-default mode-line-format (list ""))
+    (set-face-attribute 'nano-modeline-active nil
+                        :foreground fui-fg
+                        :background fui-deep-clouds
+                        :box '(:line-width 1))
+    (set-face-attribute 'nano-modeline-status nil
+                        :foreground fui-fg
+                        :box '(:line-width 1))
     (set-face-attribute 'mode-line nil
                         :foreground fui-fg
                         :background fui-deep-clouds
@@ -7316,21 +7321,6 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
                         ;; :box '(:line-width 1)
                         :box nil
                         :height 40)
-
-
-    (defun my/thin-modeline ()
-      "Transform the modeline in a thin faded line"
-
-      (set-face-attribute 'mode-line nil
-                          :box '(:line-width 1)
-                          ;; :foreground (face-background 'nano-subtle)
-                          ;; :background "black"
-                          :height 0.1)
-      (set-face-attribute 'mode-line-inactive nil
-                          :box '(:line-width 1)
-                          ;; :foreground (face-background 'nano-subtle)
-                          ;; :background "black"
-                          :height 0.1))
 
     (defun nano-modeline-emms-track-description (track)
       "Return a description of the current TRACK tuned for nano-modeline."
@@ -7376,7 +7366,29 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
 
     ;; Add emms support
     (add-hook 'emms-browser-mode-hook #'nano-modeline-emms-browser-mode)
-    (add-hook 'emms-playlist-mode-hook #'nano-modeline-emms-playlist-mode))
+    (add-hook 'emms-playlist-mode-hook #'nano-modeline-emms-playlist-mode)
+
+    ;; Slack
+    (defun nano-modeline-buffer-holder-status (&optional padding)
+      "Generic prefix to indicate buffer STATUS with vertical PADDING (top . bottom)"
+
+      (let* ((padding (or padding nano-modeline-padding))
+             (top (propertize " " 'display `(raise ,(car padding))))
+             (bot (propertize " " 'display `(raise ,(- (cdr padding))))))
+        (propertize (concat top " " bot)
+                    'face (nano-modeline-face 'status-**))))
+
+    (defun nano-modeline-chat-mode ()
+      "Nano line for chat based mode. At the opposite of `nano-modeline-text-mode', we ignore the column and status"
+
+      (funcall nano-modeline-position
+               '((nano-modeline-buffer-holder-status) " "
+                 (nano-modeline-buffer-name))
+               '()))
+
+    (add-hook 'slack-mode-hook #'nano-modeline-chat-mode)
+    (add-hook 'telega-chat-mode-hook #'nano-modeline-chat-mode)
+    )
 #+end_src
 
 ** DONE Prism
