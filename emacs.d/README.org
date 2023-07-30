@@ -6256,7 +6256,7 @@ Because, I prefer to have the completion system, =company=, configured locally f
 
     :custom-face
     (slack-message-output-reaction-pressed ((t (:background "Lightskyblue1"))))
-    (slack-message-mention-face ((t (:background unspecified :foreground "SeaGreen" :weight bold))))
+    (slack-message-mention-face ((t (:background unspecified :foreground "Red3" :weight extra-bold))))
     (slack-message-mention-me-face ((t (:background unspecified :foreground "Red3" :weight extra-bold))))
     (slack-message-mention-keyword-face ((t (:background unspecified :foreground "Red3" :underline t))))
 
@@ -7322,8 +7322,9 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
                         :background fui-deep-clouds
                         :box '(:line-width 1))
     (set-face-attribute 'nano-modeline-status nil
-                        :foreground fui-fg
-                        :box '(:line-width 1))
+                        :background fui-amethyst
+                        :foreground fui-deep-clouds
+                        :box '(:line-width 1 :color fui-fg))
     (set-face-attribute 'mode-line nil
                         :foreground fui-fg
                         :background fui-deep-clouds
