@@ -7305,7 +7305,7 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     (setq mode-line-format (list ""))
     (setq-default mode-line-format (list ""))
     (set-face-attribute 'mode-line nil
-                        :foreground fui-deep-clouds
+                        :foreground fui-fg
                         :background fui-deep-clouds
                         :box '(:line-width 1)
                         ;; :box nil
