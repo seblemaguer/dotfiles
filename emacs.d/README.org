@@ -5995,8 +5995,11 @@ The render for now is achieved by calfw and I especially like the package =calfw
     :tags '("CONNECTED" "CALENDAR" "VISUAL")
     :elpaca (:host github :repo "ml729/calfw-blocks")
     :config
-    (setq calfw-blocks-lines-per-hour 2)
-    (defun my-open-calendar-agenda ()
+    (setq calfw-blocks-lines-per-hour 2
+          calfw-blocks-earliest-visible-time '(8 0))
+
+    (defun open-block-calendar ()
+      "Open a new buffer with the block calendar using `calfw-blocks'."
       (interactive)
       (cfw:open-calendar-buffer
        :contents-sources (list (cfw:org-create-source "medium purple"))
@@ -6015,7 +6018,7 @@ The render for now is achieved by calfw and I especially like the package =calfw
           org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo)
           org-icalendar-with-timestamps t
           org-caldav-show-sync-results nil
-          org-caldav-url "http://localhost:1080/users/"
+          org-caldav-url "http://localhost:1080/users"
           org-caldav-uuid-extension ".EML"
           org-caldav-calendars `((:calendar-id "lemagues@tcd.ie/calendar"
                                                :inbox ,(format "%s/calendars/from_work.org" user-emacs-directory)
