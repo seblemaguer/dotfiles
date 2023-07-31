@@ -5979,10 +5979,10 @@ CLOSED: [2021-08-10 Tue 20:14]
     :config (mu4e-column-faces-mode))
 #+end_src
 
-** TODO Calendar
-My calendar is, for now, stored on google.
-=org-gcal= provides the conveniency to synchronize my calendar to my org-agenda.
-I also rely on =org-hyperscheduler= which provides an easier way to move around the items.
+** DONE Calendar
+CLOSED: [2023-07-31 Mon 08:55]
+For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
+The render for now is achieved by calfw and I especially like the package =calfw-blocks= which allows a block-based visualisation.
 
 #+BEGIN_SRC emacs-lisp
   (use-package calfw
@@ -6005,6 +6005,8 @@ I also rely on =org-hyperscheduler= which provides an easier way to move around 
   (use-package org-caldav
     :tags '("CONNECTED" "CALENDAR")
     :elpaca (:host github :repo "Thaodan/org-caldav" :branch "thaodan/personal_merger")
+    :init
+    (add-to-list 'org-agenda-default-files (format "%s/calendars/from_work.org" user-emacs-directory))
     :config
     (setq org-icalendar-timezone "Europe/Dublin"
           org-icalendar-alarm-time 15
@@ -6018,7 +6020,7 @@ I also rely on =org-hyperscheduler= which provides an easier way to move around 
           org-caldav-calendars `((:calendar-id "lemagues@tcd.ie/calendar"
                                                :inbox ,(format "%s/calendars/from_work.org" user-emacs-directory)
                                                :files (,(format "%s/calendars/work.org" user-emacs-directory)))))
-    (add-to-list 'org-agenda-default-files (format "%s/calendars/work.org" user-emacs-directory)))
+    )
 #+END_SRC
 
 ** DONE Chat [100%]
