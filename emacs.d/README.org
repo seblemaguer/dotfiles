@@ -331,7 +331,7 @@ While alternatives exist, I find this combination more straightforward and clean
 #+end_src
 
 *** Transient
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package transient
     :tags '("CORE")
     )
@@ -1617,27 +1617,34 @@ I also use capturing mechanism to save recipes and some interesting websites.
     :config
     (setq org-capture-templates
           (doct `(
-             ("Calendar"
-              :keys "C"
-              :type entry
-              :file ,(format "%s/calendars/adapt.org" user-emacs-directory)
-              :template-file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory))
+                  ("Calendar"
+                   :keys "c"
+                   :type entry
+                   :file ,(format "%s/calendars/work.org" user-emacs-directory)
+                   :template-file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory))
 
-             ("TODO"
-              :keys "t"
-              :type entry
-              :file ,(concat cloud-org-root-dir "todo/todo.org")
-              :headline "To sort"
-              :template-file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory)
-              :empty-lines-before 1)
+                  ("TODO"
+                   :keys "t"
+                   :type entry
+                   :file ,(concat cloud-org-root-dir "todo/todo.org")
+                   :headline "To sort"
+                   :template-file ,(format "%s/third_parties/org-capture-templates/default.org" user-emacs-directory)
+                   :empty-lines-before 1)
 
-             ("Mail"
-              :keys "m"
-              :type entry
-              :file ,(concat cloud-org-root-dir "todo/todo.org")
-              :headline "Mailing"
-              :template-file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory))
-             ))))
+                  ("Mail"
+                   :keys "m"
+                   :type entry
+                   :file ,(concat cloud-org-root-dir "todo/todo.org")
+                   :headline "Mailing"
+                   :template-file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory))
+
+                  ("Chat (Slack, Telega)"
+                   :keys "C"
+                   :type entry
+                   :file ,(concat cloud-org-root-dir "todo/todo.org")
+                   :headline "To Sort"
+                   :template-file ,(format "%s/third_parties/org-capture-templates/chat.org" user-emacs-directory)))))
+    )
 #+end_src
 
 *** DONE Cooking
@@ -1914,11 +1921,11 @@ The only important bits are:
           org-agenda-start-with-log-mode t
           org-timeline-show-empty-dates t
           org-agenda-span 'day
-          org-agenda-prefix-format '((agenda  . "  • %t %i ")
-                                     (timeline  . "  % s")
-                                     (todo  . " %i %-12:c")
-                                     (tags  . " %i %-30:c")
-                                     (search . " %i %-12:c"))
+          org-agenda-prefix-format '((agenda    . "• %?-2 i %-12.12:t ")
+                                     (timeline  . "  %s")
+                                     (todo      . "%?-2 i %-12:c  ")
+                                     (tags      . "%?-2 i %-30:c  ")
+                                     (search    . "%?-2 i %-12.12:c  "))
           org-agenda-overriding-columns-format "%TODO %7EFFORT %10CLOCKSUM %PRIORITY     %100ITEM 100%TAGS"
           org-agenda-custom-commands '(("c" . "My Custom Agendas")
                                        ("cu" "Unscheduled TODO"
@@ -2052,7 +2059,7 @@ CLOSED: [2023-06-08 Thu 19:02]
 =org-crypt= provides a nice to encrypt part of an org file.
 This is convenient as it provides a way to understand what the content should be about without showing its actual value.
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package org-crypt
     :elpaca nil
     :tags '("CORE" "ENCRYPTION")
@@ -2062,6 +2069,45 @@ This is convenient as it provides a way to understand what the content should be
 #+end_src
 
 * DONE Document [100%]
+** DONE Formatting for better reading
+CLOSED: [2023-07-22 Sat 23:18]
+=olivetti= provides a nice way to read document without distraction.
+
+#+begin_src emacs-lisp
+  (use-package olivetti
+    :preface
+    ;; Body width
+    (setq fk/olivetti-body-width-default 120)
+    (setq fk/olivetti-body-width-large 180)
+    (setq olivetti-body-width fk/olivetti-body-width-default)
+    ;; Borders
+    (setq olivetti-enable-borders t)
+
+    :custom
+    (olivetti-enable-visual-line-mode nil)
+    (olivetti-window-local t)
+
+    :bind
+    ("C-1" . fk/smart-C-x-1)
+
+    :hook
+    (Info-mode . olivetti-mode)
+    (ewww . olivetti-mode)
+
+    :config
+    (defun fk/smart-C-x-1 ()
+      (interactive)
+      (if (= (count-windows) 1)
+          (if (and global-olivetti-mode
+                   (= olivetti-body-width fk/olivetti-body-width-default))
+              (progn
+                (setq olivetti-body-width fk/olivetti-body-width-large)
+                (olivetti-mode))
+            (call-interactively 'global-olivetti-mode)
+            (setq olivetti-body-width fk/olivetti-body-width-default))
+        (delete-other-windows))))
+#+end_src
+
 ** DONE PDF
 CLOSED: [2023-05-16 Tue 21:57]
 Visualizing PDF files in Emacs is quite useful.
@@ -2260,12 +2306,14 @@ I am using =nov= to read epub files.
 
 #+BEGIN_SRC emacs-lisp
   (use-package nov
-    :disabled t
+    :elpaca (nov :depth nil)
     :tags '("DESKTOP" "DOCUMENT")
-    :mode ("\\.epub\\'" . nov-mode)
     :commands (nov-mode)
+    :custom
+    (nov-text-width t)
+    :mode ((rx ".epub" eos) . nov-mode)
     :config
-    (setq nov-text-width 100))
+    (add-hook 'nov-mode-hook 'olivetti-mode))
 #+END_SRC
 
 * DONE Notes taking & academic organizing [100%]
@@ -2630,7 +2678,7 @@ CLOSED: [2022-02-10 Thu 07:12]
 *** TODO org-media-noter
 - Set the shortcuts
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package org-media-note
     :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
     :elpaca (org-media-note :type git :host github :repo "yuchen-lea/org-media-note"))
@@ -2669,7 +2717,7 @@ The only configuration here is to activate it globally.
 
 ** DONE Folding
 CLOSED: [2021-01-04 Mon 09:00]
-For the folding, I am relying on =origami= and its connection to lsp: =lsp-origami=
+For the folding, I am relying on =origami=.
 
 #+NAME: origami-keybindings
 | Key | Function                        | Description |
@@ -2698,11 +2746,6 @@ For the folding, I am relying on =origami= and its connection to lsp: =lsp-origa
     :config
     (define-prefix-command 'origami-mode-map)
     (global-set-key (kbd "C-c @") 'origami-mode-map))
-
-  (use-package lsp-origami
-    :tags '("FOLDING")
-    :hook (lsp-after-open . lsp-origami-try-enable)
-    :commands (lsp-origami-try-enable))
 #+end_src
 
 ** DONE Completing [100%]
@@ -3128,7 +3171,7 @@ I am using it mainly to show/hide my terminal faster.
 | C-<f6> | start-term-hydra/body |             |
 
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package popper
     :tags '("HELPER")
     :bind (
@@ -3160,7 +3203,7 @@ CLOSED: [2023-07-21 Fri 22:48]
 =autoscratch= provides a neat way to adapt the scratch buffer to the needed mode pretty quickly.
 It is really convenient for quick note taking.
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package autoscratch
     :tags '("HELPERS")
     :ensure t
@@ -3462,7 +3505,7 @@ Tree-sitter is neat way of dealing with syntax highlighting.
 It is fast and configurable.
 I also added the support of =scopeline= which provides an indicator about the score of the current block.
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package tree-sitter-langs
     :ensure t
     :tags '("IDE" "PROGRAMMING" "TREE-SITTER"))
@@ -3475,132 +3518,16 @@ I also added the support of =scopeline= which provides an indicator about the sc
 
 ** DONE LSP general configuration
 CLOSED: [2021-01-03 Sun 21:28]
-The general configuration of LSP is centered around two key parts: the UI and the keys.
-I also override some default parameters to make the experience more appealing.
-
-
-#+NAME: lsp-mode-hydra-entry-keybindings
-| Key     | Functon             | Description |
-|---------+---------------------+-------------|
-| C-h M-h | lsp-mode-hydra/body |             |
-
-#+NAME: lsp-mode-hydra-buffer-keybindings
-| Key | Function                | Label         | Description |
-|-----+-------------------------+---------------+-------------|
-| f   | lsp-format-buffer       | Format        |             |
-| m   | lsp-ui-imenu            | IMenu         |             |
-| x   | lsp-execute-code-action | Excute action |             |
-
-#+NAME: lsp-mode-hydra-server-keybindings
-| Key | Function               | Label    | Description |
-|-----+------------------------+----------+-------------|
-| M-s | lsp-describe-session   | Describe |             |
-| M-r | lsp-restart-workspace  | Restart  |             |
-| S   | lsp-shutdown-workspace | Shutdown |             |
-
-#+NAME: lsp-mode-hydra-symbol-keybindings
-| Key | Function                        | Label          | Description |
-|-----+---------------------------------+----------------+-------------|
-| d   | lsp-find-declaration            | Declaration    |             |
-| D   | lsp-ui-peek-find-definitions    | Definition     |             |
-| R   | lsp-ui-peek-find-references     | References     |             |
-| i   | lsp-ui-peek-find-implementation | Implementation |             |
-| t   | lsp-find-type-definition        | Type           |             |
-| s   | lsp-signature-help              | Signature      |             |
-| o   | lsp-describe-thing-at-point     | Documentation  |             |
-| r   | lsp-rename                      | Rename         |             |
-
-
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :tags '("IDE" "PROGRAMMING" "LSP")
-    :commands (lsp lsp-deferred)
-    :bind (
-      :map lsp-mode-map (
-        <<keybindings-gen(table=lsp-mode-hydra-entry-keybindings)>>
-      )
-    )
+  (defun my-eglot-organize-imports () (interactive)
+         (eglot-code-actions nil nil "source.organizeImports" t))
 
-    :mode-hydra
-    (lsp-mode
-     (:color red)
-     ("Buffer" (
-       <<hydra-keybindings-gen(table=lsp-mode-hydra-buffer-keybindings)>>
-      )
+  (use-package project :demand t)
 
-      "Server"(
-       <<hydra-keybindings-gen(table=lsp-mode-hydra-server-keybindings)>>
-      )
-
-      "Symbol"(
-       <<hydra-keybindings-gen(table=lsp-mode-hydra-symbol-keybindings)>>
-      )
-    ))
-
-    :init
-    (setq lsp-before-save-edits t
-          lsp-inhibit-message t
-          lsp-eldoc-render-all nil
-          lsp-highlight-symbol-at-point nil
-          lsp-prefer-flymake nil
-          read-process-output-max (* 1024 1024)
-          lsp-idle-delay 0.500)
-    :config
-
-    (defun lsp-clean-workspace-folders ()
-      "Clean the list of workspace folders to restart from scratch. Useful when you had a rush a created a lot of projects and want to restart from scratch."
-      (interactive)
-      (dolist (cur-workspace-folder (lsp-session-folders (lsp-session)))
-        (lsp-workspace-folders-remove cur-workspace-folder))))
-
-  (use-package lsp-ui
-    :tags '("IDE")
-    :after lsp-mode
-    :commands lsp-ui-mode
-    :config
-    (setq lsp-ui-doc-enable t
-          lsp-ui-doc-use-webkit nil
-          lsp-ui-doc-delay 10000.0
-          lsp-ui-sideline-delay 10000.0
-          lsp-ui-doc-include-signature t
-          lsp-ui-doc-position 'at-point
-          lsp-eldoc-enable-hover nil ; Disable eldoc displays in minibuffer
-          lsp-headerline-breadcrumb-enable nil
-          lsp-modeline-code-actions-enable nil
-          lsp-modeline-diagnostics-enable nil
-          lsp-ui-sideline-enable t
-          lsp-ui-sideline-show-hover nil
-          lsp-ui-sideline-show-diagnostics nil
-          lsp-ui-sideline-ignore-duplicate t))
+  (use-package eglot
+    :demand t
+    :after (project))
 #+end_src
-
-** DONE DAP general configuration
-CLOSED: [2021-04-06 Tue 08:13]
-The default configuration of =dap-mode= is too "heavy" for me.
-I generally need the variables and the REPL buffer.
-The rest can be activated manually later.
-Finally, I reduced the height of the REPL buffer at the start of the debug session.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package dap-mode
-    :tags '("IDE" "PROGRAMMING" "LSP")
-    :config
-    ;; Disable control (I don't like it)
-    (dap-ui-controls-mode 0)
-
-    ;; Reduce the features to the repl and the local variable information
-    (setq dap-auto-configure-features '(locals repl))
-
-    ;; Redefine the height of the repl buffer
-    (setq dap-ui-buffer-configurations
-          `((,dap-ui--locals-buffer . ((side . right) (slot . 1) (window-width . 0.20)))
-            (,dap-ui--expressions-buffer . ((side . right) (slot . 2) (window-width . 0.20)))
-            (,dap-ui--sessions-buffer . ((side . right) (slot . 3) (window-width . 0.20)))
-            (,dap-ui--breakpoints-buffer . ((side . left) (slot . 2) (window-width . ,treemacs-width)))
-            (,dap-ui--debug-window-buffer . ((side . bottom) (slot . 3) (window-width . 0.20)))
-            (,dap-ui--repl-buffer . ((side . bottom) (slot . 1) (window-height . 0.20))))))
-
-#+END_SRC
 
 ** DONE Data [100%]
 CLOSED: [2021-01-03 Sun 21:49]
@@ -3851,7 +3778,8 @@ Consequently, I need a proper node to edit docker build files as I build my own 
 #+begin_src emacs-lisp
   (use-package dockerfile-mode
     :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM")
-    )
+    :hook
+    (dockerfile-mode . eglot-ensure))
 #+end_src
 
 *** DONE CRON
@@ -3862,8 +3790,7 @@ While I would generally use VIM for such editions, I prefer to use emacs configu
 
 #+begin_src emacs-lisp
   (use-package crontab-mode
-    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM")
-    )
+    :tags '("PROGRAMMING" "CONFIGURATION" "SYSTEM"))
 #+end_src
 
 ** DONE Logging
@@ -3961,6 +3888,21 @@ I also added a hydra configuration to link properly everything.
 #+end_src
 
 *** TODO C/C++/CMake
+**** Overall part
+#+begin_src emacs-lisp
+  (use-package c-mode
+    :elpaca nil
+    :tags '("PROGRAMMING" "C" "CPP")
+    :hook
+    (c-mode . eglot-ensure))
+
+  (use-package c++-mode
+    :elpaca nil
+    :tags '("PROGRAMMING" "C" "CPP")
+    :hook
+    (c++-mode . eglot-ensure))
+#+end_src
+
 **** Use google programming style
 #+BEGIN_SRC emacs-lisp
   (use-package google-c-style
@@ -3972,8 +3914,7 @@ I also added a hydra configuration to link properly everything.
 #+END_SRC
 
 **** Treat =.h= as C++
-Identify =.h= files as C++ files instead of C. To enable =c++-mode=
-manually, type =M-x c\+\+-mode=.
+Identify =.h= files as C++ files instead of C. To enable =c++-mode= manually, type =M-x c\+\+-mode=.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 #+END_SRC
@@ -3985,6 +3926,7 @@ manually, type =M-x c\+\+-mode=.
 |-------+---------------------+-------------|
 | C-c i | clang-format-region |             |
 | C-c u | clang-format-buffer |             |
+
 #+BEGIN_SRC emacs-lisp
   (use-package clang-format
     :ensure t
@@ -4041,13 +3983,6 @@ I use Java and two dialects based on Java: Groovy and Kotlin.
 I strongly rely on LSP, so the configuration consists mainly on loading major mode and configuring the LSP servers.
 
 #+begin_src emacs-lisp
-  (use-package lsp-java
-    :tags '("PROGRAMMING" "JAVA" "LSP")
-    :hook
-    (java-mode . lsp)
-
-    :config
-    (setq lsp-java-save-action-organize-imports nil))
 
   (use-package java-snippets
     :tags '("PROGRAMMING" "JAVA" "COMPLETION")
@@ -4059,13 +3994,10 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
     :interpreter ("gradle" "groovy")
     :hook
     (groovy-mode .  (lambda () (inf-groovy-keys)))
-    (groovy-mode . lsp-deferred)
 
     :config
     (autoload 'run-groovy "inf-groovy" "Run an inferior Groovy process")
-    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode")
-
-    (setq lsp-groovy-server-file "~/environment/local/lib/groovy-language-server-all.jar"))
+    (autoload 'inf-groovy-keys "inf-groovy" "Set local key defs for inf-groovy in groovy-mode"))
 
   ;; Subpackages
   (use-package groovy-imports
@@ -4075,8 +4007,6 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
   (use-package kotlin-mode
     :tags '("PROGRAMMING" "JAVA" "KOTLIN")
     :mode "\\.kts?\\'"
-    :hook
-    (kotlin-mode . lsp-deferred)
 
     :config
     (setq kotlin-tab-width 4))
@@ -4119,7 +4049,6 @@ For R, I rely on =ess= which provides excellent support with a reasonable defaul
 *** DONE Python
 CLOSED: [2021-01-04 Mon 07:42]
 Python is my main programming language, so the one I configured the most intensively.
-I strongly rely on LSP and the Microsoft ~pyright~ server.
 I prefer to use ~ipython~ as the interpreter as it is more powerful.
 I use =python-mls= to enhance the REPL environment
 Finally, I use =numpydoc= to deal with the documentation.
@@ -4132,23 +4061,17 @@ Finally, I use =numpydoc= to deal with the documentation.
     ("\\.py\\'" . python-mode)
     ("\\.wsgi$" . python-mode)
 
+    :hook
+    (python-mode . eglot-ensure)
+
     :init
     (setq-default indent-tabs-mode nil)
 
     :config
     (setq python-indent-offset 4
-	  python-shell-interpreter "ipython"
-	  python-shell-interpreter-args "--simple-prompt --colors=Linux -i"))
+          python-shell-interpreter "ipython"
+          python-shell-interpreter-args "--simple-prompt --colors=Linux -i"))
 
-  (use-package lsp-pyright
-    :tags '("PROGRAMMING" "PYTHON" "LSP")
-    :commands (lsp lsp-deferred)
-    :hook (python-mode . (lambda ()
-			   (require 'lsp-pyright)
-			   (require 'dap-python)
-			   (lsp)))
-    :custom
-    (dap-python-debugger 'debugpy))
 
   (use-package numpydoc
     :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
@@ -4168,12 +4091,6 @@ CLOSED: [2021-01-04 Mon 07:25]
 Editing bash/zsh files is relatively straightforward using Emacs' default configuration.
 Nonetheless, a proper completion support is lacking and some helpers are always welcomed.
 To do so, I use =company-shell= to add shell support using the =company= completion system.
-I am using =modern-sh= to enhance the experience (modern syntax highlighting, REPL, ...).
-
-#+NAME: modern-sh-entry-keybindings
-| Key    | Function       | Description |
-|--------+----------------+-------------|
-| C-<f6> | modern-sh-menu |             |
 
 #+begin_src emacs-lisp
   (use-package company-shell
@@ -4186,20 +4103,11 @@ I am using =modern-sh= to enhance the experience (modern syntax highlighting, RE
       (make-local-variable 'company-backends)
       (set 'company-backends (append '(company-shell company-shell-env company-fish-shell) company-backends))))
 
-  (use-package modern-sh
-    :disabled t
+  (use-package sh-script
+    :elpaca nil
     :tags '("PROGRAMMING" "SHELL")
-    :hook (sh-mode . embed-modern-sh-mode-toggle)
-    :bind (
-      :map modern-sh-mode-map (
-        <<keybindings-gen(table=modern-sh-entry-keybindings)>>
-      )
-    )
-
-    :init
-    (defun embed-modern-sh-mode-toggle ()
-      (when (buffer-file-name)
-        (modern-sh-mode))))
+    :hook
+    (sh-mode . eglot-ensure))
 #+end_src
 
 *** DONE Plotting/Graphing
@@ -4620,13 +4528,10 @@ To help to deal with my poor English, I am using grammarly to check my text.
 The package =grammarly= bring its functionnality into emacs which is a saver for me.
 
 #+begin_src emacs-lisp
-  (use-package flycheck-grammarly
-    :tags '("WRITING" "CONNECTED")
-    :init
-    (with-eval-after-load 'flycheck
-      (flycheck-grammarly-setup))
-    :custom
-    (flycheck-grammarly-check-time 0.8))
+  (use-package eglot-grammarly
+    :elpaca (:host github :repo "emacs-grammarly/eglot-grammarly")
+    :tags '("WRITING" "HELPERS" "CONNECTED")
+    :defer t)
 #+end_src
 
 ** DONE Translation
@@ -5225,7 +5130,8 @@ I also replace a base deletion by moving the files/directories to the trash.
 
     ;; When deleting, send actually to the trash!
     (setq dired-recursive-deletes 'always
-          delete-by-moving-to-trash t)
+          delete-by-moving-to-trash t
+          dirvish-use-mode-line nil)
 
     ;; Enable mouse drag-and-drop files to other applications
     (setq dired-mouse-drag-files t                    ; added in Emacs 29
@@ -5386,7 +5292,7 @@ To manage the trash via emacs, =trashed= provides a really interface.
 
 ** DONE Current File Information
 CLOSED: [2023-02-02 Thu 15:56]
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
     (use-package file-info
       :elpaca (:host github :repo "artawower/file-info.el")
       :tags '("FILE_MANAGEMENT")
@@ -6074,38 +5980,50 @@ CLOSED: [2021-08-10 Tue 20:14]
 #+end_src
 
 ** DONE Calendar
-CLOSED: [2022-07-25 Mon 07:46]
-My calendar is, for now, stored on google.
-=org-gcal= provides the conveniency to synchronize my calendar to my org-agenda.
-I also rely on =org-hyperscheduler= which provides an easier way to move around the items.
+CLOSED: [2023-07-31 Mon 08:55]
+For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
+The render for now is achieved by calfw and I especially like the package =calfw-blocks= which allows a block-based visualisation.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package oauth2-auto
-    :elpaca (oauth2-auto :type git :host github :repo "telotortium/emacs-oauth2-auto")
-    :tags '("CALENDAR" "CONNECTED")
-    )
+  (use-package calfw
+    :tags '("CONNECTED" "CALENDAR" "VISUAL"))
 
-  (use-package org-gcal
-    :if (boundp 'my-gcal-client-id) ;; Ensure we have the infos to use org-gcal
-    :elpaca (org-gcal :type git :host github :repo "kidd/org-gcal.el")
-    :tags '("CALENDAR" "CONNECTED")
-    :custom
-    (org-gcal-client-id my-gcal-client-id)
-    (org-gcal-client-secret my-gcal-client-secret)
+  (use-package calfw-org
+    :tags '("CONNECTED" "CALENDAR" "VISUAL" "ORG"))
 
+  (use-package calfw-blocks
+    :tags '("CONNECTED" "CALENDAR" "VISUAL")
+    :elpaca (:host github :repo "ml729/calfw-blocks")
     :config
-    (setq org-gcal-recurring-events-mode 'nested
-          org-gcal-notify-p nil
-          org-gcal-fetch-file-alist my-gcal-calendars)
+    (setq calfw-blocks-lines-per-hour 2
+          calfw-blocks-earliest-visible-time '(8 0))
 
-    ;; Add gcal to agenda files
-    (dolist (elt org-gcal-fetch-file-alist)
-      (add-to-list 'org-agenda-default-files (cdr elt)))
-    (defun org-gcal--refresh-token (calendar-id)
-      (refresh-gcal-token nil))
+    (defun open-block-calendar ()
+      "Open a new buffer with the block calendar using `calfw-blocks'."
+      (interactive)
+      (cfw:open-calendar-buffer
+       :contents-sources (list (cfw:org-create-source "medium purple"))
+       :view 'block-week)))
 
-    (defun org-gcal--get-access-token (calendar-id)
-      (refresh-gcal-token nil)))
+  (use-package org-caldav
+    :tags '("CONNECTED" "CALENDAR")
+    :elpaca (:host github :repo "Thaodan/org-caldav" :branch "thaodan/personal_merger")
+    :init
+    (add-to-list 'org-agenda-default-files (format "%s/calendars/from_work.org" user-emacs-directory))
+    :config
+    (setq org-icalendar-timezone "Europe/Dublin"
+          org-icalendar-alarm-time 15
+          org-icalendar-include-todo 'all
+          org-icalendar-use-deadline '(event-if-not-todo todo-due)
+          org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo)
+          org-icalendar-with-timestamps t
+          org-caldav-show-sync-results nil
+          org-caldav-url "http://localhost:1080/users"
+          org-caldav-uuid-extension ".EML"
+          org-caldav-calendars `((:calendar-id "lemagues@tcd.ie/calendar"
+                                               :inbox ,(format "%s/calendars/from_work.org" user-emacs-directory)
+                                               :files (,(format "%s/calendars/work.org" user-emacs-directory)))))
+    )
 #+END_SRC
 
 ** DONE Chat [100%]
@@ -6341,6 +6259,13 @@ Because, I prefer to have the completion system, =company=, configured locally f
     :no-require t
     :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
 
+    :custom-face
+    (slack-message-output-reaction-pressed ((t (:background "Lightskyblue1"))))
+    (slack-message-mention-face ((t (:background unspecified :foreground "Red3" :weight extra-bold))))
+    (slack-message-mention-me-face ((t (:background unspecified :foreground "Red3" :weight extra-bold))))
+    (slack-message-mention-keyword-face ((t (:background unspecified :foreground "Red3" :underline t))))
+    (slack-mrkdwn-list-face ((t (:foreground "#cd0000" :weight bold))))
+
     :custom
     (slack-modeline-formatter           nil)
     (slack-buffer-create-on-notify      t)
@@ -6363,6 +6288,11 @@ Because, I prefer to have the completion system, =company=, configured locally f
       :map slack-message-buffer-mode-map (
         <<keybindings-gen(table=slack-message-keybindings)>>
       )
+
+      :map slack-thread-message-buffer-mode-map (
+        <<keybindings-gen(table=slack-mode-keybindings)>>
+        <<keybindings-gen(table=slack-message-keybindings)>>
+      )
     )
 
     :config
@@ -6383,13 +6313,11 @@ Because, I prefer to have the completion system, =company=, configured locally f
     ;; Register the teams (configuration defined in a private file)
     (when (fboundp 'slack-register-teams)
       (slack-register-teams)))
-#+end_src
 
-**** DONE Helm-slack
-CLOSED: [2021-01-05 Tue 09:21]
-As an entry point to use slack, I prefer to use =helm-slack= as it provides a nice view of everthing in one place.
+  (use-package ol-emacs-slack
+    :elpaca (:host github :repo "ag91/ol-emacs-slack")
+    :tags '("CONNECTED" "CHAT" "SLACK"))
 
-#+begin_src emacs-lisp
   (use-package helm-slack
     :elpaca (helm-slack :type git :host github :repo "yuya373/helm-slack")
     :tags '("CONNECTED" "CHAT" "SLACK" "COMPLETION")
@@ -6441,7 +6369,29 @@ CLOSED: [2021-05-20 Thu 17:33]
                (when (and telega-chatbuf--chat (telega-chat-bot-p telega-chatbuf--chat))
                  '(telega-company-botcmd))))
       (emojify-mode 1)
-      (smartparens-mode -1)))
+      (smartparens-mode -1))
+
+    (defun org-telega-follow-link (link)
+      (telega-tme-open-tg (concat "tg:telega:" link)))
+
+    (defun org-telega-store-link ()
+      (when-let ((link (telega-tme-internal-link-to
+                        (or (telega-msg-at (point))
+                            (telega-chat-at (point))))))
+        ;; NOTE: strip leading "tg:"
+        (let ((org-link (substring link 3)))
+          (org-link-store-props :type "telega" :link org-link)
+          org-link)))
+
+    (defun org-telega-complete-link ()
+      (let ((chat (telega-completing-read-chat "Chat: ")))
+        (concat "telega:" (number-to-string (plist-get chat :id)))))
+
+    (org-link-set-parameters "telega"
+                             :follow 'org-telega-follow-link
+                             :store 'org-telega-store-link
+                             :complete 'org-telega-complete-link)
+    )
 #+END_SRC
 
 *** DONE Global helpers
@@ -6871,7 +6821,7 @@ I just modified a couple of bindings to fit my French keyboard layout (the other
 | M-i     | subed-insert-subtitle               | Insert a new subtitle "line"                                    |
 | C-c C-v | subed-mpv-play-from-file            | Open a video file to synchronize with the current subtitle file |
 
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package subed
     :elpaca (subed :type git :host github :repo "sachac/subed" :files ("subed/*.el"))
     :bind (
@@ -7006,7 +6956,7 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
 
 *** DONE Printing
 CLOSED: [2023-04-07 Fri 12:50]
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package transient-extras-lp
     :tags '("DESKTOP" "PRINT")
     :config
@@ -7185,6 +7135,14 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
                (fboundp 'define-mail-services))
       (define-mail-services))
 
+    (prodigy-define-service
+     :name "davcal"
+     :command "ssh"
+     :args `("-nNT" "-L" "1080:localhost:1080" ,work-hostname)
+     :tas '(perso ssh irc)
+     :stop-signal 'sigterm
+     :kill-process-buffer-on-stop t)
+
     (defun prodigy-force-stop-all-service ()
       "Helper to force kill all service"
       (dolist (service prodigy-services)
@@ -7275,7 +7233,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 ** Conveniencies
 *** Unit conversion
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
 (when (executable-find "units")
   (use-package units
     :tags '("HELPERS")
@@ -7285,7 +7243,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 #+end_src
 
 *** Open Street Map
-#+begin_src emacs-lisp :lexical no
+#+begin_src emacs-lisp
   (use-package osm
     :tags '("HELPERS" "DESKTOP")
     :custom
@@ -7367,8 +7325,6 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
   (use-package nano-modeline
     :elpaca (nano-modeline :type git :host github :repo "rougier/nano-modeline")
     :tags '("VISUAL")
-    ;; :custom
-    ;; (nano-modeline-prefix-padding t)
     :hook
     (prog-mode            . nano-modeline-prog-mode)
     (text-mode            . nano-modeline-text-mode)
@@ -7387,37 +7343,28 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     :config
 
     ;; ===== Modeline
+    (setq mode-line-format (list ""))
+    (setq-default mode-line-format (list ""))
+    (set-face-attribute 'nano-modeline-active nil
+                        :foreground fui-fg
+                        :background fui-deep-clouds
+                        :box '(:line-width 1))
+    (set-face-attribute 'nano-modeline-status nil
+                        :background fui-amethyst
+                        :foreground fui-deep-clouds
+                        :box '(:line-width 1 :color fui-fg))
     (set-face-attribute 'mode-line nil
                         :foreground fui-fg
                         :background fui-deep-clouds
                         :box '(:line-width 1)
                         ;; :box nil
-                        :height 1)
+                        :height 40)
     (set-face-attribute 'mode-line-inactive nil
-                        :foreground fui-fg
+                        :foreground fui-deep-clouds
                         :background fui-deep-clouds
                         ;; :box '(:line-width 1)
                         :box nil
-                        :height 1)
-
-
-    (defun my/thin-modeline ()
-      "Transform the modeline in a thin faded line"
-
-      ;; (nano-modeline-face-clear 'mode-line)
-      ;; (nano-modeline-face-clear 'mode-line-inactive)
-      (setq mode-line-format (list ""))
-      (setq-default mode-line-format (list ""))
-      (set-face-attribute 'mode-line nil
-                          :box '(:line-width 1)
-                          ;; :foreground (face-background 'nano-subtle)
-                          ;; :background "black"
-                          :height 0.1)
-      (set-face-attribute 'mode-line-inactive nil
-                          :box '(:line-width 1)
-                          ;; :foreground (face-background 'nano-subtle)
-                          ;; :background "black"
-                          :height 0.1))
+                        :height 40)
 
     (defun nano-modeline-emms-track-description (track)
       "Return a description of the current TRACK tuned for nano-modeline."
@@ -7463,7 +7410,29 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
 
     ;; Add emms support
     (add-hook 'emms-browser-mode-hook #'nano-modeline-emms-browser-mode)
-    (add-hook 'emms-playlist-mode-hook #'nano-modeline-emms-playlist-mode))
+    (add-hook 'emms-playlist-mode-hook #'nano-modeline-emms-playlist-mode)
+
+    ;; Slack
+    (defun nano-modeline-buffer-holder-status (&optional padding)
+      "Generic prefix to indicate buffer STATUS with vertical PADDING (top . bottom)"
+
+      (let* ((padding (or padding nano-modeline-padding))
+             (top (propertize " " 'display `(raise ,(car padding))))
+             (bot (propertize " " 'display `(raise ,(- (cdr padding))))))
+        (propertize (concat top " " bot)
+                    'face (nano-modeline-face 'status-**))))
+
+    (defun nano-modeline-chat-mode ()
+      "Nano line for chat based mode. At the opposite of `nano-modeline-text-mode', we ignore the column and status"
+
+      (funcall nano-modeline-position
+               '((nano-modeline-buffer-holder-status) " "
+                 (nano-modeline-buffer-name))
+               '()))
+
+    (add-hook 'slack-mode-hook #'nano-modeline-chat-mode)
+    (add-hook 'telega-chat-mode-hook #'nano-modeline-chat-mode)
+    )
 #+end_src
 
 ** DONE Prism
