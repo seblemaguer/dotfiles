@@ -1125,21 +1125,6 @@ Babel is the key feature for litterate programming in =org-mode=.
 This section provides the configuration for babel by first configuring jupyter.
 
 #+begin_src emacs-lisp
-  (use-package company-org-block
-    :tags '("ORG" "COMPLETION")
-    :custom
-    (company-org-block-edit-style 'auto) ;; 'auto, 'prompt, or 'inline
-
-    :hook
-    (org-mode . company-org-block-hook)
-
-    :config
-    (defun company-org-block-hook ()
-      "Hook to add company-org-block support to org-mode."
-      (make-local-variable 'company-backends)
-      (setq company-backends (copy-tree company-backends))
-      (set 'company-backends (append '(company-org-block) company-backends))))
-
   (use-package ob
     :elpaca nil ;; org-contrib
     :after (org-contrib)
@@ -2707,45 +2692,128 @@ For the folding, I am relying on =origami=.
 ** DONE Completing [100%]
 Completion is one of the biggest time-saver feature a text editor can have.
 I rely on three key completion systems for different purposes:
-  - =company= is used for inline completion (mainly to access programming helpers and snippets)
+  - =CORFU= is used for inline completion (mainly to access programming helpers and snippets)
   - =vertico= is used as the standard mini-buffer based completion
   - =helm= is provided for some specific completion tools which are interesting but are not supported by =completing-read=
 
-*** DONE Company
+*** DONE CORFU
 CLOSED: [2021-01-03 Sun 17:42]
-In this section, only the global configuration of =company= is provided.
-The configuration associated with each language is done separately and is, as much as possible, buffer local.
-I also use =company-quickhelp= to provide the description of the current candidate.
-I finally use =company-box= to have a better view of the category of the candidates.
 
 #+begin_src emacs-lisp
-  (use-package company
+  (use-package corfu
     :tags '("COMPLETION")
+    :elpaca (:host github :repo "minad/corfu" :files ("corfu.el"))
+    :custom
+    (corfu-cycle t) ;; Enable cycling for `corfu-next/previous'
+    (corfu-auto t) ;; Enable auto completion
+    ;; (corfu-commit-predicate nil)   ;; Do not commit selected candidates on next input
+    (corfu-quit-at-boundary 'separator) ;; Automatically quit at word boundary
+    (corfu-quit-no-match 'separator) ;; Automatically quit if there is no match
+    (corfu-scroll-margin 5) ;; Use scroll margin
+    ;; (corfu-preview-current nil)    ;; Do not preview current candidate
+    (corfu-auto-delay 0.0)
+    (corfu-auto-prefix 1)
+    (corfu-on-exact-match 'quit)
+
+    ;; (corfu-separator ?\s)          ;; Orderless field separator
+    ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+    ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
+    ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+    ;; (corfu-echo-documentation nil) ;; Disable documentation in the echo area
+    ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+    :hook (before-save-hook . corfu-quit)
     :init
-    (setq company-backends '(company-capf company-files))
+    (global-corfu-mode)
+    )
 
+  (use-package corfu-history
+    :tags '("COMPLETION")
+    :elpaca (:host github :repo "minad/corfu" :files ("extensions/corfu-history.el"))
     :config
-    ;; Global
-    (setq company-idle-delay 1
-          company-minimum-prefix-length 1
-          company-show-numbers t
-          company-tooltip-limit 20)
+    (add-to-list 'savehist-additional-variables 'corfu-history)
+    (corfu-history-mode 1)
+    (savehist-mode 1)
+    :custom
+    (corfu-history-length 200)
+    :demand
+    :after corfu)
 
-    ;; Activating globally
-    (global-company-mode t))
+  (use-package corfu-doc
+    :tags '("COMPLETION")
+    :elpaca (:host github :repo "minad/corfu" :files ("extensions/corfu-doc.el"))
+    :disabled t
+    :bind
+    (:map corfu-map
+     ("M-p" . corfu-doc-scroll-down)
+     ("M-n" . corfu-doc-scroll-up)
+     ("M-d" . corfu-doc-toggle))
+    :after corfu)
 
-  (use-package company-quickhelp
-    :after company
-    :tags '("COMPLETION" "UI")
+
+  ;; A few more useful configurations...
+  (use-package emacs
+    :elpaca nil
+    :init
+    ;; TAB cycle if there are only few candidates
+    (setq completion-cycle-threshold 3)
+
+    ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+    ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+    ;; (setq read-extended-command-predicate
+    ;;       #'command-completion-default-include-p)
+
+    ;; Enable indentation+completion using the TAB key.
+    ;; `completion-at-point' is often bound to M-TAB.
+    (setq tab-always-indent 'complete))
+
+  (use-package corfu-candidate-overlay
+    :tags '("COMPLETION")
+    :elpaca (:type git
+                   :repo "https://code.bsdgeek.org/adam/corfu-candidate-overlay"
+                   :files (:defaults "*.el"))
+    :after corfu
     :config
-    (company-quickhelp-mode 1))
+    ;; enable corfu-candidate-overlay mode globally
+    ;; this relies on having corfu-auto set to nil
+    (corfu-candidate-overlay-mode +1)
+    ;; bind Ctrl + TAB to trigger the completion popup of corfu
+    (global-set-key (kbd "C-<tab>") 'completion-at-point)
+    ;; bind Ctrl + Shift + Tab to trigger completion of the first candidate
+    ;; (keybing <iso-lefttab> may not work for your keyboard model)
+    (global-set-key (kbd "C-<iso-lefttab>") 'corfu-candidate-overlay-complete-at-point))
 
 
-  (use-package company-box
-    :after company
-    :tags '("COMPLETION" "UI")
-    :elpaca (company-box :repo "seblemaguer/company-box" :type git :host github :branch "functional")
-    :hook (company-mode . company-box-mode))
+
+  ;; Add extensions
+  (use-package cape
+    :tags '("COMPLETION")
+    ;; Bind dedicated completion commands
+    ;; :bind (("C-c p p" . completion-at-point) ;; capf
+    ;;        ("C-c p t" . complete-tag)        ;; etags
+    ;;        ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+    ;;        ("C-c p f" . cape-file)
+    ;;        ("C-c p k" . cape-keyword)
+    ;;        ("C-c p s" . cape-symbol)
+    ;;        ("C-c p a" . cape-abbrev)
+    ;;        ("C-c p i" . cape-ispell)
+    ;;        ("C-c p l" . cape-line)
+    ;;        ("C-c p w" . cape-dict)
+    ;;        ("C-c p \\" . cape-tex)
+    ;;        ("C-c p _" . cape-tex)
+    ;;        ("C-c p ^" . cape-tex)
+    ;;        ("C-c p &" . cape-sgml)
+    ;;        ("C-c p r" . cape-rfc1345))
+    :init
+    (defun add-cape-completions ()
+      (add-to-list 'completion-at-point-functions #'cape-file)
+      ;; (add-to-list 'completion-at-point-functions
+      ;;              #'cape-keyword)
+      ;; (add-to-list 'completion-at-point-functions
+      ;;              #'cape-symbol)
+      )
+
+    :hook (corfu-mode . add-cape-completions))
 #+end_src
 
 *** DONE Vertico
@@ -3984,9 +4052,6 @@ For R, I rely on =ess= which provides excellent support with a reasonable defaul
     :commands (matlab-shell)
 
     :config
-    ;; (eval-after-load 'company
-    ;;   '(add-to-list 'company-backends 'company-matlab))
-
     ;; (eval-after-load 'flycheck
     ;;   '(require 'flycheck-matlab-mlint)))
 
@@ -4046,19 +4111,8 @@ Finally, I use =numpydoc= to deal with the documentation.
 CLOSED: [2021-01-04 Mon 07:25]
 Editing bash/zsh files is relatively straightforward using Emacs' default configuration.
 Nonetheless, a proper completion support is lacking and some helpers are always welcomed.
-To do so, I use =company-shell= to add shell support using the =company= completion system.
 
 #+begin_src emacs-lisp
-  (use-package company-shell
-    :tags '("PROGRAMMING" "SHELL" "COMPLETION")
-    :hook
-    (shell-mode . company-shell-hook)
-
-    :init
-    (defun company-shell-hook ()
-      (make-local-variable 'company-backends)
-      (set 'company-backends (append '(company-shell company-shell-env company-fish-shell) company-backends))))
-
   (use-package sh-script
     :elpaca nil
     :tags '("PROGRAMMING" "SHELL")
@@ -4255,44 +4309,9 @@ The configuration consists mainly of pluging it into auctex and expand the citat
 
 *** DONE Completion
 CLOSED: [2021-05-18 Tue 16:53]
-For the completion, I need to prepare some proper hook for =company=.
-I use two packages =company-auctex= which provides the enhancement of auctex and =company-reftex= which provides a proper completion support for references.
-I also uses =company-ipa= to have a better integration of phonetic symbols.
 
 #+begin_src emacs-lisp
   (setq TeX-auto-global (format "%s/auctex/style" user-emacs-directory))
-
-  (use-package company-auctex
-    :tags '("WRITING" "LATEX" "COMPLETION")
-    :hook
-    (LaTeX-mode . company-auctex-hook)
-
-    :init
-    (defun company-auctex-hook ()
-      (make-local-variable 'company-backends)
-      (company-auctex-init)))
-
-  (use-package company-reftex
-    :tags '("WRITING" "LATEX" "ORG" "COMPLETION")
-    :hook
-    (LaTeX-mode . company-reftex-hook)
-    (org-mode   . company-reftex-hook)
-
-    :init
-    (defun company-reftex-hook ()
-      (make-local-variable 'company-backends)
-      (set 'company-backends (append '(company-reftex-labels company-reftex-citations) company-backends))))
-
-  (use-package company-ipa
-    :tags '("WRITING" "COMPLETION")
-    :hook
-    (LaTeX-mode . company-ipa-hook)
-
-    :init
-    (defun company-ipa-hook ()
-      (make-local-variable 'company-backends)
-      (add-to-list 'company-backends 'company-ipa-symbols-unicode)))
-
 #+end_src
 
 *** DONE Compilation
@@ -6254,10 +6273,7 @@ Because, I prefer to have the completion system, =company=, configured locally f
     :config
     (defun slack-define-hooks ()
       "Define some useful slack hooks."
-      ;; Company part
-      (make-local-variable 'company-backends)
-      (setq company-backends (copy-tree company-backends))
-      (set 'company-backends (append '(company-slack-backend) company-backends))
+      ;; TODO: CORFU
 
       ;; Disable smart parens
       (smartparens-mode -1))
@@ -6317,13 +6333,7 @@ CLOSED: [2021-05-20 Thu 17:33]
 
     :init
     (defun telega-chat-hook ()
-      (set
-       (make-local-variable 'company-backends)
-       (append '(telega-company-emoji
-                 telega-company-username
-                 telega-company-hashtag)
-               (when (and telega-chatbuf--chat (telega-chat-bot-p telega-chatbuf--chat))
-                 '(telega-company-botcmd))))
+      ;; TODO: CORFU
       (emojify-mode 1)
       (smartparens-mode -1))
 
