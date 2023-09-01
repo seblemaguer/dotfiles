@@ -403,7 +403,7 @@ the upstream has some priority issues with ERC; I would like to ignore some even
 				( origin     .  20)
 				( priority   .   4)
 				( message    . nil))
-	  sauron-org-exclude-todo-states (list "IN PROCESS" "EXEC-STARTED" "PAUSED" "DELEGATED" "WAITING")
+	  sauron-org-exclude-todo-states (list "CURRENT" "EXEC-STARTED" "PAUSED" "DELEGATED" "WAITING")
 	  sauron-prio-org-minutes-left-list '((15 4))
 	  sauron-insensitivity-handler 'sauron-keep-priority))
   (elpaca-wait)
@@ -943,21 +943,12 @@ CLOSED: [2021-01-03 Sun 12:42]
 This section defines the global configuration for =org-mode=.
 First, it actually relies on =org-contrib=, especially for the bibtex support.
 Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywords:
-  - =CANCELLED= and =POSTPONED= for task which can't be done for whatever reason;
-  - =WAITING= for tasks which are blocked by an external event;
-  - =PAUSED= for tasks which are manually put to sleep for whatever reason;
-  - =EXEC-STARTED= for tasks which are running but doesn't requires any manual operation (i.e. process on the cluster)
+  - =CANCELLED= for the task which is not necessary after a bit of thinking;
+  - =BLOCKED= for tasks which are blocked by an external event;
+  - =HOLD= for tasks which are manually put to sleep for whatever reason;
+  - =RUNNING= for tasks which are running but doesn't requires any manual operation (i.e. process on the cluster)
   - =DELEGATED= for tasks which are delegated to someone else
-
-Some additional keywords are also defined to deal with more specific events:
-  - =RELEASE= points to an album to be released
-  - =MAIL= points to an email to be replied to
-  - =TO-READ= points to an article, ... to review
-
-Finally, some keywords are there for note purposes:
-  - =NOTE= points to a note to be saved
-  - =EVENT= points to an event to happen
-  - =MANDATORY= points to an event which I have to do but it is recurrent!
+  - =REMINDER= for long "tasks" (e.g., cancelling info, ...) or tasks which have been completed but requires the reception of an element (e.g., orders, ...x)
 
 #+NAME: org-effort-keybindings
 | Key       | Functon           | Description |
@@ -997,21 +988,11 @@ Finally, some keywords are there for note purposes:
           org-src-fontify-natively t
           org-src-tab-acts-natively t
           org-hide-emphasis-markers t
-          org-global-properties '(("Effort_ALL" . "0:15 0:30 0:45 1:00 1:30 2:00 3:00 4:00 5:00 6:00 0:00")
+          org-global-properties '(("Effort_ALL" . "0:15 0:30 0:45 1:00 1:30 2:00")
                                   ("STYLE_ALL" . "habit"))
 
           ;; Todo part
-          org-todo-keywords '(;; Baseline sequence
-                              (sequence "TODO(t)" "DELEGATED(e)" "EXEC-STARTED(S)" "IN PROCESS(s)"  "MEETING(M)" "WAITING(w)" "PAUSED(p)" "|" "DONE(d)" "CANCELLED(c@/!)" "POSTPONED(o@/!)")
-
-                              ;; Specific "to complete"
-                              (sequence "TO-READ(r)" "RELEASE(R)" "MAIL(m)" "|")
-
-                              ;; Note information
-                              (sequence "|" "NOTE(N)" "EVENT(E)" "MANDATORY(M)"))
-
-          org-todo-state-tags-triggers '(("CANCELLED" ("CANCELLED" . t))
-                                         ("POSTPONED" ("POSTPONED" . t)))
+          org-todo-keywords '((sequence "TODO(t)" "DELEGATED(e)" "RUNNING(r)" "CURRENT(s)" "BLOCKED(b)" "HOLD(h)" "REMINDER(R)" "|" "DONE(d)" "CANCELLED(c@/!)"))
 
           ;; Priority definition
           org-highest-priority ?A
@@ -1023,7 +1004,7 @@ Finally, some keywords are there for note purposes:
           org-log-done 'time
 
           ;; Refiling
-          org-refile-targets '((nil . (:maxlevel . 6))
+          org-refile-targets '((nil              . (:maxlevel . 6))
                                (org-agenda-files . (:maxlevel . 6)))
           org-completion-use-ido nil
           org-refile-use-outline-path 'file
@@ -1402,14 +1383,14 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
             org-clock-persist t)
 
       (defadvice org-clock-in (after sacha activate)
-        "Set this task's status to 'IN PROCESS'."
-        (org-todo "IN PROCESS"))
+        "Set this task's status to 'CURRENT'."
+        (org-todo "CURRENT"))
 
       (defun sacha/org-clock-in-if-starting ()
-        "Clock in when the task is marked IN PROCESS."
+        "Clock in when the task is marked CURRENT."
         (when (member (buffer-file-name)
                       (mapcar 'file-truename org-agenda-files))
-          (when (and (string= org-state "IN PROCESS")
+          (when (and (string= org-state "CURRENT")
                      (not (string= org-last-state org-state)))
             (org-clock-in))))
 
@@ -1715,38 +1696,21 @@ CLOSED: [2021-12-10 Fri 14:17]
     ;; Faces
     (setq org-modern-todo-faces
           '(("TODO"          :background "red1"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("IN PROCESS"    :background "lightgray"     :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("MEETING"       :foreground "red1"                              :weight bold)
-
-            ;; Specific helpers
-            ("TO-READ"       :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("MAIL"          :background "purple"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("CURRENT"       :background "lightgray"     :foreground "black" :weight bold :box (:line-width 2 :style released-button))
 
             ;; I can't really do anything here!
-            ("WAITING"       :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("PAUSED"        :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("EXEC-STARTED"  :background "light green"   :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("BLOCKED"       :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("HOLD"          :background "orange"        :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("RUNNING"       :background "light green"   :foreground "black" :weight bold :box (:line-width 2 :style released-button))
             ("DELEGATED"     :background "gold"          :foreground "black" :weight bold :box (:line-width 2 :style released-button))
 
             ;; Done but not complete
             ("CANCELLED"     :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-            ("POSTPONED"     :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
-
-            ;; Done and I don't care to be complete
-            ("EVENT"         :foreground "purple"                            :weight bold)
-            ("NOTE"          :foreground "purple"                            :weight bold)
-            ("RELEASE"       :foreground "purple"                            :weight bold)
-            ("MANDATORY"     :foreground "red"                               :weight bold)
+            ("REMINDER"      :background "light green"   :foreground "black" :weight bold :box (:line-width 2 :style released-button))
 
             ;; Done and complete
             ("DONE"          :background "forest green"  :foreground "lightgray" :weight bold :box (:line-width 2 :style released-button))
             )
-
-          org-priority-faces '((?A . (:foreground "red" :weight bold))
-                               (?B . (:foreground "orange"  :weight bold))
-                               (?C . (:foreground "orange"))
-                               (?D . (:foreground "forest green"))
-                               (?E . (:foreground "forest green")))
 
           org-agenda-category-icon-alist `(
                                            ;; Tools / utils
@@ -1773,10 +1737,6 @@ CLOSED: [2021-12-10 Fri 14:17]
                                            ;; Admin / meeting
                                            ("[Aa]dmin"
                                             ,(format "%s/third_parties/icons/admin.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Aa]ppointments?"
-                                            ,(format "%s/third_parties/icons/appointment.png" user-emacs-directory)
                                             nil nil :ascent center)
 
                                            ("[Vv]isitors"
@@ -1815,10 +1775,6 @@ CLOSED: [2021-12-10 Fri 14:17]
                                            ;; Personnal dates
                                            ("[rM]edical"
                                             ,(format "%s/third_parties/icons/medical.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("Anniv"
-                                            ,(format "%s/third_parties/icons/anniversary.png" user-emacs-directory)
                                             nil nil :ascent center)
 
                                            ("Concert"
@@ -2007,17 +1963,17 @@ As I have my own way of being organized, I redefined completely the groups.
                    :order 8)
 
             (:name "Releases"
-                   :and (:category "Release" :not (:todo "WAITING"))
+                   :and (:category "Release" :not (:todo "REMINDER"))
                    :order 8)
 
             (:name "Ordered Releases"
-                   :and (:category "Release" :todo "WAITING")
+                   :and (:category "Release" :todo "REMINDER")
                    :order 9)
 
 
             ;; Some standby thingy
             (:name "In process"
-                   :todo ("PAUSED" "EXEC-STARTED")
+                   :todo ("RUNNING" "DELEGATED")
                    :order 7)
 
             ;; Deadlines
@@ -2033,13 +1989,13 @@ As I have my own way of being organized, I redefined completely the groups.
 
             ;; Schedule
             (:name "Scheduled Today"
-                   :and (:scheduled today  :not (:todo "PAUSED") :not (:todo "WAITING") :not (:todo "RELEASE"))
+                   :and (:scheduled today  :not (:todo "HOLD") :not (:todo "BLOCKED") :not (:todo "RELEASE"))
                    :order 1)
             (:name "Scheduled, past but opened"
-                   :and (:scheduled past   :not (:todo "PAUSED") :not (:todo "WAITING") :not (:todo "RELEASE"))
+                   :and (:scheduled past   :not (:todo "HOLD") :not (:todo "BLOCKED") :not (:todo "RELEASE"))
                    :order 5)
             (:name "Scheduled in the next couple of days"
-                   :and (:scheduled future :not (:todo "PAUSED") :not (:todo "WAITING") :not (:todo "RELEASE"))
+                   :and (:scheduled future :not (:todo "HOLD") :not (:todo "BLOCKED") :not (:todo "RELEASE"))
                    :order 6)
             )))
 #+end_src
