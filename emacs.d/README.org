@@ -6284,7 +6284,31 @@ Because, I prefer to have the completion system, =company=, configured locally f
 
     ;; Register the teams (configuration defined in a private file)
     (when (fboundp 'slack-register-teams)
-      (slack-register-teams)))
+      (slack-register-teams))
+      (defun sauron-slack-notifier (message room team)
+      (if (slack-message-notify-p message room team)
+          (let ((team-name (oref team name))
+                (room-name (slack-room-name room team))
+                (text (with-temp-buffer
+                        (goto-char (point-min))
+                        (insert (slack-message-to-alert message team))
+                        (slack-buffer-buttonize-link)
+                        (buffer-substring-no-properties (point-min)
+                                                        (point-max))))
+                (user-name (slack-message-sender-name message team)))
+            (if (and (eq alert-default-style 'notifier)
+                     (slack-im-p room)
+                     (or (eq (aref text 0) ?\[)
+                         (eq (aref text 0) ?\{)
+                         (eq (aref text 0) ?\<)
+                         (eq (aref text 0) ?\()))
+                (setq text (concat "\\" text)))
+            (sauron-add-event
+             (intern room-name)
+             3
+             (if (slack-im-p room) text (format "%s: %s" user-name text))))))
+
+    (setq slack-message-custom-notifier 'sauron-slack-notifier))
 
   (use-package ol-emacs-slack
     :elpaca (:host github :repo "ag91/ol-emacs-slack")
