@@ -7258,6 +7258,7 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
     (org-agenda-mode      . nano-modeline-org-agenda-mode)
 
     :config
+    (nano-modeline-text-mode t)
 
     ;; ===== Modeline
     (setq mode-line-format (list ""))
