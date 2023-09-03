@@ -958,6 +958,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
 #+begin_src emacs-lisp
   (use-package org
     :tags '("ORG")
+    :elpaca nil
     :hook
     (org-after-todo-statistics . org-summary-todo)
 
@@ -1384,9 +1385,9 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
         (when (member (buffer-file-name)
                       (mapcar 'file-truename org-agenda-files))
           (when (and (or (string= org-state "TODO")
-                         (string= org-state "WAITING")
-                         (string= org-state "PAUSED")
-                         (string= org-state "EXEC-STARTED"))
+                         (string= org-state "HOLD")
+                         (string= org-state "BLOCKED")
+                         (string= org-state "RUNNING"))
                      (not (string= org-last-state org-state))
                      (org-clock-is-active))
             (org-clock-out))))
@@ -1695,87 +1696,7 @@ CLOSED: [2021-12-10 Fri 14:17]
 
             ;; Done and complete
             ("DONE"          :background "forest green"  :foreground "lightgray" :weight bold :box (:line-width 2 :style released-button))
-            )
-
-          org-agenda-category-icon-alist `(
-                                           ;; Tools / utils
-                                           ("[Ee]macs"
-                                            ,(format "%s/third_parties/icons/emacs24.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Oo]rg"
-                                            ,(format "%s/third_parties/icons/org.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Ss]ystem"
-                                            ,(format "%s/third_parties/icons/debian.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("\\([Tt]ool\\|[Cc]onfiguration\\)s?"
-                                            ,(format "%s/third_parties/icons/wrench.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Ee]xpe\\(riment\\)s?"
-                                            ,(format "%s/third_parties/icons/expes.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ;; Admin / meeting
-                                           ("[Aa]dmin"
-                                            ,(format "%s/third_parties/icons/admin.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Vv]isitors"
-                                            ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("\\([Ss]ynsig\\|SSW\\)"
-                                            ,(format "%s/third_parties/icons/isca.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("\\([Tt]rip\\|[Dd]eplacement\\)"
-                                            ,(format "%s/third_parties/icons/trip.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ;; Deadlines / dates
-                                           ("\\([Pp]resentations?\\)"
-                                            ,(format "%s/third_parties/icons/meeting.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("\\([Pp]apers?\\|[Bb]lio\\|[Aa]rticles?\\|[Rr]eading\\|[Ww]riting\\)"
-                                            ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Mm]ails?"
-                                            ,(format "%s/third_parties/icons/email.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Rr]eviews?"
-                                            ,(format "%s/third_parties/icons/review.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("[Ss]upervising"
-                                            ,(format "%s/third_parties/icons/visitors.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ;; Personnal dates
-                                           ("[rM]edical"
-                                            ,(format "%s/third_parties/icons/medical.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("Concert"
-                                            ,(format "%s/third_parties/icons/music.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ;; Personnal diverse
-                                           ("[Rr]elease"
-                                            ,(format "%s/third_parties/icons/cd.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           ("Book"
-                                            ,(format "%s/third_parties/icons/book.png" user-emacs-directory)
-                                            nil nil :ascent center)
-
-                                           (".*" '(space . (:width (16))))))
+            ))
 
     (with-eval-after-load 'org (global-org-modern-mode)))
 
@@ -1974,13 +1895,13 @@ As I have my own way of being organized, I redefined completely the groups.
 
             ;; Schedule
             (:name "Scheduled Today"
-                   :and (:scheduled today  :not (:todo "HOLD") :not (:todo "BLOCKED") :not (:todo "RELEASE"))
+                   :and (:scheduled today :todo "TODO")
                    :order 1)
             (:name "Scheduled, past but opened"
-                   :and (:scheduled past   :not (:todo "HOLD") :not (:todo "BLOCKED") :not (:todo "RELEASE"))
+                   :and (:scheduled past  :todo "TODO")
                    :order 5)
             (:name "Scheduled in the next couple of days"
-                   :and (:scheduled future :not (:todo "HOLD") :not (:todo "BLOCKED") :not (:todo "RELEASE"))
+                   :and (:scheduled future :todo "TODO")
                    :order 6)
             )))
 #+end_src
@@ -5960,28 +5881,8 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
 The render for now is achieved by calfw and I especially like the package =calfw-blocks= which allows a block-based visualisation.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package calfw
-    :tags '("CONNECTED" "CALENDAR" "VISUAL"))
-
-  (use-package calfw-org
-    :tags '("CONNECTED" "CALENDAR" "VISUAL" "ORG"))
-
-  (use-package calfw-blocks
-    :tags '("CONNECTED" "CALENDAR" "VISUAL")
-    :elpaca (:host github :repo "ml729/calfw-blocks")
-    :config
-    (setq calfw-blocks-lines-per-hour 2
-          calfw-blocks-earliest-visible-time '(8 0))
-
-    (defun open-block-calendar ()
-      "Open a new buffer with the block calendar using `calfw-blocks'."
-      (interactive)
-      (cfw:open-calendar-buffer
-       :contents-sources (list (cfw:org-create-source "medium purple"))
-       :view 'block-week)))
-
   (use-package org-caldav
-    :tags '("CONNECTED" "CALENDAR")
+    :tags '("ORG" "CONNECTED" "CALENDAR")
     :elpaca (:host github :repo "Thaodan/org-caldav" :branch "thaodan/personal_merger")
     :init
     (add-to-list 'org-agenda-default-files (format "%s/calendars/from_work.org" user-emacs-directory))
@@ -5999,6 +5900,14 @@ The render for now is achieved by calfw and I especially like the package =calfw
                                                :inbox ,(format "%s/calendars/from_work.org" user-emacs-directory)
                                                :files (,(format "%s/calendars/work.org" user-emacs-directory)))))
     )
+
+  (use-package org-timeblock
+    :tags '("ORG" "CALENDAR")
+    :elpaca (org-timeblock :type git
+                           :host github
+                           :repo "ichernyshovvv/org-timeblock")
+    :custom
+    (org-timeblock-n-days-view 7))
 #+END_SRC
 
 ** DONE Chat [100%]
@@ -7509,6 +7418,41 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
       (if (daemonp)
           (add-hook 'after-make-frame-functions #'load-fonts)
         (load-default-fonts))))
+
+  (use-package org-agenda-category-icons
+    :elpaca (:host github :repo "egregius313/org-agenda-category-icons")
+    :config
+    (org-agenda-category-icons!
+     :faicon
+     (music release Release)
+     (wrench tool Tool configuration Configuration programming Programming)
+     (flask expe Expe experiment Experiment)
+     (file-o admin Admin)
+     (graduation-cap studies Studies)
+     (suitcase trip Trip deplacement Deplacement)
+     (book biblio Biblio reading Reading writing Writing)
+     (envelope mail Mail)
+
+     :fileicon
+     (emacs emacs Emacs)
+     (org org ORG)
+     (image review Review)
+     )
+
+    )
+
+  ;; (setq org-agenda-category-icon-alist `(
+
+  ;;                                  ("[Ss]ystem"
+  ;;                                   ,(format "%s/third_parties/icons/debian.png" user-emacs-directory)
+  ;;                                   nil nil :ascent center)
+
+  ;;                                  ("\\([Ss]ynsig\\|SSW\\)"
+  ;;                                   ,(format "%s/third_parties/icons/isca.png" user-emacs-directory)
+  ;;                                   nil nil :ascent center)
+
+  ;;                                  ))
+  ;; )
 #+end_src
 
 ** DONE Helpers [100%]
