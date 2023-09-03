@@ -4902,6 +4902,24 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
     :tags '("TERM")
+    :elpaca (vterm :post-build
+                   (progn
+                     (setq vterm-always-compile-module t)
+                     (require 'vterm)
+                     ;;print compilation info for elpaca
+                     (with-current-buffer (get-buffer-create vterm-install-buffer-name)
+                       (goto-char (point-min))
+                       (while (not (eobp))
+                         (message "%S"
+                                  (buffer-substring (line-beginning-position)
+                                                    (line-end-position)))
+                         (forward-line)))
+                     (when-let ((so (expand-file-name "./vterm-module.so"))
+                                ((file-exists-p so)))
+                       (make-symbolic-link
+                        so (expand-file-name (file-name-nondirectory so)
+                                             "../../builds/vterm")
+                        'ok-if-already-exists))))
     :custom (vterm-always-compile-module t)
 
     :config
@@ -4910,29 +4928,29 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
 
     ;; Function keys are not used in therm
     (mapcar (lambda (key)
-	      (define-key vterm-mode-map (kbd key) nil))
-	    '("<f1>" "<f2>" "<f3>" "<f4>" "<f5>" "<f6>"
-	      "<f7>" "<f8>" "<f9>" "<f10>" "<f11>" "<f12>"
-	      "<prior>" "<next>"))
+              (define-key vterm-mode-map (kbd key) nil))
+            '("<f1>" "<f2>" "<f3>" "<f4>" "<f5>" "<f6>"
+              "<f7>" "<f8>" "<f9>" "<f10>" "<f11>" "<f12>"
+              "<prior>" "<next>"))
 
     ;; Better directory tracking
     (push (list "update-pwd" (lambda (path) (setq default-directory path)))
-	  vterm-eval-cmds)
+          vterm-eval-cmds)
 
     ;; Opening file in emacs directly
     (push (list "find-file-below"
-		(lambda (path)
-		  (if-let* ((buf (find-file-noselect path))
-			    (window (display-buffer-below-selected buf nil)))
-		      (select-window window)
-		    (message "Failed to open file: %s" path))))
-	  vterm-eval-cmds))
+        	(lambda (path)
+        	  (if-let* ((buf (find-file-noselect path))
+        		    (window (display-buffer-below-selected buf nil)))
+        	      (select-window window)
+        	    (message "Failed to open file: %s" path))))
+          vterm-eval-cmds))
 
   (use-package multi-vterm
     :tags '("TERM")
     :bind (
       :map vterm-mode-map (
-	<<keybindings-gen(table=multi-vterm-mode-keybindings)>>
+        <<keybindings-gen(table=multi-vterm-mode-keybindings)>>
       )
     ))
 #+END_SRC
