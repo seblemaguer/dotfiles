@@ -2716,32 +2716,15 @@ CLOSED: [2021-01-03 Sun 17:42]
   ;; Add extensions
   (use-package cape
     :tags '("COMPLETION")
-    ;; Bind dedicated completion commands
-    ;; :bind (("C-c p p" . completion-at-point) ;; capf
-    ;;        ("C-c p t" . complete-tag)        ;; etags
-    ;;        ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-    ;;        ("C-c p f" . cape-file)
-    ;;        ("C-c p k" . cape-keyword)
-    ;;        ("C-c p s" . cape-symbol)
-    ;;        ("C-c p a" . cape-abbrev)
-    ;;        ("C-c p i" . cape-ispell)
-    ;;        ("C-c p l" . cape-line)
-    ;;        ("C-c p w" . cape-dict)
-    ;;        ("C-c p \\" . cape-tex)
-    ;;        ("C-c p _" . cape-tex)
-    ;;        ("C-c p ^" . cape-tex)
-    ;;        ("C-c p &" . cape-sgml)
-    ;;        ("C-c p r" . cape-rfc1345))
+    :hook (corfu-mode . add-cape-completions)
     :init
     (defun add-cape-completions ()
       (add-to-list 'completion-at-point-functions #'cape-file)
-      ;; (add-to-list 'completion-at-point-functions
-      ;;              #'cape-keyword)
-      ;; (add-to-list 'completion-at-point-functions
-      ;;              #'cape-symbol)
-      )
-
-    :hook (corfu-mode . add-cape-completions))
+      (add-to-list 'completion-at-point-functions #'cape-keyword)
+      (add-to-list 'completion-at-point-functions #'cape-tex)
+      ;; (add-to-list 'completion-at-point-functions #'cape-symbol)
+      ;; (add-to-list 'completion-at-point-functions #'cape-line)
+      ))
 #+end_src
 
 *** DONE Vertico
@@ -3032,6 +3015,12 @@ Finally, my own snippets are stored in the directory =~/.emacs.d/third_parties/s
   (use-package yasnippet-snippets
     :tags '("COMPLETION")
     :elpaca (consult-yasnippet :host github :repo "mohkale/consult-yasnippet"))
+
+  (use-package yasnippet-capf
+    :tags '("COMPLETION")
+    :after cape
+    :config
+    (add-to-list 'completion-at-point-functions #'yasnippet-capf))
 #+end_src
 
 *** DONE File templates
