@@ -1605,6 +1605,13 @@ I also use capturing mechanism to save recipes and some interesting websites.
                    :headline "Mailing"
                    :template-file ,(format "%s/third_parties/org-capture-templates/mail.org" user-emacs-directory))
 
+                  ("RSS"
+                   :keys "r"
+                   :type entry
+                   :file ,(concat cloud-org-root-dir "todo/todo.org")
+                   :headline "To sort"
+                   :template-file ,(format "%s/third_parties/org-capture-templates/rss.org" user-emacs-directory))
+
                   ("Chat (Slack, Telega)"
                    :keys "C"
                    :type entry
@@ -5247,6 +5254,11 @@ I rely on =elfeed-org= to store the list of feeds and defines some tags as well 
 
     (when (fboundp 'elfeed-define-faces)
       (elfeed-define-faces)))
+
+  (use-package elfeed-link
+    :tags '("CONNECTED" "RSS" "ORG")
+    :elpaca nil
+    :after elfeed)
 #+end_src
 
 *** DONE Org connection
@@ -6284,10 +6296,12 @@ CLOSED: [2021-05-20 Thu 17:33]
 
     :init
     (defun telega-chat-hook ()
+      "Telega chat helper hook"
       ;; TODO: CORFU
       (emojify-mode 1)
       (smartparens-mode -1))
 
+    :config
     (defun org-telega-follow-link (link)
       (telega-tme-open-tg (concat "tg:telega:" link)))
 
@@ -6307,8 +6321,7 @@ CLOSED: [2021-05-20 Thu 17:33]
     (org-link-set-parameters "telega"
                              :follow 'org-telega-follow-link
                              :store 'org-telega-store-link
-                             :complete 'org-telega-complete-link)
-    )
+                             :complete 'org-telega-complete-link))
 #+END_SRC
 
 *** DONE Global helpers
