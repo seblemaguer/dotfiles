@@ -7176,6 +7176,26 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
       (require 'osm-ol)))
 #+end_src
 
+*** TODO Anki editor
+
+#+begin_src emacs-lisp
+
+  (when (executable-find "anki")
+    (use-package anki-editor
+      :tags '("HELPERS" "DESKTOP" "ORG")
+      :elpaca (:host github :repo "orgtre/anki-editor")
+      :config
+      )
+    (use-package anki-editor-ui
+      :elpaca nil
+      :tags '("HELPERS" "DESKTOP" "ORG")
+      :defer t
+      :after anki-editor
+      :bind (:map anki-editor-mode-map
+                  ("C-c e" . anki-editor-ui)))
+    )
+#+end_src
+
 * DONE Visual [100%]
 For the visual part, I rely mainly on =nano-emacs= developed by Nicolas P. Rougier.
 It is a simple layout but incredibly clear and precise.
