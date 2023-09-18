@@ -7428,7 +7428,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
 
     (defun load-default-fonts ()
       "Helper to load the default fonts when it should be when using the daemon."
-      (unless (member "all-the-icons" (font-family-list))
+      (when (and (not (member "all-the-icons" (font-family-list))) (display-graphic-p))
         (all-the-icons-install-fonts t))
 
       ;; The icons you see are not the correct icons until this is evaluated!
