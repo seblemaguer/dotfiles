@@ -1,6 +1,8 @@
-* RELEASE %^{Artist} - %^{Title}
+* TODO %^{Artist} - %^{Title}
+SCHEDULED: %(org-insert-time-stamp (org-read-date nil t))
+:PROPERTIES:
+:CATEGORY: Release
+:END:
 :LOGBOOK:
 - Added: %U
 :END:
-
-SCHEDULED: %(org-insert-time-stamp (org-read-date nil t))
