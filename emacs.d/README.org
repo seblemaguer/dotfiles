@@ -1517,17 +1517,6 @@ This is why I use this configuration.
         (message "No need to clean"))))
 #+end_src
 
-*** DONE Monitoring
-CLOSED: [2021-01-03 Sun 14:45]
-I tend to have multiple project running in parallel.
-To have an overview of what is going on, I am using =org-dashboard=.
-
-#+begin_src emacs-lisp
-  (use-package org-dashboard
-    :tags '("ORG")
-    :commands (org-dashboard-display))
-#+end_src
-
 *** DONE Improving dependencies
 CLOSED: [2022-10-09 Sun 10:35]
 :PROPERTIES:
