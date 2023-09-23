@@ -1338,203 +1338,6 @@ Therefore, I use the package =ox-gfm=
       :tags '("ORG")
       :after ox)
 #+end_src
-
-** DONE GTD [100%]
-Getting Things Done (GTD) is my main way of dealing with tasks.
-My main source of inspiration is proposed in http://doc.norang.ca/org-mode.html but I deviate from it on multiple aspects.
-
-*** DONE Clock management
-CLOSED: [2021-01-03 Sun 14:42]
-:PROPERTIES:
-:FROM:     https://sachachua.com/blog/2007/12/clocking-time-with-emacs-org/
-:END:
-Based on Sacha Chua blog post, I use the following configuration to clock-in/clock-out.
-It deviates from Sacha's blog solely on the states; as I am using my own org states.
-
-#+NAME: org-mru-clock-bindings
-| Key         | function                         | Description |
-|-------------+----------------------------------+-------------|
-| C-c C-x i   | org-mru-clock-in                 |             |
-| C-c C-x C-j | org-mru-clock-select-recent-task |             |
-
-
-#+begin_src emacs-lisp
-    (use-package org-mru-clock
-      :tags '("ORG")
-      :bind* (
-        <<keybindings-gen(table=org-mru-clock-bindings)>>
-      )
-      :init
-      (setq org-mru-clock-how-many 100
-            org-mru-clock-keep-formatting t
-            org-clock-persist t)
-
-      (defadvice org-clock-in (after sacha activate)
-        "Set this task's status to 'CURRENT'."
-        (org-todo "CURRENT"))
-
-      (defun sacha/org-clock-in-if-starting ()
-        "Clock in when the task is marked CURRENT."
-        (when (member (buffer-file-name)
-                      (mapcar 'file-truename org-agenda-files))
-          (when (and (string= org-state "CURRENT")
-                     (not (string= org-last-state org-state)))
-            (org-clock-in))))
-
-      (defun sacha/org-clock-out-if-waiting-or-pausing ()
-        "Clock in when the task is marked STARTED."
-        (when (member (buffer-file-name)
-                      (mapcar 'file-truename org-agenda-files))
-          (when (and (or (string= org-state "TODO")
-                         (string= org-state "HOLD")
-                         (string= org-state "BLOCKED")
-                         (string= org-state "RUNNING"))
-                     (not (string= org-last-state org-state))
-                     (org-clock-is-active))
-            (org-clock-out))))
-
-      :hook
-      (org-after-todo-state-change . sacha/org-clock-out-if-waiting-or-pausing)
-      (org-after-todo-state-change . sacha/org-clock-in-if-starting)
-
-      :config
-      (org-clock-persistence-insinuate))
-
-  (use-package org-clock-convenience
-    :tags '("ORG")
-    :bind (:map org-agenda-mode-map
-             ("<S-up>" . org-clock-convenience-timestamp-up)
-             ("<S-down>" . org-clock-convenience-timestamp-down)))
-#+end_src
-
-**** Webpage overview
-#+begin_src emacs-lisp
-  (use-package org-analyzer
-    :elpaca (:main "org-analyzer-el/org-analyzer.el")
-    :tags '("ORG")
-    :if (file-directory-p cloud-org-root-dir)
-    :custom (org-analyzer-org-directory cloud-org-root-dir)
-    :commands (org-analyzer-start))
-#+end_src
-
-*** DONE Archiving
-CLOSED: [2021-01-03 Sun 14:44]
-:PROPERTIES:
-:FROM:     https://github.com/daviderestivo/galactic-emacs/blob/master/lisp/org-archive-subtree.el
-:END:
-I prefer to keep the tree structure.
-This is why I use this configuration.
-
-#+begin_src emacs-lisp
-  (use-package org-archive
-    :elpaca nil ;; org-contrib
-    :after (org-contrib)
-    :tags '("ORG")
-    :config
-    (setq org-archive-default-command 'org-archive-subtree)
-
-    (defadvice org-archive-subtree (around fix-hierarchy activate)
-      (let* ((fix-archive-p (and (not current-prefix-arg)
-                                 (not (use-region-p))))
-             (afile  (car (org-archive--compute-location
-                           (or (org-entry-get nil "ARCHIVE" 'inherit) org-archive-location))))
-             (buffer (or (find-buffer-visiting afile) (find-file-noselect afile))))
-        ad-do-it
-        (when fix-archive-p
-          (with-current-buffer buffer
-            (goto-char (point-max))
-            (while (org-up-heading-safe))
-            (let* ((olpath (org-entry-get (point) "ARCHIVE_OLPATH"))
-                   (path (and olpath (split-string olpath "/")))
-                   (level 1)
-                   tree-text)
-              (when olpath
-                (org-mark-subtree)
-                (setq tree-text (buffer-substring (region-beginning) (region-end)))
-                (let (this-command) (org-cut-subtree))
-                (goto-char (point-min))
-                (save-restriction
-                  (widen)
-                  (-each path
-                    (lambda (heading)
-                      (if (re-search-forward
-                           (rx-to-string
-                            `(: bol (repeat ,level "*") (1+ " ") ,heading)) nil t)
-                          (org-narrow-to-subtree)
-                        (goto-char (point-max))
-                        (unless (looking-at "^")
-                          (insert "\n"))
-                        (insert (make-string level ?*)
-                                " "
-                                heading
-                                "\n"))
-                      (cl-incf level)))
-                  (widen)
-                  (org-end-of-subtree t t)
-                  (org-paste-subtree level tree-text)))))))))
-#+end_src
-
-**** Cleaning helper
-:PROPERTIES:
-:FROM:     https://www.emacswiki.org/emacs/org-extension.el and https://stackoverflow.com/questions/6997387/how-to-archive-all-the-done-tasks-using-a-single-command
-:END:
-
-#+begin_src emacs-lisp
-  (defun org-archive-done-tasks-subtree ()
-    "Archive done tasks for the current subtree."
-    (interactive)
-    (org-map-entries
-     (lambda ()
-       (org-archive-subtree)
-       (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
-     "/+DONE" 'tree))
-
-  (defun org-archive-all-done-item ()
-    "Archive all item that have with prefix DONE."
-    (interactive)
-    (save-excursion
-      (outline-show-all)
-      (goto-char (point-min))
-      (if (search-forward-regexp "^[\\*]+ \\(DONE\\|CANCELLED\\)" nil t)
-          (progn
-            (goto-char (point-min))
-            (while (search-forward-regexp "^[\\*]+ \\(DONE\\|CANCELLED\\)" nil t)
-              (org-advertized-archive-subtree))
-            (message "Archive finished"))
-        (message "No need to archive"))))
-
-  (defun org-clean-done-item ()
-    "Delete all item that have with prefix DONE."
-    (interactive)
-    (save-excursion
-      (outline-show-all)
-      (goto-char (point-min))
-      (if (search-forward-regexp "^[\\*]+ \\(DONE\\|CANCELLED\\)" nil t)
-          (progn
-            (goto-char (point-min))
-            (while (search-forward-regexp "^[\\*]+ \\(DONE\\|CANCELLED\\)" nil t)
-              (org-cut-subtree))
-            (message "Cleaning DONE tasks finished"))
-        (message "No need to clean"))))
-#+end_src
-
-*** DONE Improving dependencies
-CLOSED: [2022-10-09 Sun 10:35]
-:PROPERTIES:
-:FROM:     https://qua.name/mrb/an-org-babel-based-emacs-configuration
-:END:
-=org-edna= provides a more flexible way of imposing dependencies between tasks.
-Configuration remains minimal for now
-
-#+begin_src emacs-lisp
-  (use-package org-edna
-    :tags '("ORG")
-    :diminish
-    :after org
-    :config
-    (org-edna-mode))
-#+end_src
-
 ** DONE Accessing
 CLOSED: [2021-01-03 Sun 15:24]
 This section configures packages to access information from the org files.
@@ -1925,6 +1728,251 @@ This is convenient as it provides a way to understand what the content should be
     :after org
     :config
     (org-crypt-use-before-save-magic))
+#+end_src
+
+* DONE Project Management / Organization [100%]
+** DONE GTD [100%]
+Getting Things Done (GTD) is my main way of dealing with tasks.
+My main source of inspiration is proposed in http://doc.norang.ca/org-mode.html but I deviate from it on multiple aspects.
+
+*** DONE Clock management
+CLOSED: [2021-01-03 Sun 14:42]
+:PROPERTIES:
+:FROM:     https://sachachua.com/blog/2007/12/clocking-time-with-emacs-org/
+:END:
+Based on Sacha Chua blog post, I use the following configuration to clock-in/clock-out.
+It deviates from Sacha's blog solely on the states; as I am using my own org states.
+
+#+NAME: org-mru-clock-bindings
+| Key         | function                         | Description |
+|-------------+----------------------------------+-------------|
+| C-c C-x i   | org-mru-clock-in                 |             |
+| C-c C-x C-j | org-mru-clock-select-recent-task |             |
+
+
+#+begin_src emacs-lisp
+    (use-package org-mru-clock
+      :tags '("ORG")
+      :bind* (
+        <<keybindings-gen(table=org-mru-clock-bindings)>>
+      )
+      :init
+      (setq org-mru-clock-how-many 100
+            org-mru-clock-keep-formatting t
+            org-clock-persist t)
+
+      (defadvice org-clock-in (after sacha activate)
+        "Set this task's status to 'CURRENT'."
+        (org-todo "CURRENT"))
+
+      (defun sacha/org-clock-in-if-starting ()
+        "Clock in when the task is marked CURRENT."
+        (when (member (buffer-file-name)
+                      (mapcar 'file-truename org-agenda-files))
+          (when (and (string= org-state "CURRENT")
+                     (not (string= org-last-state org-state)))
+            (org-clock-in))))
+
+      (defun sacha/org-clock-out-if-waiting-or-pausing ()
+        "Clock in when the task is marked STARTED."
+        (when (member (buffer-file-name)
+                      (mapcar 'file-truename org-agenda-files))
+          (when (and (or (string= org-state "TODO")
+                         (string= org-state "HOLD")
+                         (string= org-state "BLOCKED")
+                         (string= org-state "RUNNING"))
+                     (not (string= org-last-state org-state))
+                     (org-clock-is-active))
+            (org-clock-out))))
+
+      :hook
+      (org-after-todo-state-change . sacha/org-clock-out-if-waiting-or-pausing)
+      (org-after-todo-state-change . sacha/org-clock-in-if-starting)
+
+      :config
+      (org-clock-persistence-insinuate))
+
+  (use-package org-clock-convenience
+    :tags '("ORG")
+    :bind (:map org-agenda-mode-map
+             ("<S-up>" . org-clock-convenience-timestamp-up)
+             ("<S-down>" . org-clock-convenience-timestamp-down)))
+#+end_src
+
+*** DONE Archiving
+CLOSED: [2021-01-03 Sun 14:44]
+:PROPERTIES:
+:FROM:     https://github.com/daviderestivo/galactic-emacs/blob/master/lisp/org-archive-subtree.el
+:END:
+I prefer to keep the tree structure.
+This is why I use this configuration.
+
+#+begin_src emacs-lisp
+  (use-package org-archive
+    :elpaca nil ;; org-contrib
+    :after (org-contrib)
+    :tags '("ORG")
+    :config
+    (setq org-archive-default-command 'org-archive-subtree)
+
+    (defadvice org-archive-subtree (around fix-hierarchy activate)
+      (let* ((fix-archive-p (and (not current-prefix-arg)
+                                 (not (use-region-p))))
+             (afile  (car (org-archive--compute-location
+                           (or (org-entry-get nil "ARCHIVE" 'inherit) org-archive-location))))
+             (buffer (or (find-buffer-visiting afile) (find-file-noselect afile))))
+        ad-do-it
+        (when fix-archive-p
+          (with-current-buffer buffer
+            (goto-char (point-max))
+            (while (org-up-heading-safe))
+            (let* ((olpath (org-entry-get (point) "ARCHIVE_OLPATH"))
+                   (path (and olpath (split-string olpath "/")))
+                   (level 1)
+                   tree-text)
+              (when olpath
+                (org-mark-subtree)
+                (setq tree-text (buffer-substring (region-beginning) (region-end)))
+                (let (this-command) (org-cut-subtree))
+                (goto-char (point-min))
+                (save-restriction
+                  (widen)
+                  (-each path
+                    (lambda (heading)
+                      (if (re-search-forward
+                           (rx-to-string
+                            `(: bol (repeat ,level "*") (1+ " ") ,heading)) nil t)
+                          (org-narrow-to-subtree)
+                        (goto-char (point-max))
+                        (unless (looking-at "^")
+                          (insert "\n"))
+                        (insert (make-string level ?*)
+                                " "
+                                heading
+                                "\n"))
+                      (cl-incf level)))
+                  (widen)
+                  (org-end-of-subtree t t)
+                  (org-paste-subtree level tree-text)))))))))
+#+end_src
+
+**** Cleaning helper
+:PROPERTIES:
+:FROM:     https://www.emacswiki.org/emacs/org-extension.el and https://stackoverflow.com/questions/6997387/how-to-archive-all-the-done-tasks-using-a-single-command
+:END:
+
+#+begin_src emacs-lisp
+  (defun org-archive-done-tasks-subtree ()
+    "Archive done tasks for the current subtree."
+    (interactive)
+    (org-map-entries
+     (lambda ()
+       (org-archive-subtree)
+       (setq org-map-continue-from (org-element-property :begin (org-element-at-point))))
+     "/+DONE" 'tree))
+
+  (defun org-archive-all-done-item ()
+    "Archive all item that have with prefix DONE."
+    (interactive)
+    (save-excursion
+      (outline-show-all)
+      (goto-char (point-min))
+      (if (search-forward-regexp "^[\\*]+ \\(DONE\\|CANCELLED\\)" nil t)
+          (progn
+            (goto-char (point-min))
+            (while (search-forward-regexp "^[\\*]+ \\(DONE\\|CANCELLED\\)" nil t)
+              (org-advertized-archive-subtree))
+            (message "Archive finished"))
+        (message "No need to archive"))))
+
+  (defun org-clean-done-item ()
+    "Delete all item that have with prefix DONE."
+    (interactive)
+    (save-excursion
+      (outline-show-all)
+      (goto-char (point-min))
+      (if (search-forward-regexp "^[\\*]+ \\(DONE\\|CANCELLED\\)" nil t)
+          (progn
+            (goto-char (point-min))
+            (while (search-forward-regexp "^[\\*]+ \\(DONE\\|CANCELLED\\)" nil t)
+              (org-cut-subtree))
+            (message "Cleaning DONE tasks finished"))
+        (message "No need to clean"))))
+#+end_src
+
+*** DONE Improving dependencies
+CLOSED: [2022-10-09 Sun 10:35]
+:PROPERTIES:
+:FROM:     https://qua.name/mrb/an-org-babel-based-emacs-configuration
+:END:
+=org-edna= provides a more flexible way of imposing dependencies between tasks.
+Configuration remains minimal for now
+
+#+begin_src emacs-lisp
+  (use-package org-edna
+    :tags '("ORG")
+    :diminish
+    :after org
+    :config
+    (org-edna-mode))
+#+end_src
+
+** DONE Gantt
+CLOSED: [2023-09-23 Sat 17:40]
+I am not using so much GANTT charts, but it can be useful to get an idea of what needs to be done as a bootstrap strategy.
+
+#+begin_src emacs-lisp
+  (use-package elgantt
+    :elpaca (elgantt :host github :repo "legalnonsense/elgantt")
+    :custom
+    (elgantt-header-column-offset 40)
+
+    :config
+    (defun list-org-files-with-tag (tag)
+      "List Org-mode files from agenda files with a specific FILETAGS tag."
+      (let ((matching-files '()))
+        (dolist (file (org-agenda-files))
+          (with-temp-buffer
+            (insert-file-contents file)
+            (goto-char (point-min))
+            (when (re-search-forward (format "#\\+FILETAGS:.*?\\b%s\\b" (regexp-quote tag)) nil t)
+              (push file matching-files))))
+        matching-files))
+
+    (elgantt-create-display-rule draw-scheduled-to-deadline
+      :parser ((elgantt-color . ((when-let ((colors (org-entry-get (point) "ELGANTT-COLOR")))
+                                   (s-split " " colors)))))
+      :args (elgantt-scheduled elgantt-color elgantt-org-id)
+      :body ((when elgantt-scheduled
+               (let ((point1 (point))
+                     (point2 (save-excursion
+                               (elgantt--goto-date elgantt-scheduled)
+                               (point)))
+                     (color1 (or (car elgantt-color)
+                                 "black"))
+                     (color2 (or (cadr elgantt-color)
+                                 "red")))
+                 (when (/= point1 point2)
+                   (elgantt--draw-gradient
+                    color1
+                    color2
+                    (if (< point1 point2) point1 point2) ;; Since cells are not necessarily linked in
+                    (if (< point1 point2) point2 point1) ;; chronological order, make sure they are sorted
+                    nil
+                    `(priority ,(setq elgantt-user-set-color-priority-counter
+                                      (1- elgantt-user-set-color-priority-counter))
+                               ;; Decrease the priority so that earlier entries take
+                               ;; precedence over later ones (note: it doesn’t matter if the number is negative)
+                               :elgantt-user-overlay ,elgantt-org-id)))))))
+    (setq elgantt-header-type 'outline
+          elgantt-insert-blank-line-between-top-level-header t
+          elgantt-startup-folded nil
+          elgantt-show-header-depth t
+          elgantt-draw-overarching-headers t
+
+          elgantt-user-set-color-priority-counter 0
+          elgantt-agenda-files (list-org-files-with-tag "plan")))
+
 #+end_src
 
 * DONE Document [100%]
@@ -7457,8 +7505,8 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
      (music release Release)
      (wrench tool Tool configuration Configuration programming Programming)
      (flask expe Expe experiment Experiment)
-     (file-o admin Admin)
-     (graduation-cap studies Studies)
+     (file-o admin Admin administration Administration)
+     (graduation-cap studies Studies teaching Teaching)
      (suitcase trip Trip deplacement Deplacement)
      (book biblio Biblio reading Reading writing Writing)
      (envelope mail Mail)
@@ -7467,9 +7515,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
      (emacs emacs Emacs)
      (org org ORG)
      (image review Review)
-     )
-
-    )
+     ))
 
   ;; (setq org-agenda-category-icon-alist `(
 
