@@ -7248,8 +7248,23 @@ To install Anki-Connect:
     (use-package anki-editor
       :tags '("HELPERS" "DESKTOP" "ORG")
       :elpaca (:host github :repo "orgtre/anki-editor")
+      :bind (:map anki-editor-mode-map
+                  ("C-c r" . org-desc2anki))
       :config
-      )
+      (defun org-desc2anki (start end)
+        "Convert current region containing desription list (<bulgarian> :: <english) to anki reverse card format."
+        (interactive "r")
+        (replace-regexp "- \\(.*\\) :: \\(.*\\)" "*** \\1
+  :PROPERTIES:
+  :ANKI_NOTE_TYPE: Basic (and reversed card)
+  :END:
+  **** front
+  \\1
+  **** Back
+  \\2
+  " nil start end)))
+
+
     (use-package anki-editor-ui
       :elpaca nil
       :tags '("HELPERS" "DESKTOP" "ORG")
