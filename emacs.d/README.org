@@ -2253,10 +2253,11 @@ CLOSED: [2022-02-10 Thu 07:04]
 | e   | consult-org-roam-file-find     |       |             |
 
 #+NAME: org-roam-creation-bindings
-| Key | Function             | Label | Description |
-|-----+----------------------+-------+-------------|
-| i   | org-roam-node-insert |       |             |
-| c   | org-roam-capture     |       |             |
+| Key | Function               | Label            | Description |
+|-----+------------------------+------------------+-------------|
+| i   | org-roam-node-insert   | insert node link |             |
+| r   | org-roam-raw-id-insert | insert RAW id    |             |
+| c   | org-roam-capture       | call org-capture |             |
 
 #+NAME: org-roam-bibliography-bindings
 | Key | Function                    | Label | Description |
@@ -2309,7 +2310,35 @@ CLOSED: [2022-02-10 Thu 07:04]
           browse-url-netscape-program nil)
 
     :config
-    (org-roam-db-autosync-mode))
+    (org-roam-db-autosync-mode)
+
+    (cl-defun org-roam-raw-id-insert (&optional filter-fn)
+    "Find an Org-roam node and insert (where the point is) the raw id.
+  FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
+  and when nil is returned the node will be filtered out."
+    (interactive)
+    (unwind-protect
+        ;; Group functions together to avoid inconsistent state on quit
+        (atomic-change-group
+          (let* (region-text
+                 beg end
+                 (_ (when (region-active-p)
+                      (setq beg (set-marker (make-marker) (region-beginning)))
+                      (setq end (set-marker (make-marker) (region-end)))
+                      (setq region-text (org-link-display-format (buffer-substring-no-properties beg end)))))
+                 (node (org-roam-node-read region-text filter-fn))
+                 (description (or region-text
+                                  (org-roam-node-formatted node))))
+            (if (org-roam-node-id node)
+                (progn
+                  (when region-text
+                    (delete-region beg end)
+                    (set-marker beg nil)
+                    (set-marker end nil))
+                  (let ((id (org-roam-node-id node)))
+                    (insert id))))))
+      (deactivate-mark)))
+    )
 
   (use-package org-roam-protocol
     :elpaca (:host github :repo "org-roam/org-roam" :files ("extensions/org-roam-protocol.el"))
