@@ -1638,9 +1638,6 @@ As I have my own way of being organized, I redefined completely the groups.
 
 #+begin_src emacs-lisp
   (use-package org-super-agenda
-    :elpaca (org-super-agenda :host github
-                              :repo "seblemaguer/org-super-agenda"
-                              :branch "fix_diary")
     :tags '("ORG")
     :config
     ;;
