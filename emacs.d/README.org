@@ -3497,7 +3497,7 @@ And the associated configuration is:
   noContentSuffixes+ =
 #+end_src
 
-* TODO Programming [85%]
+* DONE Programming [100%]
 Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
 To do so, I rely mainly on Language Server Protocol (LSP) and for the debugging I relay on the Debug Adapter Protocol (DAP).
 
@@ -3812,7 +3812,7 @@ In both cases, backup numbers are as well supported.
     ("syslog\\(?:\\.[0-9]+\\)?\\'" . logview-mode))
 #+end_src
 
-** TODO Programming languages [88%]
+** DONE Programming languages [100%]
 I am using emacs as IDE for multiple languages.
 For my research, I am using mainly on python, shell, java and maths-based languages.
 I, obviously, write some elisp code as well.
@@ -3890,7 +3890,8 @@ I also added a hydra configuration to link properly everything.
     :commands (elpl))
 #+end_src
 
-*** TODO C/C++/CMake
+*** DONE C/C++/CMake
+CLOSED: [2023-09-23 Sat 21:24]
 **** Overall part
 #+begin_src emacs-lisp
   (use-package c-mode
