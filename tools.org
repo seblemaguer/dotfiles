@@ -324,7 +324,7 @@
 #+begin_src conf :tangle ~/.config/aria2/aria2.conf :mkdirp yes
   ### Basic ###
   # The directory to store the downloaded file.
-  dir=${HOME}/Torrents
+  dir=${HOME}/Downloads
   # Downloads the URIs listed in FILE.
   input-file=${HOME}/.cache/aria2/aria2.session
   # Save error/unfinished downloads to FILE on exit.
@@ -447,8 +447,10 @@
   Description=aria2 Daemon
 
   [Service]
-  Type=forking
-  ExecStart=/usr/bin/aria2c --conf-path=/home/lemagues/.config/aria2/aria2.conf
+  Type=simple
+  ExecStart=/usr/bin/aria2c --conf-path=%h/.config/aria2/aria2.conf
+  TimeoutStopSec=20
+  Restart=on-failure
 
   [Install]
   WantedBy=default.target
