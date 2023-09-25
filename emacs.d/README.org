@@ -2569,6 +2569,9 @@ CLOSED: [2022-02-10 Thu 07:10]
 
 *** DONE org-roam-bibtex
 CLOSED: [2022-02-10 Thu 07:10]
+We also define the function =generate-bibliography-entry= which generate an org-mode formatted entry to be ready so that we can read the reference.
+This function makes extensive use of =org-element=.
+
 #+begin_src emacs-lisp
   (use-package org-roam-bibtex
     :tags '("BIBLIOGRAPHY" "USER" "ORG")
@@ -2584,12 +2587,37 @@ CLOSED: [2022-02-10 Thu 07:10]
                      ""
                      (cdr (assoc "title" (citar-get-entry key)))))
 
+             (existing-file (car (directory-files-recursively
+                                  (concat cloud-org-root-dir "bibliography/attachments/pdfs/articles/")
+                                  (format ".*%s.*" title))))
+
              (pdf (file-relative-name
-                   (read-file-name "Find file: "
-                                   (buffer-file-name
-                                    (window-buffer (minibuffer-selected-window))))))
-             (entry (format "* %s\n:PROPERTIES:\n:ID: %s\n:ROAM_REFS: cite:%s\n:END:\n** Overall notes\n\n** Detailed notes\n:PROPERTIES:\n:INTERLEAVE_PDF: %s\n:END:\n\n" title (org-id-new) key pdf)))
-        (insert entry)))
+                   (if existing-file
+                       existing-file
+                     (read-file-name "Find file: "
+                                     (concat cloud-org-root-dir "bibliography/attachments/pdfs/articles/")))
+                   (file-name-directory
+                    (buffer-file-name
+                     (window-buffer (minibuffer-selected-window))))
+                   ))
+             (current-level (car (org-heading-components))))
+
+        (save-excursion
+          (insert (org-element-interpret-data
+                   `((headline (:title ,title :todo-keyword "TODO" :level ,current-level)
+
+                               (property-drawer nil ((node-property (:key "ID" :value ,(org-id-new)))
+                                                     (node-property (:key "ROAM_REFS" :value ,(format "cite:%s" key)))))
+                               "\n"
+                               (headline (:title "Overall notes" :level ,(+ current-level 1)))
+
+                               "\n"
+
+                               (headline (:title "Detailed notes" :level ,(+ current-level 1))
+                                         (property-drawer nil ((node-property (:key "INTERLEAVE_PDF" :value ,pdf)))))
+
+                               "\n"
+                               )))))))
 
     (setq orb-preformat-keywords '("citekey" "title" "url" "author-or-editor" "keywords" "file")
           orb-process-file-keyword t
@@ -5960,7 +5988,7 @@ CLOSED: [2021-08-10 Tue 20:14]
 ** DONE Calendar
 CLOSED: [2023-07-31 Mon 08:55]
 For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
-The render for now is achieved by calfw and I especially like the package =calfw-blocks= which allows a block-based visualisation.
+=org-timeblock=
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-caldav
@@ -5989,7 +6017,12 @@ The render for now is achieved by calfw and I especially like the package =calfw
                            :host github
                            :repo "ichernyshovvv/org-timeblock")
     :custom
-    (org-timeblock-n-days-view 7))
+    (org-timeblock-n-days-view 7)
+    (org-timeblock-view-options nil)
+    (org-timeblock-inbox-file (concat (file-truename user-emacs-directory) ".org-timeblock-inbox.org" ))
+
+    :config
+    (add-to-list 'org-agenda-files org-timeblock-inbox-file))
 #+END_SRC
 
 ** DONE Chat [100%]
