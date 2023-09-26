@@ -2247,7 +2247,7 @@ CLOSED: [2022-02-10 Thu 07:04]
 | l   | org-roam-buffer-toggle         |       |             |
 | f   | org-roam-node-find             |       |             |
 | g   | org-roam-ui-open               |       |             |
-| b   | consult-org-roam-backlinks     |       |             |
+| B   | consult-org-roam-backlinks     |       |             |
 | F   | consult-org-roam-forward-links |       |             |
 | s   | consult-org-roam-search        |       |             |
 | e   | consult-org-roam-file-find     |       |             |
