@@ -7529,7 +7529,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
 #+begin_src emacs-lisp
   (use-package all-the-icons
     :ensure t
-    :tags '("VISUAL")
+    :tags '("VISUAL" "ICONS")
     :config
     (defun set-icon-fonts (CODE-FONT-ALIST)
       "Utility to associate many unicode points with specified fonts."
@@ -7572,8 +7572,17 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
           (add-hook 'after-make-frame-functions #'load-fonts)
         (load-default-fonts))))
 
+  (use-package all-the-icons-nerd-fonts
+    :elpaca (all-the-icons-nerd-fonts :host github :repo "mohkale/all-the-icons-nerd-fonts")
+    :tags '("VISUAL" "ICONS")
+    :after all-the-icons
+    :demand t
+    :config
+    (all-the-icons-nerd-fonts-prefer))
+
   (use-package org-agenda-category-icons
     :elpaca (:host github :repo "egregius313/org-agenda-category-icons")
+    :tags '("VISUAL" "ICONS")
     :config
     (org-agenda-category-icons!
      :faicon
@@ -7590,20 +7599,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
      (emacs emacs Emacs)
      (org org ORG)
      (image review Review)
-     ))
-
-  ;; (setq org-agenda-category-icon-alist `(
-
-  ;;                                  ("[Ss]ystem"
-  ;;                                   ,(format "%s/third_parties/icons/debian.png" user-emacs-directory)
-  ;;                                   nil nil :ascent center)
-
-  ;;                                  ("\\([Ss]ynsig\\|SSW\\)"
-  ;;                                   ,(format "%s/third_parties/icons/isca.png" user-emacs-directory)
-  ;;                                   nil nil :ascent center)
-
-  ;;                                  ))
-  ;; )
+     ))'
 #+end_src
 
 ** DONE Helpers [100%]
