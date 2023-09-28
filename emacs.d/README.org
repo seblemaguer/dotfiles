@@ -7599,7 +7599,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
      (emacs emacs Emacs)
      (org org ORG)
      (image review Review)
-     ))'
+     ))
 #+end_src
 
 ** DONE Helpers [100%]
