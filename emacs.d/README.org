@@ -7553,6 +7553,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
     :tags '("VISUAL" "ICONS")
     :after all-the-icons
     :demand t
+    :disable t
     :config
     (all-the-icons-nerd-fonts-prefer))
 
