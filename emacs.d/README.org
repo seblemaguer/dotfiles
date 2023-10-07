@@ -5659,7 +5659,6 @@ The core of the configuration is separated in four main parts:
 the hydra definition, the adaptation of the ~mu4e~ environment, the introduction of new primitives and, finally, the definition of contexts.
 The last part is the most important as it provides the configuration for the mail accounts.
 These configurations are set in the private configuration file and provided by the function =set-mu4e-contexts=.
-The introduced new primitive provides a connection to EAF (~mu4e-eaf-wrapper~; see further for EAF).
 I also redesigned the header buffer.
 
 #+NAME: mu4e-entry-keybindings
@@ -6906,7 +6905,7 @@ Emacs needs to be compiled using the flag ~--with-modules~ as it requires some d
 In addition, =eaf= is installed externally as it requires additional compilation effort.
 As for =mu4e=, my environment scripts are taking care of the compilation.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package epc
     :tags '("DESKTOP")
     )
