@@ -665,28 +665,6 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
 	  '(trail-ring)))
 #+end_src
 
-* DONE Encryption part
-CLOSED: [2023-01-01 Sun 12:57]
-For the encryptication part, I prefer to have everything in emacs directly.
-Therefore, I defined the =pinentry-mode= for both EPGA and EPA to =loopback=.
-
-#+begin_src emacs-lisp
-  (use-package pinentry
-    :tags '("CORE" "ENCRYPTION")
-    :custom
-    (epg-pinentry-mode 'loopback)
-    :config
-    (pinentry-start))
-
-  (use-package epa-file
-    :elpaca nil
-    :tags '("CORE" "ENCRYPTION")
-    :custom
-    (epa-pinentry-mode 'loopback)
-    :config
-    (epa-file-enable))
-#+end_src
-
 * DONE Session [100%]
 As I am using emacs as a daemon/client combination,
 my daily routine consists of opening emacs at the beginning of work and switching it off on the evening.
@@ -7590,7 +7568,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
      (file-o admin Admin administration Administration)
      (graduation-cap studies Studies teaching Teaching)
      (suitcase trip Trip deplacement Deplacement)
-     (book biblio Biblio reading Reading writing Writing)
+     (book biblio Biblio reading Reading writing Writing paper Paper)
      (envelope mail Mail)
 
      :fileicon
