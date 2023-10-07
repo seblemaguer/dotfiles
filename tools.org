@@ -461,4 +461,24 @@ you can then active as follow
   systemctl --user enable aria2cd
 #+end_src
 
+* davmail
+** Systemd service
+#+begin_src conf :tangle ~/.config/systemd/user/davmail.service :mkdirp yes
+  [Unit]
+  Description=DavMail Daemon
+
+  [Service]
+  Type=simple
+  ExecStart=/usr/bin/davmail %h/.config/davmail.conf
+  TimeoutStopSec=20
+  Restart=on-failure
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+
+you can then active as follow
+#+begin_src sh
+  systemctl --user enable davmail
+#+end_src
 * COMMENT some extra configuration
