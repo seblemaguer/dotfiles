@@ -1,3 +1,10 @@
+# Local Variables:
+# eval: (auto-revert-mode)
+# End:
+
+:PROPERTIES:
+:ID:       `(org-id-new nil)`
+:END:
 #+TITLE: ${1:Title}
 #+DATE: `(format-time-string "%e %B %Y")`
 #+DESCRIPTION:
@@ -11,5 +18,3 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
 
 $0
-
-* COMMENT some extra configuration
