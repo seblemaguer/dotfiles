@@ -7562,12 +7562,12 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
     (org-agenda-category-icons!
      :faicon
      (music release Release)
-     (wrench tool Tool configuration Configuration programming Programming)
+     (wrench tools Tools configuration Configuration programming Programming)
      (flask expe Expe experiment Experiment)
      (file-o admin Admin administration Administration)
-     (graduation-cap studies Studies teaching Teaching)
+     (graduation-cap studies Studies teaching Teaching training Training)
      (suitcase trip Trip deplacement Deplacement)
-     (book biblio Biblio reading Reading writing Writing paper Paper)
+     (book biblio Biblio reading Reading writing Writing paper Paper documentation Documentation)
      (envelope mail Mail)
 
      :fileicon
