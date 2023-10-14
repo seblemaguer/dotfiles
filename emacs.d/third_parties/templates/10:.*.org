@@ -1,7 +1,3 @@
-# Local Variables:
-# eval: (auto-revert-mode)
-# End:
-
 :PROPERTIES:
 :ID:       `(org-id-new nil)`
 :END:
