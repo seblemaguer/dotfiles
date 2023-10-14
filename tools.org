@@ -129,10 +129,10 @@
   [core]
       excludesfile = /home/lemagues/.gitignore
       editor = emacs
-      pager = delta
+      pager = ~/environment/local/bin/delta
 
   [interactive]
-      diffFilter = delta --color-only
+      diffFilter = ~/environment/local/bin/delta --color-only
 
   # [gpg]
   # 	program = gpgv2
