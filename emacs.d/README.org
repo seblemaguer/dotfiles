@@ -5301,6 +5301,18 @@ CLOSED: [2023-02-02 Thu 15:56]
       :bind (("C-c d" . 'file-info-show)))
 #+end_src
 
+** DONE Syncthing
+CLOSED: [2023-10-27 Fri 09:07]
+I am using syncthing as sharing system. Visualising the status on emacs is pretty convenient.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package syncthing-status
+    :elpaca (syncthing-status :type git :host github :repo "bharadswami/syncthing-status.el")
+    :tags '("DESKTOP" "FILE_MANAGEMENT")
+    :custom
+    (syncthing-status-api-key syncthing-api-key))
+#+END_SRC
+
 * DONE Online [100%]
 I am using emacs to deal with a lot of online stuffy.
 The main services I consult using emacs are: RSS streams, emails, chats, "exchange services" and CD releases.
