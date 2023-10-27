@@ -1073,7 +1073,6 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
 #+end_src
 
 ** DONE Source [100%]
-CLOSED: [2021-01-03 Sun 13:59]
 The source visualisation of org files can be pretty raw.
 This section provides configurations to help the navigation and the visualisation of such files.
 
@@ -1171,12 +1170,26 @@ To do so, I am relying the package =org-checklist= which is provided by =org-con
 #+END_SRC
 
 *** DONE Tranclusion
-CLOSED: [2022-04-12 Tue 12:22]
+CLOSED: [2023-10-27 Fri 09:40]
 =org-transclusion= provide a fancy interface to include portion of other files into an org file.
+
+#+NAME: org-transclusion-keybindings
+| Key         | Functon                     | Description |
+|-------------+-----------------------------+-------------|
+| C-c t i     | org-transclusion-add        |             |
+| C-c t r     | org-transclusion-remove     |             |
+| C-c t R     | org-transclusion-remove-all |             |
+| C-c t <tab> | org-transclusion-refresh    |             |
+| C-c t m     | org-transclusion-mode       |             |
+
 
 #+begin_src emacs-lisp
   (use-package org-transclusion
-    :after org)
+    :tags '("ORG")
+    :after org
+    :bind (
+      <<keybindings-gen(table=org-menu-keybindings)>>
+    ))
 #+end_src
 
 *** DONE Helpers
