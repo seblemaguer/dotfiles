@@ -5288,8 +5288,32 @@ I also redesigned the header buffer.
                  '(:empty . (:name "Empty"
                                    :shortname ""
                                    :function (lambda (msg) "  "))))
-    (setq mu4e-headers-fields  '((:empty         .    2)
+
+    (setq mu4e-headers-thread-single-orphan-prefix '("─> " . "─▶ ")
+          mu4e-headers-thread-orphan-prefix        '("┬> " . "┬▶ ")
+          mu4e-headers-thread-connection-prefix    '("│  " . "│  ")
+          mu4e-headers-thread-first-child-prefix   '("├> " . "├▶ ")
+          mu4e-headers-thread-child-prefix         '("├> " . "├▶ ")
+          mu4e-headers-thread-last-child-prefix    '("└> " . "╰▶ "))
+
+    (add-to-list 'mu4e-header-info-custom
+                 '(:account .
+                             (:name "Account"
+                                    :shortname "Account"
+                                    :help "which account/maildir this email belongs to"
+                                    :function
+                                    (lambda (msg)
+                                      (let ((maildir (replace-regexp-in-string
+                                                      "\\`/?\\([^/]+\\)/.*\\'" "\\1"
+                                                      (mu4e-message-field msg :maildir))))
+                                         (replace-regexp-in-string
+                                          "^gmail"
+                                          (propertize "g" 'face 'bold-italic)
+                                          maildir))))))
+
+    (setq mu4e-headers-fields  '((:account       .   10)
                                  (:human-date    .   18)
+                                 (:recipnum      .    2)
                                  (:size          .    6)
                                  (:flags         .    6)
                                  (:mailing-list  .   10)
