@@ -3248,6 +3248,43 @@ While the environment configuration is fundamental for editing,
 it is necessary to add more features to simplify coding life.
 This section focuses on three components: the compilation, the commenting and the formatting.
 
+** DONE Imenu/Sidebar
+CLOSED: [2023-10-27 Fri 09:19]
+
+#+NAME: imenu-list-entry-keybindings
+| Key  | Function                    | Description |
+|------+-----------------------------+-------------|
+| <f8> | my/imenu-list-smart-toggle  |             |
+
+#+begin_src emacs-lisp
+  (use-package imenu-list
+    :ensure t
+    :bind (
+       <<keybindings-gen(table=imenu-list-entry-keybindings)>>
+     )
+    :config
+
+    (defun my/imenu-list-jump-to-window ()
+      "Jump to imenu-list window if visible, otherwise create it and jump."
+      (interactive)
+      (if (get-buffer-window imenu-list-buffer-name)
+          (select-window (get-buffer-window imenu-list-buffer-name))
+        (progn
+          (imenu-list-minor-mode)
+          (select-window (get-buffer-window imenu-list-buffer-name)))))
+
+    (defun my/imenu-list-smart-toggle ()
+      "If imenu-list window doesn't exist, create it and jump. If if does but
+  it is not the current buffer, jump there. If it exists and it's the current
+  buffer, close it."
+      (interactive)
+      (if (eq (current-buffer) (get-buffer imenu-list-buffer-name))
+          (imenu-list-quit-window)
+        (my/imenu-list-jump-to-window)))
+
+    (setq imenu-list-size 40))
+#+end_src
+
 ** DONE Compilation [100%]
 I configured the configuration around two main parts:
 refining the default compilation support and add fly-checking support.
@@ -5048,7 +5085,7 @@ I am using emacs as my main file manager.
 To do so, I rely on =dired= which is builtin package which I tweaked massively and I added multiple subpackages to improve UX.
 I also added support for basic image processing and some additional operations (trashing, visualising diffs, ...).
 
-** DONE Dired [100%]
+** DONE Dired/Dirvish [100%]
 CLOSED: [2021-01-04 Mon 18:55]
 The configuration of =dired= focuses mainly on defining keys, tuning the files to omit, and tweaking the LS command used to get the informations.
 The hydra mapping is adapted from https://github.com/abo-abo/hydra/wiki/Dired.
@@ -5227,48 +5264,6 @@ Diff visualization relies mainly on =ediff= but to which I added two primitives 
 	  (erase-buffer))
 	(append-to-buffer bufb (region-beginning) (region-end))
 	(ediff-buffers bufa bufb))))
-#+end_src
-
-** DONE Treemacs
-CLOSED: [2021-01-04 Mon 19:25]
-To have a quick visualisation (on the sidebar) of the project directory tree (and a little bit further), I am using treemacs.
-Aside tweaking the configuration to fit more my needs, a key part of the configuration is to redefine the function ~treemacs--setup-mode-line~.
-This is necessary in order to avoid issues with the modeline I use.
-I added support for visualizing the git status (=treemacs-magit=),
-for project restriction (=treemacs-projectile=) and adding some icons (=treemacs-icons-dired=).
-
-#+NAME: imenu-list-entry-keybindings
-| Key  | Function                    | Description |
-|------+-----------------------------+-------------|
-| <f8> | my/imenu-list-smart-toggle  |             |
-
-#+begin_src emacs-lisp
-  (use-package imenu-list
-    :ensure t
-    :bind (
-       <<keybindings-gen(table=imenu-list-entry-keybindings)>>
-     )
-    :config
-
-    (defun my/imenu-list-jump-to-window ()
-      "Jump to imenu-list window if visible, otherwise create it and jump."
-      (interactive)
-      (if (get-buffer-window imenu-list-buffer-name)
-          (select-window (get-buffer-window imenu-list-buffer-name))
-        (progn
-          (imenu-list-minor-mode)
-          (select-window (get-buffer-window imenu-list-buffer-name)))))
-
-    (defun my/imenu-list-smart-toggle ()
-      "If imenu-list window doesn't exist, create it and jump. If if does but
-  it is not the current buffer, jump there. If it exists and it's the current
-  buffer, close it."
-      (interactive)
-      (if (eq (current-buffer) (get-buffer imenu-list-buffer-name))
-          (imenu-list-quit-window)
-        (my/imenu-list-jump-to-window)))
-
-    (setq imenu-list-size 40))
 #+end_src
 
 ** DONE Trashed
