@@ -547,16 +547,7 @@ This choice has been made due its the simplicity and its recursive nature.
                              "~/org")))
 
                      ;; Subgroup collecting buffers per projects
-                     (group (group-and "*Projectile*"
-                                       (lambda (buffer)
-                                         (unless (funcall (lambda (buf)
-                                                            (with-current-buffer buf
-                                                              (string= (projectile-project-name) "-")))
-                                                          buffer)
-                                           "*Projectile*")))
-
-                            ;; Subgroup collecting buffers in a projectile project.
-                            (auto-projectile)
+                     (group (auto-project)
                             (auto-mode))
 
                      ;; Subgroup collecting buffers in a projectile project.
@@ -4597,7 +4588,7 @@ As a fallback, I am using google-translate via the package =go-translate=.
            :splitter (gts-paragraph-splitter)
            )))
 #+end_src
-* Version Control / Project Management [100%]
+* DONE Version Control / Project Management [100%]
 My code project management is articulated around three key points: GIT, github/gist and =projectile=.
 GIT is used as the version control manager;
 github for the non-sensitive repositories;
@@ -4919,99 +4910,35 @@ The package =gist= provides a nice way of dealing with gists.
 #+end_src
 
 ** DONE Project management
-CLOSED: [2021-01-04 Mon 16:03]
-=projectile= provides a nice way to restrict a lot of complementary packages to a dedicated project.
-A project root directory is defined by the root directory of the repository, which is ideal as all my projects are versioned using GIT.
-The default configuration is almost optimal.
-I just added a bunch of commands which are based on http://endlessparentheses.com/improving-projectile-with-extra-commands.html?source=rss
-I also added a hack to avoi hanging issues because of tramp (see https://github.com/bbatsov/projectile/issues/1232)
-
-#+NAME: projectile-hydra-find-keybinding
-| Key | Function                          | Label                  | Description |
-|-----+-----------------------------------+------------------------+-------------|
-| d   | projectile-find-dir               | Find dir               |             |
-| s-f | projectile-find-file              | Find file              |             |
-| ff  | projectile-find-file-dwim         | File dwim              |             |
-| fd  | projectile-find-file-in-directory | Find file in directory |             |
-| r   | projectile-recentf                | Recentf                |             |
-
-
-#+NAME: projectile-hydra-search-keybinding
-| Key | Function               | Label       | Description |
-|-----+------------------------+-------------+-------------|
-| a   | projectile-ag          | Ag chairs   |             |
-| o   | projectile-multi-occur | Multi-occur |             |
-
-
-#+NAME: projectile-hydra-buffers-keybinding
-| Key | Function                | Label        | Description |
-|-----+-------------------------+--------------+-------------|
-| K   | projectile-kill-buffers | Kill buffers |             |
-
-
-#+NAME: projectile-hydra-cache-keybinding
-| Key | Function                          | Label                | Description |
-|-----+-----------------------------------+----------------------+-------------|
-| p   | projectile-switch-project         | Switch to project    |             |
-| x   | projectile-remove-known-project   | Remove known project |             |
-| X   | projectile-cleanup-known-projects | Clean known projects |             |
-| z   | projectile-cache-current-file     | Cache current file   |             |
-
-
-
+CLOSED: [2023-10-27 Fri 09:32]
 #+begin_src emacs-lisp
-  (use-package projectile
+  (use-package projection
+    :ensure t
     :tags '("PROJECT")
-    :pretty-hydra
-    ((:color teal :hint nil :title "PROJECTILE: %(projectile-project-root)")
-     ("Find File" (
-        <<hydra-keybindings-gen(table=projectile-hydra-find-keybinding)>>
-      )
-
-      "Search/Tags" (
-        <<hydra-keybindings-gen(table=projectile-hydra-search-keybinding)>>
-      )
-
-      "Buffers" (
-        <<hydra-keybindings-gen(table=projectile-hydra-buffers-keybinding)>>
-      )
-
-      "Cache" (
-        <<hydra-keybindings-gen(table=projectile-hydra-cache-keybinding)>>
-      )))
-
+    ;; Enable the `projection-hook' feature.
+    :hook (elpaca-after-init . global-projection-hook-mode)
+    ;; Require projections immediately after project.el.
     :config
+    (with-eval-after-load 'project
+      (require 'projection))
 
-    ;; Global configuration
-    (setq projectile-switch-project-action 'neotree-projectile-action
-          projectile-enable-caching t
-          projectile-create-missing-test-files t
-          projectile-switch-project-action #'projectile-commander
-          projectile-ignored-project-function 'file-remote-p)
+    ;; Access pre-configured projection commands from a keybinding of your choice.
+    ;; Run `M-x describe-keymap projection-map` for a list of available commands.
+    :bind-keymap
+    ("C-x P" . projection-map))
 
-    ;; Defining some helpers
-    (def-projectile-commander-method ?s
-      "Open a *shell* buffer for the project."
-      ;; This requires a snapshot version of Projectile.
-      (projectile-run-shell))
+  (use-package projection-multi
+    :ensure t
+    :tags '("PROJECT"))
 
-    (def-projectile-commander-method ?c
-      "Run `compile' in the project."
-      (projectile-compile-project nil))
-
-    (def-projectile-commander-method ?\C-?
-      "Go back to project selection."
-      (projectile-switch-project))
-
-    ;; Keys
-    (define-key projectile-mode-map (kbd "C-x p") 'projectile-command-map)
-
-    ;; Activate globally
-    (projectile-mode)
-
-    ;; Needed to avoid tramp hanging in buffer listing
-    (defadvice projectile-project-root (around ignore-remote first activate)
-      (unless (file-remote-p default-directory) ad-do-it)))
+  (use-package projection-multi-embark
+    :ensure t
+    :tags '("PROJECT")
+    :after embark
+    :after projection-multi
+    :demand t
+    ;; Add the projection set-command bindings to `compile-multi-embark-command-map'.
+    :config (projection-multi-embark-setup-command-map))
 #+end_src
 
 * Shell [100%]
@@ -7835,7 +7762,7 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
     (text-scale-set 0))
 
   (pretty-hydra-define main-hydra
-    (:color teal :hint nil :title "Main")
+    (:color teal :hint nil :title "Emacs Entry Point")
     ("Org" (
        <<hydra-keybindings-gen(table=org-main-keybindings)>>
      )
@@ -7875,12 +7802,6 @@ It deals with:
   - flychecks
   - travis
 
-#+NAME: main-entry-project-keybindings
-| Key | Function              | Label         | Description |
-|-----+-----------------------+---------------+-------------|
-| d   | org-dashboard-display | ORG Dashboard |             |
-| p   | projectile-hydra/body | Projectile    |             |
-
 #+NAME: main-entry-vc-keybindings
 | Key | Function         | Label | Description |
 |-----+------------------+-------+-------------|
@@ -7894,12 +7815,8 @@ It deals with:
 
 #+begin_src emacs-lisp
   (pretty-hydra-define project-hydra
-    (:color teal :hint nil :title "Project")
-    ("Projects" (
-       <<hydra-keybindings-gen(table=main-entry-project-keybindings)>>
-     )
-
-     "Version Control" (
+    (:color teal :hint nil :title "Project / Status")
+    ("Version Control" (
        <<hydra-keybindings-gen(table=main-entry-vc-keybindings)>>
      )
 
