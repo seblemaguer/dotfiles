@@ -5568,6 +5568,7 @@ Therefore, all the packages are installed using =straight=.
     (ement-room-left-margin-width 0)
     (ement-room-right-margin-width 0)
     (ement-notify-notify-predicates '(ement-notify--notifications-sauron))
+    (ement-room-list-auto-update nil)
 
     :custom-face
     (ement-room-read-receipt-marker ((t (:box '(:line-width 0.1) :height 0.1 :background "red"))))
