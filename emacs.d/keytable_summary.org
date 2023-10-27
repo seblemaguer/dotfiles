@@ -1,0 +1,988 @@
+:PROPERTIES:
+:ID:       6331ccf2-06a5-4f9d-af11-f1d912d10a36
+:END:
+#+TITLE: Keymaps and keystrokes used in the configuration
+#+DATE: 27 October 2023
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  fr
+#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+COLUMNS: %55ITEM(Details) %8Effort(Effort){:} %8CLOCKSUM(Clocked){:}
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/default.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
+
+* Hydra
+:PROPERTIES:
+:ID:       b6f3c601-3270-4bc4-ab2b-a9c04f8c9c59
+:END:
+
+#+NAME: major-mode-hydra-entry-keybindings
+| Key   | Function         | Description |
+|-------+------------------+-------------|
+| M-SPC | major-mode-hydra |             |
+
+* Sauron
+:PROPERTIES:
+:ID:       7c1bf156-89bc-43db-beb5-8e8e5cff6bd3
+:END:
+
+#+NAME: sauron-keybindings
+| Key    | Function                          | Description |
+|--------+-----------------------------------+-------------|
+| <f7>   | sauron-mode-line-toggle-hide-show |             |
+| C-<f7> | sauron-mode-line-clear            |             |
+
+* Bufler
+:PROPERTIES:
+:ID:       0ecac4e5-e18a-45cf-b695-c79188b876cf
+:END:
+
+#+NAME: bufler-entry-keybindings
+| Key     | Functon | Description |
+|---------+---------+-------------|
+| C-x C-b | bufler  |             |
+
+* Navigation
+:PROPERTIES:
+:ID:       bce4ca13-9fef-4080-838a-977b214f64af
+:END:
+
+#+NAME: goto-last-point-entry-keybindings
+| Key | Functon         | Description |
+|-----+-----------------+-------------|
+| C-< | goto-last-point |             |
+
+#+NAME: trail-entry-keybindings
+| Key   | Functon                      | Description |
+|-------+------------------------------+-------------|
+| C-M-= | trail-mark                   |             |
+| C-M-' | trail-list                   |             |
+| C-M-[ | trail-find-and-jump-previous |             |
+| C-M-] | trail-find-and-jump-next     |             |
+
+* Org-mode
+:PROPERTIES:
+:ID:       f08c2c7c-4cef-41ce-82d8-d66cebbca505
+:END:
+** Effort
+:PROPERTIES:
+:ID:       af5ed4c5-189e-4a83-bd0f-708138de543e
+:END:
+
+#+NAME: org-effort-keybindings
+| Key       | Functon           | Description |
+|-----------+-------------------+-------------|
+| C-c C-x e | my-org-set-effort |             |
+
+** Transclusion
+:PROPERTIES:
+:ID:       63457f7f-4e16-4d46-86c9-abf1d3b963fa
+:END:
+
+#+NAME: org-transclusion-keybindings
+| Key         | Functon                     | Description |
+|-------------+-----------------------------+-------------|
+| C-c t i     | org-transclusion-add        |             |
+| C-c t r     | org-transclusion-remove     |             |
+| C-c t R     | org-transclusion-remove-all |             |
+| C-c t <tab> | org-transclusion-refresh    |             |
+| C-c t m     | org-transclusion-mode       |             |
+
+** Org-menu
+:PROPERTIES:
+:ID:       82b52831-5c7a-438f-9893-b77dc0cff2d1
+:END:
+
+#+NAME: org-menu-keybindings
+| Key   | Functon  | Description |
+|-------+----------+-------------|
+| C-c m | org-menu |             |
+
+** Org Agenda
+:PROPERTIES:
+:ID:       b8f3be19-fbae-479b-b314-38a95e3d4824
+:END:
+#+NAME: org-agenda-entry-keybindings
+| Key   | Functon    | Description |
+|-------+------------+-------------|
+| <f12> | org-agenda |             |
+
+#+NAME: org-agenda-hydra-entry-keybindings
+| Key | Function               | Description |
+|-----+------------------------+-------------|
+| v   | org-agenda-hydra/body  |             |
+
+#+NAME: org-agenda-mode-hydra-keybindings
+| Key | Function                  | label     | Description |
+|-----+---------------------------+-----------+-------------|
+| d   | org-agenda-day-view       | Day       |             |
+| w   | org-agenda-week-view      | Week      |             |
+| t   | org-agenda-fortnight-view | Fortnight |             |
+| m   | org-agenda-month-view     | Month     |             |
+| y   | org-agenda-year-view      | Year      |             |
+
+** Clocking
+:PROPERTIES:
+:ID:       3ea72886-b4a7-48d9-a166-7eccc504a692
+:END:
+
+#+NAME: org-mru-clock-keybindings
+| Key         | function                         | Description |
+|-------------+----------------------------------+-------------|
+| C-c C-x i   | org-mru-clock-in                 |             |
+| C-c C-x C-j | org-mru-clock-select-recent-task |             |
+
+* PDF
+:PROPERTIES:
+:ID:       2ad08f43-2af4-4cbd-a28d-41093f67d38f
+:END:
+
+#+NAME: pdf-tools-keybindings
+| Key     | Function                             | Description |
+|---------+--------------------------------------+-------------|
+| ?       | pdf-tools-hydra/body                 |             |
+| <s-spc> | pdf-view-scroll-down-or-next-page    |             |
+| <C-s>   | isearch-forward                      |             |
+| g       | pdf-view-first-page                  |             |
+| G       | pdf-view-last-page                   |             |
+| l       | image-forward-hscroll                |             |
+| h       | image-backward-hscroll               |             |
+| j       | pdf-view-next-page                   |             |
+| k       | pdf-view-previous-page               |             |
+| e       | pdf-view-goto-page                   |             |
+| u       | pdf-view-revert-buffer               |             |
+| al      | pdf-annot-list-annotations           |             |
+| ad      | pdf-annot-delete                     |             |
+| aa      | pdf-annot-attachment-dired           |             |
+| am      | pdf-annot-add-markup-annotation      |             |
+| at      | pdf-annot-add-text-annotation        |             |
+| y       | pdf-view-kill-ring-save              |             |
+| i       | pdf-misc-display-metadata            |             |
+| s       | pdf-occur                            |             |
+| b       | pdf-view-set-slice-from-bounding-box |             |
+| r       | pdf-view-reset-slice                 |             |
+
+#+NAME: pdf-tools-hydra-move-keybindings
+| Key | Function                       | Label        | Options    | Description |
+|-----+--------------------------------+--------------+------------+-------------|
+| g   | pdf-view-first-page            | First        |            |             |
+| G   | pdf-view-last-page             | Last         |            |             |
+| p   | pdf-view-previous-page-command | Previous     | :color red |             |
+| n   | pdf-view-next-page-command     | Next         | :color red |             |
+| e   | pdf-view-goto-page             | Page         |            |             |
+| h   | image-backward-hscroll         | Scroll left  | :color red |             |
+| l   | image-forward-hscroll          | Scroll right | :color red |             |
+
+#+NAME: pdf-tools-hydra-history-keybindings
+| Key | Function             | Label    | Options    | Description |
+|-----+----------------------+----------+------------+-------------|
+| B   | pdf-history-backward | Backward | :color red |             |
+| N   | pdf-history-forward  | Forward  | :color red |             |
+
+#+NAME: pdf-tools-hydra-scale-keybindings
+| Key | Function                             | Label                       | Options    | Description |
+|-----+--------------------------------------+-----------------------------+------------+-------------|
+| +   | pdf-view-enlarge                     | Enlarge                     | :color red |             |
+| -   | pdf-view-shrink                      | Shrink                      | :color red |             |
+| 0   | pdf-view-scale-reset                 | Reset                       |            |             |
+| H   | pdf-view-fit-height-to-window        | Fit height                  |            |             |
+| W   | pdf-view-fit-width-to-window         | Fit width                   |            |             |
+| P   | pdf-view-fit-page-to-window          | Fit page                    |            |             |
+| b   | pdf-view-set-slice-from-bounding-box | Set slice from bounding box |            |             |
+| r   | pdf-view-reset-slice                 | Reset slice                 |            |             |
+
+#+NAME: pdf-tools-hydra-annotations-keybindings
+| Key | Function                        | Label  | Description |
+|-----+---------------------------------+--------+-------------|
+| al  | pdf-annot-list-annotations      | List   |             |
+| am  | pdf-annot-add-markup-annotation | Markup |             |
+| at  | pdf-annot-add-text-annotation   | Text   |             |
+| ad  | pdf-annot-delete                | Delete |             |
+| aa  | pdf-annot-attachment-dired      | Dired  |             |
+| y   | pdf-view-kill-ring-save         | Yank   |             |
+
+#+NAME: pdf-tools-hydra-search-keybindings
+| Key | Function                | Label       | Description |
+|-----+-------------------------+-------------+-------------|
+| s   | pdf-occur               | Search      |             |
+| o   | pdf-outline             | Outline     |             |
+| F   | pdf-links-action-perfom | Link        |             |
+| f   | pdf-links-isearch-link  | Search link |             |
+
+#+NAME: pdf-tools-hydra-diverse-keybindings
+| Key | Function                  | Label         | Description |
+|-----+---------------------------+---------------+-------------|
+| d   | pdf-view-dark-minor-mode  | Dark mode     |             |
+| i   | pdf-misc-display-metadata | Info          |             |
+| u   | pdf-view-revert-buffer    | Revert buffer |             |
+
+* Org-Roam
+
+#+NAME: org-roam-entry-keybindings
+| Key     | Functon             | Description |
+|---------+---------------------+-------------|
+| C-<f12> | org-roam-hydra/body |             |
+
+#+NAME: org-roam-navigation-bindings
+| Key | Function                       | Label | Description |
+|-----+--------------------------------+-------+-------------|
+| l   | org-roam-buffer-toggle         |       |             |
+| f   | org-roam-node-find             |       |             |
+| g   | org-roam-ui-open               |       |             |
+| B   | consult-org-roam-backlinks     |       |             |
+| F   | consult-org-roam-forward-links |       |             |
+| s   | consult-org-roam-search        |       |             |
+| e   | consult-org-roam-file-find     |       |             |
+
+#+NAME: org-roam-creation-bindings
+| Key | Function               | Label            | Description |
+|-----+------------------------+------------------+-------------|
+| i   | org-roam-node-insert   | insert node link |             |
+| r   | org-roam-raw-id-insert | insert RAW id    |             |
+| c   | org-roam-capture       | call org-capture |             |
+
+#+NAME: org-roam-bibliography-bindings
+| Key | Function                    | Label | Description |
+|-----+-----------------------------+-------+-------------|
+| n   | org-noter                   |       |             |
+| b   | generate-bibliography-entry |       |             |
+
+#+NAME: org-roam-helpers-bindings
+| Key | Function                 | Label | Description |
+|-----+--------------------------+-------+-------------|
+| I   | org-id-get-create        |       |             |
+| a   | generate-org-heading-ids |       |             |
+| A   | generate-org-roam-ids    |       |             |
+* Citar
+#+NAME: citar-citation-keybindings
+| Key   | Function              | Description |
+|-------+-----------------------+-------------|
+| C-c ] | citar-insert-citation |             |
+
+#+NAME: citar-minibuffer-keybindings
+| Key | Function            | Description |
+|-----+---------------------+-------------|
+| M-b | citar-insert-preset |             |
+
+* Environment
+** Undoing
+
+#+NAME: vundo-entry-keybindings
+| Key   | Functon | Description |
+|-------+---------+-------------|
+| C-x u | vundo   |             |
+
+** Folding
+
+#+NAME: origami-keybindings
+| Key | Function                        | Description |
+|-----+---------------------------------+-------------|
+| s   | origami-open-node               |             |
+| O   | origami-open-node-recursively   |             |
+| d   | origami-close-node              |             |
+| C   | origami-close-node-recursively  |             |
+| a   | origami-toggle-node             |             |
+| A   | origami-recursively-toggle-node |             |
+| R   | origami-open-all-nodes          |             |
+| M   | origami-close-all-nodes         |             |
+| v   | origami-show-only-node          |             |
+| k   | origami-previous-fold           |             |
+| j   | origami-forward-fold            |             |
+| x   | origami-reset                   |             |
+
+* Completion
+** Helm
+
+#+NAME: helm-info-entry-keybindings
+| Key   | Functon   | Description |
+|-------+-----------+-------------|
+| C-h i | helm-info |             |
+
+** Marginalia
+
+#+NAME: marginalia-entry-keybindings
+| Key   | Functon          | Description |
+|-------+------------------+-------------|
+| C-M-a | marginalia-cycle |             |
+
+** Consult
+
+#+NAME: consult-ctrl-c-keybindings
+| Key   | Function             | Description |
+|-------+----------------------+-------------|
+| C-c h | consult-history      |             |
+| C-c m | consult-mode-command |             |
+| C-c k | consult-kmacro       |             |
+
+#+NAME: consult-ctrl-x-keybindings
+| Key     | Function                | Description |
+|---------+-------------------------+-------------|
+| C-x M-: | consult-complex-command |             |
+| C-x b   | consult-buffer          |             |
+| C-x p b | consult-project-buffer  |             |
+| C-x C-r | consult-recent-file     |             |
+
+#+NAME: consult-yank-keybindings
+| Key | Function         | Description |
+|-----+------------------+-------------|
+| M-y | consult-yank-pop |             |
+
+#+NAME: consult-goto-keybindings
+| Key     | Function              | Description |
+|---------+-----------------------+-------------|
+| M-g e   | consult-compile-error |             |
+| M-g f   | consult-flymake       |             |
+| M-g g   | consult-goto-line     |             |
+| M-g M-g | consult-goto-line     |             |
+| M-g o   | consult-outline       |             |
+| M-g m   | consult-mark          |             |
+| M-g k   | consult-global-mark   |             |
+| M-g i   | consult-imenu         |             |
+| M-g I   | consult-imenu-multi   |             |
+
+#+NAME: consult-search-keybindings
+| Key   | Function            | Description |
+|-------+---------------------+-------------|
+| M-s D | consult-locate      |             |
+| M-s f | consult-find        |             |
+| M-s g | consult-grep        |             |
+| M-s G | consult-git-grep    |             |
+| M-s r | consult-ripgrep     |             |
+| M-s l | consult-line        |             |
+| M-s L | consult-line-multi  |             |
+| M-s m | consult-multi-occur |             |
+| M-s k | consult-keep-lines  |             |
+| M-s u | consult-focus-lines |             |
+
+#+NAME: consult-isearch-keybindings
+| Key   | Function                | Description |
+|-------+-------------------------+-------------|
+| M-s e | consult-isearch-history |             |
+
+#+NAME: consult-isearch-mode-keybindings
+| Key   | Function                | Description                              |
+|-------+-------------------------+------------------------------------------|
+| M-e   | consult-isearch-history | orig. isearch-edit-string                |
+| M-s e | consult-isearch-history | orig. isearch-edit-string                |
+| M-s l | consult-line            | needed by consult-line to detect isearch |
+| M-s L | consult-line-multi      | needed by consult-line to detect isearch |
+
+#+NAME: consult-flycheck-entry-keybindings
+| Key | Functon          | Description |
+|-----+------------------+-------------|
+| !   | consult-flycheck |             |
+
+** Embark
+
+#+NAME: embark-keybindings
+| Key   | Function        | Description |
+|-------+-----------------+-------------|
+| C-S-a | embark-act      |             |
+| C-h B | embark-bindings |             |
+
+#+NAME: embark-minibuffer-keybindings
+| Key     | Function                | Description |
+|---------+-------------------------+-------------|
+| C-c C-o | embark-collect-snapshot |             |
+| C-c C-c | embark-act              |             |
+
+* Buffer
+
+#+NAME: start-term-hydra-keybindings
+| Key | Function    | Label        | Description |
+|-----+-------------+--------------+-------------|
+| p   | run-python  | Python Shell |             |
+| t   | multi-vterm | VTerm        |             |
+
+#+NAME: popper-entry-keybindings
+| Key    | Function              | Description |
+|--------+-----------------------+-------------|
+| <f6>   | popper-toggle         |             |
+| S-<f6> | popper-cycle          |             |
+| C-<f6> | start-term-hydra/body |             |
+
+* Environment
+** IMenu
+
+#+NAME: imenu-list-entry-keybindings
+| Key  | Function                    | Description |
+|------+-----------------------------+-------------|
+| <f8> | my/imenu-list-smart-toggle  |             |
+
+** Compilation
+
+#+NAME: compilation-hydra-keybindings
+| Key | Function                                                     | Label          | Description |
+|-----+--------------------------------------------------------------+----------------+-------------|
+| n   | next-error                                                   | Next Error     |             |
+| k   | previous-error                                               | Previous Error |             |
+| h   | first-error                                                  | First Error    |             |
+| l   | (condition-case err (while t (next-error)) (user-error nil)) | ]Last Error    |             |
+
+** Flychecking
+
+#+NAME: flycheck-errors-bindings
+| Key | Function                                                  | Label    | Description |
+|-----+-----------------------------------------------------------+----------+-------------|
+| f   | flycheck-error-list-set-filter                            | Filter   |             |
+| j   | flycheck-next-error                                       | Next     |             |
+| k   | flycheck-previous-error                                   | Previous |             |
+| gg  | flycheck-first-error                                      | First    |             |
+| <   | project-hydra/body                                        | back     |             |
+| G   | (progn (goto-char (point-max)) (flycheck-previous-error)) | Last     |             |
+
+* Documentation
+** Keybindings
+
+#+NAME: helm-descbinds-entry-keybindings
+| Key   | Function       | Description |
+|-------+----------------+-------------|
+| C-h b | helm-descbinds |             |
+
+** Helpful
+
+#+NAME: help-keybindings
+| Key   | Function         | Description |
+|-------+------------------+-------------|
+| C-h k | helpful-key      |             |
+| C-h a | helpful-symbol   |             |
+| C-h h | helpful-at-point |             |
+
+** Dash/Docsets
+
+#+NAME: consult-dash-entry-keybindings
+| Key   | Functon      | Description |
+|-------+--------------+-------------|
+| M-s d | consult-dash |             |
+
+** Recoll
+
+#+NAME: consult-recoll-entry-keybindings
+| Key   | Functon        | Description |
+|-------+----------------+-------------|
+| M-g t | consult-recoll |             |
+
+* Programming
+** YAML
+#+NAME: yaml-pro-keybindings
+| Key     | Functon                    | Description |
+|---------+----------------------------+-------------|
+| C-c M-p | yaml-pro-move-subtree-up   |             |
+| C-c M-n | yaml-pro-move-subtree-down |             |
+
+** Elisp
+#+NAME: elisp-mode-hydra-eval-keybindings
+| Key | Function    | Label  | Description |
+|-----+-------------+--------+-------------|
+| b   | eval-buffer | buffer |             |
+| e   | eval-defun  | defun  |             |
+| r   | eval-region | region |             |
+
+#+NAME: elisp-mode-hydra-repl-keybindings
+| Key | Function | Label | Description |
+|-----+----------+-------+-------------|
+| I   | elpl     | elpl  |             |
+
+#+NAME: elisp-mode-hydra-formatting-keybindings
+| Key | Function                    | Label        | Description |
+|-----+-----------------------------+--------------+-------------|
+| p   | package-lint-current-buffer | package-lint |             |
+
+#+NAME: elisp-mode-hydra-test-keybindings
+| Key | Function      | Label  | Description |
+|-----+---------------+--------+-------------|
+| t   | ert           | prompt |             |
+| T   | (ert t)       | all    |             |
+| F   | (ert :failed) | failed |             |
+
+#+NAME: elisp-mode-hydra-doc-keybindings
+| Key | Function              | Label       | Description |
+|-----+-----------------------+-------------+-------------|
+| d   | describe-foo-at-point | thing-at-pt |             |
+| f   | describe-function     | function    |             |
+| v   | describe-variable     | variable    |             |
+| i   | info-lookup-symbol    | info lookup |             |
+
+** C/C++
+#+NAME: clang-format-entry-keybindings
+| Key   | Function            | Description |
+|-------+---------------------+-------------|
+| C-c i | clang-format-region |             |
+| C-c u | clang-format-buffer |             |
+
+* Writing
+** Bibtex
+#+NAME: bibtex-tidy-entry-keybindings
+| Key    | Function           | Description |
+|--------+--------------------+-------------|
+| C-c f  | bibtex-tidy-buffer |             |
+
+** Markdown
+#+NAME: grip-mode-entry-keybindings
+| Key | Function  | Description |
+|-----+-----------+-------------|
+| g   | grip-mode |             |
+
+** Translation
+#+NAME: gts-translate-entry-keybindings
+| Key   | Function         | Description |
+|-------+------------------+-------------|
+| C-c t | gts-do-translate |             |
+
+* Version Control
+** Git
+
+#+NAME: magit-browse-keybindings
+| Key | Function        | Description |
+|-----+-----------------+-------------|
+| o   | magit-open-repo |             |
+
+#+NAME: magit-status-hydra-keybindings
+| Key | Function         | Label        | Description |
+|-----+------------------+--------------+-------------|
+| d   | magit-diff-range | Diff         |             |
+| l   | magit-log-all    | Log all      |             |
+| s   | magit-status     | Status       |             |
+| t   | git-timemachine  | Time machine |             |
+
+
+#+NAME: magit-remote-hydra-keybindings
+| Key | Function          | Label | Description |
+|-----+-------------------+-------+-------------|
+| f   | magit-pull-branch | Pull  |             |
+| p   | magit-push-other  | Push  |             |
+
+
+#+NAME: magit-operations-hydra-keybindings
+| Key | Function            | Label  | Description |
+|-----+---------------------+--------+-------------|
+| c   | magit-commit-create | Commit |             |
+| <   | project-hydra/body  | back   |             |
+
+** Github
+#+NAME: github-review-entry-keybindings
+| Key   | Function                        | Description |
+|-------+---------------------------------+-------------|
+| C-x r | github-review-forge-pr-at-point |             |
+
+#+NAME: github-review-diff-keybindings
+| Key   | Function                         | Description |
+|-------+----------------------------------+-------------|
+| C-c s | my/github-review-kill-suggestion |             |
+
+** Gist
+#+NAME: gist-mode-hydra-basic-keybindings
+| Key | Function           | Label        | Description |
+|-----+--------------------+--------------+-------------|
+| F   | gist-fetch-current | Fetch        |             |
+| +   | gist-add-buffer    | Add buffer   |             |
+| -   | gist-remove-file   | Remove file  |             |
+| g   | gist-list-reload   | List reload  |             |
+| k   | gist-kill-current  | Kill current |             |
+
+#+NAME: gist-mode-hydra-information-keybindings
+| Key | Function                      | Label            | Description |
+|-----+-------------------------------+------------------+-------------|
+| e   | gist-edit-current-description | Edit description |             |
+| y   | gist-print-current-url        | Print URL        |             |
+
+#+NAME: gist-mode-hydra-starring-keybindings
+| Key | Function    | Label  | Description |
+|-----+-------------+--------+-------------|
+| ^   | gist-unstar | Unstar |             |
+| *   | gist-star   | Start  |             |
+
+
+#+NAME: gist-mode-hydra-remote-keybindings
+#+CAPTION: Gist Hydra Remote Keybindings
+| Key | Function                | Label              | Description |
+|-----+-------------------------+--------------------+-------------|
+| b   | gist-browse-current-url | Browse current URL |             |
+| f   | gist-fork               | Fork               |             |
+
+* Shell
+#+NAME: multi-vterm-mode-keybindings
+| Key | Function                             | Description |
+|-----+--------------------------------------+-------------|
+| M-r | multi-vterm-rename-buffer            |             |
+
+* File manager
+** Dired/Dirvish
+#+NAME: dired-global-keybindings
+| Key     | Function        | Description |
+|---------+-----------------+-------------|
+| C-x C-d | dired           |             |
+| C-x f   | dirvish-fd      |             |
+| C-c 1   | find-name-dired |             |
+| C-c 2   | find-grep-dired |             |
+
+#+NAME: dired-mode-keybindings
+| Key      | Function                        | Description |
+|----------+---------------------------------+-------------|
+| *        | dirvish-mark-menu               |             |
+| C-o      | dired-omit-mode                 |             |
+| M-s      | dirvish-setup-menu              |             |
+| SPC      | dirvish-history-jump            |             |
+| TAB      | dirvish-toggle-subtree          |             |
+| b        | dirvish-bookmark-jump           |             |
+| e        | dired-open-externally           |             |
+| f        | dirvish-file-info-menu          |             |
+| p        | dired-emms-play                 |             |
+| r        | dirvish-fd-jump                 |             |
+| M-<up>   | dired-up-directory              |             |
+| M-<down> | dired-find-file                 |             |
+| T        | dired-do-transfer-to-remarkable |             |
+
+#+NAME: dired-launch-entry-keybindings
+| Key        | Function             | Description |
+|------------+----------------------+-------------|
+| <C-return> | dired-launch-command |             |
+
+* Online
+** Elfeed
+#+NAME: elfeed-entry-keybindings
+| Key  | Function | Description |
+|------+----------+-------------|
+| <f9> | elfeed   |             |
+
+*** Elfeed/Youtube
+#+NAME: elfeed-tube-entry-keybindings
+| Key                 | Function          | Description |
+|---------------------+-------------------+-------------|
+| F                   | elfeed-tube-fetch |             |
+| [remap save-buffer] | elfeed-tube-save  |             |
+
+#+NAME: elfeed-tube-mpv-keybindings
+| Key     | Function                    | Description |
+|---------+-----------------------------+-------------|
+| C-c C-f | elfeed-tube-mpv-follow-mode |             |
+| C-c C-p | elfeed-tube-mpv             |             |
+| C-c C-w | elfeed-tube-mpv-where       |             |
+
+** Mail
+*** Org-msg
+#+NAME: org-msg-edit-keybindings
+| Key         | Function                        | Description |
+|-------------+---------------------------------+-------------|
+| C-c RET C-c | mml-secure-message-sign-encrypt |             |
+| C-c RET C-s | mml-secure-message-sign         |             |
+| C-c RET f   | org-msg-attach                  |             |
+| C-c RET t   | message-goto-to                 |             |
+| C-c RET c   | message-goto-cc                 |             |
+| C-c RET b   | message-goto-bcc                |             |
+| C-c RET o   | org-msg-goto-body               |             |
+| C-c RET s   | message-goto-subject            |             |
+
+*** Mu4e
+
+#+NAME: mu4e-entry-keybindings
+| Key  | Function | Description |
+|------+----------+-------------|
+| <f2> | mu4e     |             |
+
+#+NAME: mu4e-hydra-general-keybindings
+| Key | Function                    | Label          | Description |
+|-----+-----------------------------+----------------+-------------|
+| n   | mu4e-headers-next           | Next           |             |
+| p   | mu4e-headers-previous       | Previous       |             |
+| [   | mu4e-select-next-unread     | Next unred     |             |
+| ]   | mu4e-select-previous-unread | Previous unred |             |
+| y   | mu4e-select-other-view      | Switch view    |             |
+| R   | mu4e-compose-reply          | Reply          |             |
+| C   | mu4e-compose-new            | Compose        |             |
+| F   | mu4e-compose-forward        | Forward        |             |
+| o   | my/org-capture-mu4e         | Org capture    |             |
+
+#+NAME: mu4e-hydra-search-keybindings
+| Key | Function                          | Label            | Description |
+|-----+-----------------------------------+------------------+-------------|
+| s   | mu4e-headers-search               | Search           |             |
+| S   | mu4e-headers-search-edit          | Edit prev. query |             |
+| /   | mu4e-headers-search-narrow        | Narrow search    |             |
+| b   | mu4e-headers-search-bookmark      | Search bookmark  |             |
+| B   | mu4e-headers-search-bookmark-edit | Edit bookmark    |             |
+| {   | mu4e-headers-query-prev           | Previous query   |             |
+| }   | mu4e-headers-query-next           | Next query       |             |
+| C-+ | mu4e-headers-split-view-grow      | Show more        |             |
+| C-- | mu4e-headers-split-view-shrink    | Show less        |             |
+
+#+NAME: mu4e-hydra-mark-keybindings
+| Key | Function                         | Label           | Description |
+|-----+----------------------------------+-----------------+-------------|
+| !   | mu4e-headers-mark-for-read       | Read            |             |
+| ?   | mu4e-headers-mark-for-unread     | Unread          |             |
+| r   | mu4e-headers-mark-for-refile     | Refile          |             |
+| u   | mu4e-headers-mark-for-unmark     | Unmark          |             |
+| U   | mu4e-mark-unmark-all             | Unmark All      |             |
+| d   | mu4e-headers-mark-for-trash      | Trash           |             |
+| D   | mu4e-headers-mark-for-delete     | Delete          |             |
+| m   | mu4e-headers-mark-for-move       | Move            |             |
+| a   | mu4e-headers-action              | Action          |             |
+| A   | mu4e-headers-mark-for-action     | Mark for action |             |
+| *   | mu4e-headers-mark-for-something  | *thing          |             |
+| #   | mu4e-mark-resolve-deferred-marks | Deferred        |             |
+| %   | mu4e-headers-mark-pattern        | Pattern         |             |
+| &   | mu4e-headers-mark-custom         | Custom          |             |
+| +   | mu4e-headers-mark-for-flag       | Flag            |             |
+| -   | mu4e-headers-mark-for-unflag     | Unflag          |             |
+| t   | mu4e-headers-mark-subthread      | Subthread       |             |
+| T   | mu4e-headers-mark-thread         | Thread          |             |
+
+#+NAME: mu4e-hydra-misc-keybindings
+| Key | Function                     | Label           | Description |
+|-----+------------------------------+-----------------+-------------|
+| q   | mu4e~headers-quit-buffer     | Quit            |             |
+| H   | mu4e-display-manual          | Help            |             |
+| #   | mu4e-view-pipe               | Through shell   |             |
+| `   | mu4e-update-mail-and-index   | Update          |             |
+| ;   | mu4e-context-switch          | Switch context  |             |
+| j   | mu4e~headers-jump-to-maildir | Jump to maildir |             |
+
+#+NAME: mu4e-hydra-switches-keybindings
+| Key | Function                            | Label           | Description |
+|-----+-------------------------------------+-----------------+-------------|
+| O   | mu4e-headers-change-sorting         | Sorting         |             |
+| P   | mu4e-headers-toggle-threading       | Threading       |             |
+| Q   | mu4e-headers-toggle-full-search     | Full searching  |             |
+| V   | mu4e-headers-toggle-skip-duplicates | Skip dups       |             |
+| W   | mu4e-headers-toggle-include-related | Include related |             |
+
+#+NAME: mu4e-headers-mode-keybindings
+| Key       | Function                     | Description |
+|-----------+------------------------------+-------------|
+| <tab>     | mu4e-headers-toggle-at-point |             |
+| <left>    | mu4e-headers-fold-at-point   |             |
+| <S-left>  | mu4e-headers-fold-all        |             |
+| <right>   | mu4e-headers-unfold-at-point |             |
+| <S-right> | mu4e-headers-unfold-all      |             |
+| #         | mu4e-view-pipe               |             |
+| .         | mu4e-hydra/body              |             |
+
+#+NAME: mu4e-main-mode-keybindings
+| Key | Function                   | Description                                                  |
+|-----+----------------------------+--------------------------------------------------------------|
+| u   | mu4e-update-mail-and-index |                                                              |
+| q   | previous-buffer            | Override the "exit" mu4e to always keep it in the background |
+
+#+NAME: message-mode-keybindings
+| Key     | Function            | Description |
+|---------+---------------------+-------------|
+| C-c C-a | mail-add-attachment |             |
+
+** Messaging
+*** Slack
+#+NAME: slack-mode-keybindings
+| Key | Function                    | Description |
+|-----+-----------------------------+-------------|
+| @   | slack-message-embed-mention |             |
+| #   | slack-message-embed-channel |             |
+
+#+NAME: slack-message-keybindings
+| Key     | Function                    | Description |
+|---------+-----------------------------+-------------|
+| C-c C-e | slack-message-edit          |             |
+| C-c C-a | slack-file-upload           |             |
+| C-c C-r | slack-thread-show-or-create |             |
+
+** Exchange
+*** Reddit
+#+NAME: md4rd-mode-keybindings
+| Key       | Function                  | Description |
+|-----------+---------------------------+-------------|
+| u         | md4rd-upvote              |             |
+| d         | md4rd-downvote            |             |
+| o         | md4rd-open                |             |
+| t         | md4rd-widget-toggle-line  |             |
+| e         | md4rd-widget-expand-all   |             |
+| c         | md4rd-widget-collapse-all |             |
+| TAB       | widget-forward            |             |
+| <backtab> | widget-backward           |             |
+| ?         | md4rd-hydra/body          |             |
+
+#+NAME: md4rd-hydra-basic-keybindings
+| Key | Function                 | Label       | Description |
+|-----+--------------------------+-------------+-------------|
+| o   | md4rd-open               | Open        |             |
+| t   | md4rd-widget-toggle-line | Toggle line |             |
+
+#+NAME: md4rd-hydra-voting-keybindings
+| Key | Function       | Label    | Description |
+|-----+----------------+----------+-------------|
+| u   | md4rd-upvote   | Upvote   |             |
+| d   | md4rd-downvote | Downvote |             |
+
+#+NAME: md4rd-hydra-expanding-keybindings
+| Key | Function                  | Label        | Description |
+|-----+---------------------------+--------------+-------------|
+| e   | md4rd-widget-expand-all   | Expand all   |             |
+| c   | md4rd-widget-collapse-all | Collapse all |             |
+
+** Youtube
+#+NAME: ytdious-entry-keybindings
+| Key    | Function | Description |
+|--------+----------+-------------|
+| <C-f9> | ytdious  |             |
+
+#+NAME: ytdious-mode-keybindings
+| Key      | Function         | Description |
+|----------+------------------+-------------|
+| <return> | ytdious-watch    |             |
+| d        | ytdious-download |             |
+
+* Entertainment
+** Music
+#+NAME: emms-keybindings
+| Key             | Function              | Description |
+|-----------------+-----------------------+-------------|
+| <f5>            | emms-browse-by-artist |             |
+| S-<f5>          | emms-playlist-mode-go |             |
+| <XF86AudioPlay> | emms-pause            |             |
+| <XF86AudioStop> | emms-stop             |             |
+| <XF86AudioPrev> | emms-previous         |             |
+| <XF86AudioNext> | emms-next             |             |
+
+** Subtitles
+#+NAME: subed-keybindings
+| Key     | Function                            | Description                                                     |
+|---------+-------------------------------------+-----------------------------------------------------------------|
+| C-c (   | subed-copy-player-pos-to-start-time | Set the current play-time as the *start* position                 |
+| C-c )   | subed-copy-player-pos-to-stop-time  | Set the current play-time as the *end* position                   |
+| M-i     | subed-insert-subtitle               | Insert a new subtitle "line"                                    |
+| C-c C-v | subed-mpv-play-from-file            | Open a video file to synchronize with the current subtitle file |
+
+* Interaction with other softwares
+** Firefox
+
+#+NAME: atomic-chrome-keybindings
+| Key     | Function                           | Description |
+|---------+------------------------------------+-------------|
+| S-c C-c | atomic-chrome-close-current-buffer |             |
+
+** Shell execution
+#+NAME: detached-mode-keybindings
+| Key                           | Function                   | Description |
+|-------------------------------+----------------------------+-------------|
+| [remap async-shell-command]   | detached-shell-command     |             |
+| [remap compile]               | detached-compile           |             |
+| [remap recompile]             | detached-compile-recompile |             |
+| [remap detached-open-session] | detached-consult-session   |             |
+
+#+NAME: run-command-entry-keybindings
+| Key   | Function    | Description |
+|-------+-------------+-------------|
+| C-c c | run-command |             |
+
+** Processes
+#+NAME: prodigy-keybindings
+| Key | Function                | Description                     |
+|-----+-------------------------+---------------------------------|
+| ?   | prodigy-display-process | Display the process information |
+
+* Visual
+#+NAME: scrollkeeper-remap-keybindings
+| Key                         | Function                   | Description |
+|-----------------------------+----------------------------+-------------|
+| [remap scroll-up-command]   | scrollkeeper-contents-up   |             |
+| [remap scroll-down-command] | scrollkeeper-contents-down |             |
+
+* Keybindings
+** Main Entry
+#+NAME: org-main-keybindings
+| Key | Function                      | Label           | Description |
+|-----+-------------------------------+-----------------+-------------|
+| c   | org-capture                   | Capture         |             |
+| h   | org-web-tools-read-url-as-org | Get URL to org  |             |
+| F   | org-gcal-fetch                | Fetch Calendars |             |
+| y   | org-gcal-sync                 | Sync. Calendars |             |
+
+#+NAME: help-main-keybindings
+| Key | Function          | Label             | Description |
+|-----+-------------------+-------------------+-------------|
+| f   | describe-function | Describe function |             |
+| v   | describe-variable | Describe variable |             |
+
+#+NAME: zoom-main-keybindings
+| Key | Function            | Label      | Options     | Description |
+|-----+---------------------+------------+-------------+-------------|
+| +   | text-scale-increase | Zoom in    | :color pink |             |
+| -   | text-scale-decrease | Zoom out   | :color pink |             |
+| 0   | text-scale-reset    | Reset zoom |             |             |
+
+#+NAME: bookmark-main-keybindings
+| Key | Function         | Label                 | Description |
+|-----+------------------+-----------------------+-------------|
+| b   | consult-bookmark | List bookmarks        |             |
+| B   | bookmark-set     | Bookmark current file |             |
+
+#+NAME: mail-main-keybindings
+| Key | Function         | Label        | Description |
+|-----+------------------+--------------+-------------|
+| m   | mu4e-compose-new | New mail     |             |
+| p   | prodigy          | Open prodigy |             |
+
+#+NAME: backup-main-keybindings
+| Key | Function             | Label                 | Description |
+|-----+----------------------+-----------------------+-------------|
+| s   | snapshot-timeline    | List backups          |             |
+| S   | snapshot-timemachine | Timemachine on backup |             |
+
+** Project/VC
+#+NAME: main-entry-vc-keybindings
+| Key | Function         | Label | Description |
+|-----+------------------+-------+-------------|
+| m   | magit-hydra/body | Magit |             |
+
+#+NAME: main-entry-fixme-keybindings
+| Key | Function            | Label         | Description |
+|-----+---------------------+---------------+-------------|
+| f   | fic-view-listing    | Fixme listing |             |
+| F   | flycheck-hydra/body | Flycheck      |             |
+
+** Toggling
+#+NAME: basic-toggle-keybindings
+| Key | Function                  | Label              | Options   | Description |
+|-----+---------------------------+--------------------+-----------+-------------|
+| n   | display-line-numbers-mode | line number        | :toggle t |             |
+| w   | whitespace-mode           | whitespace         | :toggle t |             |
+| W   | whitespace-cleanup-mode   | whitespace cleanup | :toggle t |             |
+| r   | rainbow-mode              | rainbow            | :toggle t |             |
+| L   | page-break-lines-mode     | page break lines   | :toggle t |             |
+
+#+NAME: highlight-toggle-keybindings
+| Key | Function            | Label  | Options   | Description |
+|-----+---------------------+--------+-----------+-------------|
+| s   | symbol-overlay-mode | symbol | :toggle t |             |
+| l   | hl-line-mode        | line   | :toggle t |             |
+| x   | highlight-sexp-mode | sexp   | :toggle t |             |
+| t   | hl-todo-mode        | todo   | :toggle t |             |
+
+#+NAME: coding-toggle-keybindings
+| Key | Function                | Label              | Options   | Description |
+|-----+-------------------------+--------------------+-----------+-------------|
+| p   | smartparens-mode        | smartparens        | :toggle t |             |
+| P   | smartparens-strict-mode | smartparens strict | :toggle t |             |
+| S   | show-smartparens-mode   | show smartparens   | :toggle t |             |
+| f   | flycheck-mode           | flycheck           | :toggle t |             |
+
+#+NAME: debug-toggle-keybindings
+| Key | Function              | Label          | Options                                 | Description |
+|-----+-----------------------+----------------+-----------------------------------------+-------------|
+| D   | toggle-debug-on-error | debug on error | :toggle (default-value 'debug-on-error) |             |
+| X   | toggle-debug-on-quit  | debug on quit  | :toggle (default-value 'debug-on-quit)  |             |
+
+** Commenting
+#+NAME: comment-keybindings
+| Key     | Function         | Description              |
+|---------+------------------+--------------------------|
+| C-c C-; | comment-region   | Commenting the region    |
+| C-c C-: | uncomment-region | Uncommenting the region  |
+
+** Reminder
+
+#+NAME: remind-bindings-keybindings
+| Key     | Function                      | Description              |
+|---------+-------------------------------+--------------------------|
+| <f10>   | remind-bindings-togglebuffer  |                          |
+| C-<f10> | remind-bindings-specific-mode |                          |

@@ -204,11 +204,15 @@ one to generate the emacs init file from =~/.emacs.d/README.org= and one to byte
 
     ;; Tangle to init.el
     (with-current-buffer (find-file (concat user-emacs-directory "README.org"))
-      (org-babel-tangle))
+      (org-transclusion-add-all)
+      (org-babel-tangle)
+      (org-transclusion-remove-all))
 
     ;; Tangle to Private variables
     (with-current-buffer (find-file (concat cloud-org-root-dir "perso/configuration/private.org"))
-      (org-babel-tangle))
+      (org-transclusion-add-all)
+      (org-babel-tangle)
+      (org-transclusion-remove-all))
 
     ;; byte-compile plugins
     (byte-recompile-directory (expand-file-name default-plugin-dir) 0))
@@ -311,10 +315,7 @@ I use hydra a lot so it is easier to add its support directly in the use-package
 The combination pretty-hydra/major-mode-hydra provides an easy and powerful way to declare hydra.
 While alternatives exist, I find this combination more straightforward and cleaner when it is used in combination with =use-package=.
 
-#+NAME: major-mode-hydra-entry-keybindings
-| Key   | Function         | Description |
-|-------+------------------+-------------|
-| M-SPC | major-mode-hydra |             |
+#+transclude: [[file:keytable_summary.org::major-mode-hydra-entry-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package pretty-hydra
@@ -416,11 +417,7 @@ By this way, all the Alert notifications are automatically transmitted to Sauron
 If a Sauron event is raised, it is transmitted to Alert to adapt the modeline bar.
 This plugin is in charge to managing the communication and avoid any cycle.
 
-#+NAME: sauron-keybindings
-| Key    | Function                          | Description |
-|--------+-----------------------------------+-------------|
-| <f7>   | sauron-mode-line-toggle-hide-show |             |
-| C-<f7> | sauron-mode-line-clear            |             |
+#+transclude: [[file:keytable_summary.org::sauron-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package sauron-mode-line
@@ -444,16 +441,13 @@ After playing with =ibuffer= and other helpers, I settled using =bufler=.
 This choice has been made due its the simplicity and its recursive nature.
 =bufler= is used in conjunction with =prism= is assumed to be loaded later.
 
-#+NAME: buffler-entry-keybindings
-| Key     | Functon | Description |
-|---------+---------+-------------|
-| C-x C-b | bufler  |             |
+#+transclude: [[file:keytable_summary.org::bufler-entry-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package bufler
     :tags '("CORE" "BUFFER")
     :bind (
-      <<keybindings-gen(table=buffler-entry-keybindings)>>
+      <<keybindings-gen(table=bufler-entry-keybindings)>>
     )
 
     :custom
@@ -599,18 +593,9 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
 =fast-scroll= disables some hooks while scrolling and therefore makes it smoother.
 =goto-last-point= enables me to go back to the position before the move happened.
 
-#+NAME: goto-last-point-entry-keybindings
-| Key | Functon         | Description |
-|-----+-----------------+-------------|
-| C-< | goto-last-point |             |
+#+transclude: [[file:keytable_summary.org::goto-last-point-entry-keybindings]]
 
-#+NAME: trail-entry-keybindings
-| Key   | Functon                      | Description |
-|-------+------------------------------+-------------|
-| C-M-= | trail-mark                   |             |
-| C-M-' | trail-list                   |             |
-| C-M-[ | trail-find-and-jump-previous |             |
-| C-M-] | trail-find-and-jump-next     |             |
+#+transclude: [[file:keytable_summary.org::trail-entry-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package fast-scroll
@@ -920,10 +905,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
   - =DELEGATED= for tasks which are delegated to someone else
   - =REMINDER= for long "tasks" (e.g., cancelling info, ...) or tasks which have been completed but requires the reception of an element (e.g., orders, ...x)
 
-#+NAME: org-effort-keybindings
-| Key       | Functon           | Description |
-|-----------+-------------------+-------------|
-| C-c C-x e | my-org-set-effort |             |
+#+transclude: [[file:keytable_summary.org::org-effort-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package org
@@ -1173,15 +1155,7 @@ To do so, I am relying the package =org-checklist= which is provided by =org-con
 CLOSED: [2023-10-27 Fri 09:40]
 =org-transclusion= provide a fancy interface to include portion of other files into an org file.
 
-#+NAME: org-transclusion-keybindings
-| Key         | Functon                     | Description |
-|-------------+-----------------------------+-------------|
-| C-c t i     | org-transclusion-add        |             |
-| C-c t r     | org-transclusion-remove     |             |
-| C-c t R     | org-transclusion-remove-all |             |
-| C-c t <tab> | org-transclusion-refresh    |             |
-| C-c t m     | org-transclusion-mode       |             |
-
+#+transclude: [[file:keytable_summary.org::org-transclusion-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package org-transclusion
@@ -1197,10 +1171,7 @@ CLOSED: [2021-02-27 Sat 08:38]
 I am using =org-menu= to provide a helper menu to edit org files.
 For whatever reason, it is required to *explicitly* configure =transient=.
 
-#+NAME: org-menu-keybindings
-| Key   | Functon  | Description |
-|-------+----------+-------------|
-| C-c m | org-menu |             |
+#+transclude: [[file:keytable_summary.org::org-menu-keybindings]]
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-menu
@@ -1516,25 +1487,9 @@ The only important bits are:
   - the todo file is set to =~/pCloudDrive/org/todo/todo.org=
   - some icons are associated to some categories
 
-#+NAME: org-agenda-entry-keybindings
-| Key   | Functon    | Description |
-|-------+------------+-------------|
-| <f12> | org-agenda |             |
-
-#+NAME: org-agenda-hydra-entry-keybindings
-| Key | Function               | Description |
-|-----+------------------------+-------------|
-| v   | org-agenda-hydra/body  |             |
-
-#+NAME: org-agenda-mode-hydra-keybindings
-| Key | Function                  | label     | Description |
-|-----+---------------------------+-----------+-------------|
-| d   | org-agenda-day-view       | Day       |             |
-| w   | org-agenda-week-view      | Week      |             |
-| t   | org-agenda-fortnight-view | Fortnight |             |
-| m   | org-agenda-month-view     | Month     |             |
-| y   | org-agenda-year-view      | Year      |             |
-
+#+transclude: [[file:keytable_summary.org::org-agenda-entry-keybindings]]
+#+transclude: [[file:keytable_summary.org::org-agenda-hydra-entry-keybindings]]
+#+transclude: [[file:keytable_summary.org::org-agenda-mode-hydra-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package org-agenda
@@ -1730,18 +1685,13 @@ CLOSED: [2021-01-03 Sun 14:42]
 Based on Sacha Chua blog post, I use the following configuration to clock-in/clock-out.
 It deviates from Sacha's blog solely on the states; as I am using my own org states.
 
-#+NAME: org-mru-clock-bindings
-| Key         | function                         | Description |
-|-------------+----------------------------------+-------------|
-| C-c C-x i   | org-mru-clock-in                 |             |
-| C-c C-x C-j | org-mru-clock-select-recent-task |             |
-
+#+transclude: [[file:keytable_summary.org::org-mru-clock-keybindings]]
 
 #+begin_src emacs-lisp
     (use-package org-mru-clock
       :tags '("ORG")
       :bind* (
-        <<keybindings-gen(table=org-mru-clock-bindings)>>
+        <<keybindings-gen(table=org-mru-clock-keybindings)>>
       )
       :init
       (setq org-mru-clock-how-many 100
@@ -2009,84 +1959,7 @@ I am using =pdf-tools= which provides a lot of functionalities.
 The configuration consists mainly of providing proper keyboard based controls using =hydra=.
 I am also using =pdf-view-restore= to keep track of where I was before closing emacs.
 
-#+NAME: pdf-tools-keybindings
-| Key     | Function                             | Description |
-|---------+--------------------------------------+-------------|
-| ?       | pdf-tools-hydra/body                 |             |
-| <s-spc> | pdf-view-scroll-down-or-next-page    |             |
-| <C-s>   | isearch-forward                      |             |
-| g       | pdf-view-first-page                  |             |
-| G       | pdf-view-last-page                   |             |
-| l       | image-forward-hscroll                |             |
-| h       | image-backward-hscroll               |             |
-| j       | pdf-view-next-page                   |             |
-| k       | pdf-view-previous-page               |             |
-| e       | pdf-view-goto-page                   |             |
-| u       | pdf-view-revert-buffer               |             |
-| al      | pdf-annot-list-annotations           |             |
-| ad      | pdf-annot-delete                     |             |
-| aa      | pdf-annot-attachment-dired           |             |
-| am      | pdf-annot-add-markup-annotation      |             |
-| at      | pdf-annot-add-text-annotation        |             |
-| y       | pdf-view-kill-ring-save              |             |
-| i       | pdf-misc-display-metadata            |             |
-| s       | pdf-occur                            |             |
-| b       | pdf-view-set-slice-from-bounding-box |             |
-| r       | pdf-view-reset-slice                 |             |
-
-#+NAME: pdf-tools-hydra-move-keybindings
-| Key | Function                       | Label        | Options    | Description |
-|-----+--------------------------------+--------------+------------+-------------|
-| g   | pdf-view-first-page            | First        |            |             |
-| G   | pdf-view-last-page             | Last         |            |             |
-| p   | pdf-view-previous-page-command | Previous     | :color red |             |
-| n   | pdf-view-next-page-command     | Next         | :color red |             |
-| e   | pdf-view-goto-page             | Page         |            |             |
-| h   | image-backward-hscroll         | Scroll left  | :color red |             |
-| l   | image-forward-hscroll          | Scroll right | :color red |             |
-
-#+NAME: pdf-tools-hydra-history-keybindings
-| Key | Function             | Label    | Options    | Description |
-|-----+----------------------+----------+------------+-------------|
-| B   | pdf-history-backward | Backward | :color red |             |
-| N   | pdf-history-forward  | Forward  | :color red |             |
-
-#+NAME: pdf-tools-hydra-scale-keybindings
-| Key | Function                             | Label                       | Options    | Description |
-|-----+--------------------------------------+-----------------------------+------------+-------------|
-| +   | pdf-view-enlarge                     | Enlarge                     | :color red |             |
-| -   | pdf-view-shrink                      | Shrink                      | :color red |             |
-| 0   | pdf-view-scale-reset                 | Reset                       |            |             |
-| H   | pdf-view-fit-height-to-window        | Fit height                  |            |             |
-| W   | pdf-view-fit-width-to-window         | Fit width                   |            |             |
-| P   | pdf-view-fit-page-to-window          | Fit page                    |            |             |
-| b   | pdf-view-set-slice-from-bounding-box | Set slice from bounding box |            |             |
-| r   | pdf-view-reset-slice                 | Reset slice                 |            |             |
-
-#+NAME: pdf-tools-hydra-annotations-keybindings
-| Key | Function                        | Label  | Description |
-|-----+---------------------------------+--------+-------------|
-| al  | pdf-annot-list-annotations      | List   |             |
-| am  | pdf-annot-add-markup-annotation | Markup |             |
-| at  | pdf-annot-add-text-annotation   | Text   |             |
-| ad  | pdf-annot-delete                | Delete |             |
-| aa  | pdf-annot-attachment-dired      | Dired  |             |
-| y   | pdf-view-kill-ring-save         | Yank   |             |
-
-#+NAME: pdf-tools-hydra-search-keybindings
-| Key | Function                | Label       | Description |
-|-----+-------------------------+-------------+-------------|
-| s   | pdf-occur               | Search      |             |
-| o   | pdf-outline             | Outline     |             |
-| F   | pdf-links-action-perfom | Link        |             |
-| f   | pdf-links-isearch-link  | Search link |             |
-
-#+NAME: pdf-tools-hydra-diverse-keybindings
-| Key | Function                  | Label         | Description |
-|-----+---------------------------+---------------+-------------|
-| d   | pdf-view-dark-minor-mode  | Dark mode     |             |
-| i   | pdf-misc-display-metadata | Info          |             |
-| u   | pdf-view-revert-buffer    | Revert buffer |             |
+#+transclude: [[file:keytable_summary.org::PDF]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package pdf-tools
@@ -2226,41 +2099,7 @@ and =org-roam-ui= for a better navigation.
 *** DONE org-roam part
 CLOSED: [2022-02-10 Thu 07:04]
 
-#+NAME: org-roam-entry-keybindings
-| Key     | Functon             | Description |
-|---------+---------------------+-------------|
-| C-<f12> | org-roam-hydra/body |             |
-
-#+NAME: org-roam-navigation-bindings
-| Key | Function                       | Label | Description |
-|-----+--------------------------------+-------+-------------|
-| l   | org-roam-buffer-toggle         |       |             |
-| f   | org-roam-node-find             |       |             |
-| g   | org-roam-ui-open               |       |             |
-| B   | consult-org-roam-backlinks     |       |             |
-| F   | consult-org-roam-forward-links |       |             |
-| s   | consult-org-roam-search        |       |             |
-| e   | consult-org-roam-file-find     |       |             |
-
-#+NAME: org-roam-creation-bindings
-| Key | Function               | Label            | Description |
-|-----+------------------------+------------------+-------------|
-| i   | org-roam-node-insert   | insert node link |             |
-| r   | org-roam-raw-id-insert | insert RAW id    |             |
-| c   | org-roam-capture       | call org-capture |             |
-
-#+NAME: org-roam-bibliography-bindings
-| Key | Function                    | Label | Description |
-|-----+-----------------------------+-------+-------------|
-| n   | org-noter                   |       |             |
-| b   | generate-bibliography-entry |       |             |
-
-#+NAME: org-roam-helpers-bindings
-| Key | Function                 | Label | Description |
-|-----+--------------------------+-------+-------------|
-| I   | org-id-get-create        |       |             |
-| a   | generate-org-heading-ids |       |             |
-| A   | generate-org-roam-ids    |       |             |
+#+transclude: [[file:keytable_summary.org::Org-Roam]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package org-roam
@@ -2538,15 +2377,7 @@ CLOSED: [2022-02-10 Thu 07:09]
 *** DONE citar
 CLOSED: [2022-02-10 Thu 07:10]
 
-#+NAME: citar-citation-keybindings
-| Key   | Function              | Description |
-|-------+-----------------------+-------------|
-| C-c ] | citar-insert-citation |             |
-
-#+NAME: citar-minibuffer-keybindings
-| Key | Function            | Description |
-|-----+---------------------+-------------|
-| M-b | citar-insert-preset |             |
+#+transclude: [[file:keytable_summary.org::Citar]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package citar
@@ -2665,10 +2496,7 @@ CLOSED: [2021-01-04 Mon 08:57]
 For undoing an operation, I am using =vundo=.
 The only configuration here is to activate it globally.
 
-#+NAME: vundo-entry-keybindings
-| Key   | Functon | Description |
-|-------+---------+-------------|
-| C-x u | vundo   |             |
+#+transclude: [[file:keytable_summary.org::Undoing]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package vundo
@@ -2687,21 +2515,7 @@ The only configuration here is to activate it globally.
 CLOSED: [2021-01-04 Mon 09:00]
 For the folding, I am relying on =origami=.
 
-#+NAME: origami-keybindings
-| Key | Function                        | Description |
-|-----+---------------------------------+-------------|
-| s   | origami-open-node               |             |
-| O   | origami-open-node-recursively   |             |
-| d   | origami-close-node              |             |
-| C   | origami-close-node-recursively  |             |
-| a   | origami-toggle-node             |             |
-| A   | origami-recursively-toggle-node |             |
-| R   | origami-open-all-nodes          |             |
-| M   | origami-close-all-nodes         |             |
-| v   | origami-show-only-node          |             |
-| k   | origami-previous-fold           |             |
-| j   | origami-forward-fold            |             |
-| x   | origami-reset                   |             |
+#+transclude: [[file:keytable_summary.org::Folding]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package origami
@@ -2858,10 +2672,7 @@ CLOSED: [2021-01-03 Sun 17:43]
 I use Helm for some specific cases which requires an important visibility space completion.
 Once again, nothing fancy here, the configuration to have a better UX.
 
-#+NAME: helm-info-entry-keybindings
-| Key   | Functon   | Description |
-|-------+-----------+-------------|
-| C-h i | helm-info |             |
+#+transclude: [[file:keytable_summary.org::Helm]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package helm
@@ -2907,10 +2718,7 @@ CLOSED: [2021-01-03 Sun 17:49]
 Marginalia is completing =vertico= by providing annotations to the candidates.
 For now, I am using the default configuration.
 
-#+NAME: marginalia-entry-keybindings
-| Key   | Functon          | Description |
-|-------+------------------+-------------|
-| C-M-a | marginalia-cycle |             |
+#+transclude: [[file:keytable_summary.org::Marginalia]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package marginalia
@@ -2933,70 +2741,7 @@ CLOSED: [2021-01-03 Sun 17:52]
 Consult provides a set of commands which are particularly useful.
 It is a nice extension to =Vertico= which brings to functionalities close to the ones proposed in =swiper= and =counsel=.
 
-#+NAME: consult-ctrl-c-keybindings
-| Key   | Function             | Description |
-|-------+----------------------+-------------|
-| C-c h | consult-history      |             |
-| C-c m | consult-mode-command |             |
-| C-c k | consult-kmacro       |             |
-
-#+NAME: consult-ctrl-x-keybindings
-| Key     | Function                | Description |
-|---------+-------------------------+-------------|
-| C-x M-: | consult-complex-command |             |
-| C-x b   | consult-buffer          |             |
-| C-x p b | consult-project-buffer  |             |
-| C-x C-r | consult-recent-file     |             |
-
-#+NAME: consult-yank-keybindings
-| Key | Function         | Description |
-|-----+------------------+-------------|
-| M-y | consult-yank-pop |             |
-
-#+NAME: consult-goto-keybindings
-| Key     | Function              | Description |
-|---------+-----------------------+-------------|
-| M-g e   | consult-compile-error |             |
-| M-g f   | consult-flymake       |             |
-| M-g g   | consult-goto-line     |             |
-| M-g M-g | consult-goto-line     |             |
-| M-g o   | consult-outline       |             |
-| M-g m   | consult-mark          |             |
-| M-g k   | consult-global-mark   |             |
-| M-g i   | consult-imenu         |             |
-| M-g I   | consult-imenu-multi   |             |
-
-#+NAME: consult-search-keybindings
-| Key   | Function            | Description |
-|-------+---------------------+-------------|
-| M-s D | consult-locate      |             |
-| M-s f | consult-find        |             |
-| M-s g | consult-grep        |             |
-| M-s G | consult-git-grep    |             |
-| M-s r | consult-ripgrep     |             |
-| M-s l | consult-line        |             |
-| M-s L | consult-line-multi  |             |
-| M-s m | consult-multi-occur |             |
-| M-s k | consult-keep-lines  |             |
-| M-s u | consult-focus-lines |             |
-
-#+NAME: consult-isearch-keybindings
-| Key   | Function                | Description |
-|-------+-------------------------+-------------|
-| M-s e | consult-isearch-history |             |
-
-#+NAME: consult-isearch-mode-keybindings
-| Key   | Function                | Description                              |
-|-------+-------------------------+------------------------------------------|
-| M-e   | consult-isearch-history | orig. isearch-edit-string                |
-| M-s e | consult-isearch-history | orig. isearch-edit-string                |
-| M-s l | consult-line            | needed by consult-line to detect isearch |
-| M-s L | consult-line-multi      | needed by consult-line to detect isearch |
-
-#+NAME: consult-flycheck-entry-keybindings
-| Key | Functon          | Description |
-|-----+------------------+-------------|
-| !   | consult-flycheck |             |
+#+transclude: [[file:keytable_summary.org::Consult]] :only-contents
 
 
 #+begin_src emacs-lisp
@@ -3143,17 +2888,7 @@ CLOSED: [2021-05-27 Thu 18:34]
 It is a convenient package to have a more refined control of my workflow.
 =embark= and =consult= also work nicely together, so I use them together.
 
-#+NAME: embark-keybindings
-| Key   | Function        | Description |
-|-------+-----------------+-------------|
-| C-S-a | embark-act      |             |
-| C-h B | embark-bindings |             |
-
-#+NAME: embark-minibuffer-keybindings
-| Key     | Function                | Description |
-|---------+-------------------------+-------------|
-| C-c C-o | embark-collect-snapshot |             |
-| C-c C-c | embark-act              |             |
+#+transclude: [[file:keytable_summary.org::Embark]] :only-contents
 
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
@@ -3193,19 +2928,7 @@ CLOSED: [2023-02-02 Thu 15:55]
 =popper= is a package providing shortcuts for a quick access to some family of buffers.
 I am using it mainly to show/hide my terminal faster.
 
-#+NAME: start-term-hydra-keybindings
-| Key | Function    | Label        | Description |
-|-----+-------------+--------------+-------------|
-| p   | run-python  | Python Shell |             |
-| t   | multi-vterm | VTerm        |             |
-
-#+NAME: popper-entry-keybindings
-| Key    | Function              | Description |
-|--------+-----------------------+-------------|
-| <f6>   | popper-toggle         |             |
-| S-<f6> | popper-cycle          |             |
-| C-<f6> | start-term-hydra/body |             |
-
+#+transclude: [[file:keytable_summary.org::Buffer]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package popper
@@ -3255,10 +2978,7 @@ This section focuses on three components: the compilation, the commenting and th
 ** DONE Imenu/Sidebar
 CLOSED: [2023-10-27 Fri 09:19]
 
-#+NAME: imenu-list-entry-keybindings
-| Key  | Function                    | Description |
-|------+-----------------------------+-------------|
-| <f8> | my/imenu-list-smart-toggle  |             |
+#+transclude: [[file:keytable_summary.org::IMenu]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package imenu-list
@@ -3298,13 +3018,7 @@ CLOSED: [2022-07-25 Mon 07:38]
 I just modify a little bit the default compilation to be a little more "user friendly".
 I also rely on =fancy-compilation= to enhance the the output in the compilation buffer.
 
-#+NAME: compilation-hydra-keybindings
-| Key | Function                                                     | Label          | Description |
-|-----+--------------------------------------------------------------+----------------+-------------|
-| n   | next-error                                                   | Next Error     |             |
-| k   | previous-error                                               | Previous Error |             |
-| h   | first-error                                                  | First Error    |             |
-| l   | (condition-case err (while t (next-error)) (user-error nil)) | ]Last Error    |             |
+#+transclude: [[file:keytable_summary.org::Compilation]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package compile
@@ -3364,17 +3078,7 @@ For the fly checking, I use flycheck instead of flymake.
 The key part of this configuration is the fact that checking the documentation is disabled.
 I also use =flycheck-posframe= to have a quick idea of what is going on at the pointed error/warning/...
 
-
-#+NAME: flycheck-errors-bindings
-| Key | Function                                                  | Label    | Description |
-|-----+-----------------------------------------------------------+----------+-------------|
-| f   | flycheck-error-list-set-filter                            | Filter   |             |
-| j   | flycheck-next-error                                       | Next     |             |
-| k   | flycheck-previous-error                                   | Previous |             |
-| gg  | flycheck-first-error                                      | First    |             |
-| <   | project-hydra/body                                        | back     |             |
-| G   | (progn (goto-char (point-max)) (flycheck-previous-error)) | Last     |             |
-
+#+transclude: [[file:keytable_summary.org::Flychecking]] :only-contents
 
 #+begin_src emacs-lisp
   ;; Disable checking doc
@@ -3457,10 +3161,7 @@ This part is there to help to navigate the documentation more easily.
 CLOSED: [2021-01-03 Sun 11:18]
 =helm-descbinds= is a useful package which provides a way to list all the shortcuts available in the current buffer.
 
-#+NAME: helm-descbinds-entry-keybindings
-| Key   | Function       | Description |
-|-------+----------------+-------------|
-| C-h b | helm-descbinds |             |
+#+transclude: [[file:keytable_summary.org::Keybindings]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package helm-descbinds
@@ -3477,12 +3178,7 @@ CLOSED: [2021-01-03 Sun 11:19]
 It also supports references and back-references.
 I am using it as the entry point of any documentation I want to access.
 
-#+NAME: help-keybindings
-| Key   | Function         | Description |
-|-------+------------------+-------------|
-| C-h k | helpful-key      |             |
-| C-h a | helpful-symbol   |             |
-| C-h h | helpful-at-point |             |
+#+transclude: [[file:keytable_summary.org::Helpful]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package helpful
@@ -3515,10 +3211,7 @@ CLOSED: [2022-07-26 Tue 09:48]
 Dash (https://www.kapeli.com/dash) provides a set of full documentation to download.
 =consult-dash= provides an easy way to query them.
 
-#+NAME: consult-dash-entry-keybindings
-| Key   | Functon      | Description |
-|-------+--------------+-------------|
-| M-s d | consult-dash |             |
+#+transclude: [[file:keytable_summary.org::Dash/Docsets]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package consult-dash
@@ -3541,10 +3234,7 @@ Dash (https://www.kapeli.com/dash) provides a set of full documentation to downl
 CLOSED: [2022-10-13 Thu 18:11]
 =consult-recoll= provides an interface to =recoll= which is handy to "grep" from a db of documents.
 
-#+NAME: consult-recoll-entry-keybindings
-| Key   | Functon        | Description |
-|-------+----------------+-------------|
-| M-g t | consult-recoll |             |
+#+transclude: [[file:keytable_summary.org::Recoll]] :only-contents
 
 #+begin_src emacs-lisp
   (when (executable-find "recoll")
@@ -3760,11 +3450,7 @@ YAML is my main configuration format file as it supports references and more imp
 I mainly rely on =yaml-mode= to which I add outline support for a better navigation.
 I also use =yaml-tomato= to get the path at the current point which helps the access to a specific subpart of the configuration.
 
-#+NAME: yaml-pro-keybindings
-| Key     | Functon                    | Description |
-|---------+----------------------------+-------------|
-| C-c M-p | yaml-pro-move-subtree-up   |             |
-| C-c M-n | yaml-pro-move-subtree-down |             |
+#+transclude: [[file:keytable_summary.org::YAML]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package yaml-mode
@@ -3893,37 +3579,7 @@ CLOSED: [2021-01-04 Mon 07:38]
 The configuration of emacs, to edit (e)lisp files, consists mainly of adding a linter support (~package-lint~) and REPL environment (~elpl~).
 I also added a hydra configuration to link properly everything.
 
-#+NAME: elisp-mode-hydra-eval-keybindings
-| Key | Function    | Label  | Description |
-|-----+-------------+--------+-------------|
-| b   | eval-buffer | buffer |             |
-| e   | eval-defun  | defun  |             |
-| r   | eval-region | region |             |
-
-#+NAME: elisp-mode-hydra-repl-keybindings
-| Key | Function | Label | Description |
-|-----+----------+-------+-------------|
-| I   | elpl     | elpl  |             |
-
-#+NAME: elisp-mode-hydra-formatting-keybindings
-| Key | Function                    | Label        | Description |
-|-----+-----------------------------+--------------+-------------|
-| p   | package-lint-current-buffer | package-lint |             |
-
-#+NAME: elisp-mode-hydra-test-keybindings
-| Key | Function      | Label  | Description |
-|-----+---------------+--------+-------------|
-| t   | ert           | prompt |             |
-| T   | (ert t)       | all    |             |
-| F   | (ert :failed) | failed |             |
-
-#+NAME: elisp-mode-hydra-doc-keybindings
-| Key | Function              | Label       | Description |
-|-----+-----------------------+-------------+-------------|
-| d   | describe-foo-at-point | thing-at-pt |             |
-| f   | describe-function     | function    |             |
-| v   | describe-variable     | variable    |             |
-| i   | info-lookup-symbol    | info lookup |             |
+#+transclude: [[file:keytable_summary.org::Elisp]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package emacs-lisp-mode
@@ -3995,11 +3651,7 @@ Identify =.h= files as C++ files instead of C. To enable =c++-mode= manually, ty
 
 **** Clang-format
 ***** Installation
-#+NAME: clang-format-entry-keybindings
-| Key   | Function            | Description |
-|-------+---------------------+-------------|
-| C-c i | clang-format-region |             |
-| C-c u | clang-format-buffer |             |
+#+transclude: [[file:keytable_summary.org::C/C++]] :only-contents
 
 #+BEGIN_SRC emacs-lisp
   (use-package clang-format
@@ -4433,10 +4085,7 @@ To store bibliography entries, BibTex is the way to go.
 The global configuration consists mainly on providing a way to generate proper keys.
 Finally, I use bibclean-format to have a clean final bibtex file.
 
-#+NAME: bibtex-tidy-entry-keybindings
-| Key    | Function           | Description |
-|--------+--------------------+-------------|
-| C-c f  | bibtex-tidy-buffer |             |
+#+transclude: [[file:keytable_summary.org::Bibtex]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package bibtex
@@ -4511,10 +4160,7 @@ Consequently, I have to get a proper configuration.
 Luckily, =markdown-mode= provide more than enough.
 I just added =grip-mode= to have a proper preview of the file.
 
-#+NAME: grip-mode-entry-keybindings
-| Key | Function  | Description |
-|-----+-----------+-------------|
-| g   | grip-mode |             |
+#+transclude: [[file:keytable_summary.org::Markdown]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package markdown-mode
@@ -4565,10 +4211,7 @@ As I have the luck to deal with multiple languages (french, english and bulgaria
 WordReference is my first choice as I find it quite complete and accurate.
 As a fallback, I am using google-translate via the package =go-translate=.
 
-#+NAME: gts-translate-entry-keybindings
-| Key   | Function         | Description |
-|-------+------------------+-------------|
-| C-c t | gts-do-translate |             |
+#+transclude: [[file:keytable_summary.org::Translation]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package wordreference
@@ -4628,33 +4271,7 @@ where:
  - short message :: is a short description
  - optional further description :: is used to complete the short description. It is optional and I don't use it so often; only for complicated tweaks
 
-#+NAME: magit-browse-keybindings
-| Key | Function        | Description |
-|-----+-----------------+-------------|
-| o   | magit-open-repo |             |
-
-#+NAME: magit-status-hydra-keybindings
-| Key | Function         | Label        | Description |
-|-----+------------------+--------------+-------------|
-| d   | magit-diff-range | Diff         |             |
-| l   | magit-log-all    | Log all      |             |
-| s   | magit-status     | Status       |             |
-| t   | git-timemachine  | Time machine |             |
-
-
-#+NAME: magit-remote-hydra-keybindings
-| Key | Function          | Label | Description |
-|-----+-------------------+-------+-------------|
-| f   | magit-pull-branch | Pull  |             |
-| p   | magit-push-other  | Push  |             |
-
-
-#+NAME: magit-operations-hydra-keybindings
-| Key | Function            | Label  | Description |
-|-----+---------------------+--------+-------------|
-| c   | magit-commit-create | Commit |             |
-| <   | project-hydra/body  | back   |             |
-
+#+transclude: [[file:keytable_summary.org::Git]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package magit
@@ -4809,15 +4426,7 @@ To interact with github in emacs, I rely on three packages:
 =github-explorer= to browse a repository in emacs;
 =github-review= to deal with code reviewing (which integrates well with =forge=).
 
-#+NAME: github-review-entry-keybindings
-| Key   | Function                        | Description |
-|-------+---------------------------------+-------------|
-| C-x r | github-review-forge-pr-at-point |             |
-
-#+NAME: github-review-diff-keybindings
-| Key   | Function                         | Description |
-|-------+----------------------------------+-------------|
-| C-c s | my/github-review-kill-suggestion |             |
+#+transclude: [[file:keytable_summary.org::Github]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package forge
@@ -4869,34 +4478,7 @@ For scripts/helpers/snippets/... which do not deserve to be saved in a dedicated
 I am storing them in a dedicated gist.
 The package =gist= provides a nice way of dealing with gists.
 
-#+NAME: gist-mode-hydra-basic-keybindings
-| Key | Function           | Label        | Description |
-|-----+--------------------+--------------+-------------|
-| F   | gist-fetch-current | Fetch        |             |
-| +   | gist-add-buffer    | Add buffer   |             |
-| -   | gist-remove-file   | Remove file  |             |
-| g   | gist-list-reload   | List reload  |             |
-| k   | gist-kill-current  | Kill current |             |
-
-#+NAME: gist-mode-hydra-information-keybindings
-| Key | Function                      | Label            | Description |
-|-----+-------------------------------+------------------+-------------|
-| e   | gist-edit-current-description | Edit description |             |
-| y   | gist-print-current-url        | Print URL        |             |
-
-#+NAME: gist-mode-hydra-starring-keybindings
-| Key | Function    | Label  | Description |
-|-----+-------------+--------+-------------|
-| ^   | gist-unstar | Unstar |             |
-| *   | gist-star   | Start  |             |
-
-
-#+NAME: gist-mode-hydra-remote-keybindings
-#+CAPTION: Gist Hydra Remote Keybindings
-| Key | Function                | Label              | Description |
-|-----+-------------------------+--------------------+-------------|
-| b   | gist-browse-current-url | Browse current URL |             |
-| f   | gist-fork               | Fork               |             |
+#+transclude: [[file:keytable_summary.org::Gist]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package gist
@@ -4959,10 +4541,7 @@ Sometimes I need to start a terminal inside Emacs (not only for geekery-purposes
 To do so, I rely now on =vterm= coupled with zsh.
 I have a specific PowerLevel10K theme for emacs vterm which is more compact (see my zshrc configuration).
 
-#+NAME: multi-vterm-mode-keybindings
-| Key | Function                             | Description |
-|-----+--------------------------------------+-------------|
-| M-r | multi-vterm-rename-buffer            |             |
+#+transclude: [[file:keytable_summary.org::Shell]] :only-contents
 
 #+BEGIN_SRC emacs-lisp
   (use-package vterm
@@ -5031,35 +4610,7 @@ The configuration of =dired= focuses mainly on defining keys, tuning the files t
 The hydra mapping is adapted from https://github.com/abo-abo/hydra/wiki/Dired.
 I also replace a base deletion by moving the files/directories to the trash.
 
-#+NAME: dired-global-keybindings
-| Key     | Function        | Description |
-|---------+-----------------+-------------|
-| C-x C-d | dired           |             |
-| C-x f   | dirvish-fd      |             |
-| C-c 1   | find-name-dired |             |
-| C-c 2   | find-grep-dired |             |
-
-#+NAME: dired-mode-keybindings
-| Key      | Function                        | Description |
-|----------+---------------------------------+-------------|
-| *        | dirvish-mark-menu               |             |
-| C-o      | dired-omit-mode                 |             |
-| M-s      | dirvish-setup-menu              |             |
-| SPC      | dirvish-history-jump            |             |
-| TAB      | dirvish-toggle-subtree          |             |
-| b        | dirvish-bookmark-jump           |             |
-| e        | dired-open-externally           |             |
-| f        | dirvish-file-info-menu          |             |
-| p        | dired-emms-play                 |             |
-| r        | dirvish-fd-jump                 |             |
-| M-<up>   | dired-up-directory              |             |
-| M-<down> | dired-find-file                 |             |
-| T        | dired-do-transfer-to-remarkable |             |
-
-#+NAME: dired-launch-entry-keybindings
-| Key        | Function             | Description |
-|------------+----------------------+-------------|
-| <C-return> | dired-launch-command |             |
+#+transclude: [[file:keytable_summary.org::Dired/Dirvish]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package dirvish
@@ -5258,10 +4809,7 @@ The database is stored in the =~/.emacs.d/elfeed=.
 I mapped the key =f9= to quickly access the list of entries.
 I rely on =elfeed-org= to store the list of feeds and defines some tags as well as on =elfeed-score= to filter entries based on handmade rules.
 
-#+NAME: elfeed-entry-keybindings
-| Key  | Function | Description |
-|------+----------+-------------|
-| <f9> | elfeed   |             |
+#+transclude: [[file:keytable_summary.org::Elfeed]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package elfeed
@@ -5324,18 +4872,7 @@ Because I need a break once and a while at work, I load both files on my work ma
 CLOSED: [2022-07-25 Mon 07:44]
 Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to play the video from the feed.
 
-#+NAME: elfeed-tube-entry-keybindings
-| Key                 | Function          | Description |
-|---------------------+-------------------+-------------|
-| F                   | elfeed-tube-fetch |             |
-| [remap save-buffer] | elfeed-tube-save  |             |
-
-#+NAME: elfeed-tube-mpv-keybindings
-| Key     | Function                    | Description |
-|---------+-----------------------------+-------------|
-| C-c C-f | elfeed-tube-mpv-follow-mode |             |
-| C-c C-p | elfeed-tube-mpv             |             |
-| C-c C-w | elfeed-tube-mpv-where       |             |
+#+transclude: [[file:keytable_summary.org::Elfeed/Youtube]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package elfeed-tube
@@ -5481,17 +5018,7 @@ The default account is my TCD email as it is my daily use email.
 Because, sometimes, I want to send rich emails, I use =org-msg= which relies on the HTML exporter provided by =org= to generate HTML emails.
 Finally, as I am quite absent-minded, I use a reminder to not forget the attachment: =message-attachment-reminder=.
 
-#+NAME: org-msg-edit-keybindings
-| Key         | Function                        | Description |
-|-------------+---------------------------------+-------------|
-| C-c RET C-c | mml-secure-message-sign-encrypt |             |
-| C-c RET C-s | mml-secure-message-sign         |             |
-| C-c RET f   | org-msg-attach                  |             |
-| C-c RET t   | message-goto-to                 |             |
-| C-c RET c   | message-goto-cc                 |             |
-| C-c RET b   | message-goto-bcc                |             |
-| C-c RET o   | org-msg-goto-body               |             |
-| C-c RET s   | message-goto-subject            |             |
+#+transclude: [[file:keytable_summary.org::Org-msg]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package message
@@ -5610,100 +5137,7 @@ The last part is the most important as it provides the configuration for the mai
 These configurations are set in the private configuration file and provided by the function =set-mu4e-contexts=.
 I also redesigned the header buffer.
 
-#+NAME: mu4e-entry-keybindings
-| Key  | Function | Description |
-|------+----------+-------------|
-| <f2> | mu4e     |             |
-
-#+NAME: mu4e-hydra-general-keybindings
-| Key | Function                    | Label          | Description |
-|-----+-----------------------------+----------------+-------------|
-| n   | mu4e-headers-next           | Next           |             |
-| p   | mu4e-headers-previous       | Previous       |             |
-| [   | mu4e-select-next-unread     | Next unred     |             |
-| ]   | mu4e-select-previous-unread | Previous unred |             |
-| y   | mu4e-select-other-view      | Switch view    |             |
-| R   | mu4e-compose-reply          | Reply          |             |
-| C   | mu4e-compose-new            | Compose        |             |
-| F   | mu4e-compose-forward        | Forward        |             |
-| o   | my/org-capture-mu4e         | Org capture    |             |
-
-#+NAME: mu4e-hydra-search-keybindings
-| Key | Function                          | Label            | Description |
-|-----+-----------------------------------+------------------+-------------|
-| s   | mu4e-headers-search               | Search           |             |
-| S   | mu4e-headers-search-edit          | Edit prev. query |             |
-| /   | mu4e-headers-search-narrow        | Narrow search    |             |
-| b   | mu4e-headers-search-bookmark      | Search bookmark  |             |
-| B   | mu4e-headers-search-bookmark-edit | Edit bookmark    |             |
-| {   | mu4e-headers-query-prev           | Previous query   |             |
-| }   | mu4e-headers-query-next           | Next query       |             |
-| C-+ | mu4e-headers-split-view-grow      | Show more        |             |
-| C-- | mu4e-headers-split-view-shrink    | Show less        |             |
-
-#+NAME: mu4e-hydra-mark-keybindings
-| Key | Function                         | Label           | Description |
-|-----+----------------------------------+-----------------+-------------|
-| !   | mu4e-headers-mark-for-read       | Read            |             |
-| ?   | mu4e-headers-mark-for-unread     | Unread          |             |
-| r   | mu4e-headers-mark-for-refile     | Refile          |             |
-| u   | mu4e-headers-mark-for-unmark     | Unmark          |             |
-| U   | mu4e-mark-unmark-all             | Unmark All      |             |
-| d   | mu4e-headers-mark-for-trash      | Trash           |             |
-| D   | mu4e-headers-mark-for-delete     | Delete          |             |
-| m   | mu4e-headers-mark-for-move       | Move            |             |
-| a   | mu4e-headers-action              | Action          |             |
-| A   | mu4e-headers-mark-for-action     | Mark for action |             |
-| *   | mu4e-headers-mark-for-something  | *thing          |             |
-| #   | mu4e-mark-resolve-deferred-marks | Deferred        |             |
-| %   | mu4e-headers-mark-pattern        | Pattern         |             |
-| &   | mu4e-headers-mark-custom         | Custom          |             |
-| +   | mu4e-headers-mark-for-flag       | Flag            |             |
-| -   | mu4e-headers-mark-for-unflag     | Unflag          |             |
-| t   | mu4e-headers-mark-subthread      | Subthread       |             |
-| T   | mu4e-headers-mark-thread         | Thread          |             |
-
-#+NAME: mu4e-hydra-misc-keybindings
-| Key | Function                     | Label           | Description |
-|-----+------------------------------+-----------------+-------------|
-| q   | mu4e~headers-quit-buffer     | Quit            |             |
-| H   | mu4e-display-manual          | Help            |             |
-| #   | mu4e-view-pipe               | Through shell   |             |
-| `   | mu4e-update-mail-and-index   | Update          |             |
-| ;   | mu4e-context-switch          | Switch context  |             |
-| j   | mu4e~headers-jump-to-maildir | Jump to maildir |             |
-
-#+NAME: mu4e-hydra-switches-keybindings
-| Key | Function                            | Label           | Description |
-|-----+-------------------------------------+-----------------+-------------|
-| O   | mu4e-headers-change-sorting         | Sorting         |             |
-| P   | mu4e-headers-toggle-threading       | Threading       |             |
-| Q   | mu4e-headers-toggle-full-search     | Full searching  |             |
-| V   | mu4e-headers-toggle-skip-duplicates | Skip dups       |             |
-| W   | mu4e-headers-toggle-include-related | Include related |             |
-
-#+NAME: mu4e-headers-mode-keybindings
-| Key       | Function                     | Description |
-|-----------+------------------------------+-------------|
-| <tab>     | mu4e-headers-toggle-at-point |             |
-| <left>    | mu4e-headers-fold-at-point   |             |
-| <S-left>  | mu4e-headers-fold-all        |             |
-| <right>   | mu4e-headers-unfold-at-point |             |
-| <S-right> | mu4e-headers-unfold-all      |             |
-| #         | mu4e-view-pipe               |             |
-| .         | mu4e-hydra/body              |             |
-
-#+NAME: mu4e-main-mode-keybindings
-| Key | Function                   | Description                                                  |
-|-----+----------------------------+--------------------------------------------------------------|
-| u   | mu4e-update-mail-and-index |                                                              |
-| q   | previous-buffer            | Override the "exit" mu4e to always keep it in the background |
-
-#+NAME: message-mode-keybindings
-| Key     | Function            | Description |
-|---------+---------------------+-------------|
-| C-c C-a | mail-add-attachment |             |
-
+#+transclude: [[file:keytable_summary.org::Mu4e]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package mu4e
@@ -6184,18 +5618,7 @@ The package =slack= (or ~emacs-slack~) provides everything I need to support Sla
 The change I do concerns mainly the formatting and the completion system.
 Because, I prefer to have the completion system, =company=, configured locally for each buffer, I needed to modify its connection with =slack=.
 
-#+NAME: slack-mode-keybindings
-| Key | Function                    | Description |
-|-----+-----------------------------+-------------|
-| @   | slack-message-embed-mention |             |
-| #   | slack-message-embed-channel |             |
-
-#+NAME: slack-message-keybindings
-| Key     | Function                    | Description |
-|---------+-----------------------------+-------------|
-| C-c C-e | slack-message-edit          |             |
-| C-c C-a | slack-file-upload           |             |
-| C-c C-r | slack-thread-show-or-create |             |
+#+transclude: [[file:keytable_summary.org::Slack]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package slack
@@ -6399,37 +5822,7 @@ For reddit, I rely on the package =md4rd=.
 However, there is currently a bug with the hierarchy package which is not embedded in my emacs 27.
 As it requires more investigation, I disabled this packaged for now.
 
-#+NAME: md4rd-mode-keybindings
-| Key       | Function                  | Description |
-|-----------+---------------------------+-------------|
-| u         | md4rd-upvote              |             |
-| d         | md4rd-downvote            |             |
-| o         | md4rd-open                |             |
-| t         | md4rd-widget-toggle-line  |             |
-| e         | md4rd-widget-expand-all   |             |
-| c         | md4rd-widget-collapse-all |             |
-| TAB       | widget-forward            |             |
-| <backtab> | widget-backward           |             |
-| ?         | md4rd-hydra/body          |             |
-
-#+NAME: md4rd-hydra-basic-keybindings
-| Key | Function                 | Label       | Description |
-|-----+--------------------------+-------------+-------------|
-| o   | md4rd-open               | Open        |             |
-| t   | md4rd-widget-toggle-line | Toggle line |             |
-
-#+NAME: md4rd-hydra-voting-keybindings
-| Key | Function       | Label    | Description |
-|-----+----------------+----------+-------------|
-| u   | md4rd-upvote   | Upvote   |             |
-| d   | md4rd-downvote | Downvote |             |
-
-#+NAME: md4rd-hydra-expanding-keybindings
-| Key | Function                  | Label        | Description |
-|-----+---------------------------+--------------+-------------|
-| e   | md4rd-widget-expand-all   | Expand all   |             |
-| c   | md4rd-widget-collapse-all | Collapse all |             |
-
+#+transclude: [[file:keytable_summary.org::Reddit]] :only-contents
 
 #+begin_src emacs-lisp
   ;; Not automatically loaded by md4rd
@@ -6502,17 +5895,7 @@ CLOSED: [2021-02-09 Tue 16:12]
 To access youtube from Emacs, I am using =ytdious= which is based on the invidious.
 It is connected to =youtube-dl= to download the video.
 
-#+NAME: ytdious-entry-keybindings
-| Key    | Function | Description |
-|--------+----------+-------------|
-| <C-f9> | ytdious  |             |
-
-#+NAME: ytdious-mode-keybindings
-| Key      | Function         | Description |
-|----------+------------------+-------------|
-| <return> | ytdious-watch    |             |
-| d        | ytdious-download |             |
-
+#+transclude: [[file:keytable_summary.org::Youtube]] :only-contents
 
 #+BEGIN_SRC emacs-lisp
   (use-package ytdious
@@ -6570,15 +5953,7 @@ The first thing I changed is to use ~mpv~ as a player as I am already it as a de
 I also tweaked the cache and some rendering part as I have a lot of files to navigate through.
 Finally, I activated the browser and assigned the multimedia keys to be understood directly by EMMS.
 
-#+NAME: emms-keybindings
-| Key             | Function              | Description |
-|-----------------+-----------------------+-------------|
-| <f5>            | emms-browse-by-artist |             |
-| S-<f5>          | emms-playlist-mode-go |             |
-| <XF86AudioPlay> | emms-pause            |             |
-| <XF86AudioStop> | emms-stop             |             |
-| <XF86AudioPrev> | emms-previous         |             |
-| <XF86AudioNext> | emms-next             |             |
+#+transclude: [[file:keytable_summary.org::Music]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package emms
@@ -6755,13 +6130,7 @@ CLOSED: [2023-01-18 Wed 12:16]
 Sacha Chua released an great package (=subed=) to edit subtitles files using emacs.
 I just modified a couple of bindings to fit my French keyboard layout (the other keys are there for reminder).
 
-#+NAME: subed-keybindings
-| Key     | Function                            | Description                                                     |
-|---------+-------------------------------------+-----------------------------------------------------------------|
-| C-c (   | subed-copy-player-pos-to-start-time | Set the current play-time as the *start* position                 |
-| C-c )   | subed-copy-player-pos-to-stop-time  | Set the current play-time as the *end* position                   |
-| M-i     | subed-insert-subtitle               | Insert a new subtitle "line"                                    |
-| C-c C-v | subed-mpv-play-from-file            | Open a video file to synchronize with the current subtitle file |
+#+transclude: [[file:keytable_summary.org::Subtitles]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package subed
@@ -6820,10 +6189,7 @@ CLOSED: [2021-01-05 Tue 12:47]
 Sometimes it is difficult to edit a text (from a textarea) in Firefox.
 Using =atomic-chrome= coupled with the ~GhostText~ firefox addon, I edit such text in Emacs and its synchronized in firefox automatically.
 
-#+NAME: atomic-chrome-keybindings
-| Key     | Function                           | Description |
-|---------+------------------------------------+-------------|
-| S-c C-c | atomic-chrome-close-current-buffer |             |
+#+transclude: [[file:keytable_summary.org::Firefox]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package atomic-chrome
@@ -6925,6 +6291,8 @@ and the section dedicated to background processes/"daemons" management directly 
 CLOSED: [2021-01-05 Tue 13:13]
 In this section, I configure packages to access system informations and enforce the shell environment into Emacs.
 
+#+transclude: [[file:keytable_summary.org::Shell execution]] :only-contents
+
 **** DONE Get system control information
 CLOSED: [2021-01-05 Tue 13:11]
 To access the global OS information, =sysctl= provides a basic interface.
@@ -6940,14 +6308,6 @@ No extra configuration is needed.
 CLOSED: [2021-01-05 Tue 13:13]
 Because an important part of my environment relies on a properly configured shell (especially for environment variables),
 I use =exec-path-from-shell= to force to run a command using the shell environment.
-
-#+NAME: detached-mode-keybindings
-| Key                           | Function                   | Description |
-|-------------------------------+----------------------------+-------------|
-| [remap async-shell-command]   | detached-shell-command     |             |
-| [remap compile]               | detached-compile           |             |
-| [remap recompile]             | detached-compile-recompile |             |
-| [remap detached-open-session] | detached-consult-session   |             |
 
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell
@@ -6977,10 +6337,6 @@ This section defines some helpers for some recurrent commands.
 It relies on the package =run-command=.
 For now, only global commands are configured but some project specific configuration may be integrated in a near future.
 
-#+NAME: run-command-entry-keybindings
-| Key   | Function    | Description |
-|-------+-------------+-------------|
-| C-c c | run-command |             |
 
 #+begin_src emacs-lisp
   (use-package run-command
@@ -7054,10 +6410,7 @@ However, =prodigy= doesn't provide a nice way to start processes automatically.
 Yet =elcontext= is still slightly bugged, so I use my own fork right now.
 Currently, it is mainly used to start/stop emails but it is likely to be expanded in the future.
 
-#+NAME: prodigy-keybindings
-| Key | Function                | Description                     |
-|-----+-------------------------+---------------------------------|
-| ?   | prodigy-display-process | Display the process information |
+#+transclude: [[file:keytable_summary.org::Processes]] :only-contents
 
 #+BEGIN_SRC emacs-lisp
   (use-package prodigy
@@ -7603,11 +6956,7 @@ Modifying/Navigating can lead to be slightly confused what has just happened.
 I added =googles= to briefly flash to indicate what just changed and =scrollkeeper= to see where I am after a massive scrolling operation.
 I also add =xhair= to visualize where I am (line + column) when I need to align things column-wise.
 
-#+NAME: scrollkeeper-remap-keybindings
-| Key                         | Function                   | Description |
-|-----------------------------+----------------------------+-------------|
-| [remap scroll-up-command]   | scrollkeeper-contents-up   |             |
-| [remap scroll-down-command] | scrollkeeper-contents-down |             |
+#+transclude: [[file:keytable_summary.org::Visual]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package goggles
@@ -7729,44 +7078,7 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
  - bookmarking and listing the bookmarks
  - Mail management: listing the synchronization process managed by *prodigy* and creating a new may
 
-#+NAME: org-main-keybindings
-| Key | Function                      | Label           | Description |
-|-----+-------------------------------+-----------------+-------------|
-| c   | org-capture                   | Capture         |             |
-| h   | org-web-tools-read-url-as-org | Get URL to org  |             |
-| F   | org-gcal-fetch                | Fetch Calendars |             |
-| y   | org-gcal-sync                 | Sync. Calendars |             |
-
-#+NAME: help-main-keybindings
-| Key | Function          | Label             | Description |
-|-----+-------------------+-------------------+-------------|
-| f   | describe-function | Describe function |             |
-| v   | describe-variable | Describe variable |             |
-
-#+NAME: zoom-main-keybindings
-| Key | Function            | Label      | Options     | Description |
-|-----+---------------------+------------+-------------+-------------|
-| +   | text-scale-increase | Zoom in    | :color pink |             |
-| -   | text-scale-decrease | Zoom out   | :color pink |             |
-| 0   | text-scale-reset    | Reset zoom |             |             |
-
-#+NAME: bookmark-main-keybindings
-| Key | Function         | Label                 | Description |
-|-----+------------------+-----------------------+-------------|
-| b   | consult-bookmark | List bookmarks        |             |
-| B   | bookmark-set     | Bookmark current file |             |
-
-#+NAME: mail-main-keybindings
-| Key | Function         | Label        | Description |
-|-----+------------------+--------------+-------------|
-| m   | mu4e-compose-new | New mail     |             |
-| p   | prodigy          | Open prodigy |             |
-
-#+NAME: backup-main-keybindings
-| Key | Function             | Label                 | Description |
-|-----+----------------------+-----------------------+-------------|
-| s   | snapshot-timeline    | List backups          |             |
-| S   | snapshot-timemachine | Timemachine on backup |             |
+#+transclude: [[file:keytable_summary.org::Main Entry]] :only-contents
 
 #+begin_src emacs-lisp
   (defun text-scale-reset ()
@@ -7815,16 +7127,7 @@ It deals with:
   - flychecks
   - travis
 
-#+NAME: main-entry-vc-keybindings
-| Key | Function         | Label | Description |
-|-----+------------------+-------+-------------|
-| m   | magit-hydra/body | Magit |             |
-
-#+NAME: main-entry-fixme-keybindings
-| Key | Function            | Label         | Description |
-|-----+---------------------+---------------+-------------|
-| f   | fic-view-listing    | Fixme listing |             |
-| F   | flycheck-hydra/body | Flycheck      |             |
+#+transclude: [[file:keytable_summary.org::Project/VC]] :only-contents
 
 #+begin_src emacs-lisp
   (pretty-hydra-define project-hydra
@@ -7848,36 +7151,7 @@ CLOSED: [2021-01-05 Tue 10:03]
 This section configures an access to a bunch of minor modes (or other) which can be toggled.
 It is a copy paste of what is proposed in the README file of the [[https://github.com/jerrypnz/major-mode-hydra.el][major-mode-hydra.el repository]].
 
-#+NAME: basic-toggle-keybindings
-| Key | Function                  | Label              | Options   | Description |
-|-----+---------------------------+--------------------+-----------+-------------|
-| n   | display-line-numbers-mode | line number        | :toggle t |             |
-| w   | whitespace-mode           | whitespace         | :toggle t |             |
-| W   | whitespace-cleanup-mode   | whitespace cleanup | :toggle t |             |
-| r   | rainbow-mode              | rainbow            | :toggle t |             |
-| L   | page-break-lines-mode     | page break lines   | :toggle t |             |
-
-#+NAME: highlight-toggle-keybindings
-| Key | Function            | Label  | Options   | Description |
-|-----+---------------------+--------+-----------+-------------|
-| s   | symbol-overlay-mode | symbol | :toggle t |             |
-| l   | hl-line-mode        | line   | :toggle t |             |
-| x   | highlight-sexp-mode | sexp   | :toggle t |             |
-| t   | hl-todo-mode        | todo   | :toggle t |             |
-
-#+NAME: coding-toggle-keybindings
-| Key | Function                | Label              | Options   | Description |
-|-----+-------------------------+--------------------+-----------+-------------|
-| p   | smartparens-mode        | smartparens        | :toggle t |             |
-| P   | smartparens-strict-mode | smartparens strict | :toggle t |             |
-| S   | show-smartparens-mode   | show smartparens   | :toggle t |             |
-| f   | flycheck-mode           | flycheck           | :toggle t |             |
-
-#+NAME: debug-toggle-keybindings
-| Key | Function              | Label          | Options                                 | Description |
-|-----+-----------------------+----------------+-----------------------------------------+-------------|
-| D   | toggle-debug-on-error | debug on error | :toggle (default-value 'debug-on-error) |             |
-| X   | toggle-debug-on-quit  | debug on quit  | :toggle (default-value 'debug-on-quit)  |             |
+#+transclude: [[file:keytable_summary.org::Toggling]] :only-contents
 
 #+begin_src emacs-lisp
   ;; (defvar jp-toggles--title (with-faicon "toggle-on" "Toggles" 1 -0.05))
@@ -7915,11 +7189,7 @@ I prefer to use a _C-c C-c_ to compile and therefore, the bindings to comment a 
 I select _C-c C-;_ to comment and _C-c C-:_ to uncomment.
 Adding a toggle support for the commenting would be a good idea too
 
-#+NAME: comment-keybindings
-| Key     | Function         | Description              |
-|---------+------------------+--------------------------|
-| C-c C-; | comment-region   | Commenting the region    |
-| C-c C-: | uncomment-region | Uncommenting the regiion |
+#+transclude: [[file:keytable_summary.org::Commenting]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package cc-mode
@@ -7935,26 +7205,12 @@ Adding a toggle support for the commenting would be a good idea too
 	  <<keybindings-gen(table=comment-keybindings)>>))
 #+end_src
 
-*** DONE Mac key remapping
-CLOSED: [2021-01-05 Tue 10:01]
-I don't know if it is still needed, but I keep this here for now.
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-c =") 'compare-windows)
-  (global-set-key (kbd "<end>") 'move-end-of-line)
-  (global-set-key (kbd "<home>") 'move-beginning-of-line)
-#+end_src
-
 ** DONE Reminder for bindings
 CLOSED: [2021-01-05 Tue 09:49]
 Finally, because of the amount of keys, I sometimes need a reminder of what is what.
 To do so, I am using =remind-bindings=.
 
-#+NAME: remind-bindings-keybindings
-| Key     | Function                      | Description              |
-|---------+-------------------------------+--------------------------|
-| <f10>   | remind-bindings-togglebuffer  |                          |
-| C-<f10> | remind-bindings-specific-mode |                          |
+#+transclude: [[file:keytable_summary.org::Reminder]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package remind-bindings
