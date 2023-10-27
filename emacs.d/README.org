@@ -989,7 +989,16 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
           org-completion-use-ido nil
           org-refile-use-outline-path 'file
           org-outline-path-complete-in-steps nil
-          org-refile-allow-creating-parent-nodes 'confirm)
+          org-refile-allow-creating-parent-nodes 'confirm
+
+          ;; Edition
+          org-list-allow-alphabetical t
+          org-highlight-latex-and-related '(latex)
+          org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
+          org-babel-results-keyword "results" ;; Display images directly in the buffer
+          org-confirm-babel-evaluate nil
+          org-startup-with-inline-images t
+          org-return-follows-link t)
 
     (defun org-schedule-effort ()
       "Setup schedule time from effort."
@@ -1054,14 +1063,14 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
        (shell-command-to-string "xclip -o -t text/html | pandoc -f html -t json | pandoc -f json -t org | sed 's/ / /g'"))
       (yank))
 
-    ;; Edition
-    (setq org-list-allow-alphabetical t
-          org-highlight-latex-and-related '(latex)
-          org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
-          org-babel-results-keyword "results" ;; Display images directly in the buffer
-          org-confirm-babel-evaluate nil
-          org-startup-with-inline-images t
-          org-return-follows-link t))
+    (defun generate-org-heading-ids ()
+      "Generate unique IDs for all headings in the current Org Mode file."
+      (interactive)
+      (org-map-entries
+       (lambda ()
+         (org-id-get-create))
+       nil 'file)
+      (message "Generated IDs for all headings")))
 
   ;; Elpaca should wait org to be loaded
   (elpaca-wait)
@@ -2243,9 +2252,11 @@ CLOSED: [2022-02-10 Thu 07:04]
 | b   | generate-bibliography-entry |       |             |
 
 #+NAME: org-roam-helpers-bindings
-| Key | Function          | Label | Description |
-|-----+-------------------+-------+-------------|
-| I   | org-id-get-create |       |             |
+| Key | Function                 | Label | Description |
+|-----+--------------------------+-------+-------------|
+| I   | org-id-get-create        |       |             |
+| a   | generate-org-heading-ids |       |             |
+| A   | generate-org-roam-ids    |       |             |
 
 #+begin_src emacs-lisp
   (use-package org-roam
@@ -2315,6 +2326,21 @@ CLOSED: [2022-02-10 Thu 07:04]
                   (let ((id (org-roam-node-id node)))
                     (insert id))))))
       (deactivate-mark)))
+
+    (defun generate-org-roam-ids ()
+      "Generate unique IDs for all headings in the Org-Roam database."
+      (interactive)
+      (let ((files (org-roam-list-files)))
+        (dolist (file files)
+          (with-current-buffer (find-file-noselect file)
+            (org-mode)
+            (org-map-entries
+             (lambda ()
+               (org-id-get-create))
+             nil
+             'file)
+            (save-buffer))))
+      (message "Unique IDs generated for all Org-Roam files."))
     )
 
   (use-package org-roam-protocol
