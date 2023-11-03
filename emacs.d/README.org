@@ -5284,10 +5284,6 @@ I also redesigned the header buffer.
     :tags '("CONNECTED" "MAIL")
     :after (mu4e)
     :config
-    (add-to-list 'mu4e-header-info-custom
-                 '(:empty . (:name "Empty"
-                                   :shortname ""
-                                   :function (lambda (msg) "  "))))
 
     (setq mu4e-headers-thread-single-orphan-prefix '("─> " . "─▶ ")
           mu4e-headers-thread-orphan-prefix        '("┬> " . "┬▶ ")
@@ -5295,6 +5291,16 @@ I also redesigned the header buffer.
           mu4e-headers-thread-first-child-prefix   '("├> " . "├▶ ")
           mu4e-headers-thread-child-prefix         '("├> " . "├▶ ")
           mu4e-headers-thread-last-child-prefix    '("└> " . "╰▶ "))
+
+    (add-to-list 'mu4e-header-info-custom
+                 '(:empty . (:name "Empty"
+                                   :shortname ""
+                                   :function (lambda (msg)
+                                      (let ((maildir (replace-regexp-in-string
+                                                      "\\`/?\\([^/]+\\)/.*\\'" "\\1"
+                                                      (mu4e-message-field msg :maildir))))
+                                               (propertize "\u2588" 'face
+                                                           `(:foreground ,(cdr (assoc maildir mail-account-color-dict)))))))))
 
     (add-to-list 'mu4e-header-info-custom
                  '(:account .
@@ -5311,7 +5317,8 @@ I also redesigned the header buffer.
                                           (propertize "g" 'face 'bold-italic)
                                           maildir))))))
 
-    (setq mu4e-headers-fields  '((:account       .   10)
+    (setq mu4e-headers-fields  '((:empty         .    1)
+                                 (:account       .   10)
                                  (:human-date    .   18)
                                  (:recipnum      .    2)
                                  (:size          .    6)
