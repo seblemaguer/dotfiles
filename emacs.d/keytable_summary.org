@@ -527,9 +527,9 @@
 
 ** Translation
 #+NAME: gts-translate-entry-keybindings
-| Key   | Function         | Description |
-|-------+------------------+-------------|
-| C-c t | gts-do-translate |             |
+| Key     | Function         | Description |
+|---------+------------------+-------------|
+| C-c t t | gts-do-translate |             |
 
 * Version Control
 ** Git
