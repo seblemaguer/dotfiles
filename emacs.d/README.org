@@ -5767,7 +5767,7 @@ CLOSED: [2021-05-20 Thu 17:33]
     :custom
     (telega-use-tracking-for            'all)
     (telega-chat-prompt-show-avatar-for nil)
-    (telega-server-libs-prefix          "/usr")
+    (telega-server-libs-prefix          (format "%s/environment/local" (getenv "HOME")))
     (telega-temp-dir                    (format "%s/tmp/telega/images" user-emacs-directory))
     (telega-use-images                  (display-graphic-p))
     ;; (telega-symbol-horizontal-bar       (propertize "-" 'face 'jao-themes-f00))
