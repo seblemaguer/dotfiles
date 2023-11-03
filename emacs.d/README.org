@@ -5701,8 +5701,8 @@ Because, I prefer to have the completion system, =company=, configured locally f
       "Define some useful slack hooks."
       ;; TODO: CORFU
 
-      ;; Disable smart parens
-      (smartparens-mode -1))
+      ;; Disable puni
+      (puni-disable-puni-mode))
 
     ;; Create directory in case of
     (make-directory slack-profile-image-file-directory t)
@@ -5788,7 +5788,7 @@ CLOSED: [2021-05-20 Thu 17:33]
       "Telega chat helper hook"
       ;; TODO: CORFU
       (emojify-mode 1)
-      (smartparens-mode -1)))
+      (puni-disable-puni-mode)))
 #+END_SRC
 
 *** DONE Global helpers
@@ -6950,25 +6950,15 @@ It is to be noted than =smartparens= is much more completing than what I describ
 Finally, the package =page-break-lines= provides a nice way to visualize a page break (^L) to be easily spotted.
 
 #+begin_src emacs-lisp
-  (use-package smartparens-config
-    :elpaca smartparens
-    :tags '("VISUAL")
-    :hook
-    (elpaca-after-init  . smartparens-global-mode)
-    (elpaca-after-init  . show-smartparens-global-mode)
-    (eval-expression-minibuffer-setup . smartparens-mode)
-
+  ;; Use puni-mode globally and disable it for term-mode.
+  (use-package puni
+    :defer t
     :init
-    (setq sp-show-pair-delay 0.2
-          sp-show-pair-from-inside nil
-          sp-cancel-autoskip-on-backward-movement nil
-          sp-highlight-pair-overlay nil
-          sp-highlight-wrap-overlay nil
-          sp-highlight-wrap-tag-overlay nil)
-
-    :config
-    ;; don't create a pair with single quote in minibuffer
-    (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil))
+    ;; The autoloads of Puni are set up so you can enable `puni-mode` or
+    ;; `puni-global-mode` before `puni` is actually loaded. Only after you press
+    ;; any key that calls Puni commands, it's loaded.
+    (puni-global-mode)
+    (add-hook 'term-mode-hook #'puni-disable-puni-mode))
 
   (use-package rainbow-delimiters
     :tags '("VISUAL")
