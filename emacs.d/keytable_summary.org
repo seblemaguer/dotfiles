@@ -134,6 +134,16 @@
 | C-c C-x i   | org-mru-clock-in                 |             |
 | C-c C-x C-j | org-mru-clock-select-recent-task |             |
 
+** Presentation
+:PROPERTIES:
+:ID:       a08824f2-634a-4340-b544-a8b3cb180478
+:END:
+#+NAME: org-tree-slide-keybindings
+| Key      | function                          | Description |
+|----------+-----------------------------------+-------------|
+| C-<left> | org-tree-slide-move-previous-tree |             |
+| C-<right | org-tree-slide-move-next-tree     |             |
+
 * PDF
 :PROPERTIES:
 :ID:       2ad08f43-2af4-4cbd-a28d-41093f67d38f
@@ -219,6 +229,9 @@
 | u   | pdf-view-revert-buffer    | Revert buffer |             |
 
 * Org-Roam
+:PROPERTIES:
+:ID:       7e5dc902-76fe-4944-b525-cf2637d94c6b
+:END:
 
 #+NAME: org-roam-entry-keybindings
 | Key     | Functon             | Description |
@@ -256,6 +269,9 @@
 | a   | generate-org-heading-ids |       |             |
 | A   | generate-org-roam-ids    |       |             |
 * Citar
+:PROPERTIES:
+:ID:       9bc9df4c-3704-4b89-ba16-3cea0c9cab1d
+:END:
 #+NAME: citar-citation-keybindings
 | Key   | Function              | Description |
 |-------+-----------------------+-------------|
@@ -267,7 +283,13 @@
 | M-b | citar-insert-preset |             |
 
 * Environment
+:PROPERTIES:
+:ID:       9d1eb886-9bfe-4e90-82e6-63d27c15a47e
+:END:
 ** Undoing
+:PROPERTIES:
+:ID:       2b4e1f3b-d838-4b0e-82b2-cc296b4e3b5f
+:END:
 
 #+NAME: vundo-entry-keybindings
 | Key   | Functon | Description |
@@ -275,6 +297,9 @@
 | C-x u | vundo   |             |
 
 ** Folding
+:PROPERTIES:
+:ID:       f966c170-4135-4270-8803-d6bdc5842b00
+:END:
 
 #+NAME: origami-keybindings
 | Key | Function                        | Description |
@@ -293,7 +318,13 @@
 | x   | origami-reset                   |             |
 
 * Completion
+:PROPERTIES:
+:ID:       3ad984e7-0bed-4937-ad0e-75fff7a80f5a
+:END:
 ** Helm
+:PROPERTIES:
+:ID:       3d02cc27-a582-4e15-8921-4fff2269d409
+:END:
 
 #+NAME: helm-info-entry-keybindings
 | Key   | Functon   | Description |
@@ -301,6 +332,9 @@
 | C-h i | helm-info |             |
 
 ** Marginalia
+:PROPERTIES:
+:ID:       faec8f8c-b2d0-460a-ba85-57cd7cd9560c
+:END:
 
 #+NAME: marginalia-entry-keybindings
 | Key   | Functon          | Description |
@@ -308,6 +342,9 @@
 | C-M-a | marginalia-cycle |             |
 
 ** Consult
+:PROPERTIES:
+:ID:       45ea3d51-9264-403a-9e03-f86b74ab2872
+:END:
 
 #+NAME: consult-ctrl-c-keybindings
 | Key   | Function             | Description |
@@ -375,6 +412,9 @@
 | !   | consult-flycheck |             |
 
 ** Embark
+:PROPERTIES:
+:ID:       6c41c682-99df-4c4d-a342-1aba7d3511f6
+:END:
 
 #+NAME: embark-keybindings
 | Key   | Function        | Description |
@@ -389,6 +429,9 @@
 | C-c C-c | embark-act              |             |
 
 * Buffer
+:PROPERTIES:
+:ID:       fe233293-960b-446b-b0a5-45ce3538da6b
+:END:
 
 #+NAME: start-term-hydra-keybindings
 | Key | Function    | Label        | Description |
@@ -404,7 +447,13 @@
 | C-<f6> | start-term-hydra/body |             |
 
 * Environment
+:PROPERTIES:
+:ID:       027b62e3-d635-425c-b621-3ff8f387f467
+:END:
 ** IMenu
+:PROPERTIES:
+:ID:       2ee5a81b-d126-42f3-a5d2-fd4acb224ff0
+:END:
 
 #+NAME: imenu-list-entry-keybindings
 | Key  | Function                    | Description |
@@ -412,6 +461,9 @@
 | <f8> | my/imenu-list-smart-toggle  |             |
 
 ** Compilation
+:PROPERTIES:
+:ID:       11707992-7489-4d66-ac48-08a180e56142
+:END:
 
 #+NAME: compilation-hydra-keybindings
 | Key | Function                                                     | Label          | Description |
@@ -422,6 +474,9 @@
 | l   | (condition-case err (while t (next-error)) (user-error nil)) | ]Last Error    |             |
 
 ** Flychecking
+:PROPERTIES:
+:ID:       12fff12f-90d0-4a3e-ab17-bebf681d9c4e
+:END:
 
 #+NAME: flycheck-errors-bindings
 | Key | Function                                                  | Label    | Description |
@@ -434,7 +489,13 @@
 | G   | (progn (goto-char (point-max)) (flycheck-previous-error)) | Last     |             |
 
 * Documentation
+:PROPERTIES:
+:ID:       0ad5a3b0-2283-4fff-8527-3aa383f9a08b
+:END:
 ** Keybindings
+:PROPERTIES:
+:ID:       2c7b33b7-59cc-4942-84df-43533eccafb5
+:END:
 
 #+NAME: helm-descbinds-entry-keybindings
 | Key   | Function       | Description |
@@ -442,6 +503,9 @@
 | C-h b | helm-descbinds |             |
 
 ** Helpful
+:PROPERTIES:
+:ID:       7fe9a888-235e-4b01-8878-a1f314c9fce9
+:END:
 
 #+NAME: help-keybindings
 | Key   | Function         | Description |
@@ -451,6 +515,9 @@
 | C-h h | helpful-at-point |             |
 
 ** Dash/Docsets
+:PROPERTIES:
+:ID:       a1ef3b13-bd96-4d0c-b95d-9b1603c2aa8f
+:END:
 
 #+NAME: consult-dash-entry-keybindings
 | Key   | Functon      | Description |
@@ -458,6 +525,9 @@
 | M-s d | consult-dash |             |
 
 ** Recoll
+:PROPERTIES:
+:ID:       c7e1c360-2707-4804-a22a-65c1807240ad
+:END:
 
 #+NAME: consult-recoll-entry-keybindings
 | Key   | Functon        | Description |
@@ -465,7 +535,13 @@
 | M-g t | consult-recoll |             |
 
 * Programming
+:PROPERTIES:
+:ID:       d5d50076-b89a-486e-9fc1-e1eb46285cd1
+:END:
 ** YAML
+:PROPERTIES:
+:ID:       fafc2ef0-90f1-4100-b768-47c614f1a65d
+:END:
 #+NAME: yaml-pro-keybindings
 | Key     | Functon                    | Description |
 |---------+----------------------------+-------------|
@@ -473,6 +549,9 @@
 | C-c M-n | yaml-pro-move-subtree-down |             |
 
 ** Elisp
+:PROPERTIES:
+:ID:       c154a0d0-6c4e-49ed-896c-f9edefd1c37f
+:END:
 #+NAME: elisp-mode-hydra-eval-keybindings
 | Key | Function    | Label  | Description |
 |-----+-------------+--------+-------------|
@@ -506,6 +585,9 @@
 | i   | info-lookup-symbol    | info lookup |             |
 
 ** C/C++
+:PROPERTIES:
+:ID:       a3d1b11f-3ec3-4efe-bfb1-120f365a2515
+:END:
 #+NAME: clang-format-entry-keybindings
 | Key   | Function            | Description |
 |-------+---------------------+-------------|
@@ -513,26 +595,44 @@
 | C-c u | clang-format-buffer |             |
 
 * Writing
+:PROPERTIES:
+:ID:       c1caab20-f777-48ec-8a5d-981b315e2575
+:END:
 ** Bibtex
+:PROPERTIES:
+:ID:       0b94b8e6-bbc3-42f7-b01b-b6bfa7b9674b
+:END:
 #+NAME: bibtex-tidy-entry-keybindings
 | Key    | Function           | Description |
 |--------+--------------------+-------------|
 | C-c f  | bibtex-tidy-buffer |             |
 
 ** Markdown
+:PROPERTIES:
+:ID:       21da8ffa-9b07-498f-9dd0-7b2238c4c2fe
+:END:
 #+NAME: grip-mode-entry-keybindings
 | Key | Function  | Description |
 |-----+-----------+-------------|
 | g   | grip-mode |             |
 
 ** Translation
+:PROPERTIES:
+:ID:       361c027b-f41e-4a41-9ffd-9bb8a32b58bb
+:END:
 #+NAME: gts-translate-entry-keybindings
 | Key     | Function         | Description |
 |---------+------------------+-------------|
 | C-c t t | gts-do-translate |             |
 
 * Version Control
+:PROPERTIES:
+:ID:       c8677740-e63b-472b-8936-1be6458eb157
+:END:
 ** Git
+:PROPERTIES:
+:ID:       f191c017-431e-4a8d-83b6-128fd2c26335
+:END:
 
 #+NAME: magit-browse-keybindings
 | Key | Function        | Description |
@@ -562,6 +662,9 @@
 | <   | project-hydra/body  | back   |             |
 
 ** Github
+:PROPERTIES:
+:ID:       a836c0cd-8dc3-42f1-8b59-0140bca2dc41
+:END:
 #+NAME: github-review-entry-keybindings
 | Key   | Function                        | Description |
 |-------+---------------------------------+-------------|
@@ -573,6 +676,9 @@
 | C-c s | my/github-review-kill-suggestion |             |
 
 ** Gist
+:PROPERTIES:
+:ID:       6e93b7b1-305a-4ba5-9a43-60828f85cc19
+:END:
 #+NAME: gist-mode-hydra-basic-keybindings
 | Key | Function           | Label        | Description |
 |-----+--------------------+--------------+-------------|
@@ -603,13 +709,22 @@
 | f   | gist-fork               | Fork               |             |
 
 * Shell
+:PROPERTIES:
+:ID:       c273b162-1189-4c53-8cc5-c9d3d9732443
+:END:
 #+NAME: multi-vterm-mode-keybindings
 | Key | Function                             | Description |
 |-----+--------------------------------------+-------------|
 | M-r | multi-vterm-rename-buffer            |             |
 
 * File manager
+:PROPERTIES:
+:ID:       9f111ca1-36e1-459b-a2bd-5b3aecb9a975
+:END:
 ** Dired/Dirvish
+:PROPERTIES:
+:ID:       bc8497b0-800f-4aa8-875e-7354712b820b
+:END:
 #+NAME: dired-global-keybindings
 | Key     | Function        | Description |
 |---------+-----------------+-------------|
@@ -641,13 +756,22 @@
 | <C-return> | dired-launch-command |             |
 
 * Online
+:PROPERTIES:
+:ID:       fe43ad7a-802c-407c-99a4-0fc74606c2ca
+:END:
 ** Elfeed
+:PROPERTIES:
+:ID:       310325d3-889c-4eea-a2c8-60424c89f174
+:END:
 #+NAME: elfeed-entry-keybindings
 | Key  | Function | Description |
 |------+----------+-------------|
 | <f9> | elfeed   |             |
 
 *** Elfeed/Youtube
+:PROPERTIES:
+:ID:       c8b5cd19-f55f-4025-8ee9-5295f6f5db0b
+:END:
 #+NAME: elfeed-tube-entry-keybindings
 | Key                 | Function          | Description |
 |---------------------+-------------------+-------------|
@@ -662,7 +786,13 @@
 | C-c C-w | elfeed-tube-mpv-where       |             |
 
 ** Mail
+:PROPERTIES:
+:ID:       76f94138-3b0d-4f96-a067-4a76512f4553
+:END:
 *** Org-msg
+:PROPERTIES:
+:ID:       54dcb852-ca0f-4d43-a33a-59e3788bc442
+:END:
 #+NAME: org-msg-edit-keybindings
 | Key         | Function                        | Description |
 |-------------+---------------------------------+-------------|
@@ -676,6 +806,9 @@
 | C-c RET s   | message-goto-subject            |             |
 
 *** Mu4e
+:PROPERTIES:
+:ID:       58d1a253-d0e7-4767-81b8-e4c6c4886a97
+:END:
 
 #+NAME: mu4e-entry-keybindings
 | Key  | Function | Description |
@@ -772,7 +905,13 @@
 | C-c C-a | mail-add-attachment |             |
 
 ** Messaging
+:PROPERTIES:
+:ID:       11cc3359-59b3-4902-9848-ce6a1bf57d64
+:END:
 *** Slack
+:PROPERTIES:
+:ID:       7f942afa-1c94-4306-a227-758c29c704be
+:END:
 #+NAME: slack-mode-keybindings
 | Key | Function                    | Description |
 |-----+-----------------------------+-------------|
@@ -787,7 +926,13 @@
 | C-c C-r | slack-thread-show-or-create |             |
 
 ** Exchange
+:PROPERTIES:
+:ID:       820ec684-b5f2-476d-9154-cbab98e1b9c3
+:END:
 *** Reddit
+:PROPERTIES:
+:ID:       af69dec8-f95f-40cb-abac-0bd01e5ae4e6
+:END:
 #+NAME: md4rd-mode-keybindings
 | Key       | Function                  | Description |
 |-----------+---------------------------+-------------|
@@ -820,6 +965,9 @@
 | c   | md4rd-widget-collapse-all | Collapse all |             |
 
 ** Youtube
+:PROPERTIES:
+:ID:       44c7a3d2-dd08-41bb-89bc-326c0f5e1da2
+:END:
 #+NAME: ytdious-entry-keybindings
 | Key    | Function | Description |
 |--------+----------+-------------|
@@ -832,7 +980,13 @@
 | d        | ytdious-download |             |
 
 * Entertainment
+:PROPERTIES:
+:ID:       9d23f954-7009-4836-bb39-7a3d5c4ff44a
+:END:
 ** Music
+:PROPERTIES:
+:ID:       d0eb4595-de86-434e-8365-c408ac09a210
+:END:
 #+NAME: emms-keybindings
 | Key             | Function              | Description |
 |-----------------+-----------------------+-------------|
@@ -844,6 +998,9 @@
 | <XF86AudioNext> | emms-next             |             |
 
 ** Subtitles
+:PROPERTIES:
+:ID:       97aa6f0d-3ccd-4141-ae27-c173e763002d
+:END:
 #+NAME: subed-keybindings
 | Key     | Function                            | Description                                                     |
 |---------+-------------------------------------+-----------------------------------------------------------------|
@@ -853,7 +1010,13 @@
 | C-c C-v | subed-mpv-play-from-file            | Open a video file to synchronize with the current subtitle file |
 
 * Interaction with other softwares
+:PROPERTIES:
+:ID:       9d20afe6-d030-4a34-9194-9793edfbc978
+:END:
 ** Firefox
+:PROPERTIES:
+:ID:       e485f08e-26a5-4e25-a405-698fb1639420
+:END:
 
 #+NAME: atomic-chrome-keybindings
 | Key     | Function                           | Description |
@@ -861,6 +1024,9 @@
 | S-c C-c | atomic-chrome-close-current-buffer |             |
 
 ** Shell execution
+:PROPERTIES:
+:ID:       efd3d31b-5ae3-4fa5-a889-8cf611d1ce07
+:END:
 #+NAME: detached-mode-keybindings
 | Key                           | Function                   | Description |
 |-------------------------------+----------------------------+-------------|
@@ -875,12 +1041,18 @@
 | C-c c | run-command |             |
 
 ** Processes
+:PROPERTIES:
+:ID:       69359072-7f85-401c-8b39-81053aef4d6f
+:END:
 #+NAME: prodigy-keybindings
 | Key | Function                | Description                     |
 |-----+-------------------------+---------------------------------|
 | ?   | prodigy-display-process | Display the process information |
 
 * Visual
+:PROPERTIES:
+:ID:       e3b9a8a2-488f-4044-8740-2e595313e76d
+:END:
 #+NAME: scrollkeeper-remap-keybindings
 | Key                         | Function                   | Description |
 |-----------------------------+----------------------------+-------------|
@@ -888,7 +1060,13 @@
 | [remap scroll-down-command] | scrollkeeper-contents-down |             |
 
 * Keybindings
+:PROPERTIES:
+:ID:       6e07006b-e43c-44ac-a894-428a3bdcb8be
+:END:
 ** Main Entry
+:PROPERTIES:
+:ID:       1f351900-07f7-41d2-bfde-02f0bf096515
+:END:
 #+NAME: org-main-keybindings
 | Key | Function                      | Label           | Description |
 |-----+-------------------------------+-----------------+-------------|
@@ -930,6 +1108,9 @@
 | S   | snapshot-timemachine | Timemachine on backup |             |
 
 ** Project/VC
+:PROPERTIES:
+:ID:       9853f2e2-60bc-4edc-91d6-7004e6f702e9
+:END:
 #+NAME: main-entry-vc-keybindings
 | Key | Function         | Label | Description |
 |-----+------------------+-------+-------------|
@@ -942,6 +1123,9 @@
 | F   | flycheck-hydra/body | Flycheck      |             |
 
 ** Toggling
+:PROPERTIES:
+:ID:       7c0d2539-4c27-4c77-a7e7-16e221853f82
+:END:
 #+NAME: basic-toggle-keybindings
 | Key | Function                  | Label              | Options   | Description |
 |-----+---------------------------+--------------------+-----------+-------------|
@@ -962,9 +1146,6 @@
 #+NAME: coding-toggle-keybindings
 | Key | Function                | Label              | Options   | Description |
 |-----+-------------------------+--------------------+-----------+-------------|
-| p   | smartparens-mode        | smartparens        | :toggle t |             |
-| P   | smartparens-strict-mode | smartparens strict | :toggle t |             |
-| S   | show-smartparens-mode   | show smartparens   | :toggle t |             |
 | f   | flycheck-mode           | flycheck           | :toggle t |             |
 
 #+NAME: debug-toggle-keybindings
@@ -974,6 +1155,9 @@
 | X   | toggle-debug-on-quit  | debug on quit  | :toggle (default-value 'debug-on-quit)  |             |
 
 ** Commenting
+:PROPERTIES:
+:ID:       4dba48de-328e-466c-b184-189803ebf596
+:END:
 #+NAME: comment-keybindings
 | Key     | Function         | Description              |
 |---------+------------------+--------------------------|
@@ -981,6 +1165,9 @@
 | C-c C-: | uncomment-region | Uncommenting the region  |
 
 ** Reminder
+:PROPERTIES:
+:ID:       2096fe22-9f3b-44a5-9aab-97a9bcd5f06c
+:END:
 
 #+NAME: remind-bindings-keybindings
 | Key     | Function                      | Description              |

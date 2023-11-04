@@ -17,6 +17,9 @@ This is my emacs configuration file. It is under version control and available, 
 configurations, at this repository: https://github.com/seblemaguer/dotfiles
 
 * Command line management
+:PROPERTIES:
+:ID:       42569b59-48db-4832-a639-18e3ec531b09
+:END:
 This part is dedicated to support some configuration using the command line by defining some options.
 For now, only the option =--no-connection= is defined in order enforce the loading without packages requiring internet.
 
@@ -42,6 +45,9 @@ For now, only the option =--no-connection= is defined in order enforce the loadi
 
 * DONE Definition of no-web helper routines
 CLOSED: [2023-07-19 Wed 20:41]
+:PROPERTIES:
+:ID:       7ad5d8d3-eec1-44ed-8d16-819ae06fccae
+:END:
 
 I found the strategy of defining tables to store keybindings proposed by [[https://config.phundrak.com/][phundrak]] pretty interesting.
 It has two main advantages.
@@ -103,6 +109,9 @@ As a result, we have now three routines:
 #+end_src
 
 * Server
+:PROPERTIES:
+:ID:       ba09db2b-a424-46b3-b26a-6d199cddd6c9
+:END:
 Before anything happens, we start the server to avoid conflict if there is a problem during the
 loading phase.
 
@@ -121,14 +130,23 @@ We also provide a helper to shutdown properly the server.
 #+end_src
 
 * TODO Core [90%]
+:PROPERTIES:
+:ID:       5d3e0d31-680d-4865-a0ce-8e1791b59599
+:END:
 This section focuses on providing helpers and utilities required for the rest of the configuration.
 
 ** DONE Fundamentals [100%]
 CLOSED: [2021-01-03 Sun 10:46]
+:PROPERTIES:
+:ID:       b08521d3-9bcd-4c5e-bba9-34fa52adc9f0
+:END:
 This section define the fundamental variables and helpers which are recurrently used in the configuration.
 
 *** DONE Deal with warning issues in "nativecomp"
 CLOSED: [2021-06-24 Thu 12:42]
+:PROPERTIES:
+:ID:       6ba6a19d-13c2-4a60-bc6d-7bb75c2c3422
+:END:
 Emacs 28 supports native compilation, but it creates a lot of warnings.
 I preferred to disable the report while waiting for a better solution.
 
@@ -140,6 +158,9 @@ I preferred to disable the report while waiting for a better solution.
 
 *** DONE Define some important variables
 CLOSED: [2021-01-03 Sun 10:39]
+:PROPERTIES:
+:ID:       9c6402ff-3cdf-457e-bb4a-80d165fbc177
+:END:
 The section defines the variables =default-plugin-dir= and set the =custom-file=.
 Some default values related to emacs' core behaviour, like the garbage collector, are also set here.
 
@@ -170,6 +191,9 @@ Some default values related to emacs' core behaviour, like the garbage collector
 
 *** DONE Identification helper
 CLOSED: [2021-01-03 Sun 10:41]
+:PROPERTIES:
+:ID:       62063570-ae6d-4290-998f-adf0958203d7
+:END:
 In order to keep the authentification as private as possible, two primitives are defined here;
 one to get the user (=my:auth-source-get-user=) and on to get the password (=my:auth-source-get-passwd=).
 
@@ -193,6 +217,7 @@ one to get the user (=my:auth-source-get-user=) and on to get the password (=my:
 CLOSED: [2021-01-03 Sun 10:46]
 :PROPERTIES:
 :FROM:     https://www.reddit.com/r/emacs/comments/6t37yg/org_mode_dot_emacs/
+:ID:       c6446492-0f26-4b39-9331-c34a0e8aa3a0
 :END:
 This section defines two functions:
 one to generate the emacs init file from =~/.emacs.d/README.org= and one to byte-compile the emacs init file.
@@ -219,6 +244,9 @@ one to generate the emacs init file from =~/.emacs.d/README.org= and one to byte
 #+end_src
 
 ** DONE Package management [100%]
+:PROPERTIES:
+:ID:       dbd2306f-c4de-443e-9a0b-f6f66235d91a
+:END:
 My configuration relies on a lot (too-many?) of packages.
 It relies primarly on =use-package= and some extensions.
 The process of how to deal with the packages is the following:
@@ -230,6 +258,9 @@ Furthermore, each package is tagged with several keywors to have a "machine-depe
 
 *** DONE Straight
 CLOSED: [2021-01-03 Sun 10:52]
+:PROPERTIES:
+:ID:       08b8b3b9-31a4-4436-9789-502e7ddd3ef1
+:END:
 
  #+begin_src emacs-lisp
    (defvar elpaca-installer-version 0.5)
@@ -282,6 +313,9 @@ CLOSED: [2021-01-03 Sun 10:52]
 
 *** DONE Tagging
 CLOSED: [2021-01-03 Sun 10:58]
+:PROPERTIES:
+:ID:       3e80de57-39b3-47f6-a3b3-8ea351cecdba
+:END:
 I am using keywords/tags to define a loading scheme for each of the machine where emacs is installed.
 Each package, from now on, has one or multiple keywords associated using the key =:tags=.
 Each computer has a series of tags which are required to be loaded.
@@ -311,6 +345,9 @@ The specification respects the following syntax:
 
 *** DONE Hydra
 CLOSED: [2021-01-03 Sun 11:01]
+:PROPERTIES:
+:ID:       2e5e6408-c5c6-424f-ad8c-7e7dc30752c9
+:END:
 I use hydra a lot so it is easier to add its support directly in the use-package configuration part.
 The combination pretty-hydra/major-mode-hydra provides an easy and powerful way to declare hydra.
 While alternatives exist, I find this combination more straightforward and cleaner when it is used in combination with =use-package=.
@@ -332,6 +369,9 @@ While alternatives exist, I find this combination more straightforward and clean
 #+end_src
 
 *** Transient
+:PROPERTIES:
+:ID:       ba96bded-c66a-4aae-b3c8-693cc61032f7
+:END:
 #+begin_src emacs-lisp
   (use-package transient
     :tags '("CORE")
@@ -339,6 +379,9 @@ While alternatives exist, I find this combination more straightforward and clean
 #+end_src
 
 *** Documentation
+:PROPERTIES:
+:ID:       70aa9321-e665-4d1e-b63c-770e92cf6453
+:END:
 #+begin_src emacs-lisp
   (use-package dash-docs
     :tags '("CORE")
@@ -347,6 +390,9 @@ While alternatives exist, I find this combination more straightforward and clean
 
 ** DONE Load private part
 CLOSED: [2021-01-03 Sun 11:11]
+:PROPERTIES:
+:ID:       d6dc9617-ee55-46ef-98b7-e744c07d0ff1
+:END:
 Some parts can't be totally hidden using the =my:auth-source-get-*= helpers.
 These sensitive configuration parts are store in a dedicated file (identified by the variable =privade-file=) which is loaded here.
 
@@ -360,6 +406,9 @@ These sensitive configuration parts are store in a dedicated file (identified by
 
 ** DONE Notifications [100%]
 CLOSED: [2021-01-03 Sun 11:14]
+:PROPERTIES:
+:ID:       fe2191e3-0ff3-4183-ad19-43304adcfdec
+:END:
 Emacs is my entry point for almost everything.
 Therefore, it is also useful to have the notifications handled directly in Emacs.
 To do so, I rely on the couple sauron/alert.
@@ -372,6 +421,9 @@ However, if a notification of an higher priority is raised, the color of the mod
 
 *** DONE Sauron
 CLOSED: [2021-01-03 Sun 11:13]
+:PROPERTIES:
+:ID:       8950483c-d934-47f8-83fc-bf89d5213c7f
+:END:
 Sauron is the pivot of the notification system.
 However, I need to use my own fork for two reasons:
 the upstream has some priority issues with ERC; I would like to ignore some events emitted by the *org-agenda*.
@@ -412,6 +464,9 @@ the upstream has some priority issues with ERC; I would like to ignore some even
 
 *** DONE Sauron/Alert/Modeline integration
 CLOSED: [2021-01-03 Sun 11:14]
+:PROPERTIES:
+:ID:       15621b50-1641-4fef-9a69-c80f3245359b
+:END:
 By using my plugin =sauron-mode-line=, I link Alert and Sauron.
 By this way, all the Alert notifications are automatically transmitted to Sauron.
 If a Sauron event is raised, it is transmitted to Alert to adapt the modeline bar.
@@ -436,6 +491,9 @@ This plugin is in charge to managing the communication and avoid any cycle.
 
 ** DONE Buffer listing
 CLOSED: [2021-01-03 Sun 11:24]
+:PROPERTIES:
+:ID:       7b8d29f3-a515-4cab-9567-eac509b71ba3
+:END:
 Buffer listing is the fundamental navigation tool.
 After playing with =ibuffer= and other helpers, I settled using =bufler=.
 This choice has been made due its the simplicity and its recursive nature.
@@ -557,6 +615,9 @@ This choice has been made due its the simplicity and its recursive nature.
 
 ** DONE Minibuffer
 CLOSED: [2021-01-03 Sun 11:24]
+:PROPERTIES:
+:ID:       58719179-4890-4e96-b668-ef6064dbae5d
+:END:
 Minibuffer configuration part. Nothing really outstanding, just the classical stuff.
 
 #+begin_src emacs-lisp
@@ -575,6 +636,9 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
 
 ** DONE Large files
 CLOSED: [2021-01-03 Sun 11:28]
+:PROPERTIES:
+:ID:       e1a35d90-60ab-49b7-aa1e-f9cba607179d
+:END:
 Large files are difficult to handle properly in emacs.
 The best way is to use =vlf=.
 However, the entry point is actually =vlf-setup=.
@@ -589,12 +653,15 @@ This leads to ensuring the package =vlf= with the use-package header defined to 
 
 ** DONE Navigation
 CLOSED: [2021-03-01 Mon 09:27]
+:PROPERTIES:
+:ID:       1a4b5853-49d4-437a-922a-8fedb01ec74a
+:END:
 To have a better scrolling/navigation, I rely on two packages =fast-scroll and =goto-last-point=.
 =fast-scroll= disables some hooks while scrolling and therefore makes it smoother.
 =goto-last-point= enables me to go back to the position before the move happened.
+Finally, introducing =move-text= provides a quick way to swap consecutive lines.
 
 #+transclude: [[file:keytable_summary.org::goto-last-point-entry-keybindings]]
-
 #+transclude: [[file:keytable_summary.org::trail-entry-keybindings]]
 
 #+begin_src emacs-lisp
@@ -619,6 +686,7 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
 
   (use-package trail
     :elpaca (:host github :repo "gitrj95/trail.el")
+    :tags '("CORE" "NAVIGATION")
     ;; if using a persistence/restoration mechanism, the restoration of
     ;; trail-ring must happen before trail-mode is enabled
     :after savehist
@@ -635,13 +703,21 @@ To have a better scrolling/navigation, I rely on two packages =fast-scroll and =
 
   (use-package savehist
     :elpaca nil
+    :tags '("CORE" "NAVIGATION")
     :init
     (savehist-mode)
     (setq savehist-additional-variables
-	  '(trail-ring)))
+          '(trail-ring)))
+
+  (use-package move-text
+    :tags '("CORE" "NAVIGATION")
+    :config (move-text-default-bindings))
 #+end_src
 
 * DONE Session [100%]
+:PROPERTIES:
+:ID:       1b1316db-efb2-427e-a6b3-ff5bbd6515d6
+:END:
 As I am using emacs as a daemon/client combination,
 my daily routine consists of opening emacs at the beginning of work and switching it off on the evening.
 Therefore it is difficult to track what needs to be remembered.
@@ -649,6 +725,9 @@ This section provides helpers which automatises key part to make the transition 
 
 ** DONE Recent files
 CLOSED: [2021-01-03 Sun 11:31]
+:PROPERTIES:
+:ID:       887bceca-455a-4223-b96e-61087c6724e9
+:END:
 Opening recent files is always an easy and fast shortcut. Some files should be ignored though. That
 leads to this configuration
 
@@ -691,12 +770,18 @@ leads to this configuration
 #+end_src
 
 ** DONE Backup/save files [100%]
+:PROPERTIES:
+:ID:       17e4beae-cf9c-4dcd-a68d-7eff132a7fe3
+:END:
 This section is dedicated to deal with backups. The main logic is to exlude some specific files
 (either because of they are sensitive, either because they are just results of a process). For the
 other ones, I want to have an easy way to navigate in it.
 
 *** DONE Saving bits
 CLOSED: [2022-07-25 Mon 07:41]
+:PROPERTIES:
+:ID:       1773914a-aa46-4fab-b61c-6f509b46e9ee
+:END:
 =super-save= provides a way to save any buffers while emacs is idled.
 
 #+begin_src emacs-lisp
@@ -711,6 +796,9 @@ CLOSED: [2022-07-25 Mon 07:41]
 
 *** DONE Backuping bits
 CLOSED: [2021-01-03 Sun 11:33]
+:PROPERTIES:
+:ID:       5a746626-9d25-4135-ae9b-c0414062ef28
+:END:
 This the global backup configuration. For that I adapted a little bit the wonderful
 snapshot-timemachine package.
 
@@ -829,6 +917,9 @@ snapshot-timemachine package.
 
 *** DONE Sensitive mode
 CLOSED: [2021-01-03 Sun 11:33]
+:PROPERTIES:
+:ID:       e5e1a014-7292-4d3a-a173-64e99fbf8dab
+:END:
 There are some files which are not desired to be backed up. This part goal is to setup this
 "avoiding saving" spécificities.
 
@@ -875,6 +966,7 @@ There are some files which are not desired to be backed up. This part goal is to
 CLOSED: [2021-01-03 Sun 11:35]
 :PROPERTIES:
 :FROM:     https://github.com/munen/emacs.d
+:ID:       f341b5fe-d3a5-4448-a0a3-b52bf991038f
 :END:
 When a file is large, it is easier to restart from the exact position where we stopped.
 To do so, I am using the package =saveplace=
@@ -890,11 +982,17 @@ To do so, I am using the package =saveplace=
 #+end_src
 
 * DONE Org-mode [100%]
+:PROPERTIES:
+:ID:       f4a3bf51-0188-4b4c-9866-ffb4d2725f0f
+:END:
 =Org-mode= is the core of how I am organizing tasks, writing documents, ...
 While it is mainly a programming/writing language, it involves too many subparts and, therefore, has its own section.
 
 ** DONE Global
 CLOSED: [2021-01-03 Sun 12:42]
+:PROPERTIES:
+:ID:       e5e911b9-26a5-4715-81a0-496180579d5f
+:END:
 This section defines the global configuration for =org-mode=.
 First, it actually relies on =org-contrib=, especially for the bibtex support.
 Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywords:
@@ -1055,11 +1153,17 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
 #+end_src
 
 ** DONE Source [100%]
+:PROPERTIES:
+:ID:       211a6e02-f36f-4ddf-ae26-c8298d6c1aa7
+:END:
 The source visualisation of org files can be pretty raw.
 This section provides configurations to help the navigation and the visualisation of such files.
 
 *** DONE Pretty bullets and better navigation
 CLOSED: [2021-01-03 Sun 12:55]
+:PROPERTIES:
+:ID:       bd6e2938-c534-48ea-9c43-95b89180394f
+:END:
 The key problem in my opinion is how are visualize the headings.
 =org-superstar= provides a clearer indentation and visualisation of such headings.
 This is fundamental to have an easy navigation in such files which can be really large (see the current one!).
@@ -1082,6 +1186,9 @@ Combined with =org-superstar=, this leads to the ultimate org-mode list manageme
 
 *** DONE Babel
 CLOSED: [2021-01-03 Sun 13:10]
+:PROPERTIES:
+:ID:       67c64a61-b0e0-4010-8db0-ec0343189aca
+:END:
 Babel is the key feature for litterate programming in =org-mode=.
 This section provides the configuration for babel by first configuring jupyter.
 
@@ -1126,6 +1233,9 @@ This section provides the configuration for babel by first configuring jupyter.
 
 *** DONE ID Generation
 CLOSED: [2021-01-03 Sun 13:30]
+:PROPERTIES:
+:ID:       61bc32cc-124f-455f-b76d-ed3302875f96
+:END:
 I don't like how identifier are hashed in org-mode.
 To fix this, =org-unique-id= aims to provide an equivalent to the "auctex/reftex" label generation module but for org-mode.
 
@@ -1140,6 +1250,9 @@ To fix this, =org-unique-id= aims to provide an equivalent to the "auctex/reftex
 
 *** DONE Checklist
 CLOSED: [2021-01-03 Sun 13:55]
+:PROPERTIES:
+:ID:       3e1c6700-7b15-4a2d-a3db-47f7db183870
+:END:
 I am using checklist regularly.
 Consequently, adding its support in org-mode is a big advantage.
 To do so, I am relying the package =org-checklist= which is provided by =org-contrib=.
@@ -1153,6 +1266,9 @@ To do so, I am relying the package =org-checklist= which is provided by =org-con
 
 *** DONE Tranclusion
 CLOSED: [2023-10-27 Fri 09:40]
+:PROPERTIES:
+:ID:       4e59c7e7-3fba-42d0-a5d9-78e38738972b
+:END:
 =org-transclusion= provide a fancy interface to include portion of other files into an org file.
 
 #+transclude: [[file:keytable_summary.org::org-transclusion-keybindings]]
@@ -1168,6 +1284,9 @@ CLOSED: [2023-10-27 Fri 09:40]
 
 *** DONE Helpers
 CLOSED: [2021-02-27 Sat 08:38]
+:PROPERTIES:
+:ID:       b626be6f-0b70-4f2b-b921-2f4368f60e13
+:END:
 I am using =org-menu= to provide a helper menu to edit org files.
 For whatever reason, it is required to *explicitly* configure =transient=.
 
@@ -1184,10 +1303,16 @@ For whatever reason, it is required to *explicitly* configure =transient=.
 
 ** DONE Export [100%]
 CLOSED: [2021-01-03 Sun 13:47]
+:PROPERTIES:
+:ID:       f3eefeb0-0384-4ab3-91f9-bcdc66e347b1
+:END:
 This section focuses on configuring the export of org files to some document format.
 
 *** DONE Global
 CLOSED: [2021-07-19 Mon 09:24]
+:PROPERTIES:
+:ID:       41aa63c5-77df-4789-b638-63d42025b9aa
+:END:
 This part contains some extra configurations which allows to write clean org documents while still having an efficient rendering.
 
 #+begin_src emacs-lisp
@@ -1202,6 +1327,9 @@ This part contains some extra configurations which allows to write clean org doc
 
 *** DONE HTML
 CLOSED: [2021-01-03 Sun 13:44]
+:PROPERTIES:
+:ID:       fd467ce8-4163-4a55-b9e9-30d7fe4f9d6b
+:END:
 In this section, we configure the export for HTML main files and for presentation using =reveal.js=.
 Both configurations relies on =htmlize= to deal with the coloring part.
 We also defines additional link to support audios and videos.
@@ -1256,6 +1384,9 @@ We also defines additional link to support audios and videos.
 
 *** DONE Latex
 CLOSED: [2021-01-03 Sun 13:46]
+:PROPERTIES:
+:ID:       af47aae7-9602-4d80-81fa-15677006f1ec
+:END:
 In this section, the export for latex and beamer are configured.
 The key part is that we are using minted to deal with the source.
 Therefore, we have to modify the call to the =latexmk= command (which is therefore required).
@@ -1292,6 +1423,9 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
 
 *** DONE Markdown
 CLOSED: [2021-01-03 Sun 13:47]
+:PROPERTIES:
+:ID:       f4dc1f12-4d7a-46bb-a62c-4f0d8f62a983
+:END:
 I am using mainly the Github markdown format.
 Therefore, I use the package =ox-gfm=
 
@@ -1302,6 +1436,9 @@ Therefore, I use the package =ox-gfm=
 #+end_src
 ** DONE Accessing
 CLOSED: [2021-01-03 Sun 15:24]
+:PROPERTIES:
+:ID:       270ed4e5-9e6e-435e-a761-681c372a2283
+:END:
 This section configures packages to access information from the org files.
 =org-ql= is providing commands to query the org files in a SQL manner.
 =org-protocol= is a package of =org-contrib= which provides helper to use emacsclient to access to org files.
@@ -1321,6 +1458,9 @@ This package is mainly use to bookmark webpages from firefox.
 
 ** DONE Capturing [100%]
 CLOSED: [2021-01-04 Mon 08:33]
+:PROPERTIES:
+:ID:       9935aa4d-a3b8-4694-878d-0b392ce815ac
+:END:
 I use the capturing mechanism provded by org mode to add information for further investigations.
 =doct= package is used to have a more human-friendly way a describing the templates.
 I also use capturing mechanism to save recipes and some interesting websites.
@@ -1378,6 +1518,9 @@ I also use capturing mechanism to save recipes and some interesting websites.
 
 *** DONE Cooking
 CLOSED: [2021-01-04 Mon 08:33]
+:PROPERTIES:
+:ID:       c48eea1e-144a-409b-bb48-dac9a1251997
+:END:
 =org-chef= provides an easy way to save recipes.
 It supports multiple website so its configuration consists only of providing the template.
 
@@ -1403,6 +1546,9 @@ It supports multiple website so its configuration consists only of providing the
 
 *** DONE ORG/Web tools
 CLOSED: [2021-01-04 Mon 08:33]
+:PROPERTIES:
+:ID:       f1eb31b9-45a3-4d6c-ac75-3c74d7c94e9c
+:END:
 =org-web-tools= is a nice package which allows to sniff a webpage and convert it into org-mode
 format. This is really useful to homogeneise documentation.
 
@@ -1414,10 +1560,16 @@ format. This is really useful to homogeneise documentation.
 #+end_src
 
 ** DONE Visual
+CLOSED: [2021-12-10 Fri 14:17]
+:PROPERTIES:
+:ID:       9414da87-3f15-4007-bfd0-ef1a9edad36d
+:END:
 The visual configuration for =org-mode= is based on =org-modern=.
 The main tweaks are that some specific colors are defined for some specific keywords and icons are associated to some categories.
+I also introduced =org-tree-slide= to enjoy quick presentation
 
-CLOSED: [2021-12-10 Fri 14:17]
+#+transclude: [[file:keytable_summary.org::org-tree-slide-keybindings]]
+
 #+begin_src emacs-lisp
   (use-package org-modern
     :tags '("VISUAL" "ORG")
@@ -1462,26 +1614,39 @@ CLOSED: [2021-12-10 Fri 14:17]
 
     (with-eval-after-load 'org (global-org-modern-mode)))
 
-    (use-package org-rainbow-tags
-      :tags '("VISUAL" "ORG")
-      :elpaca (:host github :repo "KaratasFurkan/org-rainbow-tags")
-      :custom
-      (org-rainbow-tags-hash-start-index 10)
-      (org-rainbow-tags-extra-face-attributes
-       ;; Default is '(:weight 'bold)
-       '(:inverse-video t :box t :weight 'bold))
-      :hook
-      (org-mode . org-rainbow-tags-mode)
-      (org-agenda-finalize . org-rainbow-tags-mode))
+  (use-package org-rainbow-tags
+    :tags '("VISUAL" "ORG")
+    :elpaca (:host github :repo "KaratasFurkan/org-rainbow-tags")
+    :custom
+    (org-rainbow-tags-hash-start-index 10)
+    (org-rainbow-tags-extra-face-attributes
+     ;; Default is '(:weight 'bold)
+     '(:inverse-video t :box t :weight 'bold))
+    :hook
+    (org-mode . org-rainbow-tags-mode)
+    (org-agenda-finalize . org-rainbow-tags-mode))
+
+
+  (use-package org-tree-slide
+    :tags '("VISUAL" "ORG" "PRESENTATION")
+    :bind ((:map org-tree-slide-mode-map
+      <<keybindings-gen(table=org-tree-slide-keybindings)>>
+    )))
 #+end_src
 
 ** DONE Agenda [100%]
+:PROPERTIES:
+:ID:       616ac52b-6a64-4042-bb85-2a4acecd4a7f
+:END:
 In this section, I configure the agenda part of org-mode.
 It is my main source of visualizing the todo tasks.
 I rely on the baseline =org-agenda= package and on =org-super-agenda= for a better visualisation.
 
 *** DONE Baseline configuration
 CLOSED: [2021-01-03 Sun 14:21]
+:PROPERTIES:
+:ID:       f51eb9f5-db6e-4631-b117-b19e8ffb3f8b
+:END:
 The baseline configuration is fairly standard.
 The only important bits are:
   - the todo file is set to =~/pCloudDrive/org/todo/todo.org=
@@ -1579,6 +1744,9 @@ The only important bits are:
 
 *** DONE Super agenda
 CLOSED: [2021-01-03 Sun 14:22]
+:PROPERTIES:
+:ID:       1fb922cd-0349-4495-9d15-615628f9eb6b
+:END:
 In this section, I confugre =org-super-agenda=.
 As I have my own way of being organized, I redefined completely the groups.
 
@@ -1650,6 +1818,9 @@ As I have my own way of being organized, I redefined completely the groups.
 
 *** DONE Sidebar
 CLOSED: [2022-02-04 Fri 09:10]
+:PROPERTIES:
+:ID:       2ba51cac-ffce-4821-ba46-6a9dac6343eb
+:END:
 With =org-sidebar= I have easily access to the todos of the *current* org file.
 
 #+begin_src emacs-lisp
@@ -1660,6 +1831,9 @@ With =org-sidebar= I have easily access to the todos of the *current* org file.
 
 ** DONE Encryption
 CLOSED: [2023-06-08 Thu 19:02]
+:PROPERTIES:
+:ID:       6d05e261-604b-4c31-a74a-4723a864e04d
+:END:
 =org-crypt= provides a nice to encrypt part of an org file.
 This is convenient as it provides a way to understand what the content should be about without showing its actual value.
 
@@ -1673,7 +1847,13 @@ This is convenient as it provides a way to understand what the content should be
 #+end_src
 
 * DONE Project Management / Organization [100%]
+:PROPERTIES:
+:ID:       a6aa596d-7dc5-4e9d-b8e2-a7c9d458f904
+:END:
 ** DONE GTD [100%]
+:PROPERTIES:
+:ID:       1fdd72ce-d63d-4e48-98e2-651f38781c5c
+:END:
 Getting Things Done (GTD) is my main way of dealing with tasks.
 My main source of inspiration is proposed in http://doc.norang.ca/org-mode.html but I deviate from it on multiple aspects.
 
@@ -1681,6 +1861,7 @@ My main source of inspiration is proposed in http://doc.norang.ca/org-mode.html 
 CLOSED: [2021-01-03 Sun 14:42]
 :PROPERTIES:
 :FROM:     https://sachachua.com/blog/2007/12/clocking-time-with-emacs-org/
+:ID:       a216293e-bd3f-49b4-b9a1-d8b450f8fecc
 :END:
 Based on Sacha Chua blog post, I use the following configuration to clock-in/clock-out.
 It deviates from Sacha's blog solely on the states; as I am using my own org states.
@@ -1740,6 +1921,7 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
 CLOSED: [2021-01-03 Sun 14:44]
 :PROPERTIES:
 :FROM:     https://github.com/daviderestivo/galactic-emacs/blob/master/lisp/org-archive-subtree.el
+:ID:       4084f06f-9f6e-4845-83b4-6a6db25871f9
 :END:
 I prefer to keep the tree structure.
 This is why I use this configuration.
@@ -1796,6 +1978,7 @@ This is why I use this configuration.
 **** Cleaning helper
 :PROPERTIES:
 :FROM:     https://www.emacswiki.org/emacs/org-extension.el and https://stackoverflow.com/questions/6997387/how-to-archive-all-the-done-tasks-using-a-single-command
+:ID:       1308761d-9fac-4c56-9bb0-df8144e633bc
 :END:
 
 #+begin_src emacs-lisp
@@ -1841,6 +2024,7 @@ This is why I use this configuration.
 CLOSED: [2022-10-09 Sun 10:35]
 :PROPERTIES:
 :FROM:     https://qua.name/mrb/an-org-babel-based-emacs-configuration
+:ID:       41ff0ed5-b684-4c97-95c6-8239b04b7c35
 :END:
 =org-edna= provides a more flexible way of imposing dependencies between tasks.
 Configuration remains minimal for now
@@ -1856,6 +2040,9 @@ Configuration remains minimal for now
 
 ** DONE Gantt
 CLOSED: [2023-09-23 Sat 17:40]
+:PROPERTIES:
+:ID:       63c0e8c5-9180-413c-a6ab-608113af0a46
+:END:
 I am not using so much GANTT charts, but it can be useful to get an idea of what needs to be done as a bootstrap strategy.
 
 #+begin_src emacs-lisp
@@ -1913,8 +2100,14 @@ I am not using so much GANTT charts, but it can be useful to get an idea of what
 #+end_src
 
 * DONE Document [100%]
+:PROPERTIES:
+:ID:       844f15d2-2912-492f-9cd5-23479d97b9cf
+:END:
 ** DONE Formatting for better reading
 CLOSED: [2023-07-22 Sat 23:18]
+:PROPERTIES:
+:ID:       6425b85d-cb2a-4114-8610-3839a59afb31
+:END:
 =olivetti= provides a nice way to read document without distraction.
 
 #+begin_src emacs-lisp
@@ -1954,6 +2147,9 @@ CLOSED: [2023-07-22 Sat 23:18]
 
 ** DONE PDF
 CLOSED: [2023-05-16 Tue 21:57]
+:PROPERTIES:
+:ID:       fa134aa5-cc9b-4902-93ea-1e248708520f
+:END:
 Visualizing PDF files in Emacs is quite useful.
 I am using =pdf-tools= which provides a lot of functionalities.
 The configuration consists mainly of providing proper keyboard based controls using =hydra=.
@@ -2046,6 +2242,9 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
 
 *** DONE Grepping
 CLOSED: [2021-03-01 Mon 09:45]
+:PROPERTIES:
+:ID:       cd1fcfdb-5c20-4f9d-ae59-f99b20b70891
+:END:
 I use =pdfgrep= to be able to search inside the pdf document.
 
 #+begin_src emacs-lisp
@@ -2058,6 +2257,9 @@ I use =pdfgrep= to be able to search inside the pdf document.
 
 *** DONE Connection with org-mode
 CLOSED: [2021-03-01 Mon 09:47]
+:PROPERTIES:
+:ID:       cdf2e6c3-cda2-4e4f-a7bf-3b2845bc573c
+:END:
 PDF files and org-mode are strongly related.
 I use =org-pdftools= to add an org link type for =pdftools=.
 
@@ -2069,6 +2271,9 @@ I use =org-pdftools= to add an org link type for =pdftools=.
 
 ** DONE Epub
 CLOSED: [2021-02-09 Tue 16:15]
+:PROPERTIES:
+:ID:       e199a7b0-2f71-4b36-b2aa-b9c5ebb8ffc6
+:END:
 I am using =nov= to read epub files.
 
 #+BEGIN_SRC emacs-lisp
@@ -2084,11 +2289,17 @@ I am using =nov= to read epub files.
 #+END_SRC
 
 * DONE Notes taking & academic organizing [100%]
+:PROPERTIES:
+:ID:       17c49933-86c7-477e-a7a2-ded9e09c313c
+:END:
 My note taking life is split in 2 categories: global note taking and bibliography/reference management.
 The workflow is based on =org-roam= and uses additional packages to enhance the experience.
 
 ** DONE Fundamentals
 CLOSED: [2022-02-10 Thu 07:08]
+:PROPERTIES:
+:ID:       26023bd0-4a96-4240-abbe-819ff08b312e
+:END:
 In this section, the global note taking part is configured.
 It relies on three packages:
 =org-roam= which is the core of the workflow,
@@ -2098,6 +2309,9 @@ and =org-roam-ui= for a better navigation.
 
 *** DONE org-roam part
 CLOSED: [2022-02-10 Thu 07:04]
+:PROPERTIES:
+:ID:       6aaa332d-dc7d-4abf-a4fb-0e2ff5f322f1
+:END:
 
 #+transclude: [[file:keytable_summary.org::Org-Roam]] :only-contents
 
@@ -2243,6 +2457,9 @@ CLOSED: [2022-02-10 Thu 07:04]
 
 *** DONE vulpea
 CLOSED: [2022-02-10 Thu 07:06]
+:PROPERTIES:
+:ID:       f3942b1a-a4c8-41e2-9f15-d8c37b8a41bf
+:END:
 For now, I don't really know the power of =vulpea= but I use it to bridge =org-roam= and =org-agenda=.
 
 #+begin_src emacs-lisp
@@ -2323,6 +2540,9 @@ For now, I don't really know the power of =vulpea= but I use it to bridge =org-r
 
 ** DONE Bibliography management
 CLOSED: [2022-02-10 Thu 07:12]
+:PROPERTIES:
+:ID:       9db4cad1-7ae9-4889-a426-049d7c818599
+:END:
 In this section, the configuration is focused on the bibliography handling.
 It relies on the following packages:
 =ebib= to navigate the global bibliography,
@@ -2343,6 +2563,9 @@ These last packages are key to enable the browsing of the document in parallel t
 
 *** DONE ebib
 CLOSED: [2022-02-10 Thu 07:09]
+:PROPERTIES:
+:ID:       791f5c94-af7b-47d1-a2e6-636d34c8439f
+:END:
 #+begin_src emacs-lisp
   (use-package ebib
     :tags '("BIBLIOGRAPHY" "USER")
@@ -2353,6 +2576,9 @@ CLOSED: [2022-02-10 Thu 07:09]
 
 *** DONE org-ref
 CLOSED: [2022-02-10 Thu 07:09]
+:PROPERTIES:
+:ID:       874da363-0865-40ef-93c3-5384ef2f4a8a
+:END:
 #+begin_src emacs-lisp
   (use-package org-ref
     :tags '("BIBLIOGRAPHY" "ORG" "USER")
@@ -2376,6 +2602,9 @@ CLOSED: [2022-02-10 Thu 07:09]
 
 *** DONE citar
 CLOSED: [2022-02-10 Thu 07:10]
+:PROPERTIES:
+:ID:       8681e0fa-5e55-4bf2-be9f-7ff9ce2e82f4
+:END:
 
 #+transclude: [[file:keytable_summary.org::Citar]] :only-contents
 
@@ -2407,6 +2636,9 @@ CLOSED: [2022-02-10 Thu 07:10]
 
 *** DONE org-roam-bibtex
 CLOSED: [2022-02-10 Thu 07:10]
+:PROPERTIES:
+:ID:       c6deecfe-f8a0-41f7-8cff-ed53885d455c
+:END:
 We also define the function =generate-bibliography-entry= which generate an org-mode formatted entry to be ready so that we can read the reference.
 This function makes extensive use of =org-element=.
 
@@ -2464,6 +2696,9 @@ This function makes extensive use of =org-element=.
 
 *** DONE org-noter
 CLOSED: [2022-02-10 Thu 07:12]
+:PROPERTIES:
+:ID:       329ec75f-9974-402f-823c-af10db1e7002
+:END:
 #+begin_src emacs-lisp
   (use-package org-noter
     :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
@@ -2475,6 +2710,9 @@ CLOSED: [2022-02-10 Thu 07:12]
 #+end_src
 
 *** TODO org-media-noter
+:PROPERTIES:
+:ID:       91fbbd98-e7f9-4990-8600-de5d66c59a76
+:END:
 - Set the shortcuts
 
 #+begin_src emacs-lisp
@@ -2489,10 +2727,16 @@ CLOSED: [2022-02-10 Thu 07:12]
 #+end_src
 
 * DONE Environment [100%]
+:PROPERTIES:
+:ID:       8d072ea6-0173-49c8-b1ea-315e70b2981d
+:END:
 In order to have a better editing environment, I configured several fundamental features: undoing, folding, completing and templating.
 
 ** DONE Undoing
 CLOSED: [2021-01-04 Mon 08:57]
+:PROPERTIES:
+:ID:       b5c751ab-67e8-4b15-b019-4dbe2832f6e2
+:END:
 For undoing an operation, I am using =vundo=.
 The only configuration here is to activate it globally.
 
@@ -2513,6 +2757,9 @@ The only configuration here is to activate it globally.
 
 ** DONE Folding
 CLOSED: [2021-01-04 Mon 09:00]
+:PROPERTIES:
+:ID:       304d29b4-67dd-4a87-8e14-140380ce4398
+:END:
 For the folding, I am relying on =origami=.
 
 #+transclude: [[file:keytable_summary.org::Folding]] :only-contents
@@ -2531,6 +2778,9 @@ For the folding, I am relying on =origami=.
 #+end_src
 
 ** DONE Completing [100%]
+:PROPERTIES:
+:ID:       2049b675-5be8-4db0-ad64-542ddb67f3a1
+:END:
 Completion is one of the biggest time-saver feature a text editor can have.
 I rely on three key completion systems for different purposes:
   - =CORFU= is used for inline completion (mainly to access programming helpers and snippets)
@@ -2539,6 +2789,9 @@ I rely on three key completion systems for different purposes:
 
 *** DONE CORFU
 CLOSED: [2021-01-03 Sun 17:42]
+:PROPERTIES:
+:ID:       f1d3c4c5-4319-47b7-a688-0db0f93afe40
+:END:
 
 #+begin_src emacs-lisp
   (use-package corfu
@@ -2638,6 +2891,9 @@ CLOSED: [2021-01-03 Sun 17:42]
 
 *** DONE Vertico
 CLOSED: [2022-02-26 Sat 20:51]
+:PROPERTIES:
+:ID:       973163be-3960-457d-b5cc-66ac9b993b73
+:END:
 This section provides the configuration of =Vertico=.
 Nothing fancy happens here, just its activation and a couple of setups related to emacs specificities.
 
@@ -2669,6 +2925,9 @@ Nothing fancy happens here, just its activation and a couple of setups related t
 
 *** DONE Helm
 CLOSED: [2021-01-03 Sun 17:43]
+:PROPERTIES:
+:ID:       7881fad0-6eba-4169-901d-afde30308256
+:END:
 I use Helm for some specific cases which requires an important visibility space completion.
 Once again, nothing fancy here, the configuration to have a better UX.
 
@@ -2698,10 +2957,16 @@ Once again, nothing fancy here, the configuration to have a better UX.
 
 *** DONE Extension [100%]
 CLOSED: [2021-01-03 Sun 17:52]
+:PROPERTIES:
+:ID:       e697b450-c2f1-433f-b5c3-d49756a0a843
+:END:
 While the previous completion system is enough to work on its own, it is possible to enhance the user experince by adding a couple of more tweaks.
 
 **** DONE Orderless
 CLOSED: [2021-05-27 Thu 18:31]
+:PROPERTIES:
+:ID:       1cc53501-820e-4b41-bcab-92eb89cb0ee9
+:END:
 =orderless= provides a more flexible way to filter a list of completion candidates.
 
 #+BEGIN_SRC emacs-lisp
@@ -2715,6 +2980,9 @@ CLOSED: [2021-05-27 Thu 18:31]
 
 **** DONE Marginalia
 CLOSED: [2021-01-03 Sun 17:49]
+:PROPERTIES:
+:ID:       7e99a4c8-c7dd-41f5-80e7-5b861f8706b4
+:END:
 Marginalia is completing =vertico= by providing annotations to the candidates.
 For now, I am using the default configuration.
 
@@ -2738,6 +3006,9 @@ For now, I am using the default configuration.
 
 **** DONE Consult
 CLOSED: [2021-01-03 Sun 17:52]
+:PROPERTIES:
+:ID:       55294935-ecba-45bb-ba7b-477b968ae186
+:END:
 Consult provides a set of commands which are particularly useful.
 It is a nice extension to =Vertico= which brings to functionalities close to the ones proposed in =swiper= and =counsel=.
 
@@ -2818,6 +3089,9 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
 
 ** DONE Templating [100%]
 CLOSED: [2021-01-03 Sun 17:58]
+:PROPERTIES:
+:ID:       68711b41-76cc-4e88-b5ab-98d0bd28e6aa
+:END:
 I use templates for two cases:
   - starting point as new script/code file
   - accessing to some snippets.
@@ -2826,6 +3100,9 @@ In both cases, I rely on =yasnippet=.
 
 *** DONE Snippets
 CLOSED: [2021-01-03 Sun 17:57]
+:PROPERTIES:
+:ID:       b507a2c6-6819-457c-abf6-89448e91381d
+:END:
 The default configuration of yasnippet consists of activating it and plugging it with company.
 Obviously, the package =yasnippet-snippets= is also configured to provide default snippets.
 I also use the package =consult-yasnipet= to list the snippets.
@@ -2865,6 +3142,9 @@ Finally, my own snippets are stored in the directory =~/.emacs.d/third_parties/s
 
 *** DONE File templates
 CLOSED: [2021-01-03 Sun 17:58]
+:PROPERTIES:
+:ID:       df0d376d-021f-4d87-9552-8726531e4723
+:END:
 This part is using yatemplate (an over-layer of yasnippet) coupled with auto-insert to have a set of
 file type dedicated templates. The templates are available in =~/.emacs.d/third_parties/templates= directory.
 
@@ -2884,6 +3164,9 @@ file type dedicated templates. The templates are available in =~/.emacs.d/third_
 
 ** DONE Action triggering
 CLOSED: [2021-05-27 Thu 18:34]
+:PROPERTIES:
+:ID:       7f30c2c6-775e-4026-8055-bfd3484f7cdb
+:END:
 =embark= provides ways to execute an action to an ~emacs object~ (an URL, a region, ....).
 It is a convenient package to have a more refined control of my workflow.
 =embark= and =consult= also work nicely together, so I use them together.
@@ -2925,6 +3208,9 @@ It is a convenient package to have a more refined control of my workflow.
 
 ** DONE Buffer management
 CLOSED: [2023-02-02 Thu 15:55]
+:PROPERTIES:
+:ID:       84a23a12-19d7-4705-b762-45912fea3694
+:END:
 =popper= is a package providing shortcuts for a quick access to some family of buffers.
 I am using it mainly to show/hide my terminal faster.
 
@@ -2959,6 +3245,9 @@ I am using it mainly to show/hide my terminal faster.
 
 ** DONE Autoscratch
 CLOSED: [2023-07-21 Fri 22:48]
+:PROPERTIES:
+:ID:       0448cee8-1a3b-4941-b21d-9635d119c737
+:END:
 =autoscratch= provides a neat way to adapt the scratch buffer to the needed mode pretty quickly.
 It is really convenient for quick note taking.
 
@@ -2971,12 +3260,18 @@ It is really convenient for quick note taking.
 #+end_src
 
 * DONE IDE [100%]
+:PROPERTIES:
+:ID:       64a070b9-dc83-46ce-aa97-11cb12a1a545
+:END:
 While the environment configuration is fundamental for editing,
 it is necessary to add more features to simplify coding life.
 This section focuses on three components: the compilation, the commenting and the formatting.
 
 ** DONE Imenu/Sidebar
 CLOSED: [2023-10-27 Fri 09:19]
+:PROPERTIES:
+:ID:       a15b5d59-76f1-408d-bddd-108797d56a03
+:END:
 
 #+transclude: [[file:keytable_summary.org::IMenu]] :only-contents
 
@@ -3010,11 +3305,17 @@ CLOSED: [2023-10-27 Fri 09:19]
 #+end_src
 
 ** DONE Compilation [100%]
+:PROPERTIES:
+:ID:       7360a56a-6cdc-49dd-ae18-de9eb94ec3fe
+:END:
 I configured the configuration around two main parts:
 refining the default compilation support and add fly-checking support.
 
 *** DONE Baseline compilation
 CLOSED: [2022-07-25 Mon 07:38]
+:PROPERTIES:
+:ID:       f4958e4f-31d3-4f30-81a6-bb7b957f1c21
+:END:
 I just modify a little bit the default compilation to be a little more "user friendly".
 I also rely on =fancy-compilation= to enhance the the output in the compilation buffer.
 
@@ -3074,6 +3375,9 @@ I also rely on =fancy-compilation= to enhance the the output in the compilation 
 
 *** DONE Flychecking
 CLOSED: [2021-01-03 Sun 18:13]
+:PROPERTIES:
+:ID:       ddde4927-066d-416b-8193-87fd5403c35b
+:END:
 For the fly checking, I use flycheck instead of flymake.
 The key part of this configuration is the fact that checking the documentation is disabled.
 I also use =flycheck-posframe= to have a quick idea of what is going on at the pointed error/warning/...
@@ -3109,6 +3413,9 @@ I also use =flycheck-posframe= to have a quick idea of what is going on at the p
 
 ** DONE Commenting
 CLOSED: [2021-01-03 Sun 18:33]
+:PROPERTIES:
+:ID:       ed1a2996-4c87-481b-9868-0a2720a8cd9d
+:END:
 For the commenting, the common denominator is how to deal with FIXMEs.
 To do so, I relie on two part: =hl-todo= for the highlighting and occur for the listing.
 For language specific configurations, it is done in the language configuration part.
@@ -3134,6 +3441,9 @@ For language specific configurations, it is done in the language configuration p
 
 ** DONE Formatting
 CLOSED: [2021-01-03 Sun 18:26]
+:PROPERTIES:
+:ID:       68f3ef44-c949-4239-86ef-58a4d4173cd5
+:END:
 In order to format the buffer, it is better to rely on external formatter/linter.
 =format-all= proposes support of big bunch of them, so I am using it.
 
@@ -3145,6 +3455,9 @@ In order to format the buffer, it is better to rely on external formatter/linter
 
 ** DONE Sanitizing
 CLOSED: [2023-05-16 Tue 22:07]
+:PROPERTIES:
+:ID:       dccc01fd-b206-4776-a2bc-caa3ab2d0def
+:END:
 This part contains sanitizing helpers before saving the files.
 For now it consists of simply removing any trailing whitespace.
 
@@ -3153,12 +3466,18 @@ For now it consists of simply removing any trailing whitespace.
 #+END_SRC
 
 * DONE Documentation [100%]
+:PROPERTIES:
+:ID:       480a1264-7a85-4a37-9871-afee458d504d
+:END:
 Emacs is dense and provides a lot of features.
 Too many to remember everything.
 This part is there to help to navigate the documentation more easily.
 
 ** DONE Key bindinds
 CLOSED: [2021-01-03 Sun 11:18]
+:PROPERTIES:
+:ID:       588c4f5c-c7c2-4da7-9018-fd1e61ac2015
+:END:
 =helm-descbinds= is a useful package which provides a way to list all the shortcuts available in the current buffer.
 
 #+transclude: [[file:keytable_summary.org::Keybindings]] :only-contents
@@ -3174,6 +3493,9 @@ CLOSED: [2021-01-03 Sun 11:18]
 
 ** DONE Helpful
 CLOSED: [2021-01-03 Sun 11:19]
+:PROPERTIES:
+:ID:       923d3cdd-b651-4949-8313-b1b775231ce4
+:END:
 =helpful= is a powerful package to access to the documentation of a key/symbol/...
 It also supports references and back-references.
 I am using it as the entry point of any documentation I want to access.
@@ -3191,6 +3513,9 @@ I am using it as the entry point of any documentation I want to access.
 
 ** DONE Man
 CLOSED: [2021-03-01 Mon 09:28]
+:PROPERTIES:
+:ID:       5d437469-0ab4-4e27-97c5-371a4872dea4
+:END:
 Man is critical for document on unix.
 I simply configured emacs to add my own environment man directories.
 
@@ -3208,6 +3533,9 @@ I simply configured emacs to add my own environment man directories.
 
 ** DONE Dash/Docsets
 CLOSED: [2022-07-26 Tue 09:48]
+:PROPERTIES:
+:ID:       a9330231-6a23-4ccf-8c81-508a7bbfee85
+:END:
 Dash (https://www.kapeli.com/dash) provides a set of full documentation to download.
 =consult-dash= provides an easy way to query them.
 
@@ -3232,6 +3560,9 @@ Dash (https://www.kapeli.com/dash) provides a set of full documentation to downl
 
 ** DONE Recoll
 CLOSED: [2022-10-13 Thu 18:11]
+:PROPERTIES:
+:ID:       e4d14bcb-846b-41a3-96a7-2affee00bc37
+:END:
 =consult-recoll= provides an interface to =recoll= which is handy to "grep" from a db of documents.
 
 #+transclude: [[file:keytable_summary.org::Recoll]] :only-contents
@@ -3258,11 +3589,17 @@ And the associated configuration is:
 #+end_src
 
 * DONE Programming [100%]
+:PROPERTIES:
+:ID:       b21236c9-7243-4995-9478-920a130ca89b
+:END:
 Now that the environment is set, it is time to configure the different part to use emacs as a proper developping environment.
 To do so, I rely mainly on Language Server Protocol (LSP) and for the debugging I relay on the Debug Adapter Protocol (DAP).
 
 ** DONE Tree sitter general configuration
 CLOSED: [2023-06-08 Thu 18:27]
+:PROPERTIES:
+:ID:       95c61b3e-a60e-437a-a182-737e566556ab
+:END:
 
 Tree-sitter is neat way of dealing with syntax highlighting.
 It is fast and configurable.
@@ -3281,6 +3618,9 @@ I also added the support of =scopeline= which provides an indicator about the sc
 
 ** DONE LSP general configuration
 CLOSED: [2021-01-03 Sun 21:28]
+:PROPERTIES:
+:ID:       6b0745dd-6954-4b94-a93d-94a770ef5d25
+:END:
 #+begin_src emacs-lisp
   (defun my-eglot-organize-imports () (interactive)
          (eglot-code-actions nil nil "source.organizeImports" t))
@@ -3294,10 +3634,16 @@ CLOSED: [2021-01-03 Sun 21:28]
 
 ** DONE Data [100%]
 CLOSED: [2021-01-03 Sun 21:49]
+:PROPERTIES:
+:ID:       bccb2c53-a553-4140-88cb-91d5a0642c29
+:END:
 This section is dedicated to the configuration of modes to deal with data formats.
 
 *** DONE CSV
 CLOSED: [2021-01-03 Sun 21:32]
+:PROPERTIES:
+:ID:       1aabb30d-2271-4286-87f5-fe7a664d419d
+:END:
 For CSV file, I rely on =csv-mode= but I add more separators.
 
  #+begin_src emacs-lisp
@@ -3312,6 +3658,9 @@ For CSV file, I rely on =csv-mode= but I add more separators.
 
 *** DONE CUE
 CLOSED: [2021-01-03 Sun 21:35]
+:PROPERTIES:
+:ID:       40890fa6-3615-4eb1-b1cd-b64345c1778d
+:END:
 I use CUE files to guide audio CD I encode.
 I developed a dedicated mode for this, so I am using it
 
@@ -3324,6 +3673,9 @@ I developed a dedicated mode for this, so I am using it
 
 *** DONE JSON
 CLOSED: [2021-01-03 Sun 21:47]
+:PROPERTIES:
+:ID:       1685f3e4-f055-48d5-a163-4cbd7b1eeb65
+:END:
 I am using JSON both for storing data and for configuration.
 The configuration relies on =json-mode= for the main part and =json-reformat= for a better formatting.
 
@@ -3339,6 +3691,9 @@ The configuration relies on =json-mode= for the main part and =json-reformat= fo
 
 *** DONE Praat
 CLOSED: [2021-01-03 Sun 21:38]
+:PROPERTIES:
+:ID:       6fe25d07-5530-4689-b75f-1ea586517de5
+:END:
 I use praat, and more especially Textgrid, to annotate speech signals.
 Praat-mode helps to have a proper visualization of Textgrids in Empacs.
 
@@ -3352,6 +3707,9 @@ Praat-mode helps to have a proper visualization of Textgrids in Empacs.
 
 *** DONE XML
 CLOSED: [2021-01-03 Sun 21:49]
+:PROPERTIES:
+:ID:       ec2c8655-0c62-48e6-b87a-441fdbfbe8af
+:END:
 XML is, as JSON, used for data formatting and configuration.
 However, I had to do extra-configurations to have outline support and a better formatting.
 
@@ -3396,8 +3754,14 @@ However, I had to do extra-configurations to have outline support and a better f
 
 ** DONE Configuration [100%]
 CLOSED: [2021-01-04 Mon 07:03]
+:PROPERTIES:
+:ID:       13f00230-cca6-4994-b7c0-0f582ab9f322
+:END:
 *** DONE Default unix configuration
 CLOSED: [2021-01-03 Sun 21:52]
+:PROPERTIES:
+:ID:       a1ef96fe-ce26-45d8-b0af-fedb966fdac4
+:END:
 =config-general-mode= is applied for all unix configuration files.
 For now, I know/use only files with extension ~rc~ or ~conf~.
 
@@ -3409,6 +3773,9 @@ For now, I know/use only files with extension ~rc~ or ~conf~.
 
 *** DONE Authinfo
 CLOSED: [2021-01-03 Sun 21:56]
+:PROPERTIES:
+:ID:       8b6bc8e8-aac4-4c2a-a790-a6bac396b318
+:END:
 The default =authinfo-mode= provided by emacs 27.1 is pretty nice but doesn't provide proper font-locking.
 I started to develop =colored-authinfo-mode= to provide a better colorization for authinfo files.
 
@@ -3421,6 +3788,9 @@ I started to develop =colored-authinfo-mode= to provide a better colorization fo
 
 *** DONE Apache
 CLOSED: [2021-01-04 Mon 06:41]
+:PROPERTIES:
+:ID:       e3df1f57-5789-4d65-acc6-42785f01f64a
+:END:
 Nothing fancy here, we just add the support for =apache-mode= for several files which are known to be configuration for Apache.
 Because the configuration of Apache requires root permissions, I assign the category SUDO to this package.
 #+begin_src emacs-lisp
@@ -3432,6 +3802,9 @@ Because the configuration of Apache requires root permissions, I assign the cate
 
 *** DONE SSH configuration
 CLOSED: [2021-01-04 Mon 06:48]
+:PROPERTIES:
+:ID:       5e1d8874-56b2-4206-a2f0-a9d6bc0a11db
+:END:
 Nothing fancy here, we just add the support for =ssh-config-mode= for several files which are known to be configuration for SSH.
 
 #+begin_src emacs-lisp
@@ -3446,6 +3819,9 @@ Nothing fancy here, we just add the support for =ssh-config-mode= for several fi
 
 *** DONE YAML
 CLOSED: [2021-01-04 Mon 06:53]
+:PROPERTIES:
+:ID:       ca2c0c49-d9ec-4bef-a69c-b4a158c02556
+:END:
 YAML is my main configuration format file as it supports references and more importantly comments.
 I mainly rely on =yaml-mode= to which I add outline support for a better navigation.
 I also use =yaml-tomato= to get the path at the current point which helps the access to a specific subpart of the configuration.
@@ -3505,6 +3881,9 @@ I also use =yaml-tomato= to get the path at the current point which helps the ac
 
 *** DONE VIM
 CLOSED: [2021-01-04 Mon 06:55]
+:PROPERTIES:
+:ID:       a24a2927-2cc8-46bb-a563-3d68c00c0733
+:END:
 I am using VIM as an alternative editor for quick editions, so I need to be able to modify its configuration.
 To do so, I actually use Emacs and rely on =vimrc-mode=.
 
@@ -3516,6 +3895,9 @@ To do so, I actually use Emacs and rely on =vimrc-mode=.
 
 *** DONE GIT
 CLOSED: [2021-01-04 Mon 06:58]
+:PROPERTIES:
+:ID:       384f69cb-fc11-46a2-92bb-02b9b59a92e6
+:END:
 I am using GIT as my main VC.
 GIT relies on, at least, three types of configuration files: the general ~config~ , the ~gitignore~ and the ~attributes~ files.
 I use a dedicated mode for each type.
@@ -3531,6 +3913,9 @@ I use a dedicated mode for each type.
 
 *** DONE Dockerfile
 CLOSED: [2021-01-04 Mon 07:01]
+:PROPERTIES:
+:ID:       8b8da781-6ef9-46fe-81de-660e6d6555eb
+:END:
 I am a constant user of Docker.
 Consequently, I need a proper node to edit docker build files as I build my own images for my experiences.
 
@@ -3543,6 +3928,9 @@ Consequently, I need a proper node to edit docker build files as I build my own 
 
 *** DONE CRON
 CLOSED: [2021-01-04 Mon 07:03]
+:PROPERTIES:
+:ID:       fee75970-9d74-4731-8081-65f0740669b0
+:END:
 CRON is a useful tool to plan some executions.
 However the default editor is too raw for me.
 While I would generally use VIM for such editions, I prefer to use emacs configured using =crontab-mode= to avoid mistakes.
@@ -3554,6 +3942,9 @@ While I would generally use VIM for such editions, I prefer to use emacs configu
 
 ** DONE Logging
 CLOSED: [2021-01-04 Mon 07:07]
+:PROPERTIES:
+:ID:       c73c34a0-24d5-4267-b324-0391fe77aaff
+:END:
 In all of my scripts/software, I rely more on loggers than print.
 Therefore, visualizing logs is key and =log-view= is a really flexible mode for this.
 While it is configured to open files whose basenames contain ~syslog~ or the extension is composed by ~.log~.
@@ -3569,6 +3960,9 @@ In both cases, backup numbers are as well supported.
 #+end_src
 
 ** DONE Programming languages [100%]
+:PROPERTIES:
+:ID:       f66a54c9-3c9d-4f7a-adfa-a9653ebb0048
+:END:
 I am using emacs as IDE for multiple languages.
 For my research, I am using mainly on python, shell, java and maths-based languages.
 I, obviously, write some elisp code as well.
@@ -3576,6 +3970,9 @@ Consequently, this section configure all of these languages.
 
 *** DONE Emacs Lisp
 CLOSED: [2021-01-04 Mon 07:38]
+:PROPERTIES:
+:ID:       770ee7a1-1594-4061-9b82-0199a9b28517
+:END:
 The configuration of emacs, to edit (e)lisp files, consists mainly of adding a linter support (~package-lint~) and REPL environment (~elpl~).
 I also added a hydra configuration to link properly everything.
 
@@ -3618,7 +4015,13 @@ I also added a hydra configuration to link properly everything.
 
 *** DONE C/C++/CMake
 CLOSED: [2023-09-23 Sat 21:24]
+:PROPERTIES:
+:ID:       0854e67b-91d0-4171-a924-1193cf0a1d6e
+:END:
 **** Overall part
+:PROPERTIES:
+:ID:       480785b5-a2d2-4967-9591-98548725de6f
+:END:
 #+begin_src emacs-lisp
   (use-package c-mode
     :elpaca nil
@@ -3634,6 +4037,9 @@ CLOSED: [2023-09-23 Sat 21:24]
 #+end_src
 
 **** Use google programming style
+:PROPERTIES:
+:ID:       eb4568fa-e897-46ea-90c7-1853916406e2
+:END:
 #+BEGIN_SRC emacs-lisp
   (use-package google-c-style
     :tags '("PROGRAMMING" "C" "CPP")
@@ -3644,13 +4050,22 @@ CLOSED: [2023-09-23 Sat 21:24]
 #+END_SRC
 
 **** Treat =.h= as C++
+:PROPERTIES:
+:ID:       ced7fb3c-2036-4675-8898-01b137b7ef61
+:END:
 Identify =.h= files as C++ files instead of C. To enable =c++-mode= manually, type =M-x c\+\+-mode=.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
 #+END_SRC
 
 **** Clang-format
+:PROPERTIES:
+:ID:       c48ea187-de78-430f-8acf-026df2a3e08d
+:END:
 ***** Installation
+:PROPERTIES:
+:ID:       1b58d80b-7049-4c07-9551-86694522bb6b
+:END:
 #+transclude: [[file:keytable_summary.org::C/C++]] :only-contents
 
 #+BEGIN_SRC emacs-lisp
@@ -3663,12 +4078,18 @@ Identify =.h= files as C++ files instead of C. To enable =c++-mode= manually, ty
 #+END_SRC
 
 ***** Set code style
+:PROPERTIES:
+:ID:       919c1cd5-f7bf-43b6-8800-61a51dc3ce16
+:END:
 Use Google's C++ style.
 #+BEGIN_SRC emacs-lisp
   (custom-set-variables '(clang-format-style "file"))
 #+END_SRC
 
 **** Doxygen Highlighting
+:PROPERTIES:
+:ID:       19b42202-1857-461f-93c2-42a9c2862739
+:END:
 Add highlighting for doxygen blocks.
 #+BEGIN_SRC emacs-lisp
   (use-package highlight-doxygen
@@ -3679,6 +4100,9 @@ Add highlighting for doxygen blocks.
 #+END_SRC
 
 **** CMake
+:PROPERTIES:
+:ID:       c615d617-d8f6-44a2-8d81-feab5c7aa007
+:END:
 #+begin_src emacs-lisp
   (use-package cmake-mode
     :ensure t
@@ -3705,6 +4129,9 @@ Additional syntax highlighting for CMake. For some reason manual activation is s
 
 *** DONE Java based languages
 CLOSED: [2021-01-04 Mon 07:19]
+:PROPERTIES:
+:ID:       d14ba18f-155c-4a79-9a04-a984efcdf991
+:END:
 I use Java and two dialects based on Java: Groovy and Kotlin.
 I strongly rely on LSP, so the configuration consists mainly on loading major mode and configuring the LSP servers.
 
@@ -3740,6 +4167,9 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
 
 *** DONE Mathematics based languages
 CLOSED: [2021-01-04 Mon 07:16]
+:PROPERTIES:
+:ID:       76566986-107a-4ca3-afe2-4b401ce4b55b
+:END:
 I am using two main (exclusive?!) mathematic dedicated languages: Matlab and R.
 For matlab, I rely on =matlab-mode= for which I tweaked the command to avoid matlab desktop loading.
 For R, I rely on =ess= which provides excellent support with a reasonable default configuration.
@@ -3771,6 +4201,9 @@ For R, I rely on =ess= which provides excellent support with a reasonable defaul
 
 *** DONE Python
 CLOSED: [2021-01-04 Mon 07:42]
+:PROPERTIES:
+:ID:       4d7e5c12-a474-49f9-a309-657a287bb005
+:END:
 Python is my main programming language, so the one I configured the most intensively.
 I prefer to use ~ipython~ as the interpreter as it is more powerful.
 I use =python-mls= to enhance the REPL environment
@@ -3811,6 +4244,9 @@ Finally, I use =numpydoc= to deal with the documentation.
 
 *** DONE Shell
 CLOSED: [2021-01-04 Mon 07:25]
+:PROPERTIES:
+:ID:       60767d3f-ca28-4c7b-a62a-992cc9ac96f1
+:END:
 Editing bash/zsh files is relatively straightforward using Emacs' default configuration.
 Nonetheless, a proper completion support is lacking and some helpers are always welcomed.
 
@@ -3824,6 +4260,9 @@ Nonetheless, a proper completion support is lacking and some helpers are always 
 
 *** DONE Plotting/Graphing
 CLOSED: [2021-03-01 Mon 09:39]
+:PROPERTIES:
+:ID:       89456f85-915d-4759-bd7b-5adb60581b03
+:END:
 I tend to use some specific languages to do some plotting.
 For now, I am using only ~graphivz/DOT~, =d2= and ~tikz/pgf~.
 This last one is configured on the latex part.
@@ -3851,6 +4290,9 @@ Therefore, in this section, I add the support of =graphviz-dot-mode= and =d2-mod
 
 *** DONE Web
 CLOSED: [2022-01-12 Wed 12:27]
+:PROPERTIES:
+:ID:       57d9bf0f-90db-4d2a-b5ad-ffe5b60e5489
+:END:
 I use =web-mode= to edit any kind of web-programming (html, css, and templates).
 
 #+begin_src emacs-lisp
@@ -3883,6 +4325,9 @@ I use =web-mode= to edit any kind of web-programming (html, css, and templates).
 
 *** DONE Sound and Music
 CLOSED: [2023-03-15 Wed 12:54]
+:PROPERTIES:
+:ID:       aa8c24f6-0b3c-4c0d-b3b1-3d568da0d5a2
+:END:
 =csound= is a neat tool to synthesize sound and music.
 The configuration is pretty minimal - just associate the mode to the proper extensions.
 #+begin_src emacs-lisp
@@ -3896,6 +4341,9 @@ The configuration is pretty minimal - just associate the mode to the proper exte
 #+end_src
 
 * DONE Writing / Reading [100%]
+:PROPERTIES:
+:ID:       804c1719-e469-4283-8dcf-59673df0f12a
+:END:
 I decided to dissociate programming and writing for more clarity.
 Nonetheless, both sections rely on the same principles.
 Concerning the writing part, I use mainly org-mode and LaTeX (article and shared documents).
@@ -3904,6 +4352,9 @@ Finally, concerning the reading part, I consider only PDF Files.
 I use libreoffice/office 365 for official documents which can't be handled in PDF.
 
 ** DONE LaTeX [100%]
+:PROPERTIES:
+:ID:       63fbdfe6-b1be-48f9-a9d2-c1b3aa8d3bbd
+:END:
 LaTeX is the core languages I am using to write scientific documents and presentations.
 My configuration relies mainly on auctex but I had to tweak several part to match my way of dealing with such files.
 These tweaks concerns mainly of using =outline= to deal with folding,
@@ -3967,6 +4418,9 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
 
 *** DONE Reftex
 CLOSED: [2021-01-04 Mon 11:55]
+:PROPERTIES:
+:ID:       752489ce-7615-4975-9031-e9714c098e0a
+:END:
 I am using =reftex= to deal with references.
 The configuration consists mainly of pluging it into auctex and expand the citation keywords and commands.
 
@@ -4011,6 +4465,9 @@ The configuration consists mainly of pluging it into auctex and expand the citat
 
 *** DONE Completion
 CLOSED: [2021-05-18 Tue 16:53]
+:PROPERTIES:
+:ID:       b90948dc-c8df-4377-b755-7ac2d992d379
+:END:
 
 #+begin_src emacs-lisp
   (setq TeX-auto-global (format "%s/auctex/style" user-emacs-directory))
@@ -4018,6 +4475,9 @@ CLOSED: [2021-05-18 Tue 16:53]
 
 *** DONE Compilation
 CLOSED: [2021-01-04 Mon 12:03]
+:PROPERTIES:
+:ID:       9eafa282-d40d-4955-bfe1-a027c554be4c
+:END:
 For the compilation, I prefer to use =latexmk=.
 It processes everything automatically which removes the burden of having to define the sequence of commands.
 I could have used the auctex default sequence, but I prefer to have an homogeneous process with what I do in the shell!
@@ -4055,6 +4515,9 @@ I could have used the auctex default sequence, but I prefer to have an homogeneo
 
 *** DONE Preview
 CLOSED: [2021-01-04 Mon 12:05]
+:PROPERTIES:
+:ID:       32a237cb-76e6-4d48-b8e8-2aa3ac6d13db
+:END:
 Complicated equations can be difficult to parse properly at first sight.
 I use =xenops= to generate a preview of the equations.
 =xenops= is also compatible with org-mode but I use it more with latex.
@@ -4070,6 +4533,9 @@ Therefore, it is activated by default for latex but not for org files.
 
 *** DONE Overleaf
 CLOSED: [2022-03-08 Tue 16:11]
+:PROPERTIES:
+:ID:       95bb6b9f-c354-47a8-96a8-f8459ee93bce
+:END:
 As an academic, I spend a lot of my time in Overleaf, but I prefer to edit in emacs, so =emacs-overleaf= is key!
 #+begin_src emacs-lisp
   (use-package emacs-overleaf
@@ -4081,6 +4547,9 @@ As an academic, I spend a lot of my time in Overleaf, but I prefer to edit in em
 
 ** DONE Bibtex
 CLOSED: [2021-01-04 Mon 12:15]
+:PROPERTIES:
+:ID:       56665ecc-51a9-4ebc-b635-c35310c247dd
+:END:
 To store bibliography entries, BibTex is the way to go.
 The global configuration consists mainly on providing a way to generate proper keys.
 Finally, I use bibclean-format to have a clean final bibtex file.
@@ -4139,6 +4608,9 @@ Finally, I use bibclean-format to have a clean final bibtex file.
 
 ** DONE TikZ/PGF
 CLOSED: [2021-01-04 Mon 12:18]
+:PROPERTIES:
+:ID:       bb4b5074-7afa-48ff-b5a8-3337081f394d
+:END:
 To generate figures, I use sometimes inkscape but main TikZ/PGF.
 While ktikz provides a nice tools, the way it deals with the header is problematic for me.
 Furthermore, it is not integrated in emacs :D
@@ -4154,6 +4626,9 @@ However, it relies on a side script ~compilePGF~ being in the PATH!
 
 ** DONE Markdown
 CLOSED: [2021-01-04 Mon 12:22]
+:PROPERTIES:
+:ID:       57c67fef-ca10-4f2b-ba4f-58325786825d
+:END:
 Markdown is the main language used to write READMEs in collaborative projects.
 While I prefer it org-mode, I still have to use it for collaborative purposes.
 Consequently, I have to get a proper configuration.
@@ -4179,6 +4654,9 @@ I just added =grip-mode= to have a proper preview of the file.
 
 ** DONE Writing helpers
 CLOSED: [2021-01-04 Mon 13:05]
+:PROPERTIES:
+:ID:       1517bfe5-f5c2-4823-8d7d-fca3f4d9ec8f
+:END:
 As I am prone to constantly using the same writing ways, I need some helpers to get out the loop.
 I am using =academic-phrases= to provided starting points and =mw-thesaurus= to find synonyms and/or related words.
 
@@ -4195,6 +4673,9 @@ I am using =academic-phrases= to provided starting points and =mw-thesaurus= to 
 
 ** DONE Grammar checking
 CLOSED: [2021-01-04 Mon 13:06]
+:PROPERTIES:
+:ID:       034ce652-a6ba-4b42-8621-9fc4d2b8e075
+:END:
 To help to deal with my poor English, I am using grammarly to check my text.
 The package =grammarly= bring its functionnality into emacs which is a saver for me.
 
@@ -4207,6 +4688,9 @@ The package =grammarly= bring its functionnality into emacs which is a saver for
 
 ** DONE Translation
 CLOSED: [2022-12-31 Sat 20:10]
+:PROPERTIES:
+:ID:       1658e59f-9c64-42e9-af37-bab265edddfe
+:END:
 As I have the luck to deal with multiple languages (french, english and bulgarian), I need to have a quick access to some translations.
 WordReference is my first choice as I find it quite complete and accurate.
 As a fallback, I am using google-translate via the package =go-translate=.
@@ -4245,6 +4729,9 @@ As a fallback, I am using google-translate via the package =go-translate=.
            )))
 #+end_src
 * DONE Version Control / Project Management [100%]
+:PROPERTIES:
+:ID:       47008c15-aa23-44fb-bdd4-7e3b0cf10a7a
+:END:
 My code project management is articulated around three key points: GIT, github/gist and =projectile=.
 GIT is used as the version control manager;
 github for the non-sensitive repositories;
@@ -4253,6 +4740,9 @@ gist for snippets and helpers;
 
 ** DONE Git
 CLOSED: [2021-01-04 Mon 15:40]
+:PROPERTIES:
+:ID:       8774af9b-8475-42d3-8df3-77c733101dd7
+:END:
 My configuration for GIT relies mainly on =magit=.
 Aside the standard key/hydra configuration,
 I copied the external opening from https://gist.github.com/dotemacs/9a0433341e75e01461c9
@@ -4397,6 +4887,9 @@ where:
 
 *** DONE Git helpers
 CLOSED: [2021-01-04 Mon 15:39]
+:PROPERTIES:
+:ID:       91580624-afa6-466d-9bf7-9ba8f488132a
+:END:
 In order to be more efficient with git, I also need some helpers.
 I use =gitignore-snippets= to provide starting gitignore content;
 =git-timemachine= to navigate changes of a dedicated file,
@@ -4419,6 +4912,9 @@ I use =gitignore-snippets= to provide starting gitignore content;
 
 ** DONE Github
 CLOSED: [2021-01-04 Mon 15:45]
+:PROPERTIES:
+:ID:       f0123818-c863-4dd2-a157-f743203acab0
+:END:
 GIT is the tool I am using for VC.
 I am mainly using github to store non-sensitive repositories.
 To interact with github in emacs, I rely on three packages:
@@ -4474,6 +4970,9 @@ To interact with github in emacs, I rely on three packages:
 
 ** DONE Gist
 CLOSED: [2021-01-04 Mon 15:47]
+:PROPERTIES:
+:ID:       140c3924-812a-44dc-8f47-b44e7865531a
+:END:
 For scripts/helpers/snippets/... which do not deserve to be saved in a dedicated repository,
 I am storing them in a dedicated gist.
 The package =gist= provides a nice way of dealing with gists.
@@ -4506,6 +5005,9 @@ The package =gist= provides a nice way of dealing with gists.
 
 ** DONE Project management
 CLOSED: [2023-10-27 Fri 09:32]
+:PROPERTIES:
+:ID:       432507f1-450f-451e-92c7-ae0a15b3c44b
+:END:
 #+begin_src emacs-lisp
   (use-package projection
     :ensure t
@@ -4537,6 +5039,9 @@ CLOSED: [2023-10-27 Fri 09:32]
 #+end_src
 
 * Shell [100%]
+:PROPERTIES:
+:ID:       075657a9-12e8-4cce-838f-956499275dad
+:END:
 Sometimes I need to start a terminal inside Emacs (not only for geekery-purposes).
 To do so, I rely now on =vterm= coupled with zsh.
 I have a specific PowerLevel10K theme for emacs vterm which is more compact (see my zshrc configuration).
@@ -4600,12 +5105,18 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
 #+END_SRC
 
 * DONE File manager [100%]
+:PROPERTIES:
+:ID:       b22d3be8-b0d8-4216-9dca-ea8728259147
+:END:
 I am using emacs as my main file manager.
 To do so, I rely on =dired= which is builtin package which I tweaked massively and I added multiple subpackages to improve UX.
 I also added support for basic image processing and some additional operations (trashing, visualising diffs, ...).
 
 ** DONE Dired/Dirvish [100%]
 CLOSED: [2021-01-04 Mon 18:55]
+:PROPERTIES:
+:ID:       e265f0f4-7f45-4155-8181-384d25f1fa94
+:END:
 The configuration of =dired= focuses mainly on defining keys, tuning the files to omit, and tweaking the LS command used to get the informations.
 The hydra mapping is adapted from https://github.com/abo-abo/hydra/wiki/Dired.
 I also replace a base deletion by moving the files/directories to the trash.
@@ -4713,6 +5224,9 @@ I also replace a base deletion by moving the files/directories to the trash.
 
 ** DONE Diff
 CLOSED: [2021-01-04 Mon 19:10]
+:PROPERTIES:
+:ID:       ea63a2dc-e072-4738-9e4e-786a799fa946
+:END:
 Visualizing diff is important especially when I have a file, outside of project files, which is present on multiple machines.
 Diff visualization relies mainly on =ediff= but to which I added two primitives to focus on some regions (=diff-region= followed by =diff-region-now=).
 
@@ -4759,6 +5273,9 @@ Diff visualization relies mainly on =ediff= but to which I added two primitives 
 
 ** DONE Trashed
 CLOSED: [2022-05-07 Sat 08:53]
+:PROPERTIES:
+:ID:       c2807e13-cab6-4c73-9bec-68a4638bc537
+:END:
 =rm= is pretty dangerous, so I use =trash-cli= and then manage the trash regularly.
 To manage the trash via emacs, =trashed= provides a really interface.
 
@@ -4780,6 +5297,9 @@ To manage the trash via emacs, =trashed= provides a really interface.
 
 ** DONE Current File Information
 CLOSED: [2023-02-02 Thu 15:56]
+:PROPERTIES:
+:ID:       4a892707-0e2b-4d71-b8ac-ecc726e5eb67
+:END:
 #+begin_src emacs-lisp
     (use-package file-info
       :elpaca (:host github :repo "artawower/file-info.el")
@@ -4789,6 +5309,9 @@ CLOSED: [2023-02-02 Thu 15:56]
 
 ** DONE Syncthing
 CLOSED: [2023-10-27 Fri 09:07]
+:PROPERTIES:
+:ID:       1cbcd1a3-9c4d-409c-97ae-d82ee8f531e0
+:END:
 I am using syncthing as sharing system. Visualising the status on emacs is pretty convenient.
 
 #+BEGIN_SRC emacs-lisp
@@ -4800,10 +5323,16 @@ I am using syncthing as sharing system. Visualising the status on emacs is prett
 #+END_SRC
 
 * DONE Online [100%]
+:PROPERTIES:
+:ID:       fdaf9174-9379-40f2-9d9c-8bd59c4c4beb
+:END:
 I am using emacs to deal with a lot of online stuffy.
 The main services I consult using emacs are: RSS streams, emails, chats, "exchange services" and CD releases.
 
 ** DONE RSS [100%]
+:PROPERTIES:
+:ID:       a8333da3-6503-43a6-bf85-630cdaf50455
+:END:
 To retrieve and visualize my RSS feeds, I use =elfeed=.
 The database is stored in the =~/.emacs.d/elfeed=.
 I mapped the key =f9= to quickly access the list of entries.
@@ -4839,6 +5368,9 @@ I rely on =elfeed-org= to store the list of feeds and defines some tags as well 
 
 *** DONE Org connection
 CLOSED: [2021-01-04 Mon 19:41]
+:PROPERTIES:
+:ID:       08eee607-6a52-4856-8056-5b8c67a1ff5a
+:END:
 I prefer to store the configuration in an org-mode file as it is more readable.
 This configuration is part of my "roaming" so I can have access to it easily.
 However, to properly disconnect from work when I am at home, I distinguish 2 RSS configurations:
@@ -4870,6 +5402,9 @@ Because I need a break once and a while at work, I load both files on my work ma
 
 *** DONE Youtube specificities
 CLOSED: [2022-07-25 Mon 07:44]
+:PROPERTIES:
+:ID:       8cdb2cf8-cc40-425a-8e07-69a7e6b0bf08
+:END:
 Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to play the video from the feed.
 
 #+transclude: [[file:keytable_summary.org::Elfeed/Youtube]] :only-contents
@@ -4908,6 +5443,9 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
 
 *** DONE Notification part
 CLOSED: [2021-01-04 Mon 19:46]
+:PROPERTIES:
+:ID:       c871c621-e803-4eb1-ba97-59d9c92c4a98
+:END:
 For the notification, we simply have to connect sauron and elfeed.
 I just need to define a default priority level for each feed.
 
@@ -4929,6 +5467,9 @@ I just need to define a default priority level for each feed.
 
 *** DONE Scoring support
 CLOSED: [2022-02-04 Fri 19:34]
+:PROPERTIES:
+:ID:       9e919ef7-0254-4b4a-86c0-2bdccf45f5fc
+:END:
 Using =elfeed-score= helps me to organize my feeds to have a better view of what is going in the online world.
 
 #+begin_src emacs-lisp
@@ -4943,6 +5484,9 @@ Using =elfeed-score= helps me to organize my feeds to have a better view of what
 
 **** DONE The score rules
 CLOSED: [2022-02-04 Fri 19:33]
+:PROPERTIES:
+:ID:       515bcc3a-89a0-4ebd-8621-ee24fa8e3179
+:END:
 This part defines the rules to assign the scores for each RSS entries.
 A lot are assigned for work related informations and are not actually used in computers which are not the work machine.
 This part is also tangled in its dedicated file =~/.emacs.d/elfeed.score=.
@@ -4984,12 +5528,18 @@ Obviously this part is meant to evolve regularly!
 
 ** DONE Mail [100%]
 CLOSED: [2021-01-05 Tue 09:08]
+:PROPERTIES:
+:ID:       e186b5e3-5ffd-447c-b4d2-def7041cddcf
+:END:
 Emacs is my only email client.
 It is based around the ecosystem =mu/mu4e= which provides everything we need to deal with emails.
 This configuration is articulated around three parts: the authentification part, the composing emails part and the mu4e part.
 
 *** DONE Authentification
 CLOSED: [2021-01-05 Tue 08:20]
+:PROPERTIES:
+:ID:       e1ea4fea-562c-4786-98af-7cc80e11c7d2
+:END:
 In previous emacs version (< 27), it was necessary to configure the package =starttls=.
 This configuration is remaining here for backward compatibility purposes.
 
@@ -5007,6 +5557,9 @@ This configuration is remaining here for backward compatibility purposes.
 
 *** DONE Composing emails
 CLOSED: [2021-01-05 Tue 08:27]
+:PROPERTIES:
+:ID:       a25d3b9f-25bf-4a2b-b0c8-f5bbda3dfa9c
+:END:
 To compose emails, I rely on the combination of multiple packages.
 Obviously, the entry point is the package =message= whose ~message-mode~ is the major mode used to edit new emails.
 I configured the package to support some additional features like a proper signature and a proper formatting.
@@ -5127,6 +5680,9 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
 
 *** DONE Mu4e [100%]
 CLOSED: [2021-01-05 Tue 08:53]
+:PROPERTIES:
+:ID:       ace0708c-f87c-489f-b259-243212dba409
+:END:
 As I previously indicated, =mu4e= is my entry point to deal with emails.
 However, it can't be installed via melpa.
 I have a bunch of scripts which are configuring my linux environment on ~~/environment/~.
@@ -5360,6 +5916,9 @@ I also redesigned the header buffer.
 
 **** DONE Notification
 CLOSED: [2021-01-05 Tue 08:52]
+:PROPERTIES:
+:ID:       5be79116-b2d0-4ecc-a273-f9e1e4ec0abe
+:END:
 I am using =sauron= and =alert= as my notification system.
 For now, I am using =mu4e-alert= configured using the ~count~ notification type.
 It is quite simple but robust enough to not being bother every 5 min.
@@ -5383,6 +5942,9 @@ It is quite simple but robust enough to not being bother every 5 min.
 
 **** DONE Improve visualisation
 CLOSED: [2021-08-10 Tue 20:14]
+:PROPERTIES:
+:ID:       8a466dd0-bc37-4c41-9a44-3305f74981cc
+:END:
 
 #+begin_src emacs-lisp
   (use-package mu4e-column-faces
@@ -5394,6 +5956,9 @@ CLOSED: [2021-08-10 Tue 20:14]
 
 ** DONE Calendar
 CLOSED: [2023-07-31 Mon 08:55]
+:PROPERTIES:
+:ID:       2bca7d72-8731-4c97-8b3a-09baf20605db
+:END:
 For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
 =org-timeblock=
 
@@ -5434,12 +5999,18 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
 
 ** DONE Chat [100%]
 CLOSED: [2021-01-05 Tue 09:32]
+:PROPERTIES:
+:ID:       72bc4a5e-1e48-4129-a634-27cfd60ae21b
+:END:
 As for the email, I (try to) use emacs as my chatting entry point as well.
 To do so, I rely on three key tools: the couple bitlbee/IRC for facebook messenger, skype, ...; slack and matrix.
 I added a bunch of helpers to start/stop all the accounts in one shot.
 
 *** DONE IRC
 CLOSED: [2021-01-05 Tue 09:32]
+:PROPERTIES:
+:ID:       60dd7c83-4422-47a7-b609-5a96a56eb8b5
+:END:
 The IRC configuration is quite standard.
 I added a couple of primitives to access more easily the passwords (~my-irc-password~) and to format properly the chat buffer (~erc-format-buffer~).
 I slightly tweaked the formatting to be more tolerant and added a bunch of plugins to enhance the UX.
@@ -5574,6 +6145,9 @@ Finally, the account definition is done in the private configuration file (so it
 
 *** DONE Matrix
 CLOSED: [2021-01-18 Mon 12:11]
+:PROPERTIES:
+:ID:       d27fa0ce-3ab0-460a-9c39-0ffcd05b9b0c
+:END:
 The Matrix configuration is based on =ement=.
 This package is not in stable stage (yet) but is causing less problem with my way of using emacs than =matrix-client.el=.
 =ement= requires =plz= which is not on melpa yet.
@@ -5641,6 +6215,9 @@ Therefore, all the packages are installed using =straight=.
 
 *** DONE Slack
 CLOSED: [2021-01-05 Tue 09:29]
+:PROPERTIES:
+:ID:       b29dacca-dfb1-4f16-ba98-7668ceb0b7bb
+:END:
 The package =slack= (or ~emacs-slack~) provides everything I need to support Slack in emacs.
 The change I do concerns mainly the formatting and the completion system.
 Because, I prefer to have the completion system, =company=, configured locally for each buffer, I needed to modify its connection with =slack=.
@@ -5743,6 +6320,9 @@ Because, I prefer to have the completion system, =company=, configured locally f
 
 *** DONE Telega
 CLOSED: [2021-05-20 Thu 17:33]
+:PROPERTIES:
+:ID:       adef5e39-0a9e-47f7-9339-fd113d62cfb2
+:END:
 =Telega= provides an all-in-one solution for Telegram.
 
 #+BEGIN_SRC emacs-lisp
@@ -5788,6 +6368,9 @@ CLOSED: [2021-05-20 Thu 17:33]
 
 *** DONE Global helpers
 CLOSED: [2021-01-05 Tue 09:31]
+:PROPERTIES:
+:ID:       fcb9d78d-f9b5-46c3-a0f8-ef3dceb5fb9a
+:END:
 This section provides three helper functions to connect/disconnect all my chatting accounts in one shot.
 
 #+begin_src emacs-lisp
@@ -5821,9 +6404,15 @@ This section provides three helper functions to connect/disconnect all my chatti
 
 ** DONE Exchange services [100%]
 CLOSED: [2021-01-05 Tue 09:41]
+:PROPERTIES:
+:ID:       574865ef-3030-4758-8971-11641f050aa9
+:END:
 
 *** DONE Stackexchange
 CLOSED: [2021-01-05 Tue 09:41]
+:PROPERTIES:
+:ID:       f23b2dd9-4ca0-4077-bc08-4d35d3ca5bb8
+:END:
 To access stackexchange, I rely on the package =sx=.
 Everything is nicely configured internally to this package, I just binded some keys for an easier support.
 
@@ -5845,6 +6434,9 @@ Everything is nicely configured internally to this package, I just binded some k
 
 *** DONE Reddit
 CLOSED: [2021-01-05 Tue 09:39]
+:PROPERTIES:
+:ID:       b9a131d9-7a71-453a-8495-90c9af154eac
+:END:
 For reddit, I rely on the package =md4rd=.
 However, there is currently a bug with the hierarchy package which is not embedded in my emacs 27.
 As it requires more investigation, I disabled this packaged for now.
@@ -5890,6 +6482,9 @@ As it requires more investigation, I disabled this packaged for now.
 
 ** DONE Release
 CLOSED: [2021-01-05 Tue 09:42]
+:PROPERTIES:
+:ID:       960a1774-f8cb-4b22-a108-ffc7dbe4cdae
+:END:
 Finally, as a proper metalhead and music addict, I sometimes get lost in what is currently released.
 In order to have a better view of what is going on, I developped a package named =metal-archives=.
 I am using its extension =metal-archives-shopping-list= to maintain a list of release I want to buy.
@@ -5919,6 +6514,9 @@ I am using its extension =metal-archives-shopping-list= to maintain a list of re
 
 ** DONE Youtube
 CLOSED: [2021-02-09 Tue 16:12]
+:PROPERTIES:
+:ID:       136fb08d-d9a3-4c39-be8b-aae3da737065
+:END:
 To access youtube from Emacs, I am using =ytdious= which is based on the invidious.
 It is connected to =youtube-dl= to download the video.
 
@@ -5960,6 +6558,9 @@ It is connected to =youtube-dl= to download the video.
 
 ** DONE Download
 CLOSED: [2021-02-13 Sat 11:56]
+:PROPERTIES:
+:ID:       6690fff1-0405-4b95-8767-b7d76e0c8df0
+:END:
 Aria2 provides an easy way to manage downloads (both direct and peer-to-peer).
 It requires =aria2c= to be available.
 
@@ -5972,8 +6573,14 @@ It requires =aria2c= to be available.
 #+END_SRC
 
 * DONE Entertainment [100%]
+:PROPERTIES:
+:ID:       1d575160-5d7a-44b2-b334-d42ff75d340f
+:END:
 ** DONE Music
 CLOSED: [2021-12-10 Fri 12:19]
+:PROPERTIES:
+:ID:       940ba7ca-5b9f-4289-b4c0-267b190c0e8c
+:END:
 I am playing music in Emacs using EMMS.
 The default configuration is already satisfying but I prefered to tweak a couple of part to make it more useable.
 The first thing I changed is to use ~mpv~ as a player as I am already it as a default on my system.
@@ -6138,6 +6745,9 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 
 ** DONE TV/Show
 CLOSED: [2021-12-10 Fri 12:38]
+:PROPERTIES:
+:ID:       34a159a5-683d-464a-8926-e7a17d55215d
+:END:
 To sort out what I am currently watching, I use =seriestracker=.
 
 #+begin_src emacs-lisp
@@ -6154,6 +6764,9 @@ To sort out what I am currently watching, I use =seriestracker=.
 
 ** DONE Subtitles
 CLOSED: [2023-01-18 Wed 12:16]
+:PROPERTIES:
+:ID:       98a11f14-44d0-4618-af40-b6e6f2512f68
+:END:
 Sacha Chua released an great package (=subed=) to edit subtitles files using emacs.
 I just modified a couple of bindings to fit my French keyboard layout (the other keys are there for reminder).
 
@@ -6175,6 +6788,9 @@ I just modified a couple of bindings to fit my French keyboard layout (the other
 #+end_src
 
 * DONE Emacs and the rest of the world [100%]
+:PROPERTIES:
+:ID:       4706d18e-606a-4dee-85be-258f573f7beb
+:END:
 As Emacs is the entry point of my numerical life, I connected to a bunch of other external things.
 It can be summarized around three categories:
 the connection to the desktop environment,
@@ -6183,11 +6799,17 @@ and the connection to servers (mainly computing clusters).
 
 ** DONE Emacs and the desktop [100%]
 CLOSED: [2021-01-05 Tue 12:51]
+:PROPERTIES:
+:ID:       cb04489e-0b92-4f9b-9682-f4b0522ab920
+:END:
 In this section, I configure a set of packages to control different desktop aspect using Emacs.
 Each subsection focuses on dedicated aspect of the desktop.
 
 *** DONE Clipboard
 CLOSED: [2021-01-05 Tue 12:39]
+:PROPERTIES:
+:ID:       596db304-f83c-43b3-b073-b5dde25fb04e
+:END:
 Integrate the clipboard to Emacs by using the package =cliphist=.
 
 #+begin_src emacs-lisp
@@ -6199,6 +6821,9 @@ Integrate the clipboard to Emacs by using the package =cliphist=.
 
 *** DONE Bluetooth
 CLOSED: [2021-01-05 Tue 12:52]
+:PROPERTIES:
+:ID:       3127c6cb-8025-43fb-83d3-46c53294da0e
+:END:
 To control the bluetooth devices, I use the package =bluetooth=.
 No extra configuration is needed.
 
@@ -6212,6 +6837,7 @@ No extra configuration is needed.
 CLOSED: [2021-01-05 Tue 12:47]
 :PROPERTIES:
 :FROM:     https://github.com/GhostText/GhostText
+:ID:       ea42ca37-120c-4731-a2cb-375658a85a8b
 :END:
 Sometimes it is difficult to edit a text (from a textarea) in Firefox.
 Using =atomic-chrome= coupled with the ~GhostText~ firefox addon, I edit such text in Emacs and its synchronized in firefox automatically.
@@ -6242,6 +6868,9 @@ Using =atomic-chrome= coupled with the ~GhostText~ firefox addon, I edit such te
 
 *** DONE Emacs Application Framework (EAF)
 CLOSED: [2021-01-05 Tue 12:51]
+:PROPERTIES:
+:ID:       3438154f-10d6-4744-9d1a-b3641dec6bd9
+:END:
 Emacs Application Framework (EAF) provides a way to integrate multiple applications internally into Emacs.
 Emacs needs to be compiled using the flag ~--with-modules~ as it requires some dynamic linking.
 In addition, =eaf= is installed externally as it requires additional compilation effort.
@@ -6291,6 +6920,9 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
 
 *** DONE Printing
 CLOSED: [2023-04-07 Fri 12:50]
+:PROPERTIES:
+:ID:       95795136-ead6-4e6b-808c-79f3544726c0
+:END:
 #+begin_src emacs-lisp
   (use-package transient-extras-lp
     :tags '("DESKTOP" "PRINT")
@@ -6308,6 +6940,9 @@ CLOSED: [2023-04-07 Fri 12:50]
 
 ** DONE Emacs and the system [100%]
 CLOSED: [2021-01-05 Tue 13:42]
+:PROPERTIES:
+:ID:       e295d6e9-d025-4551-956d-7c8e0d611dc0
+:END:
 In a lower level, I want to have a better access to some system/(non desktop-)environment tools.
 I separated the configuration into three main subsections:
 the section dedicated to the system/shell,
@@ -6316,12 +6951,18 @@ and the section dedicated to background processes/"daemons" management directly 
 
 *** DONE System and Shell
 CLOSED: [2021-01-05 Tue 13:13]
+:PROPERTIES:
+:ID:       12312784-2ad0-43d8-8abd-1ae8c266f709
+:END:
 In this section, I configure packages to access system informations and enforce the shell environment into Emacs.
 
 #+transclude: [[file:keytable_summary.org::Shell execution]] :only-contents
 
 **** DONE Get system control information
 CLOSED: [2021-01-05 Tue 13:11]
+:PROPERTIES:
+:ID:       84f3eb5b-0650-459d-a54b-b770b75b39f5
+:END:
 To access the global OS information, =sysctl= provides a basic interface.
 No extra configuration is needed.
 
@@ -6333,6 +6974,9 @@ No extra configuration is needed.
 
 **** DONE Execute with shell environment
 CLOSED: [2021-01-05 Tue 13:13]
+:PROPERTIES:
+:ID:       f1d0d602-b13d-4656-8d71-c91514ef8583
+:END:
 Because an important part of my environment relies on a properly configured shell (especially for environment variables),
 I use =exec-path-from-shell= to force to run a command using the shell environment.
 
@@ -6360,6 +7004,9 @@ I use =exec-path-from-shell= to force to run a command using the shell environme
 
 **** DONE Define some short for commands
 CLOSED: [2021-07-19 Mon 09:32]
+:PROPERTIES:
+:ID:       705e65d6-cdb6-4817-81d9-2226225f0956
+:END:
 This section defines some helpers for some recurrent commands.
 It relies on the package =run-command=.
 For now, only global commands are configured but some project specific configuration may be integrated in a near future.
@@ -6386,11 +7033,17 @@ For now, only global commands are configured but some project specific configura
 
 *** DONE Tools
 CLOSED: [2021-01-05 Tue 13:21]
+:PROPERTIES:
+:ID:       0378e120-f0aa-4da3-8470-5fd87eea3517
+:END:
 This section is dedicated to the configuration of specific tools.
 For now, it comprises ~Docker~ and ~Conda~.
 
 **** DONE Docker
 CLOSED: [2021-01-05 Tue 13:20]
+:PROPERTIES:
+:ID:       e240312d-0cd0-4a91-86cd-9f6a46924bb8
+:END:
 The package =docker= is already configured to provide everything to interact with Docker.
 
 #+begin_src emacs-lisp
@@ -6403,6 +7056,9 @@ The package =docker= is already configured to provide everything to interact wit
 
 **** DONE Conda
 CLOSED: [2021-01-05 Tue 13:18]
+:PROPERTIES:
+:ID:       f533e047-99ff-46b0-a42c-762625ed8ad1
+:END:
 I am using micromamba (more efficient than conda) to configure different environment for ~Python~ and ~R~.
 While =conda.el= provide a nice environment management, it is not compatible with micromamba.
 However =SqrtMinusOne= developped the package =micromamba.el= which provides a nice support for this tools.
@@ -6430,6 +7086,9 @@ However =SqrtMinusOne= developped the package =micromamba.el= which provides a n
 
 *** DONE Dealing with processes
 CLOSED: [2021-01-05 Tue 13:26]
+:PROPERTIES:
+:ID:       b72a7e89-251f-403e-a6f0-44c5cd5b89a9
+:END:
 To deal with background processes, I rely on two packages: =prodigy= and =elcontext=.
 =prodigy= is used to run and monitor the processes.
 However, =prodigy= doesn't provide a nice way to start processes automatically.
@@ -6505,6 +7164,9 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
 
 ** DONE Emacs and the servers
 CLOSED: [2021-01-05 Tue 13:06]
+:PROPERTIES:
+:ID:       ed86814a-5744-4c13-8e1a-4ff9f7ef1b8b
+:END:
 Finally, I access to computing clusters regularly.
 The main tools I am using there are ~docker~ and ~slurm~.
 As an entry point, as every Emacs use, I use =tramp= to deal with servers using SSH as a backend.
@@ -6555,10 +7217,16 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 ** DONE Helpers [100%]
 CLOSED: [2023-09-18 Mon 16:48]
+:PROPERTIES:
+:ID:       27c5a391-e781-4311-9ac5-db64fba6fb2c
+:END:
 In this section, some general helpers are configured.
 
 *** DONE Unit conversion
 CLOSED: [2023-09-18 Mon 16:36]
+:PROPERTIES:
+:ID:       609afc32-073e-46f1-8fb8-2389fb4b5136
+:END:
 =units= is a program which provides a quick way to convert between different units.
 If this program is installed, we can use the emacs wrapper to facilitate the conversion between units inside a buffer.
 
@@ -6573,6 +7241,9 @@ If this program is installed, we can use the emacs wrapper to facilitate the con
 
 *** DONE Open Street Map
 CLOSED: [2023-09-18 Mon 16:40]
+:PROPERTIES:
+:ID:       efff9074-df6b-4d8b-adf7-892e22e36ed8
+:END:
 =osm= provides an interface to Open Street Map in emacs.
 In addition to the usual commands, it also integrates org-mode links, which is convenient to pin locations in my notes.
 
@@ -6592,6 +7263,9 @@ In addition to the usual commands, it also integrates org-mode links, which is c
 
 *** DONE Anki editor
 CLOSED: [2023-09-18 Mon 16:47]
+:PROPERTIES:
+:ID:       f6508c8d-cc91-4ade-b9c7-c977d37a5863
+:END:
 [[https://apps.ankiweb.net/][Anki]] is flash-card program.
 =anki-editor= is a mode which interfaces =org-mode= and Anki.
 This provides a really neat way to create Anki cards easily directly in emacs.
@@ -6636,6 +7310,9 @@ To install Anki-Connect:
 #+end_src
 
 * DONE Visual [100%]
+:PROPERTIES:
+:ID:       4624b657-41a9-4f0a-9ed5-7f9670603d83
+:END:
 For the visual part, I rely mainly on =nano-emacs= developed by Nicolas P. Rougier.
 It is a simple layout but incredibly clear and precise.
 I deviate from it by prefering my emacs (color) theme (=flatfluc-theme=) and I tweaked a bit the layout (see =nano-layout=).
@@ -6816,6 +7493,9 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
 
 ** DONE Prism
 CLOSED: [2021-01-06 Wed 12:26]
+:PROPERTIES:
+:ID:       9b966fbb-3e32-401f-920d-66a7e4646a33
+:END:
 In daemon mode, =prism= is required to be required **after** loading the theme.
 Therefore, for now it is here!
 
@@ -6849,6 +7529,9 @@ Therefore, for now it is here!
 
 ** DONE Font/Glyphs
 CLOSED: [2021-01-05 Tue 10:41]
+:PROPERTIES:
+:ID:       06a72458-128d-410f-8387-a0b4fd371a51
+:END:
 Because, I tend to prefer glyphs to plain text, I tweaked a bit the font to override some glyphs.
 This is especially useful for =magit=, =dired=, ...
 To do so, I rely mainly on the ~nerdfonts~ collection.
@@ -6931,12 +7614,18 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
 #+end_src
 
 ** DONE Helpers [100%]
+:PROPERTIES:
+:ID:       0d344560-8688-4216-84ae-3fe393d336d1
+:END:
 In order to guide me a little bit more to the information I need,
 I introduce a couple of visual helpers.
 All of these helpers are configured in this section.
 
 *** DONE Segmenting
 CLOSED: [2021-01-05 Tue 10:51]
+:PROPERTIES:
+:ID:       7d7bb39b-ff02-451f-a610-e0c4ca12dc10
+:END:
 To segment properly different part of the code, I rely on two key concepts: separators and page breaks
 Separators are coming in two ways: unary (like space) and binary (parenthesis style).
 For the former, I sometimes activate the builtin =whitespace-mode= but it doesn't require any configuration.
@@ -6969,6 +7658,9 @@ Finally, the package =page-break-lines= provides a nice way to visualize a page 
 
 *** DONE Navigating
 CLOSED: [2021-01-05 Tue 10:46]
+:PROPERTIES:
+:ID:       bda4b153-a9f6-48d9-a243-051f55e294a6
+:END:
 Modifying/Navigating can lead to be slightly confused what has just happened.
 I added =googles= to briefly flash to indicate what just changed and =scrollkeeper= to see where I am after a massive scrolling operation.
 I also add =xhair= to visualize where I am (line + column) when I need to align things column-wise.
@@ -6996,6 +7688,9 @@ I also add =xhair= to visualize where I am (line + column) when I need to align 
 
 *** DONE Filling
 CLOSED: [2021-01-05 Tue 12:36]
+:PROPERTIES:
+:ID:       090646ff-c2f0-4732-918b-5def11abb327
+:END:
 To be consistent, I prefer to wrap the line at the ~fill-column~ value.
 This is functionality is provided by =visual-fill-column=.
 
@@ -7008,6 +7703,9 @@ This is functionality is provided by =visual-fill-column=.
 
 *** DONE Indentation
 CLOSED: [2021-03-01 Mon 09:17]
+:PROPERTIES:
+:ID:       19d4716c-a330-4374-a71c-50d9e86b104b
+:END:
 When I am programming, I like seeing clearly at which indentation level I am.
 To see this, I am using =highlight-indent-guides=.
 Its configuration is pretty standard except I prefer the ~column~ method to the ~fill~ one.
@@ -7023,6 +7721,9 @@ Its configuration is pretty standard except I prefer the ~column~ method to the 
 
 *** DONE Diff
 CLOSED: [2021-01-05 Tue 12:34]
+:PROPERTIES:
+:ID:       9c778844-dbd3-431c-8d2e-42674d1aa1c2
+:END:
 Due to the amount of modifications, I like having indicators which are reminding me what has been changed.
 I am using =diff-hl= which provides a diff. status on the (left for me) fringe.
 Long lines are also distracting, so I prefer to ellipse them.
@@ -7052,6 +7753,9 @@ To do so, I use =abridge-diff=.
 
 *** DONE Emoji
 CLOSED: [2021-01-05 Tue 12:28]
+:PROPERTIES:
+:ID:       d16ae961-5c57-4b46-9797-302d7d4397cc
+:END:
 I am chatting, mailing and so on.
 I prefer to visualize nicely emojis than the raw text.
 To do so, I use the package =emojify= which provides everything needed for this.
@@ -7074,6 +7778,9 @@ To do so, I use the package =emojify= which provides everything needed for this.
 #+end_src
 
 * Key bindings [100%]
+:PROPERTIES:
+:ID:       c0208280-e748-44d5-bab7-74c7b3298638
+:END:
 In this section, we define the bindings used globally.
 We can consider the following categories:
   - The functional bindings :: which allows the user to access to a functionality from anywhere (e.g. opening the version-control manager)
@@ -7083,12 +7790,18 @@ An helper to remind these bindings is also provided.
 
 ** DONE Functional bindings [100%]
 CLOSED: [2021-01-05 Tue 10:03]
+:PROPERTIES:
+:ID:       eb3f7eae-0b4d-4a2a-a791-0478daa7b4c9
+:END:
 This section defines the functional bindings.
 Hydra is used as the provider for these bindings.
 For now, we consider the following ones: ~main helpers~, ~version control~ and some ~toggling~
 
 *** DONE Main Helper
 CLOSED: [2021-01-05 Tue 09:46]
+:PROPERTIES:
+:ID:       1fa43ada-2c96-4dd3-b427-51dbfbc63f3f
+:END:
 The main helper, mapped to *<f1>* contains the global operations which are interesting to access globally:
  - org-mode capturing and sniffing webpage
  - zooming
@@ -7135,6 +7848,9 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
 
 *** DONE Project/Version control
 CLOSED: [2021-01-05 Tue 09:46]
+:PROPERTIES:
+:ID:       32baa46d-253c-47f3-9aab-d3ece68521fa
+:END:
 The following functional binding is the entry point to deal with code project management.
 It is mapped to *<f4>*
 It deals with:
@@ -7164,6 +7880,7 @@ It deals with:
 CLOSED: [2021-01-05 Tue 10:03]
 :PROPERTIES:
 :FROM:     https://github.com/jerrypnz/major-mode-hydra.el
+:ID:       1a5afbcb-42bb-49b6-85d6-b2fe7c4de525
 :END:
 This section configures an access to a bunch of minor modes (or other) which can be toggled.
 It is a copy paste of what is proposed in the README file of the [[https://github.com/jerrypnz/major-mode-hydra.el][major-mode-hydra.el repository]].
@@ -7197,11 +7914,17 @@ It is a copy paste of what is proposed in the README file of the [[https://githu
 
 ** DONE Remapped bindings [100%]
 CLOSED: [2021-01-05 Tue 10:01]
+:PROPERTIES:
+:ID:       6b3217eb-42e6-4028-93c6-dc633479a559
+:END:
 The following bindings are remapped to be homogeneous accross the different modes and OS.
 It concerns mainly the bindings to comment/uncomment and some macos related issues.
 
 *** DONE Commenting
 CLOSED: [2021-01-05 Tue 09:50]
+:PROPERTIES:
+:ID:       334dd7bd-e1dc-48eb-bb95-963f15108d53
+:END:
 I prefer to use a _C-c C-c_ to compile and therefore, the bindings to comment a section of the code should be remapped.
 I select _C-c C-;_ to comment and _C-c C-:_ to uncomment.
 Adding a toggle support for the commenting would be a good idea too
@@ -7224,6 +7947,9 @@ Adding a toggle support for the commenting would be a good idea too
 
 ** DONE Reminder for bindings
 CLOSED: [2021-01-05 Tue 09:49]
+:PROPERTIES:
+:ID:       037034b4-2d93-4212-8174-5a21606c92ce
+:END:
 Finally, because of the amount of keys, I sometimes need a reminder of what is what.
 To do so, I am using =remind-bindings=.
 
@@ -7238,6 +7964,9 @@ To do so, I am using =remind-bindings=.
 #+end_src
 
 * Provide
+:PROPERTIES:
+:ID:       6fd20301-cf7c-4844-b725-dc912f537075
+:END:
 We finish the configuration, let's provide it!
 
 #+begin_src emacs-lisp
