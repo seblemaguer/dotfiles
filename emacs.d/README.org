@@ -5048,6 +5048,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
     :elpaca nil
     :load-path default-plugin-dir
     :tags '("CONNECTED" "MAIL")
+    :after mu4e
     :init
     (defun my-oauth2-fetch-access-token (user)
       (replace-regexp-in-string
@@ -5221,6 +5222,35 @@ I also redesigned the header buffer.
     (mu4e-headers-time-format "%H:%M:%S")
 
     :config
+
+    ;; Initialize private configuration
+    (when (fboundp 'load-mu4e-and-smtp)
+      (load-mu4e-and-smtp))
+
+    ;; Deal with contexts
+    (require 'mu4e-context)
+
+    (when (fboundp 'set-mu4e-contexts)
+      (set-mu4e-contexts))
+
+    (setq mu4e-context-policy 'pick-first
+          mu4e-user-mail-address-list (delq nil
+                                            (mapcar (lambda (context)
+                                                      (when (mu4e-context-vars context)
+                                                        (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
+                                                    mu4e-contexts)))
+
+    ;; Deal with bookmarks
+    (require 'mu4e-bookmarks)
+
+    (when (fboundp 'set-mu4e-bookmarks)
+      (set-mu4e-bookmarks))
+
+    (add-to-list 'mu4e-bookmarks
+                 '(:name  "Drafts"
+                          :query "flag:draft"
+                          :key ?d))
+
     ;; use imagemagick, if available
     (when (fboundp 'imagemagick-register-types)
       (imagemagick-register-types))
@@ -5326,41 +5356,6 @@ I also redesigned the header buffer.
                                  (:mailing-list  .   10)
                                  (:from          .   22)
                                  (:subject       .  nil))))
-
-  (use-package mu4e-context
-    :elpaca nil
-    :after (mu4e)
-    :tags '("CONNECTED" "MAIL")
-    :config
-    ;; Define the contexts (configuration defined in a private file)
-    (when (fboundp 'set-mu4e-contexts)
-      (set-mu4e-contexts))
-
-    ;; Adapt the environment
-    (setq mu4e-context-policy 'pick-first
-          mu4e-user-mail-address-list (delq nil
-                                            (mapcar (lambda (context)
-                                                      (when (mu4e-context-vars context)
-                                                        (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
-                                                    mu4e-contexts))))
-  (use-package mu4e-bookmarks
-    :elpaca nil
-    :after (mu4e)
-    :tags '("CONNECTED" "MAIL")
-    :config
-    ;; Define the contexts (configuration defined in a private file)
-    (when (fboundp 'set-mu4e-bookmarks)
-      (set-mu4e-bookmarks))
-
-    (add-to-list 'mu4e-bookmarks
-                 '(:name  "Drafts"
-                          :query "flag:draft"
-                          :key ?d)))
-
-  (use-package org-mu4e
-    :disabled t
-    :elpaca mu4e
-    :tags '("CONNECTED" "MAIL" "ORG"))
 #+end_src
 
 **** DONE Notification
