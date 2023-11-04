@@ -1162,7 +1162,7 @@ CLOSED: [2023-10-27 Fri 09:40]
     :tags '("ORG")
     :after org
     :bind (
-      <<keybindings-gen(table=org-menu-keybindings)>>
+      <<keybindings-gen(table=org-transclusion-keybindings)>>
     ))
 #+end_src
 
@@ -7114,8 +7114,8 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
        <<hydra-keybindings-gen(table=org-main-keybindings)>>
      )
 
-     "Help" (
-       <<hydra-keybindings-gen(table=help-main-keybindings)>>
+     "Emacs Helper" (
+       <<hydra-keybindings-gen(table=emacs-helper-main-keybindings)>>
      )
 
      "Zooming"(

@@ -897,11 +897,12 @@
 | F   | org-gcal-fetch                | Fetch Calendars |             |
 | y   | org-gcal-sync                 | Sync. Calendars |             |
 
-#+NAME: help-main-keybindings
-| Key | Function          | Label             | Description |
-|-----+-------------------+-------------------+-------------|
-| f   | describe-function | Describe function |             |
-| v   | describe-variable | Describe variable |             |
+#+NAME: emacs-helper-main-keybindings
+| Key | Function           | Label             | Description                                                 |
+|-----+--------------------+-------------------+-------------------------------------------------------------|
+| f   | describe-function  | Describe function |                                                             |
+| v   | describe-variable  | Describe variable |                                                             |
+| t   | tangle-main-config | Tangle config     | Tangle the main configuration (wrap org-transclusion calls) |
 
 #+NAME: zoom-main-keybindings
 | Key | Function            | Label      | Options     | Description |
