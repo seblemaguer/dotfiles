@@ -5626,9 +5626,6 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
       (add-to-list 'smtpmail-auth-supported 'my-xoauth2))
 
     :config
-    ;; Get account informations from private file
-    (when (fboundp 'set-smtpmail-multi-accounts)
-      (set-smtpmail-multi-accounts))
 
     ;; Define default environment
     (setq user-full-name "Sébastien Le Maguer"
@@ -5805,6 +5802,10 @@ I also redesigned the header buffer.
                  '(:name  "Drafts"
                           :query "flag:draft"
                           :key ?d))
+
+    ;; SMTP needs to be here (FIXME: don't really know why)
+    (when (fboundp 'set-smtpmail-multi-accounts)
+      (set-smtpmail-multi-accounts))
 
     ;; use imagemagick, if available
     (when (fboundp 'imagemagick-register-types)
