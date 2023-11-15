@@ -4222,11 +4222,7 @@ Finally, I use =numpydoc= to deal with the documentation.
 
     :init
     (setq-default indent-tabs-mode nil)
-
-    :config
-    (setq python-indent-offset 4
-          python-shell-interpreter "ipython"
-          python-shell-interpreter-args "--simple-prompt --colors=Linux -i"))
+    (setq-default python-indent-offset 4))
 
 
   (use-package numpydoc
@@ -5088,11 +5084,11 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
 
     ;; Opening file in emacs directly
     (push (list "find-file-below"
-        	(lambda (path)
-        	  (if-let* ((buf (find-file-noselect path))
-        		    (window (display-buffer-below-selected buf nil)))
-        	      (select-window window)
-        	    (message "Failed to open file: %s" path))))
+                (lambda (path)
+                  (if-let* ((buf (find-file-noselect path))
+                            (window (display-buffer-below-selected buf nil)))
+                      (select-window window)
+                    (message "Failed to open file: %s" path))))
           vterm-eval-cmds))
 
   (use-package multi-vterm
@@ -5102,6 +5098,21 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
         <<keybindings-gen(table=multi-vterm-mode-keybindings)>>
       )
     ))
+
+  (use-package drepl
+    :elpaca (drepl :type git
+                   :host github
+                   :repo "astoff/drepl"
+                   :files ("*.el" "*.py"))
+    :tags '("TERM"))
+
+  (use-package comint-mime
+    :tags '("TERM")
+    :when (display-graphic-p)
+    :hook
+    ((shell-mode-hook . comint-mime-setup)
+     (inferior-python-mode-hook . comint-mime-setup)))
+
 #+END_SRC
 
 * DONE File manager [100%]

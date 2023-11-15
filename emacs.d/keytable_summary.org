@@ -434,10 +434,10 @@
 :END:
 
 #+NAME: start-term-hydra-keybindings
-| Key | Function    | Label        | Description |
-|-----+-------------+--------------+-------------|
-| p   | run-python  | Python Shell |             |
-| t   | multi-vterm | VTerm        |             |
+| Key | Function      | Label        | Description |
+|-----+---------------+--------------+-------------|
+| p   | drepl-ipython | Python Shell |             |
+| t   | multi-vterm   | VTerm        |             |
 
 #+NAME: popper-entry-keybindings
 | Key    | Function              | Description |
