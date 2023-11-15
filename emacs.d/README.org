@@ -3632,6 +3632,35 @@ CLOSED: [2021-01-03 Sun 21:28]
     :after (project))
 #+end_src
 
+** DONE Dape/debug
+CLOSED: [2023-11-15 Wed 20:50]
+=dape= provides a debugger interface relying on the protocol DAP.
+This package is in its early stage so more configuration will be required for futher improvement.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package dape
+    :elpaca (dape :type git :host github :repo "svaante/dape")
+    :config
+    ;; Add inline variable hints, this feature is highly experimental
+    ;; (setq dape-inline-variables t)
+
+    ;; To remove info buffer on startup
+    ;; (remove-hook 'dape-on-start-hooks 'dape-info)
+
+    ;; To remove repl buffer on startup
+    ;; (remove-hook 'dape-on-start-hooks 'dape-repl)
+
+    ;; By default dape uses gdb keybinding prefix
+    ;; (setq dape-key-prefix "\C-x\C-a")
+
+    ;; Kill compile buffer on build success
+    ;; (add-hook 'dape-compile-compile-hooks 'kill-buffer)
+
+    ;; Projectile users
+    ;; (setq dape-cwd-fn 'projectile-project-root)
+    )
+#+END_SRC
+
 ** DONE Data [100%]
 CLOSED: [2021-01-03 Sun 21:49]
 :PROPERTIES:
