@@ -6194,11 +6194,6 @@ This package is not in stable stage (yet) but is causing less problem with my wa
 Therefore, all the packages are installed using =straight=.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package plz
-    :elpaca (plz :type git :host github :repo "alphapapa/plz.el")
-    :tags '("CONNECTED" "CHAT" "MATRIX")
-    )
-
   (use-package ement
     :elpaca (ement :host github :repo "seblemaguer/ement.el" :branch "notification")
     :tags '("CONNECTED" "CHAT" "MATRIX")
@@ -7293,12 +7288,7 @@ In addition to the usual commands, it also integrates org-mode links, which is c
     :custom
     ;; Take a look at the customization group `osm' for more options.
     (osm-server 'default) ;; Configure the tile server
-    (osm-copyright t)     ;; Display the copyright information
-
-    :init
-    ;; Load Org link support
-    (with-eval-after-load 'org
-      (require 'osm-ol)))
+    (osm-copyright nil))
 #+end_src
 
 *** DONE Anki editor
