@@ -271,14 +271,14 @@ The process of how to deal with the packages is the following:
 
 Furthermore, each package is tagged with several keywors to have a "machine-dependent" loading scheme.
 
-*** DONE Straight
+*** DONE Elpaca
 CLOSED: [2021-01-03 Sun 10:52]
 :PROPERTIES:
 :ID:       08b8b3b9-31a4-4436-9789-502e7ddd3ef1
 :END:
 
  #+begin_src emacs-lisp
-   (defvar elpaca-installer-version 0.5)
+   (defvar elpaca-installer-version 0.6)
    (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
    (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
    (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
