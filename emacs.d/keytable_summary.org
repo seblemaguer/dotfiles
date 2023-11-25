@@ -29,10 +29,6 @@
 :END:
 
 #+NAME: sauron-keybindings
-| Key    | Function                          | Description |
-|--------+-----------------------------------+-------------|
-| <f7>   | sauron-mode-line-toggle-hide-show |             |
-| C-<f7> | sauron-mode-line-clear            |             |
 
 * Bufler
 :PROPERTIES:
@@ -233,41 +229,6 @@
 :ID:       7e5dc902-76fe-4944-b525-cf2637d94c6b
 :END:
 
-#+NAME: org-roam-entry-keybindings
-| Key     | Functon             | Description |
-|---------+---------------------+-------------|
-| C-<f12> | org-roam-hydra/body |             |
-
-#+NAME: org-roam-navigation-bindings
-| Key | Function                       | Label | Description |
-|-----+--------------------------------+-------+-------------|
-| l   | org-roam-buffer-toggle         |       |             |
-| f   | org-roam-node-find             |       |             |
-| g   | org-roam-ui-open               |       |             |
-| B   | consult-org-roam-backlinks     |       |             |
-| F   | consult-org-roam-forward-links |       |             |
-| s   | consult-org-roam-search        |       |             |
-| e   | consult-org-roam-file-find     |       |             |
-
-#+NAME: org-roam-creation-bindings
-| Key | Function               | Label            | Description |
-|-----+------------------------+------------------+-------------|
-| i   | org-roam-node-insert   | insert node link |             |
-| r   | org-roam-raw-id-insert | insert RAW id    |             |
-| c   | org-roam-capture       | call org-capture |             |
-
-#+NAME: org-roam-bibliography-bindings
-| Key | Function                    | Label | Description |
-|-----+-----------------------------+-------+-------------|
-| n   | org-noter                   |       |             |
-| b   | generate-bibliography-entry |       |             |
-
-#+NAME: org-roam-helpers-bindings
-| Key | Function                 | Label | Description |
-|-----+--------------------------+-------+-------------|
-| I   | org-id-get-create        |       |             |
-| a   | generate-org-heading-ids |       |             |
-| A   | generate-org-roam-ids    |       |             |
 * Citar
 :PROPERTIES:
 :ID:       9bc9df4c-3704-4b89-ba16-3cea0c9cab1d
@@ -439,27 +400,10 @@
 | p   | drepl-ipython | Python Shell |             |
 | t   | multi-vterm   | VTerm        |             |
 
-#+NAME: popper-entry-keybindings
-| Key    | Function              | Description |
-|--------+-----------------------+-------------|
-| <f6>   | popper-toggle         |             |
-| S-<f6> | popper-cycle          |             |
-| C-<f6> | start-term-hydra/body |             |
-
 * Environment
 :PROPERTIES:
 :ID:       027b62e3-d635-425c-b621-3ff8f387f467
 :END:
-** IMenu
-:PROPERTIES:
-:ID:       2ee5a81b-d126-42f3-a5d2-fd4acb224ff0
-:END:
-
-#+NAME: imenu-list-entry-keybindings
-| Key  | Function                    | Description |
-|------+-----------------------------+-------------|
-| <f8> | my/imenu-list-smart-toggle  |             |
-
 ** Compilation
 :PROPERTIES:
 :ID:       11707992-7489-4d66-ac48-08a180e56142
@@ -506,7 +450,6 @@
 :PROPERTIES:
 :ID:       7fe9a888-235e-4b01-8878-a1f314c9fce9
 :END:
-
 #+NAME: help-keybindings
 | Key   | Function         | Description |
 |-------+------------------+-------------|
@@ -759,15 +702,6 @@
 :PROPERTIES:
 :ID:       fe43ad7a-802c-407c-99a4-0fc74606c2ca
 :END:
-** Elfeed
-:PROPERTIES:
-:ID:       310325d3-889c-4eea-a2c8-60424c89f174
-:END:
-#+NAME: elfeed-entry-keybindings
-| Key  | Function | Description |
-|------+----------+-------------|
-| <f9> | elfeed   |             |
-
 *** Elfeed/Youtube
 :PROPERTIES:
 :ID:       c8b5cd19-f55f-4025-8ee9-5295f6f5db0b
@@ -809,11 +743,6 @@
 :PROPERTIES:
 :ID:       58d1a253-d0e7-4767-81b8-e4c6c4886a97
 :END:
-
-#+NAME: mu4e-entry-keybindings
-| Key  | Function | Description |
-|------+----------+-------------|
-| <f2> | mu4e     |             |
 
 #+NAME: mu4e-hydra-general-keybindings
 | Key | Function                    | Label          | Description |
@@ -968,11 +897,6 @@
 :PROPERTIES:
 :ID:       44c7a3d2-dd08-41bb-89bc-326c0f5e1da2
 :END:
-#+NAME: ytdious-entry-keybindings
-| Key    | Function | Description |
-|--------+----------+-------------|
-| <C-f9> | ytdious  |             |
-
 #+NAME: ytdious-mode-keybindings
 | Key      | Function         | Description |
 |----------+------------------+-------------|
@@ -990,8 +914,6 @@
 #+NAME: emms-keybindings
 | Key             | Function              | Description |
 |-----------------+-----------------------+-------------|
-| <f5>            | emms-browse-by-artist |             |
-| S-<f5>          | emms-playlist-mode-go |             |
 | <XF86AudioPlay> | emms-pause            |             |
 | <XF86AudioStop> | emms-stop             |             |
 | <XF86AudioPrev> | emms-previous         |             |
@@ -1059,11 +981,44 @@
 | [remap scroll-up-command]   | scrollkeeper-contents-up   |             |
 | [remap scroll-down-command] | scrollkeeper-contents-down |             |
 
-* Keybindings
+* General Keybindings
 :PROPERTIES:
 :ID:       6e07006b-e43c-44ac-a894-428a3bdcb8be
 :END:
-** Main Entry
+** Functional keybindings
+:PROPERTIES:
+:ID:       f4bd9554-48ce-4513-8b46-745e9cc46332
+:END:
+#+NAME: functional-keybindings
+|---------+-----------------------------------+-------------|
+| <f2>    | mu4e                              | mail        |
+|---------+-----------------------------------+-------------|
+| <f4>    | my-matcha-project                 |             |
+|---------+-----------------------------------+-------------|
+| <f5>    | emms-browse-by-artist             |             |
+| S-<f5>  | emms-playlist-mode-go             |             |
+|---------+-----------------------------------+-------------|
+| <f6>    | popper-toggle                     |             |
+| S-<f6>  | popper-cycle                      |             |
+| C-<f6>  | start-term-hydra/body             |             |
+|---------+-----------------------------------+-------------|
+| <f7>    | sauron-mode-line-toggle-hide-show |             |
+| C-<f7>  | sauron-mode-line-clear            |             |
+|---------+-----------------------------------+-------------|
+| <f8>    | my/imenu-list-smart-toggle        |             |
+|---------+-----------------------------------+-------------|
+| <f9>    | elfeed                            |             |
+| <C-f9>  | ytdious                           |             |
+|---------+-----------------------------------+-------------|
+| <f10>   | remind-bindings-togglebuffer      |             |
+| C-<f10> | remind-bindings-specific-mode     |             |
+|---------+-----------------------------------+-------------|
+| <f12>   | org-agenda                        |             |
+| C-<f12> | org-roam-hydra/body               |             |
+|---------+-----------------------------------+-------------|
+
+** Menu bindings
+*** Main Entry
 :PROPERTIES:
 :ID:       1f351900-07f7-41d2-bfde-02f0bf096515
 :END:
@@ -1107,54 +1062,87 @@
 | s   | snapshot-timeline    | List backups          |             |
 | S   | snapshot-timemachine | Timemachine on backup |             |
 
-** Project/VC
-:PROPERTIES:
-:ID:       9853f2e2-60bc-4edc-91d6-7004e6f702e9
-:END:
-#+NAME: main-entry-vc-keybindings
-| Key | Function         | Label | Description |
-|-----+------------------+-------+-------------|
-| m   | magit-hydra/body | Magit |             |
+*** TODO Communication / Mail [0%]
+**** TODO Mail (Mu4e)
+**** TODO Telega
+**** TODO Slack
+**** TODO ement
+**** TODO IRC (?)
 
-#+NAME: main-entry-fixme-keybindings
-| Key | Function            | Label         | Description |
-|-----+---------------------+---------------+-------------|
-| f   | fic-view-listing    | Fixme listing |             |
-| F   | flycheck-hydra/body | Flycheck      |             |
+*** TODO Project / Code management [50%]
+**** TODO Entry
+#+NAME: project-main-menu-keybindings
+| Key | Label       | Function           |
+|-----+-------------+--------------------|
+| g   | Git...      | matcha-magit       |
+| G   | Eglot...    | matcha-eglot       |
+| p   | Project...  | matcha-project     |
+| f   | Checking... | my-matcha-flycheck |
 
-** Toggling
-:PROPERTIES:
-:ID:       7c0d2539-4c27-4c77-a7e7-16e221853f82
-:END:
-#+NAME: basic-toggle-keybindings
-| Key | Function                  | Label              | Options   | Description |
-|-----+---------------------------+--------------------+-----------+-------------|
-| n   | display-line-numbers-mode | line number        | :toggle t |             |
-| w   | whitespace-mode           | whitespace         | :toggle t |             |
-| W   | whitespace-cleanup-mode   | whitespace cleanup | :toggle t |             |
-| r   | rainbow-mode              | rainbow            | :toggle t |             |
-| L   | page-break-lines-mode     | page break lines   | :toggle t |             |
+**** DONE Checking/Lint - Flycheck
+CLOSED: [2023-11-25 Sat 10:17]
+***** Diagnostics
+#+NAME: flycheck-diagnosis-menu-bindings
+| Key | Label                    | Function                          |
+|-----+--------------------------+-----------------------------------|
+| l   | Go to log buffer         | flycheck-switch-to-log-buffer     |
+| d   | Show Diagnostic          | flycheck-show-diagnostic          |
+| g   | Go to Diagnostic         | flycheck-goto-diagnostic          |
+| b   | Show Buffer Diagnostics  | flycheck-show-buffer-diagnostics  |
+| p   | Show Project Diagnostics | flycheck-show-project-diagnostics |
 
-#+NAME: highlight-toggle-keybindings
-| Key | Function            | Label  | Options   | Description |
-|-----+---------------------+--------+-----------+-------------|
-| s   | symbol-overlay-mode | symbol | :toggle t |             |
-| l   | hl-line-mode        | line   | :toggle t |             |
-| x   | highlight-sexp-mode | sexp   | :toggle t |             |
-| t   | hl-todo-mode        | todo   | :toggle t |             |
+***** Backends
+#+NAME: flycheck-backend-menu-bindings
+| Key | Label                      | Function                    |
+|-----+----------------------------+-----------------------------|
+| B   | Display Running Backends   | flycheck-running-backends   |
+| D   | Display Disabled Backends  | flycheck-disabled-backends  |
+| R   | Display Reporting Backends | flycheck-reporting-backends |
 
-#+NAME: coding-toggle-keybindings
-| Key | Function                | Label              | Options   | Description |
-|-----+-------------------------+--------------------+-----------+-------------|
-| f   | flycheck-mode           | flycheck           | :toggle t |             |
+***** Navigate
+#+NAME: flycheck-navigate-menu-bindings
+| Key | Label          | Function            |
+|-----+----------------+---------------------|
+| j   | Next Error     | flycheck-next-error |
+| k   | Previous Error | flycheck-prev-error |
 
-#+NAME: debug-toggle-keybindings
-| Key | Function              | Label          | Options                                 | Description |
-|-----+-----------------------+----------------+-----------------------------------------+-------------|
-| D   | toggle-debug-on-error | debug on error | :toggle (default-value 'debug-on-error) |             |
-| X   | toggle-debug-on-quit  | debug on quit  | :toggle (default-value 'debug-on-quit)  |             |
+*** TODO IDE Helpers [%]
+*** TODO RSS/SX/Reddit [%]
+*** DONE Organisation [100%]
+**** DONE Org-roam
+CLOSED: [2023-11-23 Thu 17:56]
+#+NAME: org-roam-navigation-bindings
+| Key | Function                       | Label | Description |
+|-----+--------------------------------+-------+-------------|
+| l   | org-roam-buffer-toggle         |       |             |
+| f   | org-roam-node-find             |       |             |
+| g   | org-roam-ui-open               |       |             |
+| B   | consult-org-roam-backlinks     |       |             |
+| F   | consult-org-roam-forward-links |       |             |
+| s   | consult-org-roam-search        |       |             |
+| e   | consult-org-roam-file-find     |       |             |
 
-** Commenting
+#+NAME: org-roam-creation-bindings
+| Key | Function               | Label            | Description |
+|-----+------------------------+------------------+-------------|
+| i   | org-roam-node-insert   | insert node link |             |
+| r   | org-roam-raw-id-insert | insert RAW id    |             |
+| c   | org-roam-capture       | call org-capture |             |
+
+#+NAME: org-roam-bibliography-bindings
+| Key | Function                    | Label | Description |
+|-----+-----------------------------+-------+-------------|
+| n   | org-noter                   |       |             |
+| b   | generate-bibliography-entry |       |             |
+
+#+NAME: org-roam-helpers-bindings
+| Key | Function                 | Label | Description |
+|-----+--------------------------+-------+-------------|
+| I   | org-id-get-create        |       |             |
+| a   | generate-org-heading-ids |       |             |
+| A   | generate-org-roam-ids    |       |             |
+
+* Commenting
 :PROPERTIES:
 :ID:       4dba48de-328e-466c-b184-189803ebf596
 :END:
@@ -1163,14 +1151,3 @@
 |---------+------------------+--------------------------|
 | C-c C-; | comment-region   | Commenting the region    |
 | C-c C-: | uncomment-region | Uncommenting the region  |
-
-** Reminder
-:PROPERTIES:
-:ID:       2096fe22-9f3b-44a5-9aab-97a9bcd5f06c
-:END:
-
-#+NAME: remind-bindings-keybindings
-| Key     | Function                      | Description              |
-|---------+-------------------------------+--------------------------|
-| <f10>   | remind-bindings-togglebuffer  |                          |
-| C-<f10> | remind-bindings-specific-mode |                          |
