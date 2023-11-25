@@ -5473,7 +5473,6 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
   (use-package elfeed-tube-mpv
     :elpaca (:type git :host github :repo "karthink/elfeed-tube" :files ("elfeed-tube-mpv.el"))
     :tags '("CONNECTED" "RSS" "YOUTUBE")
-
     :bind (
       :map elfeed-show-mode-map (
         <<keybindings-gen(table=elfeed-tube-mpv-keybindings)>>
@@ -6190,7 +6189,6 @@ CLOSED: [2021-01-18 Mon 12:11]
 :END:
 The Matrix configuration is based on =ement=.
 This package is not in stable stage (yet) but is causing less problem with my way of using emacs than =matrix-client.el=.
-=ement= requires =plz= which is not on melpa yet.
 Therefore, all the packages are installed using =straight=.
 
 #+BEGIN_SRC emacs-lisp
@@ -7672,7 +7670,10 @@ Finally, the package =page-break-lines= provides a nice way to visualize a page 
     ;; `puni-global-mode` before `puni` is actually loaded. Only after you press
     ;; any key that calls Puni commands, it's loaded.
     (puni-global-mode)
-    (add-hook 'term-mode-hook #'puni-disable-puni-mode))
+    (add-hook 'term-mode-hook #'puni-disable-puni-mode)
+
+    ;; Use electric-pair to add auto-pair
+    (electric-pair-mode 1))
 
   (use-package rainbow-delimiters
     :tags '("VISUAL")
