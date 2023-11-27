@@ -2318,7 +2318,6 @@ CLOSED: [2022-02-10 Thu 07:04]
 :PROPERTIES:
 :ID:       6aaa332d-dc7d-4abf-a4fb-0e2ff5f322f1
 :END:
-
 #+transclude: [[file:keytable_summary.org::Org-Roam]] :only-contents
 
 #+begin_src emacs-lisp
@@ -2337,35 +2336,53 @@ CLOSED: [2022-02-10 Thu 07:04]
           browse-url-galeon-program nil
           browse-url-netscape-program nil)
 
+    :pretty-hydra
+    ((:title "ORG Roam" :color teal :hint nil)
+     ("Navigation" (
+        <<hydra-keybindings-gen(table=org-roam-navigation-bindings)>>
+     )
+
+      "Creation" (
+        <<hydra-keybindings-gen(table=org-roam-creation-bindings)>>
+      )
+
+      "Bibliography" (
+        <<hydra-keybindings-gen(table=org-roam-bibliography-bindings)>>
+      )
+
+      "Helpers" (
+        <<hydra-keybindings-gen(table=org-roam-helpers-bindings)>>
+      )))
+
     :config
     (org-roam-db-autosync-mode)
 
     (cl-defun org-roam-raw-id-insert (&optional filter-fn)
-    "Find an Org-roam node and insert (where the point is) the raw id.
+      "Find an Org-roam node and insert (where the point is) the raw id.
   FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
   and when nil is returned the node will be filtered out."
-    (interactive)
-    (unwind-protect
-        ;; Group functions together to avoid inconsistent state on quit
-        (atomic-change-group
-          (let* (region-text
-                 beg end
-                 (_ (when (region-active-p)
-                      (setq beg (set-marker (make-marker) (region-beginning)))
-                      (setq end (set-marker (make-marker) (region-end)))
-                      (setq region-text (org-link-display-format (buffer-substring-no-properties beg end)))))
-                 (node (org-roam-node-read region-text filter-fn))
-                 (description (or region-text
-                                  (org-roam-node-formatted node))))
-            (if (org-roam-node-id node)
-                (progn
-                  (when region-text
-                    (delete-region beg end)
-                    (set-marker beg nil)
-                    (set-marker end nil))
-                  (let ((id (org-roam-node-id node)))
-                    (insert id))))))
-      (deactivate-mark)))
+      (interactive)
+      (unwind-protect
+          ;; Group functions together to avoid inconsistent state on quit
+          (atomic-change-group
+            (let* (region-text
+                   beg end
+                   (_ (when (region-active-p)
+                        (setq beg (set-marker (make-marker) (region-beginning)))
+                        (setq end (set-marker (make-marker) (region-end)))
+                        (setq region-text (org-link-display-format (buffer-substring-no-properties beg end)))))
+                   (node (org-roam-node-read region-text filter-fn))
+                   (description (or region-text
+                                    (org-roam-node-formatted node))))
+              (if (org-roam-node-id node)
+                  (progn
+                    (when region-text
+                      (delete-region beg end)
+                      (set-marker beg nil)
+                      (set-marker end nil))
+                    (let ((id (org-roam-node-id node)))
+                      (insert id))))))
+        (deactivate-mark)))
 
     (defun generate-org-roam-ids ()
       "Generate unique IDs for all headings in the Org-Roam database."
