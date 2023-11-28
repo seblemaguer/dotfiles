@@ -1658,7 +1658,6 @@ The only important bits are:
   - the todo file is set to =~/pCloudDrive/org/todo/todo.org=
   - some icons are associated to some categories
 
-#+transclude: [[file:keytable_summary.org::org-agenda-entry-keybindings]]
 #+transclude: [[file:keytable_summary.org::org-agenda-hydra-entry-keybindings]]
 #+transclude: [[file:keytable_summary.org::org-agenda-mode-hydra-keybindings]]
 
@@ -1683,14 +1682,6 @@ The only important bits are:
      ("Time window" (
        <<hydra-keybindings-gen(table=org-agenda-mode-hydra-keybindings)>>
      )))
-
-    :bind (
-      <<keybindings-gen(table=org-agenda-entry-keybindings)>>
-
-      :map org-agenda-mode-map (
-         <<keybindings-gen(table=org-agenda-entry-keybindings)>>
-      )
-    )
 
     :config
 

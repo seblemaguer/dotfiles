@@ -98,13 +98,8 @@
 
 ** Org Agenda
 :PROPERTIES:
-:ID:       b8f3be19-fbae-479b-b314-38a95e3d4824
+:ID:       22c37e02-3817-4488-a041-a719fe76f536
 :END:
-#+NAME: org-agenda-entry-keybindings
-| Key   | Functon    | Description |
-|-------+------------+-------------|
-| <f12> | org-agenda |             |
-
 #+NAME: org-agenda-hydra-entry-keybindings
 | Key | Function               | Description |
 |-----+------------------------+-------------|
@@ -990,32 +985,33 @@
 :ID:       f4bd9554-48ce-4513-8b46-745e9cc46332
 :END:
 #+NAME: functional-keybindings
-|---------+-----------------------------------+-------------|
-| <f2>    | mu4e                              | mail        |
-|---------+-----------------------------------+-------------|
-| <f4>    | my-matcha-project                 |             |
-|---------+-----------------------------------+-------------|
-| <f5>    | emms-browse-by-artist             |             |
-| S-<f5>  | emms-playlist-mode-go             |             |
-|---------+-----------------------------------+-------------|
-| <f6>    | popper-toggle                     |             |
-| S-<f6>  | popper-cycle                      |             |
-| C-<f6>  | start-term-hydra/body             |             |
-|---------+-----------------------------------+-------------|
-| <f7>    | sauron-mode-line-toggle-hide-show |             |
-| C-<f7>  | sauron-mode-line-clear            |             |
-|---------+-----------------------------------+-------------|
-| <f8>    | my/imenu-list-smart-toggle        |             |
-|---------+-----------------------------------+-------------|
-| <f9>    | elfeed                            |             |
-| <C-f9>  | ytdious                           |             |
-|---------+-----------------------------------+-------------|
-| <f10>   | remind-bindings-togglebuffer      |             |
-| C-<f10> | remind-bindings-specific-mode     |             |
-|---------+-----------------------------------+-------------|
-| <f12>   | org-agenda                        |             |
-| C-<f12> | org-roam-hydra/body               |             |
-|---------+-----------------------------------+-------------|
+|---------+-----------------------------------+------|
+| <f2>    | mu4e                              | mail |
+|---------+-----------------------------------+------|
+| <f4>    | my-matcha-project                 |      |
+|---------+-----------------------------------+------|
+| <f5>    | emms-browse-by-artist             |      |
+| S-<f5>  | emms-playlist-mode-go             |      |
+|---------+-----------------------------------+------|
+| <f6>    | popper-toggle                     |      |
+| S-<f6>  | popper-cycle                      |      |
+| C-<f6>  | start-term-hydra/body             |      |
+|---------+-----------------------------------+------|
+| <f7>    | sauron-mode-line-toggle-hide-show |      |
+| C-<f7>  | sauron-mode-line-clear            |      |
+|---------+-----------------------------------+------|
+| <f8>    | my/imenu-list-smart-toggle        |      |
+|---------+-----------------------------------+------|
+| <f9>    | elfeed                            |      |
+| <C-f9>  | ytdious                           |      |
+|---------+-----------------------------------+------|
+| <f10>   | remind-bindings-togglebuffer      |      |
+| C-<f10> | remind-bindings-specific-mode     |      |
+|---------+-----------------------------------+------|
+| <f12>   | org-agenda                        |      |
+| S-<f12> | org-timeblock                     |      |
+| C-<f12> | org-roam-hydra/body               |      |
+|---------+-----------------------------------+------|
 
 ** Menu bindings
 *** Main Entry
