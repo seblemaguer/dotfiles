@@ -457,10 +457,10 @@
 :ID:       a1ef3b13-bd96-4d0c-b95d-9b1603c2aa8f
 :END:
 
-#+NAME: consult-dash-entry-keybindings
-| Key   | Functon      | Description |
-|-------+--------------+-------------|
-| M-s d | consult-dash |             |
+#+NAME: devdocs-entry-keybindings
+| Key   | Functon              | Description |
+|-------+----------------------+-------------|
+| M-s d | devdocs-browser-open |             |
 
 ** Recoll
 :PROPERTIES:
@@ -1129,6 +1129,7 @@ CLOSED: [2023-11-23 Thu 17:56]
 | Key | Function                    | Label | Description |
 |-----+-----------------------------+-------+-------------|
 | n   | org-noter                   |       |             |
+| m   | org-media-noter             |       |             |
 | b   | generate-bibliography-entry |       |             |
 
 #+NAME: org-roam-helpers-bindings

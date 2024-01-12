@@ -3524,20 +3524,15 @@ Dash (https://www.kapeli.com/dash) provides a set of full documentation to downl
 #+transclude: [[file:keytable_summary.org::Dash/Docsets]] :only-contents
 
 #+begin_src emacs-lisp
-  (use-package consult-dash
+  (use-package devdocs-browser
     :tags '("CORE" "DOCUMENTATION" "COMPLETION")
     :bind (
-      <<keybindings-gen(table=consult-dash-entry-keybindings)>>
+      <<keybindings-gen(table=devdocs-entry-keybindings)>>
     )
 
     :custom
-    (dash-docs-docsets-path "~/shared/docset")
-    (dash-docs-browser-func 'eww)
-
-    :config
-    (consult-customize consult-dash :initial (thing-at-point 'symbol))
-    (when (functionp 'consult-dash)
-      (setq-local consult-dash-docsets '("Python 3" "Pandas" "NumPy" "SciPy" "Matplotlib"))))
+    (devdocs-browser-cache-directory "~/shared/docset")
+  )
 #+end_src
 
 ** DONE Recoll
@@ -5337,11 +5332,10 @@ CLOSED: [2023-10-27 Fri 09:07]
 I am using syncthing as sharing system. Visualising the status on emacs is pretty convenient.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package syncthing-status
-    :elpaca (syncthing-status :type git :host github :repo "bharadswami/syncthing-status.el")
+  (use-package syncthing
     :tags '("DESKTOP" "FILE_MANAGEMENT")
     :custom
-    (syncthing-status-api-key syncthing-api-key))
+    (syncthing-default-server-token syncthing-api-key))
 #+END_SRC
 
 * DONE Online [100%]
