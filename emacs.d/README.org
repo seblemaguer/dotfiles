@@ -6353,8 +6353,6 @@ CLOSED: [2021-05-20 Thu 17:33]
     (telega-temp-dir                    (format "%s/tmp/telega/images" user-emacs-directory))
     (telega-use-images                  (display-graphic-p))
     (telega-chat-fill-column            120)
-    (telega-symbol-horizontal-bar       (propertize "-" 'face 'jao-themes-f00))
-    (telega-symbol-vertical-bar         (propertize "|" 'face 'jao-themes-dimm))
 
     :hook
     (telega-chat-mode . telega-chat-hook)
