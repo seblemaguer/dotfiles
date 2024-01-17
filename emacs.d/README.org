@@ -7311,11 +7311,11 @@ I deviate from it by prefering my emacs (color) theme (=flatfluc-theme=) and I t
 Concerning the layout, I needed to add a specific font resolution for my surface.
 This is done in the ~config~ part of the package loading.
 I also need =rainbow-mode= to help visualize the colors when editing the themes.
+Finally, I use =indicators= to show my relative position in the buffer.
 
 #+begin_src emacs-lisp
   (use-package rainbow-mode
-    :tags '("VISUAL")
-    )
+    :tags '("VISUAL"))
 
   (use-package flatfluc-theme
     :tags '("VISUAL")
@@ -7480,6 +7480,46 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
 
     (add-hook 'slack-mode-hook #'nano-modeline-chat-mode)
     (add-hook 'telega-chat-mode-hook #'nano-modeline-chat-mode)
+    )
+
+  ;; Add indicators for position in buffer and end of buffer.
+  ;; Only load this for graphical displays (i.e. not the terminal).
+  (when (display-graphic-p)
+    (use-package indicators
+      :diminish indicators-mode
+      :hook ((prog-mode . new-indicators)
+             (conf-mode . new-indicators)
+             (text-mode . new-indicators)
+             )
+      :config
+      (defun new-indicators ()
+        "Create new indicators in the current buffer."
+        (interactive)
+
+        ;; show an arrow at the begining of buffer using the default fringe face
+        (ind-create-indicator 'point-min
+                              :managed t
+                              :relative nil
+                              :fringe 'right-fringe
+                              :bitmap 'left-triangle
+                              :face 'fringe)
+
+        ;; show an arrow at the end of buffer using the default fringe face
+        (ind-create-indicator 'point-max
+                              :managed t
+                              :relative nil
+                              :fringe 'right-fringe
+                              :bitmap 'left-triangle
+                              :face 'fringe)
+
+        ;; ;; show relative position in the file (a.k.a. scroll bar)
+        (ind-create-indicator 'point
+                              :managed t
+                              :relative nil
+                              :fringe 'right-fringe
+                              :bitmap 'left-arrow)
+        )
+      )
     )
 #+end_src
 
