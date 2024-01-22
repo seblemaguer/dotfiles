@@ -7388,6 +7388,10 @@ Finally, I use =indicators= to show my relative position in the buffer.
           window-divider-default-places 'right-only)
     (window-divider-mode 1)
 
+    ;; Fringe bits
+    (setq-default indicate-buffer-boundaries 'right)
+
+    ;; Highlight current line
     (global-hl-line-mode)
 
     :config
@@ -7520,45 +7524,7 @@ Finally, I use =indicators= to show my relative position in the buffer.
                '()))
 
     (add-hook 'slack-mode-hook #'nano-modeline-chat-mode)
-    (add-hook 'telega-chat-mode-hook #'nano-modeline-chat-mode)
-    )
-
-  ;; Add indicators for position in buffer and end of buffer.
-  ;; Only load this for graphical displays (i.e. not the terminal).
-  (when (display-graphic-p)
-    (use-package indicators
-      :diminish indicators-mode
-      :hook ((prog-mode . new-indicators)
-             (conf-mode . new-indicators)
-             (text-mode . new-indicators))
-
-      :config
-      (defun new-indicators ()
-        "Create new indicators in the current buffer."
-        (interactive)
-
-        ;; show an arrow at the begining of buffer using the default fringe face
-        (ind-create-indicator 'point-min
-                              :managed t
-                              :relative nil
-                              :fringe 'right-fringe
-                              :bitmap 'left-triangle
-                              :face 'fringe)
-
-        ;; show an arrow at the end of buffer using the default fringe face
-        (ind-create-indicator 'point-max
-                              :managed t
-                              :relative nil
-                              :fringe 'right-fringe
-                              :bitmap 'left-triangle
-                              :face 'fringe)
-
-        ;; ;; show relative position in the file (a.k.a. scroll bar)
-        (ind-create-indicator 'point
-                              :managed t
-                              :relative nil
-                              :fringe 'right-fringe
-                              :bitmap 'right-arrow))))
+    (add-hook 'telega-chat-mode-hook #'nano-modeline-chat-mode))
 #+end_src
 
 ** DONE Prism
