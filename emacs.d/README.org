@@ -1440,6 +1440,7 @@ Therefore, I use the package =ox-gfm=
       :tags '("ORG")
       :after ox)
 #+end_src
+
 ** DONE Accessing
 CLOSED: [2021-01-03 Sun 15:24]
 :PROPERTIES:
@@ -2757,6 +2758,7 @@ For the folding, I am relying on =origami=.
 
 #+begin_src emacs-lisp
   (use-package origami
+    :elpaca (origami :host github :repo "elp-revive/origami.el")
     :tags '("FOLDING")
     :demand
     :bind (:map origami-mode-map
