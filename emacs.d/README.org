@@ -3690,6 +3690,12 @@ For CSV file, I rely on =csv-mode= but I add more separators.
 
      :config
      (setq csv-separators '("," ";" ":" " " "	")))
+
+   (use-package rainbow-csv
+     :elpaca (rainbow-csv :type git :host github :repo "emacs-vs/rainbow-csv")
+     :tags '("PROGRAMMING" "DATA")
+     :hook
+     (csv-mode . rainbow-csv-mode))
  #+end_src
 
 *** DONE CUE
