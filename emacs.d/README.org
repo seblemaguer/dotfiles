@@ -3601,14 +3601,31 @@ CLOSED: [2021-01-03 Sun 21:28]
 :ID:       6b0745dd-6954-4b94-a93d-94a770ef5d25
 :END:
 #+begin_src emacs-lisp
-  (defun my-eglot-organize-imports () (interactive)
-         (eglot-code-actions nil nil "source.organizeImports" t))
-
-  (use-package project :demand t)
+  (use-package project
+    :tags '("IDE" "PROGRAMMING")
+    :demand t)
 
   (use-package eglot
+    :tags '("IDE" "PROGRAMMING")
     :demand t
-    :after (project))
+    :after (project)
+    :init
+    (defun my-eglot-organize-imports () (interactive)
+           (eglot-code-actions nil nil "source.organizeImports" t)))
+
+  (use-package eglot-booster
+    :elpaca (eglot-booster
+             :type git
+             :host github
+             :repo "jdtsmith/eglot-booster"
+             :pre-build (
+               ("wget" "https://github.com/blahgeek/emacs-lsp-booster/releases/download/v0.2.0/emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")
+               ("unzip" "emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")
+               (rename-file "emacs-lsp-booster" (expand-file-name "~/environment/local/bin/"))
+               (delete-file "emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")))
+    :tags '("IDE" "PROGRAMMING")
+    :after eglot
+    :config (eglot-booster-mode))
 #+end_src
 
 ** DONE Dape/debug
