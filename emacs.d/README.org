@@ -3601,7 +3601,18 @@ CLOSED: [2021-01-03 Sun 21:28]
 :ID:       6b0745dd-6954-4b94-a93d-94a770ef5d25
 :END:
 #+begin_src emacs-lisp
+  (defun +elpaca-unload-project (e)
+    (and (featurep 'project) (unload-feature 'project t))
+    (elpaca--continue-build e))
+
+  ;; You could embed this code directly in the reicpe, I just abstracted it into a function.
+  (defun +elpaca-project-build-steps ()
+    (append (butlast (if (file-exists-p (expand-file-name "project" elpaca-builds-directory))
+                         elpaca--pre-built-steps elpaca-build-steps))
+            (list '+elpaca-unload-project 'elpaca--activate-package)))
+
   (use-package project
+    :elpaca `(project :build ,(+elpaca-project-build-steps))
     :tags '("IDE" "PROGRAMMING")
     :demand t)
 
@@ -4236,7 +4247,19 @@ I also use =jinja2= as a template format
 Finally, I use =numpydoc= to deal with the documentation.
 
 #+begin_src emacs-lisp
+  (defun +elpaca-unload-python (e)
+    (and (featurep 'python) (unload-feature 'python t))
+    (elpaca--continue-build e))
+
+  ;; You could embed this code directly in the reicpe, I just abstracted it into a function.
+  (defun +elpaca-python-build-steps ()
+    (append (butlast (if (file-exists-p (expand-file-name "python" elpaca-builds-directory))
+                         elpaca--pre-built-steps elpaca-build-steps))
+            (list '+elpaca-unload-python 'elpaca--activate-package)))
+
+
   (use-package python
+    :elpaca `(python :build ,(+elpaca-python-build-steps))
     :tags '("PROGRAMMING" "PYTHON")
 
     :hook
