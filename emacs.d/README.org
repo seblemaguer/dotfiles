@@ -4231,28 +4231,24 @@ CLOSED: [2021-01-04 Mon 07:42]
 :END:
 Python is my main programming language, so the one I configured the most intensively.
 I prefer to use ~ipython~ as the interpreter as it is more powerful.
-I use =python-mls= to enhance the REPL environment
+I use =python-mls= to enhance the REPL environment.
+I also use =jinja2= as a template format
 Finally, I use =numpydoc= to deal with the documentation.
 
 #+begin_src emacs-lisp
   (use-package python
     :tags '("PROGRAMMING" "PYTHON")
-    ;; :dash "Python 3" "Pandas" "NumPy" "SciPy" "Matplotlib"
-    :mode
-    ("\\.py\\'" . python-mode)
-    ("\\.wsgi$" . python-mode)
 
     :hook
-    (python-mode . eglot-ensure)
+    (python-ts-mode . eglot-ensure)
 
     :init
     (setq-default indent-tabs-mode nil)
     (setq-default python-indent-offset 4))
 
-
-  (use-package numpydoc
-    :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
-    :after python)
+  (use-package jinja2-mode
+    :tags '("PROGRAMMING" "PYTHON" "TEMPLATE")
+    :mode ("\\.tpl\\'"))
 
   (use-package python-mls
     :elpaca (python-mls :host github :repo "jdtsmith/python-mls")
@@ -4261,6 +4257,10 @@ Finally, I use =numpydoc= to deal with the documentation.
     (python-mls-multiline-history-modifier '(meta shift))
     :hook
     (inferior-python-mode . python-mls-mode))
+
+  (use-package numpydoc
+    :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
+    :after python)
 #+end_src
 
 *** DONE Shell
