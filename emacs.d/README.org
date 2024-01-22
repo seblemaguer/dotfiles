@@ -6013,7 +6013,6 @@ CLOSED: [2023-07-31 Mon 08:55]
 :ID:       2bca7d72-8731-4c97-8b3a-09baf20605db
 :END:
 For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
-=org-timeblock=
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-caldav
@@ -6042,8 +6041,8 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
                            :host github
                            :repo "ichernyshovvv/org-timeblock")
     :custom
-    (org-timeblock-n-days-view 7)
-    (org-timeblock-view-options nil)
+    (org-timeblock-span 7)
+    (org-timeblock-scale-options '(8 . 22))
     (org-timeblock-inbox-file (concat (file-truename user-emacs-directory) ".org-timeblock-inbox.org" ))
 
     :config
