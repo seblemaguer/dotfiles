@@ -4340,8 +4340,7 @@ I use =web-mode= to edit any kind of web-programming (html, css, and templates).
                        unless (string-match-p "^[a-z-]" (cdr pair))
                        collect (cons (car pair)
                                      (string-trim-right (cdr pair)
-                                                        "\\(?:>\\|]\\|}\\)+\\'")))))
-    )
+                                                        "\\(?:>\\|]\\|}\\)+\\'"))))))
 #+end_src
 
 *** DONE Sound and Music
@@ -7508,8 +7507,8 @@ Finally, I use =indicators= to show my relative position in the buffer.
       :diminish indicators-mode
       :hook ((prog-mode . new-indicators)
              (conf-mode . new-indicators)
-             (text-mode . new-indicators)
-             )
+             (text-mode . new-indicators))
+
       :config
       (defun new-indicators ()
         "Create new indicators in the current buffer."
@@ -7536,10 +7535,7 @@ Finally, I use =indicators= to show my relative position in the buffer.
                               :managed t
                               :relative nil
                               :fringe 'right-fringe
-                              :bitmap 'left-arrow)
-        )
-      )
-    )
+                              :bitmap 'right-arrow))))
 #+end_src
 
 ** DONE Prism
