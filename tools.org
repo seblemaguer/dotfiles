@@ -481,6 +481,7 @@ you can then active as follow
 #+begin_src sh
   systemctl --user enable davmail
 #+end_src
+
 * Emailproxy
 ** Systemd service
 #+begin_src conf :tangle ~/.config/systemd/user/emailproxy.service :mkdirp yes
@@ -529,27 +530,22 @@ you can then active as follow
   osd-status-msg='${time-pos} / ${duration}${?percent-pos:  (${percent-pos}%)}${?frame-drop-count:${!frame-drop-count==0:  Dropped: ${frame-drop-count}}}\n${?chapter:Chapter: ${chapter}}'
 
   # ===== Seeking =====
-
   save-position-on-quit=yes               # saves the seekbar position on exit
   force-seekable=yes                      # forces videos to be seekable
 
-
-
   # ===== RAM =====
-
   cache=yes                               # uses a large seekable RAM cache even for local input.
   cache-secs=300                          # uses extra large RAM cache (needs cache=yes to make it useful).
   demuxer-max-back-bytes=20M              # sets fast seeking
   demuxer-max-bytes=20M                   # sets fast seeking
-
   demuxer-readahead-secs=200
-  # ===== Audio =====
 
+  # ===== Audio =====
   volume-max=100                          # maximum volume in %, everything above 100 results in amplification
   volume=70                               # default volume, 100 = unchanged
+  audio-display=no
 
   # ===== Subtitles =====
-
   # Display English Subtitles if available
   #sub-ass-force-margins=yes
   #sub-ass-force-style=Kerning=yes        # allows you to override style parameters of ASS scripts
