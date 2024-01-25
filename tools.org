@@ -481,17 +481,35 @@ you can then active as follow
 #+begin_src sh
   systemctl --user enable davmail
 #+end_src
+* Emailproxy
+** Systemd service
+#+begin_src conf :tangle ~/.config/systemd/user/emailproxy.service :mkdirp yes
+  [Unit]
+  Description=Email OAuth2 Proxy Daemon
+
+  [Service]
+  Type=simple
+  ExecStart=%h/.local/bin/emailproxy --external-auth --config-file %h/.config/emailproxy.cfg --no-gui
+  TimeoutStopSec=20
+  Restart=on-failure
+
+  [Install]
+  WantedBy=default.target
+#+end_src
+
+you can then active as follow
+#+begin_src sh
+  systemctl --user enable emailproxy
+#+end_src
 
 * MPV
 ** overall configuration
 #+begin_src conf :tangle ~/.config/mpv/mpv.conf :mkdirp yes
-
   # MPV v3 Config - version 1.0.10
 
-  # REF: https://github.com/Argon-/mpv-config/blob/master/mpv.conf
+  # Adapted from: https://github.com/Argon-/mpv-config/blob/master/mpv.conf
 
   # ===== Terminal =====
-
   cursor-autohide=200                     # autohides the cursor after 200ms
   cursor-autohide-fs-only=yes             # don't autohide the cursor in window mode, only fullscreen
   msg-color=yes                           # color log messages on terminal
