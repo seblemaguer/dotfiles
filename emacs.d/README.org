@@ -2321,6 +2321,7 @@ CLOSED: [2022-02-10 Thu 07:04]
     :custom
     (org-roam-directory cloud-org-root-dir)
     (org-roam-file-exclude-regexp '(".stversions/" ".stfolder/"))
+    (org-roam-database-connector 'sqlite-builtin)
 
     :init
     (add-hook 'after-init-hook 'org-roam-setup)
@@ -2390,7 +2391,33 @@ CLOSED: [2022-02-10 Thu 07:04]
              'file)
             (save-buffer))))
       (message "Unique IDs generated for all Org-Roam files."))
-    )
+
+  (cl-defmethod org-roam-node-directories ((node org-roam-node))
+    (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
+        (format "(%s)" (car (split-string dirs "/")))
+      ""))
+
+  (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
+    (let ((level (org-roam-node-level node)))
+      (concat
+       (when (> level 0) (concat (org-roam-node-file-title node) " > "))
+       (when (> level 1) (concat (string-join (org-roam-node-olp node) " > ") " > "))
+       (org-roam-node-title node))))
+
+  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
+    (let* ((count (caar (org-roam-db-query
+                         [:select (funcall count source)
+                                  :from links
+                                  :where (= dest $s1)
+                                  :and (= type "id")]
+                         (org-roam-node-id node)))))
+      (format "[%d]" count)))
+
+  (setq org-roam-node-display-template
+        (concat
+         (propertize "${directories} / " 'face 'org-tag)
+         "${hierarchy:*}"
+         (propertize "${backlinkscount:6}" 'face 'org-tag))))
 
   (use-package org-roam-protocol
     :elpaca (:host github :repo "org-roam/org-roam" :files ("extensions/org-roam-protocol.el"))
