@@ -1573,6 +1573,7 @@ CLOSED: [2021-12-10 Fri 14:17]
 The visual configuration for =org-mode= is based on =org-modern=.
 The main tweaks are that some specific colors are defined for some specific keywords and icons are associated to some categories.
 I also introduced =org-tree-slide= to enjoy quick presentation
+=org-appear= is used to be able to edit more easily the org-mode markups
 
 #+transclude: [[file:keytable_summary.org::org-tree-slide-keybindings]]
 
@@ -1619,6 +1620,15 @@ I also introduced =org-tree-slide= to enjoy quick presentation
             ))
 
     (with-eval-after-load 'org (global-org-modern-mode)))
+
+  (use-package org-appear
+    :tags '("VISUAL" "ORG")
+    :custom
+    (org-appear-autolinks t)
+    (org-appear-autosubmarkers t)
+    (org-appear-autoentities t)
+    (org-appear-autokeywords t)
+    :hook (org-mode . org-appear-mode))
 
   (use-package org-rainbow-tags
     :tags '("VISUAL" "ORG")
