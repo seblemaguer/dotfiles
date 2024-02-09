@@ -5718,7 +5718,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
       (org-hide-block-all)
       (org-hide-drawer-all))
 
-    ;; Org HTML Styling
+    ;; Org HTML Styling (from https://github.com/jeremy-compostella/org-msg/issues/143#issuecomment-1412904472)
     (defconst cpm-org-msg-style
       (let* ((font-family '(font-family . "font-family: \"Helvetica\", \"Arial\", sans-serif"))
              (font-size '(font-size . "12pt"))
@@ -5822,6 +5822,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
                   ,font-family))
           (div nil (,@font (line-height . "1.25"))))))
 
+    ;; Main part is coming from https://gitlab.com/jdm204/dotfiles/-/blob/master/config.org
     (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
           org-msg-greeting-name-limit 3
           org-msg-startup "hidestars indent inlineimages"
