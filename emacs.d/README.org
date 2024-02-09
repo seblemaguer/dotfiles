@@ -1,6 +1,5 @@
 #+TITLE: Emacs configuration file
 #+AUTHOR: Sébastien Le Maguer
-#+EMAIL: lemagues@tcd.ie
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  fr
@@ -2422,23 +2421,7 @@ CLOSED: [2022-02-10 Thu 07:04]
   (use-package org-roam-protocol
     :elpaca (:host github :repo "org-roam/org-roam" :files ("extensions/org-roam-protocol.el"))
     :tags '("ORG" "USER")
-    :after org-roam
-    :config
-    (cl-defmethod org-roam-node-directories ((node org-roam-node))
-      (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
-          (format "(%s)" (car (f-split dirs)))
-        ""))
-
-    (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
-      (let* ((count (caar (org-roam-db-query
-                           [:select (funcall count source)
-                                    :from links
-                                    :where (= dest $s1)
-                                    :and (= type "id")]
-                           (org-roam-node-id node)))))
-        (format "[%d]" count)))
-
-    (setq org-roam-node-display-template "${title:100} ${backlinkscount:4}"))
+    :after org-roam)
 
   (use-package org-roam-ui
     :elpaca (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
@@ -5727,7 +5710,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
     ))
 
     :hook
-    (mu4e-compose-pre . org-msg-mode)
+    (mu4e-compose-pre  . org-msg-mode)
     (org-msg-edit-mode . format-hook-message)
 
     :config
