@@ -217,6 +217,10 @@
   #: shell integration {{{
   shell_integration disabled
   #! }}}
+
+  #: notification {{{
+  enable_audio_bell no
+  #! }}}
 #+end_src
 
 ** Theme
