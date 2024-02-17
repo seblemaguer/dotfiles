@@ -532,6 +532,15 @@
 | C-c i | clang-format-region |             |
 | C-c u | clang-format-buffer |             |
 
+** Python
+:PROPERTIES:
+:ID:       89f2e84b-8d7b-42c9-821b-b2762b1bdee0
+:END:
+#+NAME: python-entry-keybindings
+| Key     | Function            | Description |
+|---------+---------------------+-------------|
+| C-c C-n | numpydoc-generate   |             |
+
 * Writing
 :PROPERTIES:
 :ID:       c1caab20-f777-48ec-8a5d-981b315e2575
@@ -1014,6 +1023,9 @@
 |---------+-----------------------------------+------|
 
 ** Menu bindings
+:PROPERTIES:
+:ID:       7b2975a1-ed8c-4cb4-b923-33e924a0775f
+:END:
 *** Main Entry
 :PROPERTIES:
 :ID:       1f351900-07f7-41d2-bfde-02f0bf096515
@@ -1058,15 +1070,44 @@
 | s   | snapshot-timeline    | List backups          |             |
 | S   | snapshot-timemachine | Timemachine on backup |             |
 
+#+NAME: metal-archive-keybindings
+| Key | Function                            | Label               | Description |
+|-----+-------------------------------------+---------------------+-------------|
+| M   | metal-archives-shopping-list-update | Retrieve CD release |             |
+
 *** TODO Communication / Mail [0%]
+:PROPERTIES:
+:ID:       874c0828-9f53-43f4-aaf1-bb466bf28ed2
+:END:
 **** TODO Mail (Mu4e)
+:PROPERTIES:
+:ID:       c157579b-6b9c-4709-b5c0-6b55c15ee80b
+:END:
 **** TODO Telega
+:PROPERTIES:
+:ID:       a2b07a87-bfcd-4b91-8298-cc6ed2208703
+:END:
 **** TODO Slack
+:PROPERTIES:
+:ID:       df89d98b-7529-430e-bad9-f7f064750828
+:END:
 **** TODO ement
+:PROPERTIES:
+:ID:       2b6a3493-c0db-4fb9-95cc-abad350d3bef
+:END:
 **** TODO IRC (?)
+:PROPERTIES:
+:ID:       8a8f7941-14a4-4f1f-b711-c3db57694dd7
+:END:
 
 *** TODO Project / Code management [50%]
+:PROPERTIES:
+:ID:       7c408623-09ce-4e59-bd28-c1348d3ebb0a
+:END:
 **** TODO Entry
+:PROPERTIES:
+:ID:       229c99e4-d862-45a4-9721-0938847842ea
+:END:
 #+NAME: project-main-menu-keybindings
 | Key | Label       | Function           |
 |-----+-------------+--------------------|
@@ -1077,7 +1118,13 @@
 
 **** DONE Checking/Lint - Flycheck
 CLOSED: [2023-11-25 Sat 10:17]
+:PROPERTIES:
+:ID:       20f40eb5-15fb-4057-b5dd-836a546a19e4
+:END:
 ***** Diagnostics
+:PROPERTIES:
+:ID:       e787c705-f3ca-45d5-a17c-f3a0bbd94c16
+:END:
 #+NAME: flycheck-diagnosis-menu-bindings
 | Key | Label                    | Function                          |
 |-----+--------------------------+-----------------------------------|
@@ -1088,6 +1135,9 @@ CLOSED: [2023-11-25 Sat 10:17]
 | p   | Show Project Diagnostics | flycheck-show-project-diagnostics |
 
 ***** Backends
+:PROPERTIES:
+:ID:       69cc028c-8e84-4613-96a1-a14125bfb524
+:END:
 #+NAME: flycheck-backend-menu-bindings
 | Key | Label                      | Function                    |
 |-----+----------------------------+-----------------------------|
@@ -1096,6 +1146,9 @@ CLOSED: [2023-11-25 Sat 10:17]
 | R   | Display Reporting Backends | flycheck-reporting-backends |
 
 ***** Navigate
+:PROPERTIES:
+:ID:       3953939d-4500-4add-8045-b5ce40f067b4
+:END:
 #+NAME: flycheck-navigate-menu-bindings
 | Key | Label          | Function            |
 |-----+----------------+---------------------|
@@ -1103,10 +1156,22 @@ CLOSED: [2023-11-25 Sat 10:17]
 | k   | Previous Error | flycheck-prev-error |
 
 *** TODO IDE Helpers [%]
+:PROPERTIES:
+:ID:       fd949d9e-3c39-4631-bf2b-e685386465ef
+:END:
 *** TODO RSS/SX/Reddit [%]
+:PROPERTIES:
+:ID:       a990aaf3-22aa-4b01-bf05-8ea41db7f56a
+:END:
 *** DONE Organisation [100%]
+:PROPERTIES:
+:ID:       86349db5-1730-4beb-9812-67d6daa5a520
+:END:
 **** DONE Org-roam
 CLOSED: [2023-11-23 Thu 17:56]
+:PROPERTIES:
+:ID:       c67cd9c1-d4c6-47c9-8450-8b5ff3fec6b2
+:END:
 #+NAME: org-roam-navigation-bindings
 | Key | Function                       | Label | Description |
 |-----+--------------------------------+-------+-------------|

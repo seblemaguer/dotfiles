@@ -4272,6 +4272,9 @@ I use =python-mls= to enhance the REPL environment.
 I also use =jinja2= as a template format
 Finally, I use =numpydoc= to deal with the documentation.
 
+
+#+transclude: [[file:keytable_summary.org::python-entry-keybindings]]
+
 #+begin_src emacs-lisp
   (defun +elpaca-unload-python (e)
     (and (featurep 'python) (unload-feature 'python t))
@@ -4287,6 +4290,9 @@ Finally, I use =numpydoc= to deal with the documentation.
   (use-package python
     :ensure `(python :build ,(+elpaca-python-build-steps))
     :tags '("PROGRAMMING" "PYTHON")
+    :bind (:map python-mode-map (
+      <<keybindings-gen(table=python-entry-keybindings)>>
+    ))
 
     :hook
     (python-ts-mode . eglot-ensure)
@@ -4310,7 +4316,8 @@ Finally, I use =numpydoc= to deal with the documentation.
 
   (use-package numpydoc
     :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
-    :after python)
+    :after python
+    :commands (numpydoc-generate))
 #+end_src
 
 *** DONE Shell
