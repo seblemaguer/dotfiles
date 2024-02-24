@@ -1306,7 +1306,6 @@ For whatever reason, it is required to *explicitly* configure =transient=.
 #+END_SRC
 
 ** DONE Export [100%]
-CLOSED: [2021-01-03 Sun 13:47]
 :PROPERTIES:
 :ID:       f3eefeb0-0384-4ab3-91f9-bcdc66e347b1
 :END:
@@ -1436,6 +1435,19 @@ Therefore, I use the package =ox-gfm=
 #+begin_src emacs-lisp
   (use-package ox-gfm
       :tags '("ORG")
+      :after ox)
+#+end_src
+
+*** DONE SSH
+CLOSED: [2024-02-19 Mon 13:55]
+:PROPERTIES:
+:ID:       c2bcd9e3-d65a-498a-b289-08dd4873a724
+:END:
+There is also a nice way to have the SSH config file using org-mode and then export it.
+
+#+begin_src emacs-lisp
+  (use-package ox-ssh
+      :tags '("ORG" "SSH")
       :after ox)
 #+end_src
 
@@ -1746,6 +1758,11 @@ The only important bits are:
           ;; Define the diary comment syntax as elisp
           diary-comment-start ";;"
           diary-comment-end ""))
+
+  (use-package suomalainen-kalenteri
+    :tags '("DIARY" "USER" "CONNECTED")
+    :config
+    (setq calendar-holidays suomalainen-kalenteri)) ;; FIXME: should be more flexible than this
 #+end_src
 
 *** DONE Super agenda
@@ -2786,7 +2803,8 @@ For the folding, I am relying on =origami=.
 
     :config
     (define-prefix-command 'origami-mode-map)
-    (global-set-key (kbd "C-c @") 'origami-mode-map))
+    (global-set-key (kbd "C-c @") 'origami-mode-map)
+    (global-origami-mode))
 #+end_src
 
 ** DONE Completing [100%]
@@ -3620,22 +3638,13 @@ CLOSED: [2021-01-03 Sun 21:28]
 :ID:       6b0745dd-6954-4b94-a93d-94a770ef5d25
 :END:
 #+begin_src emacs-lisp
-  (defun +elpaca-unload-project (e)
-    (and (featurep 'project) (unload-feature 'project t))
-    (elpaca--continue-build e))
-
-  ;; You could embed this code directly in the reicpe, I just abstracted it into a function.
-  (defun +elpaca-project-build-steps ()
-    (append (butlast (if (file-exists-p (expand-file-name "project" elpaca-builds-directory))
-                         elpaca--pre-built-steps elpaca-build-steps))
-            (list '+elpaca-unload-project 'elpaca--activate-package)))
-
   (use-package project
-    :ensure `(project :build ,(+elpaca-project-build-steps))
+    :ensure nil
     :tags '("IDE" "PROGRAMMING")
     :demand t)
 
   (use-package eglot
+    :ensure nil
     :tags '("IDE" "PROGRAMMING")
     :demand t
     :after (project)
@@ -4276,19 +4285,8 @@ Finally, I use =numpydoc= to deal with the documentation.
 #+transclude: [[file:keytable_summary.org::python-entry-keybindings]]
 
 #+begin_src emacs-lisp
-  (defun +elpaca-unload-python (e)
-    (and (featurep 'python) (unload-feature 'python t))
-    (elpaca--continue-build e))
-
-  ;; You could embed this code directly in the reicpe, I just abstracted it into a function.
-  (defun +elpaca-python-build-steps ()
-    (append (butlast (if (file-exists-p (expand-file-name "python" elpaca-builds-directory))
-                         elpaca--pre-built-steps elpaca-build-steps))
-            (list '+elpaca-unload-python 'elpaca--activate-package)))
-
-
   (use-package python
-    :ensure `(python :build ,(+elpaca-python-build-steps))
+    :ensure nil
     :tags '("PROGRAMMING" "PYTHON")
     :bind (:map python-mode-map (
       <<keybindings-gen(table=python-entry-keybindings)>>
@@ -5841,7 +5839,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
           (div nil (,@font (line-height . "1.25"))))))
 
     ;; Main part is coming from https://gitlab.com/jdm204/dotfiles/-/blob/master/config.org
-    (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
+    (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:nil"
           org-msg-greeting-name-limit 3
           org-msg-startup "hidestars indent inlineimages"
           org-msg-default-alternatives '((new	       . (text))
