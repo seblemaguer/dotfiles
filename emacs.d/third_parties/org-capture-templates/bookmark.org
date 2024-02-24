@@ -1,6 +1,0 @@
-** REVIEW [[%:link][%:description]]
-:LOGBOOK:
-- Added: %U
-:END:
-
-%i
