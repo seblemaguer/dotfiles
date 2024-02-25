@@ -6059,14 +6059,27 @@ I also redesigned the header buffer.
     :ensure (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
     :tags '("CONNECTED" "MAIL")
     :after (mu4e)
+    :hook (mu4e-headers-mode . mu4e-thread-folding-mode)
+    :custom-face
+    (mu4e-thread-folding-root-unfolded-face
+     ((t (:extend t :background "#dce6f9" :weight bold :overline nil :underline nil))))
+    (mu4e-thread-folding-root-folded-face
+     ((t (:extend t :background "#eef3fc" :overline nil :underline nil))))
+    (mu4e-thread-folding-child-face
+     ((t (:extend t :background "#eef3fc" :underline nil))))
+    (mu4e-thread-folding-root-prefix-face
+     ((t (:extend t :background "#dce6f9" :overline nil :underline nil))))
+
     :config
 
-    (setq mu4e-headers-thread-single-orphan-prefix '("─> " . "─▶ ")
-          mu4e-headers-thread-orphan-prefix        '("┬> " . "┬▶ ")
-          mu4e-headers-thread-connection-prefix    '("│  " . "│  ")
-          mu4e-headers-thread-first-child-prefix   '("├> " . "├▶ ")
-          mu4e-headers-thread-child-prefix         '("├> " . "├▶ ")
-          mu4e-headers-thread-last-child-prefix    '("└> " . "╰▶ "))
+    (setq mu4e-headers-thread-child-prefix '("├>" . "┣▶ ")
+          mu4e-headers-thread-last-child-prefix '("└>" . "┗▶ ")
+          mu4e-headers-thread-connection-prefix '("│" . "┃ ")
+          mu4e-headers-thread-blank-prefix '(" " . "  ")
+          mu4e-headers-thread-orphan-prefix '("┬>" . "┳▶ ")
+          mu4e-headers-thread-single-orphan-prefix '("─>" . "━▶ ")
+
+          mu4e-headers-thread-duplicate-prefix '("=" . "≡ "))
 
     (add-to-list 'mu4e-header-info-custom
                  '(:empty . (:name "Empty"
