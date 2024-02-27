@@ -494,7 +494,7 @@ you can then active as follow
 
   [Service]
   Type=simple
-  ExecStart=%h/.local/bin/emailproxy --external-auth --config-file %h/.config/emailproxy.cfg --no-gui
+  ExecStart=%h/.local/bin/emailproxy --config-file %h/.config/emailproxy.cfg
   TimeoutStopSec=20
   Restart=on-failure
 
