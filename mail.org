@@ -16,68 +16,42 @@
   #!/usr/bin/python3
   # -*- coding: utf-8 -*-
 
-  import os
+  import pathlib
   import sys
-  import io
-  import logging
-  from sys import platform as _platform
-  from subprocess import check_output
+  import keepassxc_proxy_client
+  import keepassxc_proxy_client.protocol
 
-  GPG_PROG = "/usr/bin/gpg"
-
-  def decrypt(filename):
-      # # Load encrypted data
-      # f = open(os.path.expanduser(authinfo), "rb")
-      # encrypted_data = f.read()
-      # f.close()
-
-      # binary = GPG_PROG
-      # homedir = os.getenv("HOME") + "/.gnupg/"
-      # with open(os.path.expanduser(authinfo), "rb") as f:
-      #     decrypted_data = gnupg.GPG(binary=binary, homedir=homedir).decrypt(f.read())
-      with open(os.devnull, 'w') as devnull:
-          return check_output("%s -dq %s" % (GPG_PROG, filename), shell=True, stderr=devnull).decode("utf-8")
-
-  def contains(d, m):
-      '''Return True if d contains all items of m.'''
-      for k in m:
-          if not k in d or d[k] != m[k]:
-              return False
-      return True
-
-  def getnetrc(authinfo=None, **match):
-      '''A dumb filter for ~/.netrc.gpg. It understands oneline entries,
-      comments and default entry. No macros or multiline entries.
-
-      Return first matching dict or None.'''
-      default = None
-      if not authinfo:
-          authinfo = os.getenv('NETRC') or '~/.authinfo.gpg'
-
-      # Decrypt
-      decrypted_data = decrypt(os.path.expanduser(authinfo))
-      # logging.debug(decrypted_data)
-      # Extracting informations
-      for li in str(decrypted_data).split("\n"):
-          li = li.split() # current line in list
-          if not li:
-              continue
-          if li[0] == 'default':
-              default = dict(zip(li[1:-1:2], li[2::2]))
-              continue
-          elif li[0] == 'macdef':
-              continue
-
-          li = dict(zip(li[:-1:2], li[1::2])) # current line in dict
-          if match and contains(li, match):
-              return li
-
-      if default and contains(default, match):
-          return default
+  NAME = "getpasswd"
+  KEEPASS_CACHE = pathlib.Path.home()/".cache/keepass_key"
 
   # debug
   if __name__ == "__main__":
-      print(getnetrc(machine=sys.argv[1], login=sys.argv[2])['password'])
+
+      # Connect to the database
+      connection = keepassxc_proxy_client.protocol.Connection()
+      connection.connect()
+
+      # Authenticate the app
+      if KEEPASS_CACHE.exists():
+          with open(KEEPASS_CACHE, "rb") as f_key:
+              public_key = f_key.read(32)  # NOTE: the key is supposed to be 32 bytes
+          connection.load_associate(NAME, public_key)
+      else:
+          connection.associate()
+          _, public_key = connection.dump_associate()
+          with open(KEEPASS_CACHE, "wb") as f_key:
+              f_key.write(public_key)
+
+      # Test the connection
+      if not connection.test_associate():
+          raise Exception("association failed")
+
+      # Retrieve the info
+      con = connection.get_logins(sys.argv[1])
+      for elt in con:
+          if elt["login"] == sys.argv[2]:
+              print(elt["password"])
+              break
 #+end_src
 
 * COMMENT some extra configuration
