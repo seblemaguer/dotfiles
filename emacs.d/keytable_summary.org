@@ -62,6 +62,12 @@
 :PROPERTIES:
 :ID:       f08c2c7c-4cef-41ce-82d8-d66cebbca505
 :END:
+
+#+NAME: org-additional-keybindings
+| Key       | Function                               | Description |
+|-----------+----------------------------------------+-------------|
+| C-c C-x t | org-checkbox-toggle-insertion-deletion |             |
+
 ** Effort
 :PROPERTIES:
 :ID:       af5ed4c5-189e-4a83-bd0f-708138de543e
@@ -134,6 +140,17 @@
 |----------+-----------------------------------+-------------|
 | C-<left> | org-tree-slide-move-previous-tree |             |
 | C-<right | org-tree-slide-move-next-tree     |             |
+
+** Media-noter
+:PROPERTIES:
+:ID:       67c738b1-7643-44aa-bf5f-0b6cd3502e37
+:END:
+#+NAME: org-media-noter-keybindings
+| Key | function                    | Description |
+|-----+-----------------------------+-------------|
+| s-n | org-media-noter             |             |
+| s-i | org-media-noter-insert-note |             |
+| s-s | org-media-noter-seek        |             |
 
 * PDF
 :PROPERTIES:

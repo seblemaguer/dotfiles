@@ -340,7 +340,7 @@ The specification respects the following syntax:
 
 #+begin_src emacs-lisp
   (use-package use-package-tags
-    :elpaca (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
+    :ensure (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
     :config
 
     (when no-connection
@@ -1007,6 +1007,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
   - =DELEGATED= for tasks which are delegated to someone else
   - =REMINDER= for long "tasks" (e.g., cancelling info, ...) or tasks which have been completed but requires the reception of an element (e.g., orders, ...x)
 
+#+transclude: [[file:keytable_summary.org::org-additional-keybindings]]
 #+transclude: [[file:keytable_summary.org::org-effort-keybindings]]
 
 #+begin_src emacs-lisp
@@ -1017,6 +1018,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
     (org-after-todo-statistics . org-summary-todo)
 
     :bind (:map org-mode-map (
+      <<keybindings-gen(table=org-additional-keybindings)>>
       <<keybindings-gen(table=org-effort-keybindings)>>
     ))
 
@@ -1145,7 +1147,17 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
        (lambda ()
          (org-id-get-create))
        nil 'file)
-      (message "Generated IDs for all headings")))
+      (message "Generated IDs for all headings"))
+
+    (defun org-checkbox-toggle-insertion-deletion ()
+      "Toggle the insertion/deletion of a checkbox for an org-mode list item."
+      (interactive)
+      (save-excursion
+        (beginning-of-line)
+        (if (re-search-forward "^\\(\\s-*\\)- \\[\\([ X]\\)\\] \\(.*\\)" (line-end-position) t)
+            (replace-match "\\1- \\3")
+          (re-search-forward "^\\(\\s-*\\)- \\(.*\\)" (line-end-position) t)
+          (replace-match "\\1- [ ] \\2")))))
 
   ;; Elpaca should wait org to be loaded
   (elpaca-wait)
@@ -2737,11 +2749,15 @@ CLOSED: [2022-02-10 Thu 07:12]
     (org-noter-property-note-location "INTERLEAVE_PAGE_NOTE"))
 #+end_src
 
-*** TODO org-media-noter
+*** DONE org-media-noter
+CLOSED: [2024-03-02 Sat 07:48]
 :PROPERTIES:
 :ID:       91fbbd98-e7f9-4990-8600-de5d66c59a76
 :END:
-- Set the shortcuts
+=org-media-note= provides a neat way to annotate videos in org-mode.
+I added a package which builds on top of =org-media-note= (named =org-media-noter=) to maintain consistency with the way I annotate PDFs.
+
+#+transclude: [[file:keytable_summary.org::org-media-noter-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package org-media-note
@@ -2751,7 +2767,10 @@ CLOSED: [2022-02-10 Thu 07:12]
   (use-package org-media-noter
     :ensure (org-media-noter :type git :host github :repo "seblemaguer/org-media-noter")
     :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
-    :commands (org-media-noter))
+    :commands (org-media-noter)
+    :bind (
+      <<keybindings-gen(table=org-media-noter-keybindings)>>
+    ))
 #+end_src
 
 * DONE Environment [100%]
@@ -4374,7 +4393,7 @@ I use =web-mode= to edit any kind of web-programming (html, css, and templates).
 #+begin_src emacs-lisp
   (use-package web-mode
     :tags '("PROGRAMMING" "WEB")
-    :mode (".twig$" ".html?$" ".tpl$")
+    :mode (".twig$" ".html?$")
 
     :config
     (setq web-mode-markup-indent-offset 4
