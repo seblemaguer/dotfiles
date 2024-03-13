@@ -143,7 +143,7 @@ We also provide a helper to shutdown properly the server.
   (kill-emacs))
 #+end_src
 
-* TODO Core [90%]
+* DONE Core [100%]
 :PROPERTIES:
 :ID:       5d3e0d31-680d-4865-a0ce-8e1791b59599
 :END:
@@ -201,30 +201,6 @@ Some default values related to emacs' core behaviour, like the garbage collector
         ;; Garbage collection (see https://github.com/jethrokuan/.emacs.d/blob/master/config.org)
         gc-cons-threshold 100000000
         large-file-warning-threshold 100000000)
-#+end_src
-
-*** DONE Identification helper
-CLOSED: [2021-01-03 Sun 10:41]
-:PROPERTIES:
-:ID:       62063570-ae6d-4290-998f-adf0958203d7
-:END:
-In order to keep the authentification as private as possible, two primitives are defined here;
-one to get the user (=my:auth-source-get-user=) and on to get the password (=my:auth-source-get-passwd=).
-
-#+begin_src emacs-lisp
-  (require 'cl-lib)
-  (require 'auth-source)
-  (cl-defun my:auth-source-get-user (&rest spec &allow-other-keys)
-    "Helper to get the user given the SPEC from authsource."
-    (let ((founds (apply 'auth-source-search spec)))
-      (when founds
-	(plist-get (nth 0 founds) :user))))
-
-  (cl-defun my:auth-source-get-passwd (&rest spec &allow-other-keys)
-    "Helper to get the password given the SPEC from authsource."
-    (let ((founds (apply 'auth-source-search spec)))
-      (when founds
-	(funcall (plist-get (nth 0 founds) :secret)))))
 #+end_src
 
 *** DONE Dealing with tangling this file
@@ -399,12 +375,61 @@ While alternatives exist, I find this combination more straightforward and clean
     :ensure t)
 #+end_src
 
-** DONE Load private part
-CLOSED: [2021-01-03 Sun 11:11]
+** DONE Dealing with authentication private configuration  [100%]
 :PROPERTIES:
 :ID:       d6dc9617-ee55-46ef-98b7-e744c07d0ff1
 :END:
-Some parts can't be totally hidden using the =my:auth-source-get-*= helpers.
+
+*** DONE Dealing with secret/password management
+CLOSED: [2024-03-13 Wed 22:59]
+:PROPERTIES:
+:SOURCE:   https://ph-uhl.com/emacs-password-management-on-linux/
+:ID:       af4f58fe-aa6a-48e8-8fe9-b892333fd190
+:END:
+Rely on the secret service protocol to retrieve the passwords.
+
+#+begin_src emacs-lisp
+  ;; Load and patch secrets
+  (use-package secrets
+    :ensure nil
+    :commands (secrets-search-items
+               secrets-get-secret
+               secrets-get-attributes)
+    :config
+    ;; Adds a patch to fix behavior with KeepassXC
+    (defun secrets-unlock-item (collection item)
+      "Unlock item labeled ITEM from collection labeled COLLECTION.
+    If successful, return the object path of the item."
+      (let ((item-path (secrets-item-path collection item)))
+        (unless (secrets-empty-path item-path)
+          (secrets-prompt
+           (cadr
+            (dbus-call-method
+             :session secrets-service secrets-path secrets-interface-service
+             "Unlock" `(:array :object-path ,item-path)))))
+        item-path))
+
+    ;; Adds a patch to fix behavior with KeepassXC
+    (defun secrets-get-secret (collection item)
+      "Return the secret of item labeled ITEM in COLLECTION.
+    If there are several items labeled ITEM, it is undefined which
+    one is returned.  If there is no such item, return nil.
+
+    ITEM can also be an object path, which is used if contained in COLLECTION."
+      (let ((item-path (secrets-unlock-item collection item)))
+        (unless (secrets-empty-path item-path)
+          (dbus-byte-array-to-string
+           (nth 2
+                (dbus-call-method
+                 :session secrets-service item-path secrets-interface-item
+                 "GetSecret" :object-path secrets-session-path)))))))
+#+END_SRC
+
+*** DONE Private configuration
+CLOSED: [2024-03-13 Wed 22:59]
+:PROPERTIES:
+:ID:       146b0726-c335-44e4-9fab-dbf696dd1063
+:END:
 These sensitive configuration parts are store in a dedicated file (identified by the variable =privade-file=) which is loaded here.
 
 #+begin_src emacs-lisp
