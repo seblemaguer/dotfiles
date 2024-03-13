@@ -3724,6 +3724,9 @@ CLOSED: [2021-01-03 Sun 21:28]
 
 ** DONE Dape/debug
 CLOSED: [2023-11-15 Wed 20:50]
+:PROPERTIES:
+:ID:       448c6b54-feb4-4887-bb09-ce1b25455651
+:END:
 =dape= provides a debugger interface relying on the protocol DAP.
 This package is in its early stage so more configuration will be required for futher improvement.
 
@@ -8046,6 +8049,9 @@ We can consider the following categories:
 An helper to remind these bindings is also provided.
 
 ** TODO Functional bindings
+:PROPERTIES:
+:ID:       c7d1328b-675f-4861-810f-c922d4d896aa
+:END:
 These bindings are associated to the keys <fn> where n is varying between 1 and 12.
 Their configuration heavily relies on =matcha=, =hydra= and =transient=.
 The package =matcha= is used as the entry point for the configuration for simplicity!
@@ -8056,6 +8062,9 @@ For the documentation and the reasoning behind the definition of the bindings, r
 
 **** DONE Initialise matcha (and the global bindings for better readibility)
 CLOSED: [2023-11-25 Sat 10:00]
+:PROPERTIES:
+:ID:       6a838fe1-9c36-4831-85d5-6b37298b2402
+:END:
 #+BEGIN_SRC emacs-lisp
   (use-package matcha
     :ensure (matcha :host github :repo "jojojames/matcha")
@@ -8276,6 +8285,9 @@ CLOSED: [2023-11-25 Sat 10:00]
 #+END_SRC
 
 **** TODO Define the transient helper bindings
+:PROPERTIES:
+:ID:       31d549b6-3664-4f48-a728-95bd3f96b06e
+:END:
 
 #+transclude: [[file:keytable_summary.org::Menu bindings]] :only-contents
 
