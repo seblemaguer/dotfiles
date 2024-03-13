@@ -3487,6 +3487,17 @@ For language specific configurations, it is done in the language configuration p
 
 #+begin_src emacs-lisp
   (use-package hl-todo
+    :ensure ( :package "hl-todo"
+              :repo "tarsius/hl-todo"
+              :fetcher github
+              :files ("*.el" "*.el.in" "dir" "*.info"
+                      "*.texi" "*.texinfo" "doc/dir"
+                      "doc/*.info" "doc/*.texi"
+                      "doc/*.texinfo" "lisp/*.el" (:exclude
+                                                   ".dir-locals.el" "test.el" "tests.el"
+                                                   "*-test.el" "*-tests.el" "LICENSE"
+                                                   "README*" "*-pkg.el"))
+              :version (lambda (_) "1.9.0"))
     :tags '("CORE" "IDE")
 
     :init
@@ -7364,6 +7375,15 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
       "Helper to force kill all service"
       (dolist (service prodigy-services)
         (prodigy-stop-service service t))))
+
+  (use-package osx-location
+    :ensure (
+       :package "osx-location"
+       :fetcher github
+       :repo "purcell/osx-location"
+       :files ("*.el" "EmacsLocationHelper")
+       :version (lambda (_) "0.4") ;; NOTE: dirty hack to ensure the version is properly set
+       ))
 
   (use-package elcontext
     :ensure (elcontext :type git
