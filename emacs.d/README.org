@@ -3713,6 +3713,8 @@ CLOSED: [2021-01-03 Sun 21:28]
              :host github
              :repo "jdtsmith/eglot-booster"
              :pre-build (
+               (when (file-exists-p (expand-file-name "~/environment/local/bin/emacs-lsp-booster"))
+                 (delete-file (expand-file-name "~/environment/local/bin/emacs-lsp-booster")))
                ("wget" "https://github.com/blahgeek/emacs-lsp-booster/releases/download/v0.2.0/emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")
                ("unzip" "emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")
                (rename-file "emacs-lsp-booster" (expand-file-name "~/environment/local/bin/"))
