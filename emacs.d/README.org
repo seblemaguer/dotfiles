@@ -5706,7 +5706,9 @@ I configured the package to support some additional features like a proper signa
 I also updated the citation line/format.
 
 As I am using multiple account, I use the package =smtpmail-multi= to sort this out.
-The default account is my TCD email as it is my daily use email.
+I also had to redefine the function ~smtpmail-try-auth-methods~ to support keepassxc and secret services.
+To do so, the assumption is that every SMTP credential is labeled as =<host>:<port>:<user>=.
+The default account is my work email as it is my most used account.
 
 Because, sometimes, I want to send rich emails, I use =org-msg= which relies on the HTML exporter provided by =org= to generate HTML emails.
 Finally, as I am quite absent-minded, I use a reminder to not forget the attachment: =message-attachment-reminder=.
@@ -5742,36 +5744,37 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
     :load-path default-plugin-dir
     :tags '("CONNECTED" "MAIL")
     :after mu4e
-    :init
-    (defun my-oauth2-fetch-access-token (user)
-      (replace-regexp-in-string
-       "\n$" ""
-       (with-temp-buffer
-         (call-process
-          "oauth2mail" nil t nil
-          "--encode-xoauth2"
-          "-c" (expand-file-name oauth2mail-config-file) user)
-         (buffer-string))))
-
-    (cl-defmethod smtpmail-try-auth-method
-      (process (_mech (eql my-xoauth2)) user password)
-      (let* ((access-token (my-oauth2-fetch-access-token user)))
-        (smtpmail-command-or-throw
-         process
-         (concat "AUTH XOAUTH2 " access-token)
-         235)))
-
-    ;; Register the method
-    (with-eval-after-load 'smtpmail
-      (add-to-list 'smtpmail-auth-supported 'my-xoauth2))
-
     :config
+
+    (defun smtpmail-try-auth-methods (process supported-extensions host port
+                                              &optional ask-for-password)
+      "Hijacked version of `smtpmail-try-auth-methods' to ensure the use of secrets and keepassxc."
+      (setq port
+            (if port
+                (format "%s" port)
+              "smtp"))
+
+      (let* ((mechs (seq-intersection smtpmail-auth-supported
+                                      (cdr-safe (assoc 'auth supported-extensions)) #'eq))
+             (password (secrets-get-secret keepass-db (format "%s:%s:%s" host port smtpmail-smtp-user)))
+             (result ""))
+
+        (while (and mechs
+                    (stringp result))
+          (setq result (catch 'done
+                         (smtpmail-try-auth-method
+                          process (intern-soft (pop mechs)) smtpmail-smtp-user password))))
+
+        ;; A string result is an error.
+        (if (stringp result)
+            (throw 'done result)
+          result)))
 
     ;; Define default environment
     (setq user-full-name "Sébastien Le Maguer"
-          smtpmail-multi-default-account 'tcd
+          smtpmail-multi-default-account 'uh
           message-send-mail-function 'smtpmail-multi-send-it
-          mail-host-address "tcd.ie"
+          mail-host-address "helsinki.fi"
 
           ;; Debug part
           smtpmail-debug-info nil
