@@ -7316,12 +7316,14 @@ CLOSED: [2021-01-05 Tue 13:18]
 :END:
 I am using micromamba (more efficient than conda) to configure different environment for ~Python~ and ~R~.
 While =conda.el= provide a nice environment management, it is not compatible with micromamba.
-However =SqrtMinusOne= developped the package =micromamba.el= which provides a nice support for this tools.
+However =SqrtMinusOne= developped the package [[https://github.com/SqrtMinusOne/micromamba.el/][micromamba.el]] which provides a nice support for this tools.
 
 #+begin_src emacs-lisp
   (when (executable-find "micromamba")
     (use-package micromamba
       :ensure (micromamba :host github :repo "SqrtMinusOne/micromamba.el")
+      :init
+      (defalias 'conda 'micromamba)
       ;; :init
       ;; (setq conda-anaconda-home (expand-file-name "~/environment/local/mamba"))
 
