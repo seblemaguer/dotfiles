@@ -3706,7 +3706,9 @@ CLOSED: [2021-01-03 Sun 21:28]
     :after (project)
     :init
     (defun my-eglot-organize-imports () (interactive)
-           (eglot-code-actions nil nil "source.organizeImports" t)))
+           (eglot-code-actions nil nil "source.organizeImports" t))
+    :config
+    (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio"))))
 
   (use-package eglot-booster
     :ensure (eglot-booster
