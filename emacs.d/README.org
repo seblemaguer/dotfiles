@@ -5165,6 +5165,7 @@ CLOSED: [2023-10-27 Fri 09:32]
     :tags '("PROJECT"))
 
   (use-package projection-multi-embark
+    :disabled t
     :ensure t
     :tags '("PROJECT")
     :after embark
@@ -7182,6 +7183,7 @@ CLOSED: [2023-04-07 Fri 12:50]
 #+begin_src emacs-lisp
   (use-package transient-extras-lp
     :tags '("DESKTOP" "PRINT")
+    :after pdf-tools
     :config
     (with-eval-after-load 'dired
       (define-key
@@ -7499,7 +7501,7 @@ If this program is installed, we can use the emacs wrapper to facilitate the con
 
 #+begin_src emacs-lisp
 (when (executable-find "units")
-  (use-package units
+  (use-package units-mode
     :tags '("HELPERS")
     :hook text-mode
     :config
