@@ -1833,18 +1833,19 @@ As I have my own way of being organized, I redefined completely the groups.
                    :scheduled nil)
 
             ;; CD part
-            (:discard (:and (:category "Release" :tag "noexport")))
-            (:discard (:and (:category "Release" :todo "CANCELLED")))
+            (:discard (:and (:category "RELEASE" :tag "noexport")))
+            ;; (:discard (:and (:category "RELEASE" :tag "ignore")))
+            (:discard (:and (:category "RELEASE" :todo "CANCELLED")))
             (:name "Today's releases"
                    :and (:todo "RELEASE" :date today)
                    :order 8)
 
-            (:name "Releases"
-                   :and (:category "Release" :not (:todo "REMINDER"))
+            (:name "Past releases"
+                   :and (:category "RELEASE" :todo "TODO")
                    :order 8)
 
             (:name "Ordered Releases"
-                   :and (:category "Release" :todo "REMINDER")
+                   :and (:category "RELEASE" :todo "REMINDER")
                    :order 9)
 
             ;; Some standby thingy
