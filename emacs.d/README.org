@@ -7326,7 +7326,8 @@ However =SqrtMinusOne= developped the package [[https://github.com/SqrtMinusOne/
     (use-package micromamba
       :ensure (micromamba :host github :repo "SqrtMinusOne/micromamba.el")
       :init
-      (defalias 'conda 'micromamba)
+      (defalias 'conda-activate 'micromamba-activate)
+      (defalias 'conda-deactivate 'micromamba-deactivate)
       ;; :init
       ;; (setq conda-anaconda-home (expand-file-name "~/environment/local/mamba"))
 
