@@ -1789,8 +1789,7 @@ The only important bits are:
 
                                          ;; skip finished entries
                                          (org-agenda-skip-deadline-if-done t)
-                                         (org-agenda-skip-scheduled-if-done t)))
-                                       )
+                                         (org-agenda-skip-scheduled-if-done t))))
 
           ;; Define the diary comment syntax as elisp
           diary-comment-start ";;"
@@ -4499,14 +4498,18 @@ These tweaks concerns mainly of using =outline= to deal with folding,
 using the ~enquote~ command to do some quotation in latex and prepare a proper pdf compilation/synchronization.
 
 #+begin_src emacs-lisp
+  (use-package auctex
+    :ensure (:repo "https://git.savannah.gnu.org/git/auctex.git"
+                   :local-repo "auctex" :files ("*" :exclude ".git")
+                   :protocol https :inherit t :depth 1
+                   :pre-build (("chmod" "775" "autogen.sh") ("./autogen.sh") ("./configure") ("make"))
+                   :version (lambda (_) (require 'tex-site) AUCTeX-version)
+                   ))
+
   (use-package tex
-    :ensure (:package "auctex"
-                      :repo "https://git.savannah.gnu.org/git/auctex.git"
-                      :local-repo "auctex" :files ("*" :exclude ".git")
-                      :protocol https :inherit t :depth 1
-                      :pre-build (("chmod" "775" "autogen.sh") ("./autogen.sh") ("./configure") ("make")))
+    :ensure nil
     :tags '("WRITING" "LATEX")
-    :after (tex latex)
+    :after auctex
     :hook
     (LaTeX-mode . turn-off-auto-fill)
     (LaTeX-mode . (lambda () (TeX-fold-mode t)))
@@ -4516,6 +4519,7 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
     (TeX-after-compilation-finished-functions . TeX-revert-document-buffer)
 
     :config
+    (require 'latex)
     ;; PDF activated by default
     (TeX-global-PDF-mode 1)
 
@@ -4544,14 +4548,13 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
 
   (use-package latex-table-wizard
     :tags '("WRITING" "LATEX")
-    )
+    :after tex)
 
   (use-package sentex
     :ensure (sentex :type git
                     :repo "https://codeberg.org/martianh/sentex"
                     :files ("*.el" "*.eld"))
-    :tags '("WRITING" "LATEX")
-    )
+    :tags '("WRITING" "LATEX"))
 #+end_src
 
 *** DONE Reftex
@@ -4625,6 +4628,7 @@ I could have used the auctex default sequence, but I prefer to have an homogeneo
     (use-package auctex-latexmk
       :ensure (:type git :host github :repo "wang1zhen/auctex-latexmk")
       :tags '("WRITING" "LATEX" "COMPILATION")
+      :after tex
       :config
 
       ;; Redine TeX-output-mode to get the color !
@@ -4664,6 +4668,7 @@ Therefore, it is activated by default for latex but not for org files.
 #+begin_src emacs-lisp
   (use-package xenops
     :tags '("WRITING" "LATEX" "ORG" "DESKTOP")
+    :after tex
     :commands (xenops-mode xenops-doctor)
     :hook
     (latex-mode . xenops-mode))
@@ -4759,7 +4764,7 @@ However, it relies on a side script ~compilePGF~ being in the PATH!
   (use-package tikz-mode
     :ensure (tikz-mode :type git :host github :repo "seblemaguer/tikz-mode")
     :tags '("WRITING" "BIBTEX" "DESKTOP")
-    )
+    :after tex)
 #+end_src
 
 ** DONE Markdown
@@ -5751,7 +5756,6 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
     :tags '("CONNECTED" "MAIL")
     :after mu4e
     :config
-
     (defun smtpmail-try-auth-methods (process supported-extensions host port
                                               &optional ask-for-password)
       "Hijacked version of `smtpmail-try-auth-methods' to ensure the use of secrets and keepassxc."
