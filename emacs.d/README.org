@@ -7984,16 +7984,19 @@ CLOSED: [2021-03-01 Mon 09:17]
 :ID:       19d4716c-a330-4374-a71c-50d9e86b104b
 :END:
 When I am programming, I like seeing clearly at which indentation level I am.
-To see this, I am using =highlight-indent-guides=.
-Its configuration is pretty standard except I prefer the ~column~ method to the ~fill~ one.
+To see this, I am using =indent-bars=.
 
 #+begin_src emacs-lisp
-  (use-package highlight-indent-guides
-    :tags '("VISUAL")
-    :hook
-    (prog-mode . highlight-indent-guides-mode)
-    :config
-    (setq highlight-indent-guides-method 'column))
+  (use-package indent-bars
+    :ensure (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
+    :custom
+    (indent-bars-treesit-support t)
+    (indent-bars-treesit-ignore-blank-lines-types '("module"))
+
+    ;; Add other languages as needed
+    (indent-bars-treesit-scope '((python function_definition class_definition for_statement
+            if_statement with_statement while_statement)))
+    :hook ((python-ts-mode yaml-mode) . indent-bars-mode))
 #+end_src
 
 *** DONE Diff
