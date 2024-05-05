@@ -77,6 +77,9 @@
   export GEM_HOME="$USER_ENV_DIR/gems"
   export PATH="$GEM_HOME/bin:$PATH"
 
+  # NLTK
+  export NLTK_DATA="$HOME/.cache/nltk"
+
   #################################################################################ex#
   ### Remaining variables
   ###################################################################################
