@@ -1496,7 +1496,7 @@ CLOSED: [2021-01-03 Sun 15:24]
 This section configures packages to access information from the org files.
 =org-ql= is providing commands to query the org files in a SQL manner.
 =org-protocol= is a package of =org-contrib= which provides helper to use emacsclient to access to org files.
-This package is mainly use to bookmark webpages from firefox.
+This package is mainly use to bookmark webpages from the web browser.
 
 #+begin_src emacs-lisp
   (use-package org-ql
@@ -7096,16 +7096,16 @@ No extra configuration is needed.
     )
 #+end_src
 
-*** DONE Emacs and firefox
+*** DONE Emacs and the web browser
 CLOSED: [2021-01-05 Tue 12:47]
 :PROPERTIES:
 :FROM:     https://github.com/GhostText/GhostText
 :ID:       ea42ca37-120c-4731-a2cb-375658a85a8b
 :END:
-Sometimes it is difficult to edit a text (from a textarea) in Firefox.
-Using =atomic-chrome= coupled with the ~GhostText~ firefox addon, I edit such text in Emacs and its synchronized in firefox automatically.
+Sometimes it is difficult to edit a text (from a textarea) in the web browser.
+Using =atomic-chrome= coupled with the ~GhostText~ addon, I edit such text in Emacs and its synchronized in the browser automatically.
 
-#+transclude: [[file:keytable_summary.org::Firefox]] :only-contents
+#+transclude: [[file:keytable_summary.org::Browser]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package atomic-chrome

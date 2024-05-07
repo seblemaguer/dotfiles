@@ -956,7 +956,7 @@
 :PROPERTIES:
 :ID:       9d20afe6-d030-4a34-9194-9793edfbc978
 :END:
-** Firefox
+** Browser
 :PROPERTIES:
 :ID:       e485f08e-26a5-4e25-a405-698fb1639420
 :END:
