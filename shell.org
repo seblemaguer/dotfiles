@@ -480,6 +480,9 @@
   # Some helpers
   alias vi='vim'
   alias watch='watch -x ' # NOTE: this is needed to expand aliases properly
+  alias spiny="conda run -n spiny spiny"
+  alias rm_import="conda run -n remarkable rm_import"
+  alias rm_export="conda run -n remarkable rm_export"
 
   # Coloring some command
   alias mvn="mvn-color"
