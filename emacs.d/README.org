@@ -4849,28 +4849,39 @@ As a fallback, I am using google-translate via the package =go-translate=.
   (use-package go-translate
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :bind (
-      <<keybindings-gen(table=gts-translate-entry-keybindings)>>
+      <<keybindings-gen(table=gt-translate-entry-keybindings)>>
     )
 
     :config
-    (setq gts-translate-list '(("en" "fr")
-                               ("en" "bg")
-                               ("fr" "en")
-                               ("bg" "en")))
+    (setq gt-preset-translators `((fi2en . ,(gt-translator
+                                              :taker   (gt-taker :langs '(fi en) :text 'word)
+                                              :engines (gt-google-engine)
+                                              :render  (gt-overlay-render)))
+                                  (en2fi . ,(gt-translator
+                                              :taker   (gt-taker :langs '(en fi) :text 'word)
+                                              :engines (gt-google-engine)
+                                              :render  (gt-overlay-render)))
 
-    ;; config the default translator, it will be used by command gts-do-translate
-    (setq gts-default-translator
-          (gts-translator
-           :picker (gts-prompt-picker)
-           :engines (list
-             (gts-google-engine :parser (gts-google-summary-parser))
-             ;; (gts-google-rpc-engine :parser (gts-google-rpc-parser) :url "https://translate.google.com")
-           )
+                                  (bg2en . ,(gt-translator
+                                              :taker   (gt-taker :langs '(bg en) :text 'word)
+                                              :engines (gt-google-engine)
+                                              :render  (gt-overlay-render)))
+                                  (en2bg . ,(gt-translator
+                                              :taker   (gt-taker :langs '(en bg) :text 'word)
+                                              :engines (gt-google-engine)
+                                              :render  (gt-overlay-render)))
 
-           :render (gts-buffer-render)
-           :splitter (gts-paragraph-splitter)
-           )))
+                                  (fr2en . ,(gt-translator
+                                              :taker   (gt-taker :langs '(fr en) :text 'word)
+                                              :engines (gt-google-engine)
+                                              :render  (gt-overlay-render)))
+                                  (en2fr . ,(gt-translator
+                                              :taker   (gt-taker :langs '(en fr) :text 'word)
+                                              :engines (gt-google-engine)
+                                              :render  (gt-overlay-render)))
+                                  )))
 #+end_src
+
 * DONE Version Control / Project Management [100%]
 :PROPERTIES:
 :ID:       47008c15-aa23-44fb-bdd4-7e3b0cf10a7a

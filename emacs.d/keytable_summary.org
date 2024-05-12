@@ -584,10 +584,10 @@
 :PROPERTIES:
 :ID:       361c027b-f41e-4a41-9ffd-9bb8a32b58bb
 :END:
-#+NAME: gts-translate-entry-keybindings
+#+NAME: gt-translate-entry-keybindings
 | Key     | Function         | Description |
 |---------+------------------+-------------|
-| C-c t t | gts-do-translate |             |
+| C-c t t | gt-do-translate |             |
 
 * Version Control
 :PROPERTIES:
