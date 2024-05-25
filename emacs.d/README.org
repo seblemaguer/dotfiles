@@ -4502,7 +4502,15 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
     :ensure (:repo "https://git.savannah.gnu.org/git/auctex.git"
                    :local-repo "auctex" :files ("*" :exclude ".git")
                    :protocol https :inherit t :depth 1
-                   :pre-build (("chmod" "775" "autogen.sh") ("./autogen.sh") ("./configure") ("make"))
+                   :pre-build (
+                     ("chmod" "775" "autogen.sh")
+                     ("./autogen.sh")
+                     ("./configure"
+                      "--without-texmf-dir"
+                      "--with-packagelispdir=$PWD/"
+                      "--with-packagedatadir=$PWD/"
+                      "--with-lispdir=$PWD/tex-site.el")
+                     ("make"))
                    :version (lambda (_) (require 'tex-site) AUCTeX-version)
                    ))
 
