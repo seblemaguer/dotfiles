@@ -3696,7 +3696,16 @@ CLOSED: [2021-01-03 Sun 21:28]
   (use-package project
     :ensure nil
     :tags '("IDE" "PROGRAMMING")
-    :demand t)
+    :demand t
+    :init
+    (defun project-remember-current-project ()
+      "Index the current project."
+      (interactive)
+      (when (project-current)
+        (project-remember-projects-under
+         (project-root (project-current))
+         nil)))
+    )
 
   (use-package eglot
     :ensure nil
