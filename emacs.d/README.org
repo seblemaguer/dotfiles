@@ -238,11 +238,8 @@ one to generate the emacs init file from =~/.emacs.d/README.org= and one to byte
 :ID:       dbd2306f-c4de-443e-9a0b-f6f66235d91a
 :END:
 My configuration relies on a lot (too-many?) of packages.
-It relies primarly on =use-package= and some extensions.
-The process of how to deal with the packages is the following:
-  - by default, if possible, let's use =melpa=
-  - if the package is not on melpa, let's use =straight=
-  - if the package is on melpa but requires extra development, let's use =straight=
+It relies primarly on =use-package= and ~elpaca~.
+I also use the command ~use-builtin~ from https://github.com/danilshvalov/dotfiles/blob/main/.config/emacs/config.el for a better readability of the configuration.
 
 Furthermore, each package is tagged with several keywors to have a "machine-dependent" loading scheme.
 
@@ -299,6 +296,13 @@ CLOSED: [2021-01-03 Sun 10:52]
 
    ;; Block until current queue processed.
    (elpaca-wait)
+
+   ;; Introduce macro for a better readability of the configuration
+   (defmacro use-builtin (name &rest args)
+     (declare (indent defun))
+     `(use-package ,name
+        :ensure nil
+        ,@args))
  #+end_src
 
 *** DONE Tagging
@@ -1234,8 +1238,7 @@ Babel is the key feature for litterate programming in =org-mode=.
 This section provides the configuration for babel by first configuring jupyter.
 
 #+begin_src emacs-lisp
-  (use-package ob
-    :ensure nil ;; org-contrib
+  (use-builtin ob ;; org-contrib
     :after (org-contrib)
     :tags '("ORG")
     :config
@@ -1299,8 +1302,7 @@ Consequently, adding its support in org-mode is a big advantage.
 To do so, I am relying the package =org-checklist= which is provided by =org-contrib=.
 
 #+BEGIN_SRC emacs-lisp
-    (use-package org-checklist
-      :ensure nil ;; org-contrib
+    (use-builtin org-checklist ;; org-contrib
       :tags '("ORG")
       )
 #+END_SRC
@@ -1356,8 +1358,7 @@ CLOSED: [2021-07-19 Mon 09:24]
 This part contains some extra configurations which allows to write clean org documents while still having an efficient rendering.
 
 #+begin_src emacs-lisp
-  (use-package ox-extra
-    :ensure nil ;; org-contrib
+  (use-builtin ox-extra ;; org-contrib
     :after (org-contrib)
     :tags '("ORG")
     :after ox
@@ -1379,8 +1380,7 @@ We also defines additional link to support audios and videos.
     :tags '("ORG")
     )
 
-  (use-package ox-html
-    :ensure nil ;; org-contrib
+  (use-builtin ox-html ;; org-contrib
     :after ox
     :requires (htmlize)
     :tags '("ORG")
@@ -1432,8 +1432,7 @@ The key part is that we are using minted to deal with the source.
 Therefore, we have to modify the call to the =latexmk= command (which is therefore required).
 
 #+begin_src emacs-lisp
-  (use-package ox-latex
-    :ensure nil ;; org-contrib
+  (use-builtin ox-latex ;; org-contrib
     :after (org-contrib)
     :tags '("ORG")
     :after ox
@@ -1442,8 +1441,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
           org-export-with-LaTeX-fragments t
           org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 
-  (use-package ox-beamer
-    :ensure nil ;; org-contrib
+  (use-builtin ox-beamer ;; org-contrib
     :after (org-contrib)
     :tags '("ORG")
     :after ox
@@ -1453,8 +1451,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
         (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\textbf" contents)))
     (add-to-list 'org-export-filter-bold-functions 'my-beamer-bold))
 
-  (use-package ox-bibtex
-    :ensure nil ;; org-contrib
+  (use-builtin ox-bibtex ;; org-contrib
     :after (org-contrib)
     :tags '("ORG")
     :after ox
@@ -1503,8 +1500,7 @@ This package is mainly use to bookmark webpages from the web browser.
     :tags '("ORG")
     :commands (org-ql-search org-ql-view org-ql-view-recent-items))
 
-  (use-package org-protocol
-    :ensure nil ;; org-contrib
+  (use-builtin org-protocol ;; org-contrib
     :after (org-contrib)
     :tags '("ORG")
     )
@@ -1524,8 +1520,7 @@ I also use capturing mechanism to save recipes and some interesting websites.
     :tags '("ORG" "CAPTURE" "DESKTOP")
     :commands (doct))
 
-  (use-package org-capture
-    :ensure nil ;; org-contrib
+  (use-builtin org-capture ;; org-contrib
     :after (org-contrib)
     :tags '("ORG" "CAPTURE" "DESKTOP")
     :if (file-directory-p cloud-org-root-dir)
@@ -1720,8 +1715,7 @@ The only important bits are:
 #+transclude: [[file:keytable_summary.org::org-agenda-mode-hydra-keybindings]]
 
 #+begin_src emacs-lisp
-  (use-package org-agenda
-    :ensure nil ;; org-contrib
+  (use-builtin org-agenda ;; org-contrib
     :tags '("ORG" "USER" "CONNECTED")
     :if (file-directory-p cloud-org-root-dir)
     :commands (org-agenda)
@@ -6377,8 +6371,7 @@ Finally, the account definition is done in the private configuration file (so it
     :tags '("CONNECTED" "CHAT" "IRC")
     :commands (enable-lui-logging))
 
-  (use-package lui-autopaste
-    :ensure nil ;; circe
+  (use-builtin lui-autopaste ;; circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :hook (circe-channel-mode . enable-lui-autopaste)
     :config
@@ -6414,8 +6407,7 @@ Finally, the account definition is done in the private configuration file (so it
     (setq lui-autopaste-function 'lui-autopaste-service-gist))
 
 
-  (use-package lui
-    :ensure nil ;; circe
+  (use-builtin lui ;; circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :hook
     (lui-mode . my-lui-setup)
@@ -6439,8 +6431,7 @@ Finally, the account definition is done in the private configuration file (so it
       :group 'tracking
       :global t))
 
-  (use-package lui-irc-colors
-    :ensure nil ;; circe
+  (use-builtin lui-irc-colors ;; circe
     :tags '("CONNECTED" "CHAT" "IRC")
     :config
     (add-to-list 'lui-pre-output-hook 'lui-irc-colors))
@@ -6987,29 +6978,25 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
   ;; Wait for elpaca so that the other packages are ready if necessary !
   (elpaca-wait)
 
-  (use-package emms-info-metaflac
-    :ensure nil ;; emms
+  (use-builtin emms-info-metaflac ;; emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil
           emms-info-functions '(emms-info-metaflac)))
 
-  (use-package emms-info-libtag
-    :ensure nil ;; emms
+  (use-builtin emms-info-libtag ;; emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     (setq emms-info-asynchronously nil)
     (add-to-list 'emms-info-functions 'emms-info-libtag t))
 
-  (use-package emms-info-native
-    :ensure nil ;; emms
+  (use-builtin emms-info-native ;; emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :init
     (setq emms-info-asynchronously nil)
     (add-to-list 'emms-info-functions 'emms-info-native t))
 
-  (use-package emms-browser
-    :ensure nil ;; emms
+  (use-builtin emms-browser ;; emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
     :config
     ;; Formatting
@@ -8079,8 +8066,7 @@ I prefer to visualize nicely emojis than the raw text.
 To do so, I use the package =emojify= which provides everything needed for this.
 
 #+begin_src emacs-lisp
-  (use-package emojify
-    :ensure nil ;; FIXME: temporary way because of stupid slack enforcement
+  (use-builtin emojify ;; FIXME: temporary way because of stupid slack enforcement
     :tags '("VISUAL" "DESKTOP")
     :functions (emojify-set-emoji-data)
     :custom
