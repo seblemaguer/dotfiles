@@ -4842,13 +4842,49 @@ CLOSED: [2021-01-04 Mon 13:06]
 :ID:       034ce652-a6ba-4b42-8621-9fc4d2b8e075
 :END:
 To help to deal with my poor English, I am using grammarly to check my text.
-The package =grammarly= bring its functionnality into emacs which is a saver for me.
+The package =grammarly= bring its functionality into emacs which is a saver for me.
 
 #+begin_src emacs-lisp
   (use-package eglot-grammarly
     :ensure (:host github :repo "emacs-grammarly/eglot-grammarly")
     :tags '("WRITING" "HELPERS" "CONNECTED")
     :defer t)
+#+end_src
+
+** DONE Spelling
+CLOSED: [2024-06-04 Tue 15:56]
+~wucuo~ provides a more efficient spell checker.
+
+#+begin_src emacs-lisp
+  (use-package wucuo
+    :ensure t
+    :tags '("WRITING" "HELPERS")
+    :custom
+   (wucuo-font-faces-to-check '(font-lock-doc-face font-lock-comment-face))
+
+    :config
+    ;; -------------------------------------------------------------------------
+    ;; spell checking via `aspell'
+    (setq ispell-program-name "aspell")
+    (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_GB" "--run-together" "--run-together-limit=16"))
+
+    ;; -------------------------------------------------------------------------
+    ;; disable spell checking in some major-modes
+    (setq wucuo-spell-check-buffer-predicate
+          (lambda ()
+            (not (memq major-mode '(dired-mode
+                                    log-edit-mode
+                                    compilation-mode
+                                    help-mode
+                                    profiler-report-mode
+                                    speedbar-mode
+                                    gud-mode
+                                    calc-mode
+                                    Info-mode)))))
+
+    :hook
+    (prog-mode . wucuo-start)
+    (text-mode . wucuo-start))
 #+end_src
 
 ** DONE Translation
