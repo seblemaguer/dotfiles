@@ -4910,7 +4910,7 @@ Aside the standard key/hydra configuration,
 I copied the external opening from https://gist.github.com/dotemacs/9a0433341e75e01461c9
 and the pretty configuration is adapted from https://ekaschalk.github.io/post/pretty-magit/
 
-My whole process relies on the commits following this pattern
+My whole process relies on the commits following this pattern:
 #+begin_example
 [package] operation: short message
 
@@ -4922,6 +4922,9 @@ where:
  - operation :: is ~add~, ~update~, ~fix~, ~clean~ or ~doc~
  - short message :: is a short description
  - optional further description :: is used to complete the short description. It is optional and I don't use it so often; only for complicated tweaks
+
+Finally, I am using ~git-commit-ts-mode~ for a better handling of the commit message buffer.
+It will require in case of first installation to run the following command: ~(treesit-install-language-grammar 'gitcommit)~.
 
 #+transclude: [[file:keytable_summary.org::Git]] :only-contents
 
@@ -5034,7 +5037,7 @@ where:
     :after magit)
 
   (use-package magit-todos
-    ;;:tags '("VC" "GIT")
+    :tags '("VC" "GIT" "TODOS")
     :commands (magit-todos-mode)
     :hook (magit-mode . magit-todos-mode)
     :custom
@@ -5043,8 +5046,15 @@ where:
     (magit-todos-depth 10))
 
   (use-package why-this
-    :tags '("VC" "GIT")
-    )
+    :tags '("VC" "GIT"))
+
+  (use-package git-commit-ts-mode
+    :ensure (git-commit-ts-mode :host github
+                                :repo "danilshvalov/git-commit-ts-mode")
+    :mode "\\COMMIT_EDITMSG\\'"
+    :init
+    (add-to-list 'treesit-language-source-alist
+                 '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit"))))
 #+end_src
 
 *** DONE Git helpers
