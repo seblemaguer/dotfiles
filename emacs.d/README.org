@@ -3750,28 +3750,36 @@ CLOSED: [2023-11-15 Wed 20:50]
 This package is in its early stage so more configuration will be required for futher improvement.
 
 #+BEGIN_SRC emacs-lisp
+  (use-package jsonrpc
+    :ensure (:tag "1.0.25"))
+
   (use-package dape
     :ensure (dape :type git :host github :repo "svaante/dape")
-    :disabled t
+    :defer t
+    :hook
+    (kill-emacs . dape-breakpoint-save)
+    (after-init . dape-breakpoint-load)
+
     :config
-    ;; Add inline variable hints, this feature is highly experimental
-    ;; (setq dape-inline-variables t)
+    ;; Info buffers to the right
+    (setq dape-buffer-window-arrangement 'right)
 
-    ;; To remove info buffer on startup
+    ;; ;; Global bindings for setting breakpoints with mouse
+    ;; (dape-breakpoint-global-mode)
+
+    ;; ;; To not display info and/or buffers on startup
     ;; (remove-hook 'dape-on-start-hooks 'dape-info)
-
-    ;; To remove repl buffer on startup
     ;; (remove-hook 'dape-on-start-hooks 'dape-repl)
 
-    ;; By default dape uses gdb keybinding prefix
-    ;; (setq dape-key-prefix "\C-x\C-a")
+    ;; ;; To display info and/or repl buffers on stopped
+    ;; (add-hook 'dape-on-stopped-hooks 'dape-info)
+    ;; (add-hook 'dape-on-stopped-hooks 'dape-repl)
 
     ;; Kill compile buffer on build success
     ;; (add-hook 'dape-compile-compile-hooks 'kill-buffer)
 
-    ;; Projectile users
-    ;; (setq dape-cwd-fn 'projectile-project-root)
-    )
+    ;; Save buffers on startup, useful for interpreted languages
+    (add-hook 'dape-on-start-hooks (lambda () (save-some-buffers t t))))
 #+END_SRC
 
 ** DONE Data [100%]
