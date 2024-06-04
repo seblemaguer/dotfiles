@@ -2754,7 +2754,10 @@ This function makes extensive use of =org-element=.
 #+end_src
 
 *** DONE org-noter
-CLOSED: [2022-02-10 Thu 07:12]
+CLOSED: [2024-06-04 Tue 15:46]
+=org-noter= is key package for my research life as it allows to annotate PDF using org-modes.
+As I tend to read using a remarkable, I also added a helper to transfer the article directly to the remarkable.
+
 :PROPERTIES:
 :ID:       329ec75f-9974-402f-823c-af10db1e7002
 :END:
@@ -2765,7 +2768,15 @@ CLOSED: [2022-02-10 Thu 07:12]
     :custom
     (org-noter-doc-split-fraction '(0.7 . 0.3))
     (org-noter-property-doc-file "INTERLEAVE_PDF")
-    (org-noter-property-note-location "INTERLEAVE_PAGE_NOTE"))
+    (org-noter-property-note-location "INTERLEAVE_PAGE_NOTE")
+
+    (defun org-noter-transfer-to-rm ()
+      "Import the PDF associated with the current Org mode node to remarkable."
+      (interactive)
+      (let ((pdf-file (org-entry-get (point) "INTERLEAVE_PDF")))
+        (if (and pdf-file (file-exists-p pdf-file))
+            (shell-command (format "conda run -n remarkable rm_import -t / \"%s\"" pdf-file))
+          (message "No associated PDF found or PDF file doesn't exist")))))
 #+end_src
 
 *** DONE org-media-noter
@@ -2773,7 +2784,7 @@ CLOSED: [2024-03-02 Sat 07:48]
 :PROPERTIES:
 :ID:       91fbbd98-e7f9-4990-8600-de5d66c59a76
 :END:
-=org-media-note= provides a neat way to annotate videos in org-mode.
+=org-media-noter= provides a neat way to annotate videos in org-mode.
 I added a package which builds on top of =org-media-note= (named =org-media-noter=) to maintain consistency with the way I annotate PDFs.
 
 #+transclude: [[file:keytable_summary.org::org-media-noter-keybindings]]
