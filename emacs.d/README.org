@@ -42,6 +42,69 @@ For now, only the option =--no-connection= is defined in order enforce the loadi
     (setq no-connection t))
 #+end_src
 
+** DONE Elpaca
+CLOSED: [2021-01-03 Sun 10:52]
+:PROPERTIES:
+:ID:       08b8b3b9-31a4-4436-9789-502e7ddd3ef1
+:END:
+
+ #+begin_src emacs-lisp
+   (defvar elpaca-installer-version 0.7)
+   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+   (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+   (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+   (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                                 :ref nil
+                                 :files (:defaults (:exclude "extensions"))
+                                 :build (:not elpaca--activate-package)))
+   (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+          (build (expand-file-name "elpaca/" elpaca-builds-directory))
+          (order (cdr elpaca-order))
+          (default-directory repo))
+     (add-to-list 'load-path (if (file-exists-p build) build repo))
+     (unless (file-exists-p repo)
+       (make-directory repo t)
+       (when (< emacs-major-version 28) (require 'subr-x))
+       (condition-case-unless-debug err
+           (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                    ((zerop (call-process "git" nil buffer t "clone"
+                                          (plist-get order :repo) repo)))
+                    ((zerop (call-process "git" nil buffer t "checkout"
+                                          (or (plist-get order :ref) "--"))))
+                    (emacs (concat invocation-directory invocation-name))
+                    ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                          "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                    ((require 'elpaca))
+                    ((elpaca-generate-autoloads "elpaca" repo)))
+               (kill-buffer buffer)
+             (error "%s" (with-current-buffer buffer (buffer-string))))
+         ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+     (unless (require 'elpaca-autoloads nil t)
+       (require 'elpaca)
+       (elpaca-generate-autoloads "elpaca" repo)
+       (load "./elpaca-autoloads")))
+   (add-hook 'after-init-hook #'elpaca-process-queues)
+   (elpaca `(,@elpaca-order))
+
+   ;; Install use-package support
+   (elpaca elpaca-use-package
+     ;; Enable :ensure use-package keyword.
+     (elpaca-use-package-mode)
+     ;; Assume :ensure t unless otherwise specified.
+     (setq elpaca-use-package-by-default t))
+
+   ;; Block until current queue processed.
+   (elpaca-wait)
+
+   ;; Introduce macro for a better readability of the configuration
+   (defmacro use-builtin (name &rest args)
+     (declare (indent defun))
+     `(use-package ,name
+        :ensure nil
+        ,@args))
+ #+end_src
+
+
 * DONE Definition of no-web helper routines
 CLOSED: [2023-07-19 Wed 20:41]
 :PROPERTIES:
@@ -242,68 +305,6 @@ It relies primarly on =use-package= and ~elpaca~.
 I also use the command ~use-builtin~ from https://github.com/danilshvalov/dotfiles/blob/main/.config/emacs/config.el for a better readability of the configuration.
 
 Furthermore, each package is tagged with several keywors to have a "machine-dependent" loading scheme.
-
-*** DONE Elpaca
-CLOSED: [2021-01-03 Sun 10:52]
-:PROPERTIES:
-:ID:       08b8b3b9-31a4-4436-9789-502e7ddd3ef1
-:END:
-
- #+begin_src emacs-lisp
-   (defvar elpaca-installer-version 0.7)
-   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-   (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-   (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-   (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                                 :ref nil
-                                 :files (:defaults (:exclude "extensions"))
-                                 :build (:not elpaca--activate-package)))
-   (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-          (build (expand-file-name "elpaca/" elpaca-builds-directory))
-          (order (cdr elpaca-order))
-          (default-directory repo))
-     (add-to-list 'load-path (if (file-exists-p build) build repo))
-     (unless (file-exists-p repo)
-       (make-directory repo t)
-       (when (< emacs-major-version 28) (require 'subr-x))
-       (condition-case-unless-debug err
-           (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                    ((zerop (call-process "git" nil buffer t "clone"
-                                          (plist-get order :repo) repo)))
-                    ((zerop (call-process "git" nil buffer t "checkout"
-                                          (or (plist-get order :ref) "--"))))
-                    (emacs (concat invocation-directory invocation-name))
-                    ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                          "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                    ((require 'elpaca))
-                    ((elpaca-generate-autoloads "elpaca" repo)))
-               (kill-buffer buffer)
-             (error "%s" (with-current-buffer buffer (buffer-string))))
-         ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-     (unless (require 'elpaca-autoloads nil t)
-       (require 'elpaca)
-       (elpaca-generate-autoloads "elpaca" repo)
-       (load "./elpaca-autoloads")))
-   (add-hook 'after-init-hook #'elpaca-process-queues)
-   (elpaca `(,@elpaca-order))
-
-   ;; Install use-package support
-   (elpaca elpaca-use-package
-     ;; Enable :ensure use-package keyword.
-     (elpaca-use-package-mode)
-     ;; Assume :ensure t unless otherwise specified.
-     (setq elpaca-use-package-by-default t))
-
-   ;; Block until current queue processed.
-   (elpaca-wait)
-
-   ;; Introduce macro for a better readability of the configuration
-   (defmacro use-builtin (name &rest args)
-     (declare (indent defun))
-     `(use-package ,name
-        :ensure nil
-        ,@args))
- #+end_src
 
 *** DONE Tagging
 CLOSED: [2021-01-03 Sun 10:58]
@@ -3280,7 +3281,7 @@ It is a convenient package to have a more refined control of my workflow.
     (use-package embark-consult
       :tags '("HELPERS")
       :after (:all embark consult)
-      :demand t
+      :defer t
       :hook
       (embark-collect-mode . embark-consult-preview-minor-mode))
 #+END_SRC
@@ -3701,7 +3702,7 @@ CLOSED: [2021-01-03 Sun 21:28]
   (use-package project
     :ensure nil
     :tags '("IDE" "PROGRAMMING")
-    :demand t
+    :defer t
     :init
     (defun project-remember-current-project ()
       "Index the current project."
@@ -3715,7 +3716,7 @@ CLOSED: [2021-01-03 Sun 21:28]
   (use-package eglot
     :ensure nil
     :tags '("IDE" "PROGRAMMING")
-    :demand t
+    :defer t
     :after (project)
     :init
     (defun my-eglot-organize-imports () (interactive)
@@ -5148,7 +5149,7 @@ To interact with github in emacs, I rely on three packages:
 
 #+begin_src emacs-lisp
   (use-package forge
-    :demand t
+    :defer t
     :tags '("VC" "GIT" "GITHUB" "CONNECTED")
     :after magit
     :custom-face
@@ -5256,7 +5257,7 @@ CLOSED: [2023-10-27 Fri 09:32]
     :tags '("PROJECT")
     :after embark
     :after projection-multi
-    :demand t
+    :defer t
     ;; Add the projection set-command bindings to `compile-multi-embark-command-map'.
     :config (projection-multi-embark-setup-command-map))
 #+end_src
@@ -5645,7 +5646,7 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
     :ensure (:type git :host github :repo "karthink/elfeed-tube" :files (:defaults (:exclude "elfeed-tube-mpv.el")))
     :after elfeed
     :tags '("CONNECTED" "RSS" "YOUTUBE")
-    :demand t
+    :defer t
     :config
     ;; (setq elfeed-tube-auto-save-p nil) ; default value
     ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
@@ -7439,7 +7440,7 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
 
 #+BEGIN_SRC emacs-lisp
   (use-package prodigy
-    :demand t
+    :defer t
     :tags '("CONNECTED" "SYSTEM" "PROCESSES")
     :bind (:map prodigy-mode-map (
       <<keybindings-gen(table=prodigy-keybindings)>>
@@ -7932,7 +7933,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
     :ensure (all-the-icons-nerd-fonts :host github :repo "mohkale/all-the-icons-nerd-fonts")
     :tags '("VISUAL" "ICONS")
     :after all-the-icons
-    :demand t
+    :defer t
     :disabled t
     :config
     (all-the-icons-nerd-fonts-prefer))
