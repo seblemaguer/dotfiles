@@ -5110,7 +5110,9 @@ It will require in case of first installation to run the following command: ~(tr
   (use-package git-commit-ts-mode
     :ensure (git-commit-ts-mode :host github
                                 :repo "danilshvalov/git-commit-ts-mode")
-    :mode "\\COMMIT_EDITMSG\\'"
+    :tags '("VC" "GIT")
+    :custom
+    (git-commit-major-mode #'git-commit-ts-mode)
     :init
     (add-to-list 'treesit-language-source-alist
                  '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit"))))
