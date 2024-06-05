@@ -5129,21 +5129,16 @@ To interact with github in emacs, I rely on three packages:
 
 #+begin_src emacs-lisp
   (use-package forge
-    :defer t
+    :ensure (:version (lambda (_) "0.4.0")) ;; NOTE: dirty hack to ensure the version is properly set - this impacts gh-notify
     :tags '("VC" "GIT" "GITHUB" "CONNECTED")
+    :defer t
     :after magit
     :custom-face
     (forge-topic-closed ((t (:strike-through t :inherit magit-dimmed)))))
 
-  (use-package github-explorer
-    :disabled t
-    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
-    )
-
   (use-package gh-notify
     :ensure (:type git :host github :repo "anticomputer/gh-notify")
-    :tags '("VC" "GIT" "GITHUB" "CONNECTED")
-    )
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED"))
 
   ;; Extracted from https://github.com/anticomputer/gh-notify
   (use-package github-review
