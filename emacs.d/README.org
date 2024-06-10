@@ -6283,9 +6283,9 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
 #+BEGIN_SRC emacs-lisp
   (use-package org-caldav
     :tags '("ORG" "CONNECTED" "CALENDAR")
-    :ensure (:host github :repo "Thaodan/org-caldav" :branch "thaodan/personal_merger")
     :init
-    (add-to-list 'org-agenda-default-files (format "%s/calendars/from_work.org" user-emacs-directory))
+    (add-to-list 'org-agenda-default-files (format "%s/calendars/perso.org" user-emacs-directory))
+
     :config
     (setq org-icalendar-timezone "Europe/Helsinki"
           org-icalendar-alarm-time 15
@@ -6293,13 +6293,8 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
           org-icalendar-use-deadline '(event-if-not-todo todo-due)
           org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo)
           org-icalendar-with-timestamps t
-          org-caldav-show-sync-results nil
-          org-caldav-url "http://localhost:1080/users"
-          org-caldav-uuid-extension ".EML"
-          org-caldav-calendars `((:calendar-id "lemaguer@ad.helsinki.fi/calendar"
-                                               :inbox ,(format "%s/calendars/from_work.org" user-emacs-directory)
-                                               :files (,(format "%s/calendars/work.org" user-emacs-directory)))))
-    )
+          org-caldav-show-sync-results nil)
+    (load-calendars))
 
   (use-package org-timeblock
     :tags '("ORG" "CALENDAR")
