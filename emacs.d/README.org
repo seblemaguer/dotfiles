@@ -376,8 +376,7 @@ While alternatives exist, I find this combination more straightforward and clean
 :END:
 #+begin_src emacs-lisp
   (use-package dash-docs
-    :tags '("CORE")
-    :ensure t)
+    :tags '("CORE"))
 #+end_src
 
 ** DONE Dealing with authentication private configuration  [100%]
@@ -395,8 +394,7 @@ Rely on the secret service protocol to retrieve the passwords.
 
 #+begin_src emacs-lisp
   ;; Load and patch secrets
-  (use-package secrets
-    :ensure nil
+  (use-builtin secrets
     :commands (secrets-search-items
                secrets-get-secret
                secrets-get-attributes)
@@ -514,8 +512,7 @@ If a Sauron event is raised, it is transmitted to Alert to adapt the modeline ba
 This plugin is in charge to managing the communication and avoid any cycle.
 
 #+begin_src emacs-lisp
-  (use-package sauron-mode-line
-    :ensure nil
+  (use-builtin sauron-mode-line
     :load-path default-plugin-dir
     :tags '("CORE" "NOTIFICATION")
     :hook (elpaca-after-init . sauron-mode-line-start-hidden)
@@ -656,8 +653,7 @@ CLOSED: [2021-01-03 Sun 11:24]
 Minibuffer configuration part. Nothing really outstanding, just the classical stuff.
 
 #+begin_src emacs-lisp
-  (use-package minibuffer
-    :ensure nil
+  (use-builtin minibuffer
     :tags '("CORE" "MINIBUFFER")
     ;; :hook
     ;; (eval-expression-minibuffer-setup .  #'eldoc-mode)
@@ -736,8 +732,7 @@ Finally, introducing =move-text= provides a quick way to swap consecutive lines.
       <<keybindings-gen(table=trail-entry-keybindings)>>
     ))
 
-  (use-package savehist
-    :ensure nil
+  (use-builtin savehist
     :tags '("CORE" "NAVIGATION")
     :init
     (savehist-mode)
@@ -767,8 +762,7 @@ Opening recent files is always an easy and fast shortcut. Some files should be i
 leads to this configuration
 
 #+begin_src emacs-lisp
-  (use-package recentf
-    :ensure nil
+  (use-builtin recentf
     :tags '("CORE" "SESSION" "RECENT")
     :hook (elpaca-after-init . recentf-mode)
     :custom
@@ -1006,8 +1000,7 @@ When a file is large, it is easier to restart from the exact position where we s
 To do so, I am using the package =saveplace=
 
 #+begin_src emacs-lisp
-  (use-package saveplace
-    :ensure nil
+  (use-builtin saveplace
     :tags '("CORE" "SESSION")
     :init
     (setq save-place-file (format "%s/saveplace" user-emacs-directory))
@@ -1893,8 +1886,7 @@ CLOSED: [2023-06-08 Thu 19:02]
 This is convenient as it provides a way to understand what the content should be about without showing its actual value.
 
 #+begin_src emacs-lisp
-  (use-package org-crypt
-    :ensure nil
+  (use-builtin org-crypt
     :tags '("CORE" "ENCRYPTION")
     :after org
     :config
@@ -1982,8 +1974,7 @@ I prefer to keep the tree structure.
 This is why I use this configuration.
 
 #+begin_src emacs-lisp
-  (use-package org-archive
-    :ensure nil
+  (use-builtin org-archive
     :after (org-contrib)
     :tags '("ORG")
     :config
@@ -2924,8 +2915,7 @@ CLOSED: [2021-01-03 Sun 17:42]
 
 
   ;; A few more useful configurations...
-  (use-package emacs
-    :ensure nil
+  (use-builtin emacs
     :init
     ;; TAB cycle if there are only few candidates
     (setq completion-cycle-threshold 3)
@@ -3330,7 +3320,6 @@ It is really convenient for quick note taking.
 #+begin_src emacs-lisp
   (use-package autoscratch
     :tags '("HELPERS")
-    :ensure t
     :config
     (setq initial-major-mode 'autoscratch-mode))
 #+end_src
@@ -3351,7 +3340,6 @@ CLOSED: [2023-10-27 Fri 09:19]
 
 #+begin_src emacs-lisp
   (use-package imenu-list
-    :ensure t
     :config
 
     (defun my/imenu-list-jump-to-window ()
@@ -3393,8 +3381,7 @@ I also rely on =fancy-compilation= to enhance the the output in the compilation 
 #+transclude: [[file:keytable_summary.org::Compilation]] :only-contents
 
 #+begin_src emacs-lisp
-  (use-package compile
-    :ensure nil
+  (use-builtin compile
     :tags '("IDE" "COMPILATION")
 
     :pretty-hydra
@@ -3602,8 +3589,7 @@ Man is critical for document on unix.
 I simply configured emacs to add my own environment man directories.
 
 #+begin_src emacs-lisp
-  (use-package man
-    :ensure nil
+  (use-builtin man
     :tags '("CORE" "DOCUMENTATION")
     :config
     (setq Man-notify-method 'pushy
@@ -3684,7 +3670,6 @@ I also added the support of =scopeline= which provides an indicator about the sc
 
 #+begin_src emacs-lisp
   (use-package tree-sitter-langs
-    :ensure t
     :tags '("IDE" "PROGRAMMING" "TREE-SITTER"))
 
   (use-package scopeline
@@ -3699,8 +3684,7 @@ CLOSED: [2021-01-03 Sun 21:28]
 :ID:       6b0745dd-6954-4b94-a93d-94a770ef5d25
 :END:
 #+begin_src emacs-lisp
-  (use-package project
-    :ensure nil
+  (use-builtin project
     :tags '("IDE" "PROGRAMMING")
     :defer t
     :init
@@ -3856,8 +3840,7 @@ I use praat, and more especially Textgrid, to annotate speech signals.
 Praat-mode helps to have a proper visualization of Textgrids in Empacs.
 
 #+begin_src emacs-lisp
-  (use-package praat-mode
-    :ensure nil
+  (use-builtin praat-mode
     :load-path default-plugin-dir
     :tags '("PROGRAMMING" "DATA")
     :mode ("\\.[tT][Gg]"))
@@ -3872,8 +3855,7 @@ XML is, as JSON, used for data formatting and configuration.
 However, I had to do extra-configurations to have outline support and a better formatting.
 
 #+begin_src emacs-lisp
-  (use-package nxml-mode
-    :ensure nil
+  (use-builtin nxml-mode
     :load-path default-plugin-dir
     :tags '("PROGRAMMING" "DATA" "CONFIGURATION")
     :mode ("\\.xml$" . nxml-mode)
@@ -4137,8 +4119,7 @@ I also added a hydra configuration to link properly everything.
 #+transclude: [[file:keytable_summary.org::Elisp]] :only-contents
 
 #+begin_src emacs-lisp
-  (use-package emacs-lisp-mode
-    :ensure nil
+  (use-builtin emacs-lisp-mode
     :mode-hydra
     (emacs-lisp-mode
      ("Eval" (
@@ -4181,14 +4162,12 @@ CLOSED: [2023-09-23 Sat 21:24]
 :ID:       480785b5-a2d2-4967-9591-98548725de6f
 :END:
 #+begin_src emacs-lisp
-  (use-package c-mode
-    :ensure nil
+  (use-builtin c-mode
     :tags '("PROGRAMMING" "C" "CPP")
     :hook
     (c-mode . eglot-ensure))
 
-  (use-package c++-mode
-    :ensure nil
+  (use-builtin c++-mode
     :tags '("PROGRAMMING" "C" "CPP")
     :hook
     (c++-mode . eglot-ensure))
@@ -4201,7 +4180,6 @@ CLOSED: [2023-09-23 Sat 21:24]
 #+BEGIN_SRC emacs-lisp
   (use-package google-c-style
     :tags '("PROGRAMMING" "C" "CPP")
-    :ensure t
     :hook
     (c-mode-common . google-set-c-style)
     (c-mode-common . google-make-newline-indent))
@@ -4228,7 +4206,6 @@ Identify =.h= files as C++ files instead of C. To enable =c++-mode= manually, ty
 
 #+BEGIN_SRC emacs-lisp
   (use-package clang-format
-    :ensure t
     :tags '("PROGRAMMING" "C" "CPP")
     :bind (
       <<keybindings-gen(table=clang-format-entry-keybindings)>>
@@ -4251,7 +4228,6 @@ Use Google's C++ style.
 Add highlighting for doxygen blocks.
 #+BEGIN_SRC emacs-lisp
   (use-package highlight-doxygen
-    :ensure t
     :tags '("PROGRAMMING" "C" "CPP")
     :hook
     (c-mode-common . highlight-doxygen-mode))
@@ -4263,7 +4239,6 @@ Add highlighting for doxygen blocks.
 :END:
 #+begin_src emacs-lisp
   (use-package cmake-mode
-    :ensure t
     :tags '("PROGRAMMING" "CMAKE")
     :mode "CMakeLists.txt")
 #+end_src
@@ -4271,15 +4246,14 @@ Add highlighting for doxygen blocks.
 Eldoc for CMake.
 #+BEGIN_SRC emacs-lisp
   (use-package eldoc-cmake
-    :ensure t
     :tags '("PROGRAMMING" "CMAKE")
+    :defer t
     :hook (cmake-mode . eldoc-cmake-enable))
 #+END_SRC
 
 Additional syntax highlighting for CMake. For some reason manual activation is still required.
 #+BEGIN_SRC emacs-lisp
   (use-package cmake-font-lock
-    :ensure t
     :tags '("PROGRAMMING" "CMAKE")
     :init (autoload 'cmake-font-lock-activate "cmake-font-lock" nil t)
     :hook (cmake-mode . cmake-font-lock-activate))
@@ -4372,8 +4346,7 @@ Finally, I use =numpydoc= to deal with the documentation.
 #+transclude: [[file:keytable_summary.org::python-entry-keybindings]]
 
 #+begin_src emacs-lisp
-  (use-package python
-    :ensure nil
+  (use-builtin python
     :tags '("PROGRAMMING" "PYTHON")
     :bind (:map python-mode-map (
       <<keybindings-gen(table=python-entry-keybindings)>>
@@ -4414,8 +4387,7 @@ Editing bash/zsh files is relatively straightforward using Emacs' default config
 Nonetheless, a proper completion support is lacking and some helpers are always welcomed.
 
 #+begin_src emacs-lisp
-  (use-package sh-script
-    :ensure nil
+  (use-builtin sh-script
     :tags '("PROGRAMMING" "SHELL")
     :hook
     (sh-mode . eglot-ensure))
@@ -4539,8 +4511,7 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
                    :version (lambda (_) (require 'tex-site) AUCTeX-version)
                    ))
 
-  (use-package tex
-    :ensure nil
+  (use-builtin tex
     :tags '("WRITING" "LATEX")
     :after auctex
     :hook
@@ -4599,8 +4570,7 @@ I am using =reftex= to deal with references.
 The configuration consists mainly of pluging it into auctex and expand the citation keywords and commands.
 
 #+begin_src emacs-lisp
-  (use-package reftex
-    :ensure nil
+  (use-builtin reftex
     :tags '("WRITING" "LATEX")
     :hook
     (LaTeX-mode . turn-on-reftex)
@@ -4733,8 +4703,7 @@ Finally, I use bibclean-format to have a clean final bibtex file.
 #+transclude: [[file:keytable_summary.org::Bibtex]] :only-contents
 
 #+begin_src emacs-lisp
-  (use-package bibtex
-    :ensure nil
+  (use-builtin bibtex
     :tags '("WRITING" "BIBTEX")
     :bind (
       :map bibtex-mode-map (
@@ -4868,7 +4837,6 @@ CLOSED: [2024-06-04 Tue 15:56]
 
 #+begin_src emacs-lisp
   (use-package wucuo
-    :ensure t
     :tags '("WRITING" "HELPERS")
     :custom
    (wucuo-font-faces-to-check '(font-lock-doc-face font-lock-comment-face))
@@ -5245,7 +5213,6 @@ CLOSED: [2023-10-27 Fri 09:32]
 :END:
 #+begin_src emacs-lisp
   (use-package projection
-    :ensure t
     :tags '("PROJECT")
     ;; Enable the `projection-hook' feature.
     :hook (elpaca-after-init . global-projection-hook-mode)
@@ -5260,12 +5227,10 @@ CLOSED: [2023-10-27 Fri 09:32]
     ("C-x P" . projection-map))
 
   (use-package projection-multi
-    :ensure t
     :tags '("PROJECT"))
 
   (use-package projection-multi-embark
     :disabled t
-    :ensure t
     :tags '("PROJECT")
     :after embark
     :after projection-multi
@@ -5482,8 +5447,7 @@ Visualizing diff is important especially when I have a file, outside of project 
 Diff visualization relies mainly on =ediff= but to which I added two primitives to focus on some regions (=diff-region= followed by =diff-region-now=).
 
 #+begin_src emacs-lisp
-  (use-package ediff
-    :ensure nil
+  (use-builtin ediff
     :tags '("FILE_MANAGEMENT" "DIFF")
     :config
     (autoload 'diff-mode "diff-mode" "Diff major mode" t)
@@ -5693,8 +5657,7 @@ For the notification, we simply have to connect sauron and elfeed.
 I just need to define a default priority level for each feed.
 
 #+begin_src emacs-lisp
-  (use-package sauron-elfeed
-    :ensure nil
+  (use-builtin sauron-elfeed
     :after (sauron)
     :tags '("CONNECTED" "RSS" "NOTIFICATION")
     :commands (elfeed-update-background-start sauron-elfeed-start)
@@ -5787,8 +5750,7 @@ In previous emacs version (< 27), it was necessary to configure the package =sta
 This configuration is remaining here for backward compatibility purposes.
 
 #+begin_src emacs-lisp
-  (use-package starttls
-    :ensure nil
+  (use-builtin starttls
     :tags '("CONNECTED")
     :if (< emacs-major-version 27)
     :config
@@ -5819,8 +5781,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
 #+transclude: [[file:keytable_summary.org::Org-msg]] :only-contents
 
 #+begin_src emacs-lisp
-  (use-package message
-    :ensure nil
+  (use-builtin message
     :tags '("CONNECTED" "MAIL")
     :hook
     (message-mode . format-hook-message)
@@ -5842,8 +5803,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
           message-signature-file nil
           message-fill-column 100))
 
-  (use-package smtpmail-multi
-    :ensure nil
+  (use-builtin smtpmail-multi
     :load-path default-plugin-dir
     :tags '("CONNECTED" "MAIL")
     :after mu4e
@@ -6021,8 +5981,7 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
 
   (use-package message-attachment-reminder
     :disabled t
-    :tags '("CONNECTED" "MAIL")
-    :ensure t)
+    :tags '("CONNECTED" "MAIL"))
 #+end_src
 
 *** DONE Mu4e [100%]
@@ -6426,8 +6385,7 @@ Finally, the account definition is done in the private configuration file (so it
   ;; Elpaca should wait circe to be ready!
   (elpaca-wait)
 
-  (use-package lui-logging
-    :ensure nil
+  (use-builtin lui-logging
     :tags '("CONNECTED" "CHAT" "IRC")
     :commands (enable-lui-logging))
 
@@ -6803,8 +6761,7 @@ As it requires more investigation, I disabled this packaged for now.
     :tags '("CONNECTED" "EXCHANGE" "REDDIT")
     )
 
-  (use-package cl-extra
-    :ensure nil
+  (use-builtin cl-extra
     :tags '("CONNECTED" "EXCHANGE" "REDDIT")
     )
 
@@ -7536,8 +7493,7 @@ However, a hack was proposed in [[https://github.com/truls/slurm.el/tree/explici
 I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 #+begin_src emacs-lisp
-  (use-package tramp
-    :ensure nil
+  (use-builtin tramp
     :tags '("SYSTEM" "SERVER" "CONNECTED")
     :custom
     (tramp-default-method "ssh")
@@ -7655,8 +7611,7 @@ To install Anki-Connect:
   " nil start end)))
 
 
-    (use-package anki-editor-ui
-      :ensure nil
+    (use-builtin anki-editor-ui
       :tags '("HELPERS" "DESKTOP" "ORG")
       :defer t
       :after anki-editor
@@ -7897,7 +7852,6 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
 
 #+begin_src emacs-lisp
   (use-package all-the-icons
-    :ensure t
     :tags '("VISUAL" "ICONS")
     :config
     (defun set-icon-fonts (CODE-FONT-ALIST)
@@ -8057,8 +8011,7 @@ To be consistent, I prefer to wrap the line at the ~fill-column~ value.
 This is functionality is provided by =visual-fill-column=.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package visual-fill-column
-    :ensure nil
+  (use-builtin visual-fill-column
     :tags '("VISUAL")
     )
 #+END_SRC
@@ -8577,8 +8530,7 @@ Adding a toggle support for the commenting would be a good idea too
 #+transclude: [[file:keytable_summary.org::Commenting]] :only-contents
 
 #+begin_src emacs-lisp
-  (use-package cc-mode
-    :ensure nil
+  (use-builtin cc-mode
     :tags '("CORE" "BINDING")
     :bind
     (;; Global
