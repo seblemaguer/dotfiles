@@ -3753,6 +3753,10 @@ This package is in its early stage so more configuration will be required for fu
     (kill-emacs . dape-breakpoint-save)
     (after-init . dape-breakpoint-load)
 
+    :bind (:map dape-global-map (
+      ("T" . dape-transient)
+    ))
+
     :config
     ;; Info buffers to the right
     (setq dape-buffer-window-arrangement 'right)
@@ -3772,7 +3776,29 @@ This package is in its early stage so more configuration will be required for fu
     ;; (add-hook 'dape-compile-compile-hooks 'kill-buffer)
 
     ;; Save buffers on startup, useful for interpreted languages
-    (add-hook 'dape-on-start-hooks (lambda () (save-some-buffers t t))))
+    (add-hook 'dape-on-start-hooks (lambda () (save-some-buffers t t)))
+
+    (transient-define-prefix dape-transient ()
+         "Transient for dape."
+          [["Stepping"
+           ("n" "Next" dape-next :transient t)
+           ("i" "Step in" dape-step-in :transient t)
+           ("o" "Step out" dape-step-out :transient t)
+           ("c" "Continue" dape-continue :transient t)
+           ("r" "Restart" dape-restart :transient t)]
+           ["Breakpoints"
+           ("bb" "Toggle" dape-breakpoint-toggle :transient t)
+           ("bd" "Delete" dape-breakpoint-remove-at-point :transient t)
+           ("bD" "Delete all" dape-breakpoint-remove-all :transient t)
+           ("bl" "Log" dape-breakpoint-log :transient t)]
+           ["Info"
+           ("si" "Info" dape-info :transient t)
+           ("sm" "Memory" dape-read-memory :transient t)
+           ("ss" "Select Stack" dape-select-stack :transient t)
+           ("R" "Repl" dape-repl :transient t)]
+           ["Quit"
+           ("qq" "Quit" dape-quit :transient nil)
+           ("qk" "Kill" dape-kill :transient nil)]]))
 #+END_SRC
 
 ** DONE Data [100%]
