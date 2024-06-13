@@ -2260,7 +2260,14 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
       )))
 
     :magic ("%PDF" . pdf-view-mode)
-
+    :custom
+    (pdf-annot-default-annotation-properties `((t           (label . ,user-full-name))
+                                               (text        (icon . "Note")
+                                                            (color . "#ff0000"))
+                                               (highlight   (color . "green"))
+                                               (squiggly    (color . "orange"))
+                                               (strike-out  (color . "red"))
+                                               (underline   (color . "blue"))))
     :config
     ;; Install what need to be installed !
     (pdf-tools-install t t t)
