@@ -118,7 +118,10 @@
 #+begin_src conf :tangle "~/.gitconfig"
   [user]
       name = Sebastien Le Maguer
-      email = lemagues@tcd.ie
+      email = sebastien.lemaguer@helsinki.fi
+
+  [init]
+      defaultBranch = main
 
   [push]
       default = simple
