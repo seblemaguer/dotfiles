@@ -7649,6 +7649,18 @@ As LLMs are apparently becoming a thing, it could be useful to test one on a loc
 The machine should have a GPU and we will only use =ollama= (so server is assumed to be available).
 =gptel= is used as the interaction interface but server is started using =prodigy=.
 
+In order to install the server simply run the following:
+
+#+begin_src sh
+  # Install ollama client
+  curl -fsSL https://ollama.com/install.sh | sh
+
+  # Get Llama model
+  ollama pull llama3
+#+end_src
+
+So finally, here is the configuration:
+
 #+begin_src emacs-lisp
   (when (executable-find "ollama")
     (use-package gptel
