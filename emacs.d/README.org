@@ -7643,6 +7643,36 @@ To install Anki-Connect:
     )
 #+end_src
 
+*** DONE LLMs
+CLOSED: [2024-07-22 Mon 18:17]
+As LLMs are apparently becoming a thing, it could be useful to test one on a local machine.
+The machine should have a GPU and we will only use =ollama= (so server is assumed to be available).
+=gptel= is used as the interaction interface but server is started using =prodigy=.
+
+#+begin_src emacs-lisp
+  (when (executable-find "ollama")
+    (use-package gptel
+      :tags '("HELPERS" "HEAVY" "GPU")
+      :init
+      (prodigy-define-service
+        :name "ollama"
+        :command "ollama"
+        :args '("serve")
+        :tas '(llm gptel)
+        :stop-signal 'sigterm
+        :kill-process-buffer-on-stop t)
+
+
+      :config
+
+      (setq  gptel-model "llama3:latest"
+             gptel-backend (gptel-make-ollama "Ollama"             ;Any name of your choosing
+                                              :host "localhost:11434"               ;Where it's running
+                                              :stream t                             ;Stream responses
+                                              :models '("llama3:latest") ;List of models
+                                              ))))
+#+end_src
+
 * DONE Visual [100%]
 :PROPERTIES:
 :ID:       4624b657-41a9-4f0a-9ed5-7f9670603d83
