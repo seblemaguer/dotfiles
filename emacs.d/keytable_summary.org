@@ -1220,6 +1220,7 @@ CLOSED: [2023-11-23 Thu 17:56]
 | I   | org-id-get-create        |       |             |
 | a   | generate-org-heading-ids |       |             |
 | A   | generate-org-roam-ids    |       |             |
+| C   | org-clean-done-item      |       |             |
 
 * Commenting
 :PROPERTIES:
