@@ -8575,6 +8575,35 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
   (global-set-key (kbd "<f1>") 'main-hydra/body)
 #+end_src
 
+** DONE Some casual helpers
+CLOSED: [2024-07-24 Wed 13:50]
+[[https://github.com/kickingvegas][Charles Choi]] proposes a nice [[https://github.com/kickingvegas/casual-suite][suite]] based on transient.
+I am not using everything so I configure the packages one by one.
+The default shortcut for this is "C-o" associated to the given mode!
+
+#+begin_src emacs-lisp
+  (use-package casual-calc
+    :bind (:map calc-mode-map ("C-o" . casual-calc-tmenu)))
+
+  (use-package casual-info
+    :bind (:map Info-mode-map ("C-o" . casual-info-tmenu)))
+
+  ;; (use-package casual-avy
+  ;;   :ensure t
+  ;;   :bind ("M-g" . casual-avy-tmenu))
+
+  (use-package casual-isearch
+    :bind (:map isearch-mode-map ("<f2>" . casual-isearch-tmenu)))
+
+  (use-package casual-re-builder
+    :bind (:map reb-mode-map
+                ("C-o" . casual-re-builder-tmenu)))
+
+  ;; (use-package casual-bookmarks
+  ;;   :bind (:map bookmark-bmenu-mode-map
+  ;;               ("C-o" . casual-bookmarks-tmenu)))
+#+end_src
+
 ** DONE Remapped bindings [100%]
 CLOSED: [2021-01-05 Tue 10:01]
 :PROPERTIES:
