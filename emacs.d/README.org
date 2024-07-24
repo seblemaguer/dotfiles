@@ -6376,18 +6376,18 @@ Finally, the account definition is done in the private configuration file (so it
       "Return non-nil if there's any Circe server-buffer whose
       `circe-netwok' is NETWORK."
       (catch 'return
-	(dolist (buffer (circe-server-buffers))
-	  (with-current-buffer buffer
-	    (if (string= network circe-network)
-		(throw 'return t))))))
+        (dolist (buffer (circe-server-buffers))
+          (with-current-buffer buffer
+            (if (string= network circe-network)
+                (throw 'return t))))))
 
     (defun circe-maybe-connect (network)
       "Connect to NETWORK, but ask user for confirmation if it's
       already been connected to."
       (interactive "sNetwork: ")
       (if (or (not (circe-network-connected-p network))
-	      (y-or-n-p (format "Already connected to %s, reconnect?" network)))
-	  (circe network)))
+              (y-or-n-p (format "Already connected to %s, reconnect?" network)))
+          (circe network)))
 
     (defun circe-start ()
       "Connect to IRC"
@@ -6430,25 +6430,25 @@ Finally, the account definition is done in the private configuration file (so it
       ;; work around that!
       (setq lui-autopaste-service-gist-url 'waiting)
       (with-temp-buffer
-	(insert text)
-	(gist-region (point-min) (point-max) nil
-		     (lambda (gist)
-		       (when (eq lui-autopaste-service-gist-url
-				 'waiting)
-			 (setq lui-autopaste-service-gist-url
-			       (oref gist :html-url)))))) ;; FIXME: this provokes a Warning: Unknown slot ‘:html-url’
+        (insert text)
+        (gist-region (point-min) (point-max) nil
+                     (lambda (gist)
+                       (when (eq lui-autopaste-service-gist-url
+                                 'waiting)
+                         (setq lui-autopaste-service-gist-url
+                               (oref gist :html-url)))))) ;; FIXME: this provokes a Warning: Unknown slot ‘:html-url’
       (let ((wait 0))
-	(while (and (< wait 10)
-		    (eq lui-autopaste-service-gist-url
-			'waiting))
-	  (sit-for 0.1 )
-	  (setq wait (1+ wait))))
+        (while (and (< wait 10)
+                    (eq lui-autopaste-service-gist-url
+                        'waiting))
+          (sit-for 0.1 )
+          (setq wait (1+ wait))))
       (if (eq lui-autopaste-service-gist-url 'waiting)
-	  (progn
-	    (setq lui-autopaste-service-gist-url nil)
-	    (error "Couldn't create gist"))
-	(prog1 lui-autopaste-service-gist-url
-	  (setq lui-autopaste-service-gist-url nil))))
+          (progn
+            (setq lui-autopaste-service-gist-url nil)
+            (error "Couldn't create gist"))
+        (prog1 lui-autopaste-service-gist-url
+          (setq lui-autopaste-service-gist-url nil))))
 
     (setq lui-autopaste-function 'lui-autopaste-service-gist))
 
@@ -6461,14 +6461,14 @@ Finally, the account definition is done in the private configuration file (so it
     :init
     (defun my-lui-setup ()
       (setq fringes-outside-margins t
-	    right-margin-width 21
-	    word-wrap t
-	    wrap-prefix "    "))
+            right-margin-width 21
+            word-wrap t
+            wrap-prefix "    "))
 
     :config
     (setq lui-time-stamp-position 'right-margin
-	  lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]"
-	  lui-fill-type nil)
+          lui-time-stamp-format "[%Y-%m-%d %H:%M:%S]"
+          lui-fill-type nil)
 
     ;; Disabled modeline (tracking-mode) when loading lui
     ;; This is incompatible with nano-emacs!
@@ -6489,70 +6489,6 @@ Finally, the account definition is done in the private configuration file (so it
     :hook
     (circe-server-connected . enable-circe-notifications))
 #+end_src
-
-*** DONE Matrix
-CLOSED: [2021-01-18 Mon 12:11]
-:PROPERTIES:
-:ID:       d27fa0ce-3ab0-460a-9c39-0ffcd05b9b0c
-:END:
-The Matrix configuration is based on =ement=.
-This package is not in stable stage (yet) but is causing less problem with my way of using emacs than =matrix-client.el=.
-Therefore, all the packages are installed using =straight=.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package ement
-    :ensure (ement :host github :repo "seblemaguer/ement.el" :branch "notification")
-    :tags '("CONNECTED" "CHAT" "MATRIX")
-    :custom
-    (ement-room-timestamp-format "%d-%m-%Y %H:%M:%S")
-    (ement-room-message-format-spec "[%t] %S> %B%r")
-    (ement-room-left-margin-width 0)
-    (ement-room-right-margin-width 0)
-    (ement-notify-notify-predicates '(ement-notify--notifications-sauron))
-    (ement-room-list-auto-update nil)
-
-    :custom-face
-    (ement-room-read-receipt-marker ((t (:box '(:line-width 0.1) :height 0.1 :background "red"))))
-    (ement-room-fully-read-marker ((t (:box '(:line-width 0.1) :height 0.1 :background "green"))))
-
-    :commands (ement-connect)
-    :config
-
-    ;; NOTE: this is dirty but it helps to get rid of timestamps' header I don't want to see
-    (defun ement-room--insert-ts-headers (&optional start-node end-node) )
-
-    ;; NOTE: The redefinition is a bit ugly but it allows to define `ement-notify--notifications-sauron'
-    (cl-defstruct ement-event
-      id sender content origin-server-ts type unsigned state-key
-      receipts
-      ;; The local slot is an alist used by the local client only.
-      local)
-
-    (cl-defstruct ement-room
-      id display-name prev-batch
-      summary state timeline ephemeral account-data unread-notifications
-      latest-ts topic canonical-alias avatar status type invite-state
-      (members (make-hash-table :test #'equal) :documentation "Hash table mapping joined user IDs to user structs.")
-      ;; The local slot is an alist used by the local client only.
-      local
-      (receipts (make-hash-table :test #'equal))
-      (displaynames (make-hash-table) :documentation "Hash table mapping users to their displayname in this room."))
-
-    (defun ement-notify--notifications-sauron (event room _session)
-      "Call `notifications-notify' for EVENT in ROOM on SESSION."
-      (pcase-let* (((cl-struct ement-event sender content) event)
-                   ((cl-struct ement-room avatar (display-name room-displayname)) room)
-                   ((map body) content)
-                   (room-name (or room-displayname (ement--room-display-name room)))
-                   (sender-name (ement--user-displayname-in room sender))
-                   (title (format "%s in %s" sender-name room-name)))
-        ;; TODO: Encode HTML entities.
-        (when (stringp body)
-          ;; If event has no body, it was probably redacted or something, so don't notify.
-          (truncate-string-to-width body 60)
-          (sauron-add-event (intern room-name) 2 body))))
-    )
-#+END_SRC
 
 *** DONE Slack
 CLOSED: [2021-01-05 Tue 09:29]
@@ -6719,8 +6655,7 @@ This section provides three helper functions to connect/disconnect all my chatti
     (interactive)
     (circe-start)
     (telega)
-    (slack-start)
-    (my-ement-connect))
+    (slack-start))
 
   (defun communication-shutdown ()
     "Routine to shutdown all chats"
@@ -6729,7 +6664,6 @@ This section provides three helper functions to connect/disconnect all my chatti
     (circe-command-GQUIT "time to go back to the real life")
     (telega-kill t)
     (slack-ws-close)
-    (call-interactively #'ement-disconnect)
 
     ;; Clean buffers
     (dolist (buf (buffer-list))
@@ -7980,7 +7914,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
     :config
     (org-agenda-category-icons!
      :faicon
-     (music release Release)
+     (music release Release music Music)
      (wrench tools Tools configuration Configuration programming Programming)
      (flask expe Expe experiment Experiment)
      (file-o admin Admin administration Administration)
