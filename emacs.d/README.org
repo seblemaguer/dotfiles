@@ -5411,10 +5411,9 @@ I also replace a base deletion by moving the files/directories to the trash.
                          ("h" "Make hardlinks here"         dirvish-hardlink)
                          ("d" "Duplicate here"              dired-do-copy)))
 
-    (dirvish-bookmarks-alist
-     '(("h" "~/" "Home")
-       ("d" "~/Downloads/" "Downloads")
-       ("t" "~/.local/share/Trash/files/" "TrashCan")))
+    (dirvish-bookmarks-alist '(("h" "~/" "Home")
+                               ("d" "~/Downloads/" "Downloads")
+                               ("t" "~/.local/share/Trash/files/" "TrashCan")))
 
     :config
 
@@ -5457,7 +5456,8 @@ I also replace a base deletion by moving the files/directories to the trash.
           ))
 
     :config
-    (setq dired-launch-default-launcher '("xdg-open")))
+    (setq dired-launch-default-launcher '("xdg-open"))
+    (setq dired-launch-extensions-map nil))
 
   (use-package media-progress
     :ensure (media-progress :type git :host github :repo "jumper047/media-progress" :files ("media-progress.el")
@@ -8532,7 +8532,7 @@ The default shortcut for this is "C-o" associated to the given mode!
   ;;   :bind ("M-g" . casual-avy-tmenu))
 
   (use-package casual-isearch
-    :bind (:map isearch-mode-map ("<f2>" . casual-isearch-tmenu)))
+    :bind (:map isearch-mode-map ("C-s" . casual-isearch-tmenu)))
 
   (use-package casual-re-builder
     :bind (:map reb-mode-map
@@ -8548,7 +8548,7 @@ CLOSED: [2021-01-05 Tue 10:01]
 :PROPERTIES:
 :ID:       6b3217eb-42e6-4028-93c6-dc633479a559
 :END:
-The following bindings are remapped to be homogeneous accross the different modes and OS.
+The following bindings are remapped to be homogeneous across the different modes and OS.
 It concerns mainly the bindings to comment/uncomment and some macos related issues.
 
 *** DONE Commenting
