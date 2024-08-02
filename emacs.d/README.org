@@ -4826,6 +4826,11 @@ Finally, I use bibclean-format to have a clean final bibtex file.
                "--sort-fields=title,shorttitle,author,year,month,day,journal,booktitle,location,on,publisher,address,series,volume,number,pages,doi,isbn,issn,url,urldate,copyright,category,note,metadata"
                (shell-quote-argument (buffer-file-name))))
       (revert-buffer t t t)))
+
+  (use-package bibtex-utils
+    :tags '("WRITING" "BIBTEX")
+    :config
+    (setq bibtex-utils-remove-duplicates-prompt 'ask))
 #+end_src
 
 ** DONE TikZ/PGF
