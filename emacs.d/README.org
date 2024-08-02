@@ -715,6 +715,10 @@ Finally, introducing =move-text= provides a quick way to swap consecutive lines.
       <<keybindings-gen(table=goto-last-point-entry-keybindings)>>
     ))
 
+  (use-package goto-line-preview
+    :tags '("CORE" "NAVIGATION")
+    :commands (goto-line-preview))
+
   (use-package trail
     :ensure (:host github :repo "gitrj95/trail.el")
     :tags '("CORE" "NAVIGATION")

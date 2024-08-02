@@ -344,7 +344,7 @@
 |---------+-----------------------+-------------|
 | M-g e   | consult-compile-error |             |
 | M-g f   | consult-flymake       |             |
-| M-g g   | consult-goto-line     |             |
+| M-g g   | goto-line-preview     |             |
 | M-g M-g | consult-goto-line     |             |
 | M-g o   | consult-outline       |             |
 | M-g m   | consult-mark          |             |
