@@ -2353,6 +2353,41 @@ I am using =nov= to read epub files.
 My note taking life is split in 2 categories: global note taking and bibliography/reference management.
 The workflow is based on =org-roam= and uses additional packages to enhance the experience.
 
+** DONE Spelling
+CLOSED: [2024-06-04 Tue 15:56]
+~wucuo~ provides a more efficient spell checker.
+
+#+begin_src emacs-lisp
+  (use-package wucuo
+    :tags '("CORE" "WRITING" "HELPERS")
+    :custom
+   (wucuo-font-faces-to-check '(font-lock-doc-face font-lock-comment-face))
+
+    :config
+    ;; -------------------------------------------------------------------------
+    ;; spell checking via `aspell'
+    (setq ispell-program-name "aspell")
+    (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_GB" "--run-together" "--run-together-limit=16"))
+
+    ;; -------------------------------------------------------------------------
+    ;; disable spell checking in some major-modes
+    (setq wucuo-spell-check-buffer-predicate
+          (lambda ()
+            (not (memq major-mode '(dired-mode
+                                    log-edit-mode
+                                    compilation-mode
+                                    help-mode
+                                    profiler-report-mode
+                                    speedbar-mode
+                                    gud-mode
+                                    calc-mode
+                                    Info-mode)))))
+
+    :hook
+    (prog-mode . wucuo-start)
+    (text-mode . wucuo-start))
+#+end_src
+
 ** DONE Fundamentals
 CLOSED: [2022-02-10 Thu 07:08]
 :PROPERTIES:
@@ -4867,41 +4902,6 @@ The package =grammarly= bring its functionality into emacs which is a saver for 
     :ensure (:host github :repo "emacs-grammarly/eglot-grammarly")
     :tags '("WRITING" "HELPERS" "CONNECTED")
     :defer t)
-#+end_src
-
-** DONE Spelling
-CLOSED: [2024-06-04 Tue 15:56]
-~wucuo~ provides a more efficient spell checker.
-
-#+begin_src emacs-lisp
-  (use-package wucuo
-    :tags '("WRITING" "HELPERS")
-    :custom
-   (wucuo-font-faces-to-check '(font-lock-doc-face font-lock-comment-face))
-
-    :config
-    ;; -------------------------------------------------------------------------
-    ;; spell checking via `aspell'
-    (setq ispell-program-name "aspell")
-    (setq ispell-extra-args '("--sug-mode=ultra" "--lang=en_GB" "--run-together" "--run-together-limit=16"))
-
-    ;; -------------------------------------------------------------------------
-    ;; disable spell checking in some major-modes
-    (setq wucuo-spell-check-buffer-predicate
-          (lambda ()
-            (not (memq major-mode '(dired-mode
-                                    log-edit-mode
-                                    compilation-mode
-                                    help-mode
-                                    profiler-report-mode
-                                    speedbar-mode
-                                    gud-mode
-                                    calc-mode
-                                    Info-mode)))))
-
-    :hook
-    (prog-mode . wucuo-start)
-    (text-mode . wucuo-start))
 #+end_src
 
 ** DONE Translation
