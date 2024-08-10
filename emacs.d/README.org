@@ -1104,10 +1104,11 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
           org-startup-with-inline-images t
           org-return-follows-link t)
 
-    ;; Support emphasis INSIDE words (source: https://stackoverflow.com/a/24540651)
-    (setcar org-emphasis-regexp-components " \t('\"{[:alpha:]")
-    (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]- \t.,:!?;'\")}\\")
-    (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
+    ;; FIXME: for now this is annoying
+    ;; ;; Support emphasis INSIDE words (source: https://stackoverflow.com/a/24540651)
+    ;; (setcar org-emphasis-regexp-components " \t('\"{[:alpha:]")
+    ;; (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]- \t.,:!?;'\")}\\")
+    ;; (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 
     (defun org-schedule-effort ()
       "Setup schedule time from effort."
