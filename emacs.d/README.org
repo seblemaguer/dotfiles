@@ -5000,6 +5000,7 @@ It will require in case of first installation to run the following command: ~(tr
 
 #+begin_src emacs-lisp
   (use-package magit
+    :ensure (:branch "main")
     :tags '("VC" "GIT")
     :commands (magit magit-hydra/body magit-get-current-branch)
     :pretty-hydra
@@ -5119,8 +5120,7 @@ It will require in case of first installation to run the following command: ~(tr
     :tags '("VC" "GIT"))
 
   (use-package git-commit-ts-mode
-    :ensure (git-commit-ts-mode :host github
-                                :repo "danilshvalov/git-commit-ts-mode")
+    :ensure (:host github :repo "danilshvalov/git-commit-ts-mode")
     :tags '("VC" "GIT")
     :custom
     (git-commit-major-mode #'git-commit-ts-mode)
@@ -5169,8 +5169,13 @@ To interact with github in emacs, I rely on three packages:
 #+transclude: [[file:keytable_summary.org::Github]] :only-contents
 
 #+begin_src emacs-lisp
+  (use-package ghub
+    :ensure (:branch "main")
+   ;; NOTE: dirty hack to ensure the version is properly set - this impacts gh-notify
+    :tags '("VC" "GIT" "GITHUB" "CONNECTED"))
+
   (use-package forge
-    :ensure (:version (lambda (_) "0.4.0")) ;; NOTE: dirty hack to ensure the version is properly set - this impacts gh-notify
+    :ensure (:branch "main")
     :tags '("VC" "GIT" "GITHUB" "CONNECTED")
     :defer t
     :after magit
