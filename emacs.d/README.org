@@ -2556,6 +2556,14 @@ CLOSED: [2022-02-10 Thu 07:04]
     (consult-customize consult-org-roam-forward-links
                        :preview-key "M-.")
     )
+
+  (use-package org-roam-project-dashboard
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/org-roam-project-dashboard")
+    :tags '("ORG" "PROJECT_MANAGEMENT")
+    :commands (org-roam-project-dashboard-show)
+    :custom
+    (org-roam-project-dashboard-list-tags '("research" "tools" "duties" "application" "perso"))
+    (org-roam-project-dashboard-threshold-tasks 5))
 #+end_src
 
 *** DONE vulpea
