@@ -7080,6 +7080,22 @@ CLOSED: [2021-01-05 Tue 12:51]
 In this section, I configure a set of packages to control different desktop aspect using Emacs.
 Each subsection focuses on dedicated aspect of the desktop.
 
+*** DONE Global clickable URLS
+CLOSED: [2024-08-16 Fri 14:38]
+
+#+begin_src emacs-lisp
+    (use-builtin goto-addr
+      :tags '("DESKTOP")
+      :config
+      (define-globalized-minor-mode global-goto-address-mode
+        goto-address-mode goto-address-mode :group 'goto-address)
+
+      (global-goto-address-mode)
+
+      (define-globalized-minor-mode global-goto-address-prog-mode
+        goto-address-prog-mode goto-address-prog-mode :group 'goto-address))
+#+end_src
+
 *** DONE Clipboard
 CLOSED: [2021-01-05 Tue 12:39]
 :PROPERTIES:
@@ -7661,8 +7677,8 @@ Finally, I use =indicators= to show my relative position in the buffer.
                    '(min-width  . 1)  '(width  . 81)
                    '(vertical-scroll-bars  . nil)
                    '(internal-border-width . 24)
-                   '(left-fringe           . 10)
-                   '(right-fringe          . 10)
+                   '(left-fringe           . 15)
+                   '(right-fringe          . 15)
                    '(tool-bar-lines        . 0)
                    '(menu-bar-lines        . 0))))
 
