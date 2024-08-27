@@ -321,7 +321,7 @@ The specification respects the following syntax:
 
 #+begin_src emacs-lisp
   (use-package use-package-tags
-    :ensure (use-package-tags :type git :host github :repo "seblemaguer/use-package-tags")
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/use-package-tags")
     :config
 
     (when no-connection
@@ -473,7 +473,7 @@ the upstream has some priority issues with ERC; I would like to ignore some even
     )
 
   (use-package sauron
-    :ensure (sauron :type git :host github :repo "seblemaguer/sauron" :branch "functional")
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/sauron" :branch "functional")
     :tags '("CORE" "NOTIFICATION")
     :commands (sauron-start-hidden sauron-add-event)
 
@@ -2847,7 +2847,7 @@ I added a package which builds on top of =org-media-note= (named =org-media-note
     :ensure (org-media-note :type git :host github :repo "yuchen-lea/org-media-note"))
 
   (use-package org-media-noter
-    :ensure (org-media-noter :type git :host github :repo "seblemaguer/org-media-noter")
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/org-media-noter")
     :tags '("BIBLIOGRAPHY" "USER" "ORG" "DESKTOP")
     :commands (org-media-noter)
     :bind (
@@ -3894,7 +3894,7 @@ I developed a dedicated mode for this, so I am using it
 
 #+begin_src emacs-lisp
   (use-package cue-mode
-    :ensure (cue-mode :repo "seblemaguer/cue-mode" :type git :host github)
+    :ensure (:protocol ssh :repo "seblemaguer/cue-mode" :type git :host github)
     :tags '("PROGRAMMING" "DATA" "RELEASE")
     :mode ("\\.cue$"))
 #+end_src
@@ -3995,21 +3995,6 @@ For now, I know/use only files with extension ~rc~ or ~conf~.
   (use-package config-general-mode
     :tags '("PROGRAMMING" "CONFIGURATION")
     :mode ("\\.conf$" "\\.*rc$"))
-#+end_src
-
-*** DONE Authinfo
-CLOSED: [2021-01-03 Sun 21:56]
-:PROPERTIES:
-:ID:       8b6bc8e8-aac4-4c2a-a790-a6bac396b318
-:END:
-The default =authinfo-mode= provided by emacs 27.1 is pretty nice but doesn't provide proper font-locking.
-I started to develop =colored-authinfo-mode= to provide a better colorization for authinfo files.
-
-#+begin_src emacs-lisp
-  (use-package colored-authinfo-mode
-    :ensure (colored-authinfo-mode :repo "seblemaguer/colored-authinfo-mode" :type git :host github)
-    :tags '("PROGRAMMING" "CONFIGURATION")
-    :mode ("\\.authinfo\\(?:\\.gpg\\)\\'" . colored-authinfo-mode))
 #+end_src
 
 *** DONE Apache
@@ -4771,7 +4756,7 @@ CLOSED: [2022-03-08 Tue 16:11]
 As an academic, I spend a lot of my time in Overleaf, but I prefer to edit in emacs, so =emacs-overleaf= is key!
 #+begin_src emacs-lisp
   (use-package emacs-overleaf
-    :ensure (:type git :host github :repo "seblemaguer/emacs-overleaf")
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/emacs-overleaf")
     :tags '("WRITING" "LATEX" "CONNECTED")
     :commands (overleaf-setup overleaf-manual-save overleaf-mode)
     :custom (overleaf-auto-sync "never"))
@@ -4855,7 +4840,7 @@ However, it relies on a side script ~compilePGF~ being in the PATH!
 
 #+begin_src emacs-lisp
   (use-package tikz-mode
-    :ensure (tikz-mode :type git :host github :repo "seblemaguer/tikz-mode")
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/tikz-mode")
     :tags '("WRITING" "BIBTEX" "DESKTOP")
     :after tex)
 #+end_src
@@ -6301,7 +6286,7 @@ It is quite simple but robust enough to not being bother every 5 min.
 
 #+begin_src emacs-lisp
   (use-package mu4e-alert
-    :ensure (:host github :repo "seblemaguer/mu4e-alert" :branch "mu-1.7")
+    :ensure (:protocol ssh :host github :repo "seblemaguer/mu4e-alert" :branch "mu-1.7")
     :after (sauron-mode-line)
     :tags '("CONNECTED" "MAIL" "NOTIFICATION")
     :config
@@ -6521,7 +6506,7 @@ Because, I prefer to have the completion system, =company=, configured locally f
 
 #+begin_src emacs-lisp
   (use-package slack
-    :ensure (slack :type git :host github :repo "seblemaguer/emacs-slack")
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/emacs-slack")
     :tags '("CONNECTED" "CHAT" "SLACK")
     :commands (slack-start)
     :no-require t
@@ -6856,7 +6841,7 @@ It requires =aria2c= to be available.
 #+BEGIN_SRC emacs-lisp
   (when (executable-find "aria2c")
     (use-package aria2
-      :ensure (aria2 :type git :host github :repo "seblemaguer/aria2")
+      :ensure (:protocol ssh :type git :host github :repo "seblemaguer/aria2")
       :tags '("CONNECTED")
       :commands aria2-downloads-list))
 #+END_SRC
@@ -7428,10 +7413,7 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
        ))
 
   (use-package elcontext
-    :ensure (elcontext :type git
-                       :host github
-                       :repo "seblemaguer/elcontext"
-                       :branch "fix_missing_hydras_2")
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/elcontext" :branch "fix_missing_hydras_2")
     :tags '("CONNECTED" "SYSTEM" "PROCESSES")
     :config
 
@@ -7504,12 +7486,8 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
 
   (use-package slurm-mode
-    :ensure (slurm :type git
-                   :host github
-                   :repo "seblemaguer/slurm.el"
-                   :branch "explicit-username")
-    :tags '("SYSTEM" "SERVER" "CONNECTED")
-    )
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/slurm.el" :branch "explicit-username")
+    :tags '("SYSTEM" "SERVER" "CONNECTED"))
 #+end_src
 
 ** DONE Helpers [100%]
