@@ -1037,6 +1037,7 @@
 | <f12>   | org-agenda                        |      |
 | S-<f12> | org-timeblock                     |      |
 | C-<f12> | org-roam-hydra/body               |      |
+| M-<f12> | org-roam-project-dashboard-show   |      |
 |---------+-----------------------------------+------|
 
 ** Menu bindings
