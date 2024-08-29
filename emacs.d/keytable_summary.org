@@ -74,9 +74,10 @@
 :END:
 
 #+NAME: org-effort-keybindings
-| Key       | Functon           | Description |
-|-----------+-------------------+-------------|
-| C-c C-x e | my-org-set-effort |             |
+| Key       | Functon                    | Description |
+|-----------+----------------------------+-------------|
+| C-c C-x e | org-set-effort-to-schedule |             |
+| C-c C-s   | org-schedule-effort        |             |
 
 ** Transclusion
 :PROPERTIES:

@@ -1110,55 +1110,82 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
     ;; (setcar (nthcdr 1 org-emphasis-regexp-components) "[:alpha:]- \t.,:!?;'\")}\\")
     ;; (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 
-    (defun org-schedule-effort ()
-      "Setup schedule time from effort."
+    (defun org-schedule-effort (&optional no-schedule)
+      "Helper to schedule a task and set the effort at the same time if the start time is provided."
       (interactive)
       (save-excursion
         (org-back-to-heading t)
-        (let* ((element (org-element-at-point))
-               (effort (org-element-property :EFFORT element))
-               (scheduled (org-element-property :scheduled element))
-               (ts-year-start (org-element-property :year-start scheduled))
-               (ts-month-start (org-element-property :month-start scheduled))
-               (ts-day-start (org-element-property :day-start scheduled))
-               (ts-hour-start (org-element-property :hour-start scheduled))
-               (ts-minute-start (org-element-property :minute-start scheduled)) )
-          (org-schedule nil (concat
-                             (format "%s" ts-year-start)
-                             "-"
-                             (if (< ts-month-start 10)
-                                 (concat "0" (format "%s" ts-month-start))
-                               (format "%s" ts-month-start))
-                             "-"
-                             (if (< ts-day-start 10)
-                                 (concat "0" (format "%s" ts-day-start))
-                               (format "%s" ts-day-start))
-                             " "
-                             (if (< ts-hour-start 10)
-                                 (concat "0" (format "%s" ts-hour-start))
-                               (format "%s" ts-hour-start))
-                             ":"
-                             (if (< ts-minute-start 10)
-                                 (concat "0" (format "%s" ts-minute-start))
-                               (format "%s" ts-minute-start))
-                             "+"
-                             effort))
-          )))
+        (let* ((element         (org-element-at-point))
+               (effort          (org-element-property :EFFORT element))
+               (scheduled       (org-element-property :scheduled element))
+               (ts-year-start   (org-element-property :year-start scheduled))
+               (ts-month-start  (org-element-property :month-start scheduled))
+               (ts-day-start    (org-element-property :day-start scheduled))
+               (ts-hour-start   (org-element-property :hour-start scheduled))
+               (ts-minute-start (org-element-property :minute-start scheduled))
+               (ts-hour-end     (org-element-property :hour-end scheduled))
+               (ts-minute-end   (org-element-property :minute-end scheduled))
+               (duration        (if ts-hour-end
+                                    (- (+ (* ts-hour-end 60) ts-minute-end)
+                                       (+ (* ts-hour-start 60) ts-minute-start))
+                                  0)))
 
-    (defun my-org-set-effort ()
-      "Wrapper around `org-set-effort' and `org-schedule-effort' to
-   enforce the scheduling of the effort."
+          ;; Just to homogeneise everything
+          (if (or (> duration 0) (and ts-hour-start effort))
+              (progn
+                ;; Effort has priority
+                (unless effort
+                  (when ts-hour-end
+                    (setq effort (format "%d:%02d" (/ duration 60) (% duration 60)))))
+
+                (org-schedule nil (concat
+                                   (format "%s" ts-year-start)
+                                   "-"
+                                   (if (< ts-month-start 10)
+                                       (concat "0" (format "%s" ts-month-start))
+                                     (format "%s" ts-month-start))
+                                   "-"
+                                   (if (< ts-day-start 10)
+                                       (concat "0" (format "%s" ts-day-start))
+                                     (format "%s" ts-day-start))
+                                   " "
+                                   (if (< ts-hour-start 10)
+                                       (concat "0" (format "%s" ts-hour-start))
+                                     (format "%s" ts-hour-start))
+                                   ":"
+                                   (if (< ts-minute-start 10)
+                                       (concat "0" (format "%s" ts-minute-start))
+                                     (format "%s" ts-minute-start))
+                                   (when effort
+                                     (concat "+"effort)))))
+
+            (when (not no-schedule)
+              (org-schedule nil)
+              (setq element         (org-element-at-point)
+                    scheduled       (org-element-property :scheduled element)
+                    ts-year-start   (org-element-property :year-start scheduled)
+                    ts-month-start  (org-element-property :month-start scheduled)
+                    ts-day-start    (org-element-property :day-start scheduled)
+                    ts-hour-start   (org-element-property :hour-start scheduled)
+                    ts-minute-start (org-element-property :minute-start scheduled)
+                    ts-hour-end     (org-element-property :hour-end scheduled)
+                    ts-minute-end   (org-element-property :minute-end scheduled))
+              (setq duration        (if ts-hour-end (- (+ (* ts-hour-end 60) ts-minute-end)
+                                                       (+ (* ts-hour-start 60) ts-minute-start))
+                                        0))
+              (when (and (> duration 0) (not effort))
+                (message "%S" ts-hour-start)
+                (setq effort (format "%d:%02d" (/ duration 60) (% duration 60))))))
+
+          ;; Force a reset to the effort
+          (when effort
+            (org-set-effort nil effort)))))
+
+    (defun org-set-effort-to-schedule ()
+      "Update the timestamp based on the effort"
       (interactive)
       (org-set-effort)
-
-      (save-excursion
-        (org-back-to-heading t)
-        (let* ((element (org-element-at-point))
-               (scheduled (org-element-property :scheduled element))
-               (ts-hour-start (org-element-property :hour-start scheduled))
-               (ts-minute-start (org-element-property :minute-start scheduled)))
-          (when (and ts-hour-start ts-minute-start)
-            (org-schedule-effort)))))
+      (org-schedule-effort t))
 
     ;; Enforce done marking to propagate
     (defun org-summary-todo (n-done n-not-done)
@@ -1926,52 +1953,52 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
 #+transclude: [[file:keytable_summary.org::org-mru-clock-keybindings]]
 
 #+begin_src emacs-lisp
-    (use-package org-mru-clock
-      :tags '("ORG")
-      :bind* (
-        <<keybindings-gen(table=org-mru-clock-keybindings)>>
-      )
-      :init
-      (setq org-mru-clock-how-many 100
-            org-mru-clock-keep-formatting t
-            org-clock-persist t)
+  (use-package org-mru-clock
+    :tags '("ORG")
+    :bind* (
+       <<keybindings-gen(table=org-mru-clock-keybindings)>>
+    )
+    :init
+    (setq org-mru-clock-how-many 100
+          org-mru-clock-keep-formatting t
+          org-clock-persist t)
 
-      (defadvice org-clock-in (after sacha activate)
-        "Set this task's status to 'CURRENT'."
-        (org-todo "CURRENT"))
+    (defadvice org-clock-in (after sacha activate)
+      "Set this task's status to 'CURRENT'."
+      (org-todo "CURRENT"))
 
-      (defun sacha/org-clock-in-if-starting ()
-        "Clock in when the task is marked CURRENT."
-        (when (member (buffer-file-name)
-                      (mapcar 'file-truename org-agenda-files))
-          (when (and (string= org-state "CURRENT")
-                     (not (string= org-last-state org-state)))
-            (org-clock-in))))
+    (defun sacha/org-clock-in-if-starting ()
+      "Clock in when the task is marked CURRENT."
+      (when (member (buffer-file-name)
+                    (mapcar 'file-truename org-agenda-files))
+        (when (and (string= org-state "CURRENT")
+                   (not (string= org-last-state org-state)))
+          (org-clock-in))))
 
-      (defun sacha/org-clock-out-if-waiting-or-pausing ()
-        "Clock in when the task is marked STARTED."
-        (when (member (buffer-file-name)
-                      (mapcar 'file-truename org-agenda-files))
-          (when (and (or (string= org-state "TODO")
-                         (string= org-state "HOLD")
-                         (string= org-state "BLOCKED")
-                         (string= org-state "RUNNING"))
-                     (not (string= org-last-state org-state))
-                     (org-clock-is-active))
-            (org-clock-out))))
+    (defun sacha/org-clock-out-if-waiting-or-pausing ()
+      "Clock in when the task is marked STARTED."
+      (when (member (buffer-file-name)
+                    (mapcar 'file-truename org-agenda-files))
+        (when (and (or (string= org-state "TODO")
+                       (string= org-state "HOLD")
+                       (string= org-state "BLOCKED")
+                       (string= org-state "RUNNING"))
+                   (not (string= org-last-state org-state))
+                   (org-clock-is-active))
+          (org-clock-out))))
 
-      :hook
-      (org-after-todo-state-change . sacha/org-clock-out-if-waiting-or-pausing)
-      (org-after-todo-state-change . sacha/org-clock-in-if-starting)
+    :hook
+    (org-after-todo-state-change . sacha/org-clock-out-if-waiting-or-pausing)
+    (org-after-todo-state-change . sacha/org-clock-in-if-starting)
 
-      :config
-      (org-clock-persistence-insinuate))
+    :config
+    (org-clock-persistence-insinuate))
 
   (use-package org-clock-convenience
     :tags '("ORG")
     :bind (:map org-agenda-mode-map
-             ("<S-up>" . org-clock-convenience-timestamp-up)
-             ("<S-down>" . org-clock-convenience-timestamp-down)))
+                ("<S-up>" . org-clock-convenience-timestamp-up)
+                ("<S-down>" . org-clock-convenience-timestamp-down)))
 #+end_src
 
 *** DONE Archiving
