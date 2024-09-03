@@ -11,6 +11,9 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/main.css" />
 
 * ABCDE
+:PROPERTIES:
+:ID:       df9ab728-95e2-4bae-bbe2-fb75d725aa88
+:END:
 #+begin_src conf :tangle ~/.abcde.conf
   # System defaults for abcde version 2.2.x
   # Nothing in this file is uncommented by default.
@@ -115,6 +118,9 @@
 #+end_src
 
 * GIT
+:PROPERTIES:
+:ID:       9c6750a7-524d-476d-8475-4f5a7aa89153
+:END:
 #+begin_src conf :tangle "~/.gitconfig"
   [user]
       name = Sebastien Le Maguer
@@ -165,6 +171,9 @@
 #+end_src
 
 * kitty
+:PROPERTIES:
+:ID:       51db28d8-8b2f-496a-99bf-4c8ff418774e
+:END:
 #+begin_src conf :tangle ~/.config/kitty/kitty.conf :mkdirp yes
   # Theme
   include themes/flatfluc.conf
@@ -227,6 +236,9 @@
 #+end_src
 
 ** Theme
+:PROPERTIES:
+:ID:       bcb51094-f37f-4bbe-a40f-0cf1b96e7df1
+:END:
 #+begin_src conf :tangle "~/.config/kitty/themes/flatfluc.conf" :mkdirp yes
   # vim:ft=kitty
   ## name: flatfluc
@@ -282,6 +294,9 @@
 #+end_src
 
 * rsync
+:PROPERTIES:
+:ID:       6aa8b88c-abcf-4921-a6d5-083126105b1c
+:END:
 #+begin_src conf :tangle "~/.rsyncignore"
   # Ignore temporary/bulk files
   ,*~*
@@ -299,6 +314,9 @@
 #+end_src
 
 * conda
+:PROPERTIES:
+:ID:       1bc88ec3-3954-4629-b97f-782e1a0c5750
+:END:
 #+begin_src yaml :tangle "~/.condarc"
   # See https://www.anaconda.com/understanding-and-improving-condas-performance/ for more info.
 
@@ -327,7 +345,13 @@
 #+end_src
 
 * aria2c
+:PROPERTIES:
+:ID:       c7d9a1d8-ec49-4473-9112-de5ca810bfb3
+:END:
 ** Configuration
+:PROPERTIES:
+:ID:       d7225d2f-e8ff-484a-805c-aa014f347fb4
+:END:
 #+begin_src conf :tangle ~/.config/aria2/aria2.conf :mkdirp yes
   ### Basic ###
   # The directory to store the downloaded file.
@@ -449,6 +473,9 @@
 #+end_src
 
 ** Systemd service
+:PROPERTIES:
+:ID:       3cb5a9f3-b169-4a30-9379-f15990dc6b6f
+:END:
 #+begin_src conf :tangle ~/.config/systemd/user/aria2cd.service :mkdirp yes
   [Unit]
   Description=aria2 Daemon
@@ -469,7 +496,13 @@ you can then active as follow
 #+end_src
 
 * davmail
+:PROPERTIES:
+:ID:       5cb8c704-8216-406a-a36a-f9647bbcef77
+:END:
 ** Systemd service
+:PROPERTIES:
+:ID:       58f8a15c-8272-4616-8c15-3a3c820566a1
+:END:
 #+begin_src conf :tangle ~/.config/systemd/user/davmail.service :mkdirp yes
   [Unit]
   Description=DavMail Daemon
@@ -490,7 +523,13 @@ you can then active as follow
 #+end_src
 
 * Emailproxy
+:PROPERTIES:
+:ID:       16b778ce-cf4d-4f18-ad08-c4a60610ecd3
+:END:
 ** Systemd service
+:PROPERTIES:
+:ID:       686c79fa-4120-48db-ab3d-287f3a5166ff
+:END:
 #+begin_src conf :tangle ~/.config/systemd/user/emailproxy.service :mkdirp yes
   [Unit]
   Description=Email OAuth2 Proxy Daemon
@@ -511,7 +550,13 @@ you can then active as follow
 #+end_src
 
 * MPV
+:PROPERTIES:
+:ID:       4b456672-6e37-437d-bdc3-cc3c0fe2e03f
+:END:
 ** overall configuration
+:PROPERTIES:
+:ID:       9f10d2d4-5007-45d7-b789-fe7a947303ca
+:END:
 #+begin_src conf :tangle ~/.config/mpv/mpv.conf :mkdirp yes
   # MPV v3 Config - version 1.0.10
 
@@ -599,6 +644,9 @@ you can then active as follow
 #+end_src
 
 ** keys
+:PROPERTIES:
+:ID:       f5f363bd-c55a-491a-850e-6b23443ba4f5
+:END:
 #+begin_src conf :tangle ~/.config/mpv/input.conf :mkdirp yes
 
   # MPV v3 Input Configuration - version 1.0.10
@@ -833,3 +881,6 @@ you can then active as follow
 #+end_src
 
 * COMMENT some extra configuration
+:PROPERTIES:
+:ID:       a11edaa6-9f1a-4324-bb85-3b7c5c542fef
+:END:
