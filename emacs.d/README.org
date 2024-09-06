@@ -1040,7 +1040,6 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
 #+begin_src emacs-lisp
   (use-package org
     :tags '("ORG")
-    :ensure nil
     :hook
     (org-after-todo-statistics . org-summary-todo)
 
@@ -8566,9 +8565,11 @@ The default shortcut for this is "C-o" associated to the given mode!
 
 #+begin_src emacs-lisp
   (use-package casual-calc
+    :tags '("HELPERS" "BINDING")
     :bind (:map calc-mode-map ("C-o" . casual-calc-tmenu)))
 
   (use-package casual-info
+    :tags '("HELPERS" "BINDING")
     :bind (:map Info-mode-map ("C-o" . casual-info-tmenu)))
 
   ;; (use-package casual-avy
@@ -8576,8 +8577,10 @@ The default shortcut for this is "C-o" associated to the given mode!
   ;;   :bind ("M-g" . casual-avy-tmenu))
 
   (use-package casual-isearch
+    :tags '("HELPERS" "BINDING")
     :bind (:map isearch-mode-map ("C-s" . casual-isearch-tmenu)))
 
+    :tags '("HELPERS" "BINDING")
   (use-package casual-re-builder
     :bind (:map reb-mode-map
                 ("C-o" . casual-re-builder-tmenu)))
@@ -8585,6 +8588,12 @@ The default shortcut for this is "C-o" associated to the given mode!
   ;; (use-package casual-bookmarks
   ;;   :bind (:map bookmark-bmenu-mode-map
   ;;               ("C-o" . casual-bookmarks-tmenu)))
+
+  (use-package casual-agenda
+    :tags '("HELPERS" "BINDING")
+    :bind (:map
+           org-agenda-mode-map
+           ("C-o" . casual-agenda-tmenu)))
 #+end_src
 
 ** DONE Remapped bindings [100%]
