@@ -243,14 +243,14 @@ Some default values related to emacs' core behaviour, like the garbage collector
 
 #+begin_src emacs-lisp
   ;; Define cloud variables
-  (defvar cloud-org-root-dir "~/shared/org-roam/"
+  (defvar cloud-org-root-dir (expand-file-name "~/shared/org-roam/")
     "The root directory of org-mode specific files which should be saved on the cloud.")
 
   ;; Define root directory and add the plugins
   (defvar default-plugin-dir (concat user-emacs-directory "plugins")
     "The plugins directory")
 
-  (defvar org-agenda-default-files nil
+  (defvar org-agenda-default-files `(,(concat cloud-org-root-dir"perso/music/shopping_list.org"))
     "Agenda files which are not managed by org-roam/vulpea")
 
   ;; Don't screw up my files with custom
@@ -1075,7 +1075,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
                                   ("STYLE_ALL" . "habit"))
 
           ;; Todo part
-          org-todo-keywords '((sequence "TODO(t)" "DELEGATED(e)" "RUNNING(r)" "CURRENT(s)" "BLOCKED(b)" "HOLD(h)" "REMINDER(R)" "|" "DONE(d)" "CANCELLED(c@/!)"))
+          org-todo-keywords '((sequence "TODO(t)" "DELEGATED(e)" "RUNNING(r)" "CURRENT(s)" "BLOCKED(b)" "HOLD(h)" "REMINDER(R)" "ORDERED(o)" "|" "DONE(d)" "CANCELLED(c@/!)"))
 
           ;; Priority definition
           org-highest-priority ?A
@@ -1687,6 +1687,7 @@ I also introduced =org-tree-slide= to enjoy quick presentation
             ;; Done but not complete
             ("CANCELLED"     :background "lime green"    :foreground "black" :weight bold :box (:line-width 2 :style released-button))
             ("REMINDER"      :background "light green"   :foreground "black" :weight bold :box (:line-width 2 :style released-button))
+            ("ORDERED"       :background "light green"   :foreground "black" :weight bold :box (:line-width 2 :style released-button))
 
             ;; Done and complete
             ("DONE"          :background "forest green"  :foreground "lightgray" :weight bold :box (:line-width 2 :style released-button))
@@ -1868,7 +1869,7 @@ As I have my own way of being organized, I redefined completely the groups.
                    :order 8)
 
             (:name "Ordered Releases"
-                   :and (:category "RELEASE" :todo "REMINDER")
+                   :and (:category "RELEASE" :todo "ORDERED")
                    :order 9)
 
             ;; Some standby thingy
