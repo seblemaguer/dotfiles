@@ -2387,6 +2387,9 @@ The workflow is based on =org-roam= and uses additional packages to enhance the 
 
 ** DONE Spelling
 CLOSED: [2024-06-04 Tue 15:56]
+:PROPERTIES:
+:ID:       edd07a3e-6602-480d-9748-2aeedd485feb
+:END:
 ~wucuo~ provides a more efficient spell checker.
 
 #+begin_src emacs-lisp
@@ -2834,6 +2837,9 @@ This function makes extensive use of =org-element=.
 
 *** DONE org-noter
 CLOSED: [2024-06-04 Tue 15:46]
+:PROPERTIES:
+:ID:       5a709457-8017-477d-9bc9-8dc18765d069
+:END:
 =org-noter= is key package for my research life as it allows to annotate PDF using org-modes.
 As I tend to read using a remarkable, I also added a helper to transfer the article directly to the remarkable.
 
@@ -7109,6 +7115,9 @@ Each subsection focuses on dedicated aspect of the desktop.
 
 *** DONE Global clickable URLS
 CLOSED: [2024-08-16 Fri 14:38]
+:PROPERTIES:
+:ID:       67af1675-65b0-4054-8ade-65e210ea08c6
+:END:
 
 #+begin_src emacs-lisp
     (use-builtin goto-addr
@@ -7628,6 +7637,9 @@ To install Anki-Connect:
 
 *** DONE LLMs
 CLOSED: [2024-07-22 Mon 18:17]
+:PROPERTIES:
+:ID:       7d1067a2-a74e-4e33-ab40-1f1890ee200f
+:END:
 As LLMs are apparently becoming a thing, it could be useful to test one on a local machine.
 The machine should have a GPU and we will only use =ollama= (so server is assumed to be available).
 =gptel= is used as the interaction interface but server is started using =prodigy=.
@@ -8560,6 +8572,9 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
 
 ** DONE Some casual helpers
 CLOSED: [2024-07-24 Wed 13:50]
+:PROPERTIES:
+:ID:       6ce884e5-85df-4a93-8fdf-72781a15c550
+:END:
 [[https://github.com/kickingvegas][Charles Choi]] proposes a nice [[https://github.com/kickingvegas/casual-suite][suite]] based on transient.
 I am not using everything so I configure the packages one by one.
 The default shortcut for this is "C-o" associated to the given mode!
