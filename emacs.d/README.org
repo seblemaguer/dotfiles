@@ -2592,8 +2592,21 @@ CLOSED: [2022-02-10 Thu 07:04]
     :tags '("ORG" "PROJECT_MANAGEMENT")
     :commands (org-roam-project-dashboard-show)
     :custom
-    (org-roam-project-dashboard-list-tags '("research" "tools" "duties" "application" "perso"))
-    (org-roam-project-dashboard-threshold-tasks 5))
+    (org-roam-project-dashboard-list-tags '("research" "tools" "duties" "application" "perso" "teaching" "training"))
+    (org-roam-project-dashboard-threshold-tasks 5)
+
+    :custom-face
+    (org-roam-project-dashboard-todo     ((t :background "red1"
+                                             :foreground "black"
+                                             :weight bold
+                                             :box (:line-width 2 :style released-button))))
+    (org-roam-project-dashboard-priority ((t :foreground "#3498db"
+                                             :weight semibold
+                                             :box (:color "#ecf0f1" :line-width (-1 . -2))
+                                             :inverse-video t)))
+    (org-roam-project-dashboard-header   ((t :inherit outline-1 :weight ultra-bold :height 150)))
+    (org-roam-project-dashboard-project  ((t :inherit outline-2 :weight bold)))
+    (org-roam-project-dashboard-task     ((t :inherit outline-4))))
 #+end_src
 
 *** DONE vulpea
