@@ -4632,7 +4632,7 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
                       "--with-packagedatadir=$PWD/"
                       "--with-lispdir=$PWD/tex-site.el")
                      ("make"))
-                   :version (lambda (_) (require 'tex-site) AUCTeX-version)
+                   :version (lambda (_) (require 'auctex) AUCTeX-version)
                    ))
 
   (use-builtin tex
