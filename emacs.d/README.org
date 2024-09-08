@@ -1042,6 +1042,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
     :tags '("ORG")
     :hook
     (org-after-todo-statistics . org-summary-todo)
+    (before-save . org-agenda-generate-id)
 
     :bind (:map org-mode-map (
       <<keybindings-gen(table=org-additional-keybindings)>>
@@ -1216,7 +1217,13 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
         (if (re-search-forward "^\\(\\s-*\\)- \\[\\([ X]\\)\\] \\(.*\\)" (line-end-position) t)
             (replace-match "\\1- \\3")
           (re-search-forward "^\\(\\s-*\\)- \\(.*\\)" (line-end-position) t)
-          (replace-match "\\1- [ ] \\2")))))
+          (replace-match "\\1- [ ] \\2"))))
+
+    (defun org-agenda-generate-id ()
+      "Helper to be used in a hook to generate org ids only if the buffer is part of the org-agenda files"
+      (when (member (buffer-file-name) org-agenda-files)
+        (generate-org-heading-ids)))
+    )
 
   ;; Elpaca should wait org to be loaded
   (elpaca-wait)
