@@ -431,7 +431,7 @@
   # Completion/helpers
   znap source zsh-users/zsh-completions
   znap source zsh-users/zsh-autosuggestions
-  znap source esc/conda-zsh-completion
+  znap source conda-incubator/conda-zsh-completion
   znap source marlonrichert/zsh-hist
 
   # oh-my-zsh
