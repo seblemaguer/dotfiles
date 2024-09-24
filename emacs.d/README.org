@@ -5180,6 +5180,22 @@ It will require in case of first installation to run the following command: ~(tr
     :init
     (add-to-list 'treesit-language-source-alist
                  '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit"))))
+
+  (when (executable-find "gh")
+    (use-package consult-gh
+      :ensure (consult-gh :type git :host github :repo "armindarvish/consult-gh")
+      :tags '("VC" "GIT" "GITHUB")
+      :after consult
+
+      :config
+      ;;add your main GitHub account (replace "armindarvish" with your user or org)
+      (add-to-list 'consult-gh-default-orgs-list "seblemaguer")
+
+      ;;use "gh org list" to get a list of all your organizations and adds them to default list
+      (setq consult-gh-default-orgs-list (append consult-gh-default-orgs-list (remove "" (split-string (or (consult-gh--command-to-string "org" "list") "") "\n"))))
+
+      ;; set the default folder for cloning repositories, By default Consult-GH will confirm this before cloning
+      (setq consult-gh-default-clone-directory "~/tmp/to_sort_repos")))
 #+end_src
 
 *** DONE Git helpers
@@ -5539,6 +5555,7 @@ CLOSED: [2021-01-04 Mon 19:10]
 :END:
 Visualizing diff is important especially when I have a file, outside of project files, which is present on multiple machines.
 Diff visualization relies mainly on =ediff= but to which I added two primitives to focus on some regions (=diff-region= followed by =diff-region-now=).
+Also, I am using the configuration of =smerge-mode= from https://github.com/alphapapa/unpackaged.el#hydra.
 
 #+begin_src emacs-lisp
   (use-builtin ediff
@@ -5546,24 +5563,24 @@ Diff visualization relies mainly on =ediff= but to which I added two primitives 
     :config
     (autoload 'diff-mode "diff-mode" "Diff major mode" t)
     (setq diff-switches "-u"
-	  ediff-auto-refine-limit (* 2 14000)
-	  ediff-window-setup-function 'ediff-setup-windows-plain
-	  ediff-split-window-function
-	  (lambda (&optional arg)
-	    (if (> (frame-width) 160)
-		(split-window-horizontally arg)
-	      (split-window-vertically arg)))))
+          ediff-auto-refine-limit (* 2 14000)
+          ediff-window-setup-function 'ediff-setup-windows-plain
+          ediff-split-window-function
+          (lambda (&optional arg)
+            (if (> (frame-width) 160)
+        	(split-window-horizontally arg)
+              (split-window-vertically arg)))))
 
   (defun diff-region ()
     "Select a region to compare"
     (interactive)
     (when (use-region-p) ; there is a region
       (let (buf)
-	(setq buf (get-buffer-create "*Diff-regionA*"))
-	(save-current-buffer
-	  (set-buffer buf)
-	  (erase-buffer))
-	(append-to-buffer buf (region-beginning) (region-end))))
+        (setq buf (get-buffer-create "*Diff-regionA*"))
+        (save-current-buffer
+          (set-buffer buf)
+          (erase-buffer))
+        (append-to-buffer buf (region-beginning) (region-end))))
     (message "Now select other region to compare and run `diff-region-now`"))
 
   (defun diff-region-now ()
@@ -5571,13 +5588,55 @@ Diff visualization relies mainly on =ediff= but to which I added two primitives 
     (interactive)
     (when (use-region-p)
       (let (bufa bufb)
-	(setq bufa (get-buffer-create "*Diff-regionA*"))
-	(setq bufb (get-buffer-create "*Diff-regionB*"))
-	(save-current-buffer
-	  (set-buffer bufb)
-	  (erase-buffer))
-	(append-to-buffer bufb (region-beginning) (region-end))
-	(ediff-buffers bufa bufb))))
+        (setq bufa (get-buffer-create "*Diff-regionA*"))
+        (setq bufb (get-buffer-create "*Diff-regionB*"))
+        (save-current-buffer
+          (set-buffer bufb)
+          (erase-buffer))
+        (append-to-buffer bufb (region-beginning) (region-end))
+        (ediff-buffers bufa bufb))))
+
+    (use-builtin smerge-mode
+      :tags '("DIFF")
+      :hook
+      (prog-mode . smerge-mode)
+      (magit-diff-visit-file . (lambda ()
+                                 (when smerge-mode
+                                   (unpackaged/smerge-hydra/body))))
+      :config
+      (defhydra unpackaged/smerge-hydra
+        (:color pink :hint nil :post (smerge-auto-leave))
+        "
+    ^Move^       ^Keep^               ^Diff^                 ^Other^
+    ^^-----------^^-------------------^^---------------------^^-------
+    _n_ext       _b_ase               _<_: upper/base        _C_ombine
+    _p_rev       _u_pper              _=_: upper/lower       _r_esolve
+    ^^           _l_ower              _>_: base/lower        _k_ill current
+    ^^           _a_ll                _R_efine
+    ^^           _RET_: current       _E_diff
+    "
+        ("n" smerge-next)
+        ("p" smerge-prev)
+        ("b" smerge-keep-base)
+        ("u" smerge-keep-upper)
+        ("l" smerge-keep-lower)
+        ("a" smerge-keep-all)
+        ("RET" smerge-keep-current)
+        ("\C-m" smerge-keep-current)
+        ("<" smerge-diff-base-upper)
+        ("=" smerge-diff-upper-lower)
+        (">" smerge-diff-base-lower)
+        ("R" smerge-refine)
+        ("E" smerge-ediff)
+        ("C" smerge-combine-with-next)
+        ("r" smerge-resolve)
+        ("k" smerge-kill-current)
+        ("ZZ" (lambda ()
+                (interactive)
+                (save-buffer)
+                (bury-buffer))
+         "Save and bury buffer" :color blue)
+        ("q" nil "cancel" :color blue)))
 #+end_src
 
 ** DONE Trashed
@@ -7701,7 +7760,15 @@ So finally, here is the configuration:
                                               :host "localhost:11434"               ;Where it's running
                                               :stream t                             ;Stream responses
                                               :models '("llama3:latest") ;List of models
-                                              ))))
+                                              )))
+
+    (use-package elysium
+      :tags '("HELPERS" "HEAVY" "GPU")
+      :custom
+      ;; Below are the default values
+      (elysium-window-size 0.33) ; The elysium buffer will be 1/3 your screen
+      (elysium-window-style 'vertical)) ; Can be customized to horizontal
+    )
 #+end_src
 
 * DONE Visual [100%]
