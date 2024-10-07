@@ -1476,7 +1476,15 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
     :config
     (setq org-latex-listings t
           org-export-with-LaTeX-fragments t
-          org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
+          org-cite-export-processors '((latex biblatex) (t csl))
+          org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
+
+    (add-to-list 'org-latex-classes
+                 '("myarticle"
+                   "\\documentclass{myarticle}"
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
 
   (use-builtin ox-beamer ;; org-contrib
     :after (org-contrib)
