@@ -6493,11 +6493,9 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
     (org-timeblock-scale-options '(8 . 22))
     (org-timeblock-inbox-file (concat (file-truename user-emacs-directory) ".org-timeblock-inbox.org" ))
 
-    :init
+    :config
     (unless (file-exists-p org-timeblock-inbox-file)
       (write-region "" nil org-timeblock-inbox-file))
-
-    :config
     (add-to-list 'org-agenda-files org-timeblock-inbox-file))
 #+END_SRC
 
