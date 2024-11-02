@@ -356,6 +356,23 @@ While alternatives exist, I find this combination more straightforward and clean
   (use-package major-mode-hydra
     :demand t
     :tags '("CORE"))
+#+end_src
+
+*** DONE "on"
+CLOSED: [2024-11-01 Fri 11:03]
+The goal of this package is to provide some helpers to have a more refined control on "when" a package should be loaded.
+The following hooks are provided by the package:
+  - on-first-input-hook :: when a key is stroke (before)
+  - on-first-file-hook :: when the first file is INTERACTIVELY loaded (before)
+  - on-first-buffer-hook :: when the first buffer is INTERACTIVELY opened (before)
+  - on-switch-buffer-hook :: after changing the current buffer
+  - on-switch-window-hook :: after changing the focused window
+  - on-switch-frame-hook :: after changing the focused frame
+  - on-init-ui-hook :: when the UI has been initialized
+
+#+begin_src emacs-lisp
+  (use-package on
+    :tags '("CORE"))
 
   (elpaca-wait)
 #+end_src
@@ -366,8 +383,7 @@ While alternatives exist, I find this combination more straightforward and clean
 :END:
 #+begin_src emacs-lisp
   (use-package transient
-    :tags '("CORE")
-    )
+    :tags '("CORE"))
 #+end_src
 
 *** Documentation
@@ -3368,7 +3384,7 @@ It is a convenient package to have a more refined control of my workflow.
   (use-package which-key
     :tags '("HELPERS")
     :commands (which-key-mode)
-    :hook (elpaca-after-init . which-key-mode))
+    :hook (on-first-input . which-key-mode))
 
   (use-package embark
     :commands (embark-act embark-collect-snapshot)
