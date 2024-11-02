@@ -8211,8 +8211,8 @@ To see this, I am using =indent-bars=.
 
     ;; Add other languages as needed
     (indent-bars-treesit-scope '((python function_definition class_definition for_statement
-            if_statement with_statement while_statement)))
-    :hook ((python-ts-mode yaml-mode) . indent-bars-mode))
+                                         if_statement with_statement while_statement)))
+    :hook ((prog-mode yaml-mode sgml-mode) . indent-bars-mode))
 #+end_src
 
 *** DONE Diff
