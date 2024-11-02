@@ -5936,8 +5936,9 @@ I also had to redefine the function ~smtpmail-try-auth-methods~ to support keepa
 To do so, the assumption is that every SMTP credential is labeled as =<host>:<port>:<user>=.
 The default account is my work email as it is my most used account.
 
-Because, sometimes, I want to send rich emails, I use =org-msg= which relies on the HTML exporter provided by =org= to generate HTML emails.
-Finally, as I am quite absent-minded, I use a reminder to not forget the attachment: =message-attachment-reminder=.
+Because I sometimeswant to send rich emails, I use =org-msg= which relies on the HTML exporter provided by =org= to generate HTML emails.
+I also use ~varuga~ to send calendar invite.
+As I am quite absent-minded, I use a reminder to not forget the attachment: =message-attachment-reminder=.
 
 #+transclude: [[file:keytable_summary.org::Org-msg]] :only-contents
 
@@ -6143,6 +6144,10 @@ Finally, as I am quite absent-minded, I use a reminder to not forget the attachm
   (use-package message-attachment-reminder
     :disabled t
     :tags '("CONNECTED" "MAIL"))
+
+  (use-package varuga
+    :tags '("CONNECTED" "MAIL")
+    :commands (varuga-invite))
 #+end_src
 
 *** DONE Mu4e [100%]
