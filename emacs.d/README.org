@@ -8698,36 +8698,17 @@ I am not using everything so I configure the packages one by one.
 The default shortcut for this is "C-o" associated to the given mode!
 
 #+begin_src emacs-lisp
-  (use-package casual-calc
+  (use-package casual
     :tags '("HELPERS" "BINDING")
-    :bind (:map calc-mode-map ("C-o" . casual-calc-tmenu)))
-
-  (use-package casual-info
-    :tags '("HELPERS" "BINDING")
-    :bind (:map Info-mode-map ("C-o" . casual-info-tmenu)))
-
-  ;; (use-package casual-avy
-  ;;   :ensure t
-  ;;   :bind ("M-g" . casual-avy-tmenu))
-
-  (use-package casual-isearch
-    :tags '("HELPERS" "BINDING")
-    :bind (:map isearch-mode-map ("C-s" . casual-isearch-tmenu)))
-
-    :tags '("HELPERS" "BINDING")
-  (use-package casual-re-builder
-    :bind (:map reb-mode-map
-                ("C-o" . casual-re-builder-tmenu)))
-
-  ;; (use-package casual-bookmarks
-  ;;   :bind (:map bookmark-bmenu-mode-map
-  ;;               ("C-o" . casual-bookmarks-tmenu)))
-
-  (use-package casual-agenda
-    :tags '("HELPERS" "BINDING")
-    :bind (:map
-           org-agenda-mode-map
-           ("C-o" . casual-agenda-tmenu)))
+    :bind ( :map bookmark-bmenu-mode-map
+            ("?" . casual-bookmarks-tmenu)
+            :map dired-mode-map
+            ("?" . 'casual-dired-tmenu)
+            ("s" . #'casual-dired-sort-by-tmenu)
+            :map calc-mode-map
+            ("?" . casual-calc-tmenu)
+            :map calc-alg-map
+            ("?" . casual-calc-tmenu)))
 #+end_src
 
 ** DONE Remapped bindings [100%]
