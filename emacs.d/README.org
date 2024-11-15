@@ -8272,6 +8272,35 @@ To do so, I use the package =emojify= which provides everything needed for this.
       (emojify-set-emoji-data)))
 #+end_src
 
+*** DONE Replacing
+CLOSED: [2024-11-15 Fri 13:02]
+#+BEGIN_SRC emacs-lisp
+  (use-package visual-replace
+    :tags '("VISUAL")
+    :defer nil
+    :config
+    (visual-replace-global-mode 1)
+    (define-key visual-replace-mode-map
+                (kbd "C-c")
+                visual-replace-secondary-mode-map))
+#+END_SRC
+
+*** DONE Diverse set of visual helpers
+CLOSED: [2024-11-15 Fri 13:02]
+#+BEGIN_SRC emacs-lisp
+  (defun display-current-time ()
+    "Display the current time in the minibuffer with bold, different colors for date and time, and improved separators."
+    (interactive)
+    (let* ((current-time (current-time))
+           (formatted-date (format-time-string "%Y-%m-%d" current-time))
+           (formatted-time (format-time-string "%H:%M:%S" current-time))
+           (formatted-output (concat
+                             (propertize formatted-date 'face 'header-line)
+                             " "
+                             (propertize formatted-time 'face 'font-lock-builtin-face))))
+      (message "%s" formatted-output)))
+#+END_SRC
+
 * TODO Key bindings [75%]
 :PROPERTIES:
 :ID:       c0208280-e748-44d5-bab7-74c7b3298638
@@ -8688,28 +8717,6 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
   (global-set-key (kbd "<f1>") 'main-hydra/body)
 #+end_src
 
-** DONE Some casual helpers
-CLOSED: [2024-07-24 Wed 13:50]
-:PROPERTIES:
-:ID:       6ce884e5-85df-4a93-8fdf-72781a15c550
-:END:
-[[https://github.com/kickingvegas][Charles Choi]] proposes a nice [[https://github.com/kickingvegas/casual-suite][suite]] based on transient.
-I am not using everything so I configure the packages one by one.
-The default shortcut for this is "C-o" associated to the given mode!
-
-#+begin_src emacs-lisp
-  (use-package casual
-    :tags '("HELPERS" "BINDING")
-    :bind ( :map bookmark-bmenu-mode-map
-            ("?" . casual-bookmarks-tmenu)
-            :map dired-mode-map
-            ("?" . 'casual-dired-tmenu)
-            ("s" . #'casual-dired-sort-by-tmenu)
-            :map calc-mode-map
-            ("?" . casual-calc-tmenu)
-            :map calc-alg-map
-            ("?" . casual-calc-tmenu)))
-#+end_src
 
 ** DONE Remapped bindings [100%]
 CLOSED: [2021-01-05 Tue 10:01]
