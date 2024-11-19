@@ -1,6 +1,6 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{myarticle}[2014/08/16 HY Letter Class]
-\LoadClass[a4paper,12pt]{article}
+\LoadClass[a4paper,11pt]{article}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % The Legrand Orange Book
@@ -26,6 +26,12 @@
 \usepackage{graphicx} % Required for including pictures
 \usepackage{svg}
 
+\usepackage{xcolor} % Required for specifying colors by name
+\definecolor{gmitblue}{RGB}{93,138,168}
+\definecolor{LightSkyBlue}{RGB}{135, 206, 250}
+\definecolor{dkgreen}{RGB}{0, 100, 0}
+
+
 \usepackage{lipsum} % Inserts dummy text
 
 \usepackage{tikz} % Required for drawing custom shapes
@@ -35,13 +41,17 @@
 
 \usepackage{enumitem} % Customize lists
 \setlist{nolistsep} % Reduce spacing between bullet points and numbered lists
+% Redefine the description environment
+\setlist[description]{
+  font=\color{gmitblue}\bfseries, % Automatically set font style and color for labels
+  labelwidth=2cm,
+  labelsep=0.5cm, % Space between label and description text
+  leftmargin=3cm, % Indentation of the entire description list
+  itemsep=0.7em, % Space between items
+}
+
 
 \usepackage{booktabs} % Required for nicer horizontal rules in tables
-
-\usepackage{xcolor} % Required for specifying colors by name
-\definecolor{gmitblue}{RGB}{93,138,168}
-\definecolor{LightSkyBlue}{RGB}{135, 206, 250}
-\definecolor{dkgreen}{RGB}{0, 100, 0}
 
 % ----------------------------------------------------------------------------------------
 %	MARGINS
