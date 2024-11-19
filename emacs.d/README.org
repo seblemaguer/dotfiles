@@ -6654,7 +6654,6 @@ Because, I prefer to have the completion system, =company=, configured locally f
 
 #+begin_src emacs-lisp
   (use-package slack
-    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/emacs-slack")
     :tags '("CONNECTED" "CHAT" "SLACK")
     :commands (slack-start)
     :no-require t
