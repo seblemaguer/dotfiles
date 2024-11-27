@@ -328,10 +328,10 @@ The specification respects the following syntax:
         (setq use-package-tags-default-tag-list '("!CONNECTED")))
 
     (setq use-package-tags-enabled
-          `(("surface"                      . ("ALL" "!MAIL"))
+          `(("surface.home"                 . ("ALL" "!MAIL"))
             (,work-hostname                 . ("ALL"))
             ("mackenzie"                    . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
-            (,use-package-tags-default-host . ("CORE" "!USER" "!DESKTOP")))))
+            (,use-package-tags-default-host . ("CORE" "ORG" "!USER" "!DESKTOP")))))
 
 
   ;; Block until current queue processed.
@@ -811,7 +811,7 @@ leads to this configuration
 
     ;; Org-roam or accessible via org-roam
     (add-to-list 'recentf-exclude (concat cloud-org-root-dir ".*"))
-    (add-to-list 'recentf-exclude (concat (expand-file-name cloud-org-root-dir) ".*" ))
+    (add-to-list 'recentf-exclude (concat (abbreviate-file-name cloud-org-root-dir) ".*" ))
 
     ;; Maildir
     (add-to-list 'recentf-exclude "~/mail/.*" ))
