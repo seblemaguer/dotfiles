@@ -681,17 +681,26 @@ Minibuffer configuration part. Nothing really outstanding, just the classical st
     (file-name-shadow-mode 1))
 #+end_src
 
-** DONE Large files
+** DONE Memory & buffer
 CLOSED: [2021-01-03 Sun 11:28]
 :PROPERTIES:
 :ID:       e1a35d90-60ab-49b7-aa1e-f9cba607179d
 :END:
-Large files are difficult to handle properly in emacs.
+Large files are difficult to handle properly in Emacs.
 The best way is to use =vlf=.
 However, the entry point is actually =vlf-setup=.
 This leads to ensuring the package =vlf= with the use-package header defined to be =vlf-setup=
 
+I also use buffer-terminator to avoid the explosion of opened buffers (which are unused!).
+
 #+begin_src emacs-lisp
+  (use-package buffer-terminator
+    :tags '("CORE")
+    :custom
+    (buffer-terminator-verbose nil)
+    :config
+    (buffer-terminator-mode 1))
+
   (use-package vlf-setup
     :ensure  vlf
     :tags '("CORE")
@@ -762,6 +771,10 @@ Finally, introducing =move-text= provides a quick way to swap consecutive lines.
   (use-package move-text
     :tags '("CORE" "NAVIGATION")
     :config (move-text-default-bindings))
+
+  (use-package speedrect
+    :tags '("CORE" "NAVIGATION")
+    :config (speedrect-mode))
 #+end_src
 
 * DONE Session [100%]
