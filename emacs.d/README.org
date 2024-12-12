@@ -6667,7 +6667,6 @@ Because, I prefer to have the completion system, =company=, configured locally f
     :tags '("CONNECTED" "CHAT" "SLACK")
     :commands (slack-start)
     :no-require t
-    :defines (url-http-method url-http-data url-http-extra-headers url-callback-function url-callback-arguments oauth--token-data)
 
     :custom-face
     (slack-message-output-reaction-pressed ((t (:background "Lightskyblue1"))))
@@ -6687,10 +6686,12 @@ Because, I prefer to have the completion system, =company=, configured locally f
     (slack-file-dir                     "~/Downloads/")
 
     :hook
-    (slack-mode . slack-define-hooks)
+    (slack-mode                  . slack-define-hooks)
     (slack-file-info-buffer-mode . view-mode)
 
     :bind (
+      <<keybindings-gen(table=slack-general-keybindings)>>
+
       :map slack-mode-map (
         <<keybindings-gen(table=slack-mode-keybindings)>>
       )

@@ -842,6 +842,26 @@
 :PROPERTIES:
 :ID:       7f942afa-1c94-4306-a227-758c29c704be
 :END:
+
+#+NAME: slack-general-keybindings
+| Key     | Function                              | Description |
+|---------+---------------------------------------+-------------|
+| C-c S K | slack-stop                            |             |
+| C-c S c | slack-select-rooms                    |             |
+| C-c S u | slack-select-unread-rooms             |             |
+| C-c S U | slack-user-select                     |             |
+| C-c S s | slack-search-from-messages            |             |
+| C-c S J | slack-jump-to-browser                 |             |
+| C-c S j | slack-jump-to-app                     |             |
+| C-c S e | slack-insert-emoji                    |             |
+| C-c S E | slack-message-edit                    |             |
+| C-c S r | slack-message-add-reaction            |             |
+| C-c S t | slack-thread-show-or-create           |             |
+| C-c S g | slack-message-redisplay               |             |
+| C-c S G | slack-conversations-list-update-quick |             |
+| C-c S q | slack-quote-and-reply                 |             |
+| C-c S Q | slack-quote-and-reply-with-link       |             |
+
 #+NAME: slack-mode-keybindings
 | Key | Function                    | Description |
 |-----+-----------------------------+-------------|
@@ -849,11 +869,12 @@
 | #   | slack-message-embed-channel |             |
 
 #+NAME: slack-message-keybindings
-| Key     | Function                    | Description |
-|---------+-----------------------------+-------------|
-| C-c C-e | slack-message-edit          |             |
-| C-c C-a | slack-file-upload           |             |
-| C-c C-r | slack-thread-show-or-create |             |
+| Key     | Function                           | Description |
+|---------+------------------------------------+-------------|
+| C-c C-e | slack-message-edit                 |             |
+| C-c C-a | slack-file-upload                  |             |
+| C-c C-r | slack-thread-show-or-create        |             |
+| C-c '   | slack-message-write-another-buffer |             |
 
 ** Exchange
 :PROPERTIES:
