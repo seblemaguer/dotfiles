@@ -2979,23 +2979,20 @@ CLOSED: [2021-01-04 Mon 09:00]
 :PROPERTIES:
 :ID:       304d29b4-67dd-4a87-8e14-140380ce4398
 :END:
-For the folding, I am relying on =origami=.
-
-#+transclude: [[file:keytable_summary.org::Folding]] :only-contents
+For the folding, I am relying on =outline-indent=.
 
 #+begin_src emacs-lisp
-  (use-package origami
-    :ensure (origami :host github :repo "elp-revive/origami.el")
+  (use-package outline-indent
     :tags '("FOLDING")
-    :demand
-    :bind (:map origami-mode-map
-      <<keybindings-gen(table=origami-keybindings)>>
-    )
+    :commands (outline-indent-minor-mode
+               outline-indent-insert-heading)
+    :hook ((yaml-mode . outline-indent-minor-mode)
+           (yaml-ts-mode . outline-indent-minor-mode)
+           (python-mode . outline-indent-minor-mode)
+           (python-ts-mode . outline-indent-minor-mode))
 
-    :config
-    (define-prefix-command 'origami-mode-map)
-    (global-set-key (kbd "C-c @") 'origami-mode-map)
-    (global-origami-mode))
+    :custom
+    (outline-indent-ellipsis " ▼ "))
 #+end_src
 
 ** DONE Completing [100%]

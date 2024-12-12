@@ -270,27 +270,6 @@
 |-------+---------+-------------|
 | C-x u | vundo   |             |
 
-** Folding
-:PROPERTIES:
-:ID:       f966c170-4135-4270-8803-d6bdc5842b00
-:END:
-
-#+NAME: origami-keybindings
-| Key | Function                        | Description |
-|-----+---------------------------------+-------------|
-| s   | origami-open-node               |             |
-| O   | origami-open-node-recursively   |             |
-| d   | origami-close-node              |             |
-| C   | origami-close-node-recursively  |             |
-| a   | origami-toggle-node             |             |
-| A   | origami-recursively-toggle-node |             |
-| R   | origami-open-all-nodes          |             |
-| M   | origami-close-all-nodes         |             |
-| v   | origami-show-only-node          |             |
-| k   | origami-previous-fold           |             |
-| j   | origami-forward-fold            |             |
-| x   | origami-reset                   |             |
-
 * Completion
 :PROPERTIES:
 :ID:       3ad984e7-0bed-4937-ad0e-75fff7a80f5a
