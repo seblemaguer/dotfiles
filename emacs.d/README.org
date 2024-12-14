@@ -1902,7 +1902,6 @@ As I have my own way of being organized, I redefined completely the groups.
 
             ;; CD part
             (:discard (:and (:category "RELEASE" :tag "noexport")))
-            ;; (:discard (:and (:category "RELEASE" :tag "ignore")))
             (:discard (:and (:category "RELEASE" :todo "CANCELLED")))
             (:name "Today's releases"
                    :and (:todo "RELEASE" :date today)
@@ -1913,7 +1912,7 @@ As I have my own way of being organized, I redefined completely the groups.
                    :order 8)
 
             (:name "Ordered Releases"
-                   :and (:category "RELEASE" :todo "ORDERED")
+                   :and (:category "RELEASE" :todo "ORDERED" :scheduled t)
                    :order 9)
 
             ;; Some standby thingy
@@ -1942,6 +1941,9 @@ As I have my own way of being organized, I redefined completely the groups.
             (:name "Scheduled in the next couple of days"
                    :and (:scheduled future :todo "TODO")
                    :order 6)
+
+            ;; Ignore anything which doesn't have a todo "keyword"
+            (:discard (:todo nil))
             )))
 #+end_src
 
@@ -2343,7 +2345,7 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     :magic ("%PDF" . pdf-view-mode)
     :custom
     (pdf-annot-default-annotation-properties `((t           (label . ,user-full-name))
-                                               (text        (icon . "Note")
+                                               (text        (icon  . "Note")
                                                             (color . "#ff0000"))
                                                (highlight   (color . "green"))
                                                (squiggly    (color . "orange"))
@@ -3032,7 +3034,7 @@ CLOSED: [2021-01-03 Sun 17:42]
     ;; (corfu-echo-documentation nil) ;; Disable documentation in the echo area
     ;; (corfu-scroll-margin 5)        ;; Use scroll margin
 
-    :hook (before-save-hook . corfu-quit)
+    :hook (before-save . corfu-quit)
     :init
     (global-corfu-mode)
     )
