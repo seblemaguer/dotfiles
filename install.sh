@@ -60,14 +60,15 @@ do
           (org-babel-tangle))))" $cur_org
 done
 
-# Tangle emacs
-~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "
-    (progn
-      (require 'ob-tangle)
-      (setq org-confirm-babel-evaluate nil)
-      (dolist (file command-line-args-left)
-        (with-current-buffer (find-file-noselect file)
-          (org-babel-tangle))))" "~/.emacs.d/README.org"
+# FIXME: with new version, it doesn't work now
+# # Tangle emacs
+# ~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "
+#     (progn
+#       (require 'ob-tangle)
+#       (setq org-confirm-babel-evaluate nil)
+#       (dolist (file command-line-args-left)
+#         (with-current-buffer (find-file-noselect file)
+#           (org-babel-tangle))))" "~/.emacs.d/README.org"
 
 
 ##########################################################################
