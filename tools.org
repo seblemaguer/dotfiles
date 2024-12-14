@@ -190,7 +190,6 @@
   #: }}}
 
   #: Tab bar {{{
-
   tab_bar_edge bottom
   tab_bar_margin_width 0.0
   tab_bar_margin_height 0.0 0.0
@@ -210,9 +209,7 @@
   tab_bar_margin_color none
 
   map ctrl+shift+t new_tab_with_cwd
-
   #: }}}
-
 
   #: Splits {{{
   # - Do the split
@@ -227,6 +224,7 @@
   #: }}}
 
   #: shell integration {{{
+  shell zsh
   shell_integration disabled
   #! }}}
 
@@ -635,6 +633,8 @@ you can then active as follow
   sub-font="Arial"
   sub-scale-with-window=yes
 
+  # == YouTube
+  script-opts=ytdl_hook-ytdl_path=yt-dlp
 
   # == To sort
   hls-bitrate=max                         # uses max quality for HLS streams

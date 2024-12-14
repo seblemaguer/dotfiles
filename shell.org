@@ -1,7 +1,5 @@
 #+TITLE: SHELL configuration part
 #+AUTHOR: Sébastien Le Maguer
-#+EMAIL: lemagues@surface
-#+DATE: 19 June 2021
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  fr
@@ -366,16 +364,16 @@
 
   # >>> mamba initialize >>>
   # !! Contents within this block are managed by 'mamba init' !!
-  export MAMBA_EXE="/home/lemagues/.local/bin/micromamba";
-  export MAMBA_ROOT_PREFIX="/home/lemagues/environment/local/mamba";
+  export MAMBA_EXE="$HOME/environment/local/bin/micromamba";
+  export MAMBA_ROOT_PREFIX="$HOME/environment/local/micromamba";
   __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
   if [ $? -eq 0 ]; then
       eval "$__mamba_setup"
   else
-      if [ -f "/home/lemagues/environment/local/mamba/etc/profile.d/micromamba.sh" ]; then
-          . "/home/lemagues/environment/local/mamba/etc/profile.d/micromamba.sh"
+      if [ -f "$HOME/environment/local/micromamba/etc/profile.d/micromamba.sh" ]; then
+          . "$HOME/environment/local/micromamba/etc/profile.d/micromamba.sh"
       else
-          export  PATH="/home/lemagues/environment/local/mamba/bin:$PATH"  # extra space after export prevents interference from conda init
+          export  PATH="$HOME/environment/local/micromamba/bin:$PATH"  # extra space after export prevents interference from conda init
       fi
   fi
   unset __mamba_setup
@@ -622,16 +620,16 @@
 
   # >>> mamba initialize >>>
   # !! Contents within this block are managed by 'mamba init' !!
-  export MAMBA_EXE="/home/lemagues/.local/bin/micromamba";
-  export MAMBA_ROOT_PREFIX="/home/lemagues/environment/local/mamba";
+  export MAMBA_EXE="$HOME/environment/local/bin/micromamba";
+  export MAMBA_ROOT_PREFIX="$HOME/environment/local/micromamba";
   __mamba_setup="$("$MAMBA_EXE" shell hook --shell zsh --prefix "$MAMBA_ROOT_PREFIX" 2> /dev/null)"
   if [ $? -eq 0 ]; then
       eval "$__mamba_setup"
   else
-      if [ -f "/home/lemagues/environment/local/mamba/etc/profile.d/micromamba.sh" ]; then
-          . "/home/lemagues/environment/local/mamba/etc/profile.d/micromamba.sh"
+      if [ -f "$HOME/environment/local/micromamba/etc/profile.d/micromamba.sh" ]; then
+          . "$HOME/environment/local/micromamba/etc/profile.d/micromamba.sh"
       else
-          export  PATH="/home/lemagues/environment/local/mamba/bin:$PATH"  # extra space after export prevents interference from conda init
+          export  PATH="$HOME/environment/local/micromamba/bin:$PATH"  # extra space after export prevents interference from conda init
       fi
   fi
   unset __mamba_setup
