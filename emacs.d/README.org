@@ -2347,7 +2347,7 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     (pdf-annot-default-annotation-properties `((t           (label . ,user-full-name))
                                                (text        (icon  . "Note")
                                                             (color . "#ff0000"))
-                                               (highlight   (color . "green"))
+                                               (highlight   (color . "green1"))
                                                (squiggly    (color . "orange"))
                                                (strike-out  (color . "red"))
                                                (underline   (color . "blue"))))
