@@ -5220,8 +5220,11 @@ It will require in case of first installation to run the following command: ~(tr
                  '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit"))))
 
   (when (executable-find "gh")
+    (use-package ox-gfm
+      :ensure (:version (lambda (_) "1.0"))
+      :tags '("VC" "GIT" "GITHUB" "ORG"))
+
     (use-package consult-gh
-      :ensure (consult-gh :type git :host github :repo "armindarvish/consult-gh")
       :tags '("VC" "GIT" "GITHUB")
       :after consult
 
