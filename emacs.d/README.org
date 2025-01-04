@@ -7769,7 +7769,6 @@ CLOSED: [2024-07-22 Mon 18:17]
 :END:
 As LLMs are apparently becoming a thing, it could be useful to test one on a local machine.
 The machine should have a GPU and we will only use =ollama= (so server is assumed to be available).
-=gptel= is used as the interaction interface but server is started using =prodigy=.
 
 In order to install the server simply run the following:
 
@@ -7777,41 +7776,65 @@ In order to install the server simply run the following:
   # Install ollama client
   curl -fsSL https://ollama.com/install.sh | sh
 
-  # Get Llama model
-  ollama pull llama3
+  # Get Llama models
+  ollama pull llama3:8b-instruct-q8_0
+  ollama pull qwen2.5:3b
+  ollama pull qwen2.5-coder:3b
 #+end_src
 
-So finally, here is the configuration:
+Also, it may be useful to modify the variable =OLLAMA_MODELS= in the service file as the default path is =/usr/share/ollama/models=.
 
 #+begin_src emacs-lisp
   (when (executable-find "ollama")
-    (use-package gptel
+    (use-package ellama
       :tags '("HELPERS" "HEAVY" "GPU")
+      :bind ("C-c e" . ellama-transient-main-menu)
       :init
-      (prodigy-define-service
-        :name "ollama"
-        :command "ollama"
-        :args '("serve")
-        :tas '(llm gptel)
-        :stop-signal 'sigterm
-        :kill-process-buffer-on-stop t)
+      (setopt ellama-language "Finnish")
 
+      (require 'llm-ollama)
+
+
+      (setopt ellama-provider (make-llm-ollama :chat-model "llama3:8b-instruct-q8_0"
+  	                                     :embedding-model "nomic-embed-text"
+  	                                     :default-chat-non-standard-params '(("num_ctx" . 8192))))
+      (setopt ellama-summarization-provider (make-llm-ollama :chat-model "qwen2.5:3b"
+  	                                                   :embedding-model "nomic-embed-text"
+  	                                                   :default-chat-non-standard-params '(("num_ctx" . 32768))))
+      (setopt ellama-coding-provider (make-llm-ollama  :chat-model "qwen2.5-coder:3b"
+  	                                             :embedding-model "nomic-embed-text"
+  	                                             :default-chat-non-standard-params '(("num_ctx" . 32768))))
+
+
+      ;; Predefined llm providers for interactive switching.
+      ;; You shouldn't add ollama providers here - it can be selected interactively
+      ;; without it. It is just example.
+      (setopt ellama-providers '(("zephyr" . (make-llm-ollama :chat-model "zephyr:7b-beta-q6_K"
+  			                                    :embedding-model "zephyr:7b-beta-q6_K"))
+  		               ("mistral" . (make-llm-ollama :chat-model "mistral:7b-instruct-v0.2-q6_K"
+  			                                     :embedding-model "mistral:7b-instruct-v0.2-q6_K"))
+  		               ("mixtral" . (make-llm-ollama :chat-model "mixtral:8x7b-instruct-v0.1-q3_K_M-4k"
+  			                                     :embedding-model "mixtral:8x7b-instruct-v0.1-q3_K_M-4k"))))
+
+      ;; Naming new sessions with llm
+      (setopt ellama-naming-provider (make-llm-ollama :chat-model "llama3:8b-instruct-q8_0"
+  	                                            :embedding-model "nomic-embed-text"
+  	                                            :default-chat-non-standard-params '(("stop" . ("\n")))))
+      (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+
+      ;; Translation llm provider
+      (setopt ellama-translation-provider (make-llm-ollama :chat-model "qwen2.5:3b"
+  	                                                 :embedding-model "nomic-embed-text"
+  	                                                 :default-chat-non-standard-params '(("num_ctx" . 32768))))
+
+      ;; customize display buffer behaviour
+      ;; see ~(info "(elisp) Buffer Display Action Functions")~
+      (setopt ellama-chat-display-action-function #'display-buffer-full-frame)
+      (setopt ellama-instant-display-action-function #'display-buffer-at-bottom)
 
       :config
-
-      (setq  gptel-model "llama3:latest"
-             gptel-backend (gptel-make-ollama "Ollama"             ;Any name of your choosing
-                                              :host "localhost:11434"               ;Where it's running
-                                              :stream t                             ;Stream responses
-                                              :models '("llama3:latest") ;List of models
-                                              )))
-
-    (use-package elysium
-      :tags '("HELPERS" "HEAVY" "GPU")
-      :custom
-      ;; Below are the default values
-      (elysium-window-size 0.33) ; The elysium buffer will be 1/3 your screen
-      (elysium-window-style 'vertical)) ; Can be customized to horizontal
+      ;; send last message in chat buffer with C-c C-c
+      (add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message))
     )
 #+end_src
 
