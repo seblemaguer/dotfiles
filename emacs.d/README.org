@@ -1542,8 +1542,9 @@ Therefore, I use the package =ox-gfm=
 
 #+begin_src emacs-lisp
   (use-package ox-gfm
-      :tags '("ORG")
-      :after ox)
+    :ensure (:version (lambda (_) "1.0"))
+    :tags '("ORG")
+    :after ox)
 #+end_src
 
 *** DONE SSH
@@ -5220,20 +5221,16 @@ It will require in case of first installation to run the following command: ~(tr
                  '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit"))))
 
   (when (executable-find "gh")
-    (use-package ox-gfm
-      :ensure (:version (lambda (_) "1.0"))
-      :tags '("VC" "GIT" "GITHUB" "ORG"))
-
     (use-package consult-gh
       :tags '("VC" "GIT" "GITHUB")
       :after consult
 
       :config
       ;;add your main GitHub account (replace "armindarvish" with your user or org)
-      (add-to-list 'consult-gh-default-orgs-list "seblemaguer")
+      (add-to-list 'consult-gh-favorite-orgs-list "seblemaguer")
 
       ;;use "gh org list" to get a list of all your organizations and adds them to default list
-      (setq consult-gh-default-orgs-list (append consult-gh-default-orgs-list (remove "" (split-string (or (consult-gh--command-to-string "org" "list") "") "\n"))))
+      (setq consult-gh-favorite-orgs-list (append consult-gh-favorite-orgs-list (remove "" (split-string (or (consult-gh--command-to-string "org" "list") "") "\n"))))
 
       ;; set the default folder for cloning repositories, By default Consult-GH will confirm this before cloning
       (setq consult-gh-default-clone-directory "~/tmp/to_sort_repos")))
