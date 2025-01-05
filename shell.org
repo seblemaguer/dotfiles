@@ -194,7 +194,7 @@
 
   # Helper aliases
   alias conda=micromamba
-  alias tangle_emacs_conf=$'~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "(progn (require \'ob-tangle) (setq org-confirm-babel-evaluate nil) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))" "~/.emacs.d/README.org"'
+  alias tangle_emacs_conf='~/environment/local/apps/emacs/bin/emacs -Q --batch --load "~/.emacs.d/tangle.el" "~/.emacs.d/README.org"'
   alias mquota="python ~/environment/local/bin/mquota" # NOTE: needed because boole python's version is 2.7...
 
   # Docker cleaning aliases
@@ -501,7 +501,7 @@
 
   # Helper aliases
   alias conda=micromamba
-  alias tangle_emacs_conf=$'~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "(progn (require \'ob-tangle) (setq org-confirm-babel-evaluate nil) (dolist (file command-line-args-left) (with-current-buffer (find-file-noselect file) (org-babel-tangle))))" "~/.emacs.d/README.org"'
+  alias tangle_emacs_conf='~/environment/local/apps/emacs/bin/emacs -Q --batch --load "~/.emacs.d/tangle.el" "~/.emacs.d/README.org"'
 
 
   ########################################################################################
@@ -611,6 +611,7 @@
   export SDKMAN_DIR="$HOME/.sdkman"
   [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+  ## Kitty
   if test -n "$KITTY_INSTALLATION_DIR"; then
       export KITTY_SHELL_INTEGRATION="enabled"
       autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration

@@ -49,26 +49,10 @@ then
 fi
 
 # Tangle all the configuration
-for cur_org in $(ls *.org | grep -v README.org)
-do
-    ~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "
-    (progn
-      (require 'ob-tangle)
-      (setq org-confirm-babel-evaluate nil)
-      (dolist (file command-line-args-left)
-        (with-current-buffer (find-file-noselect file)
-          (org-babel-tangle))))" $cur_org
-done
+~/environment/local/apps/emacs/bin/emacs -Q --batch --load "~/.emacs.d/tangle.el" $(ls *.org)
 
-# FIXME: with new version, it doesn't work now
-# # Tangle emacs
-# ~/environment/local/apps/emacs/bin/emacs -Q --batch --eval "
-#     (progn
-#       (require 'ob-tangle)
-#       (setq org-confirm-babel-evaluate nil)
-#       (dolist (file command-line-args-left)
-#         (with-current-buffer (find-file-noselect file)
-#           (org-babel-tangle))))" "~/.emacs.d/README.org"
+# Emacs is a specific case as it is in its own directory
+~/environment/local/apps/emacs/bin/emacs -Q --batch --load "~/.emacs.d/tangle.el" $PWD/emacs.d/README.org
 
 
 ##########################################################################
