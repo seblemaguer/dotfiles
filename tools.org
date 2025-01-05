@@ -179,7 +179,7 @@
   include themes/flatfluc.conf
 
   #: Fonts {{{
-  font_family      Monoid
+  font_family MesloLGS NF
   # font_family      Fira Code
   # font_family      Roboto Mono
   bold_font        auto
