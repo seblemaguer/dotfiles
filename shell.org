@@ -100,7 +100,7 @@
   ###################################################################################
   if test -n "$KITTY_INSTALLATION_DIR"; then
       # Define some kitty helper aliases
-      alias ssh="kitty +kitten ssh"
+      # alias ssh="kitty +kitten ssh"
       alias icat="kitty +kitten icat"
 
       # Set matplotlib backend to be compatible kitty
