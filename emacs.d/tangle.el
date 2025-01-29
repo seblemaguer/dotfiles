@@ -1,6 +1,6 @@
 ;; This file is used as the entry point for main installation
 
-(defvar elpaca-installer-version 0.8)
+(defvar elpaca-installer-version 0.9)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -36,6 +36,14 @@
     (load "./elpaca-autoloads")))
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
+
+;; Some additional configuration to ensure an optimal run (note: saved for remembering
+;; (require 'elpaca-menu-elpa)
+;; (setf (alist-get 'packages-url (alist-get 'gnu elpaca-menu-elpas))
+;;       "https://git.savannah.gnu.org/gitweb/?p=emacs/elpa.git;a=blob_plain;f=elpa-packages;hb=HEAD"
+;;       (alist-get 'packages-url (alist-get 'nongnu elpaca-menu-elpas))
+;;       "https://git.savannah.gnu.org/gitweb/?p=emacs/nongnu.git;a=blob_plain;f=elpa-packages;hb=HEAD")
+(setq elpaca-queue-limit 5)
 
 ;; Install use-package support
 (elpaca elpaca-use-package
