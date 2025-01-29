@@ -7941,12 +7941,11 @@ Finally, I use =indicators= to show my relative position in the buffer.
     (set-face-attribute 'nano-modeline-status nil
                         :background fui-amethyst
                         :foreground fui-deep-clouds
-                        :box '(:line-width 1 :color fui-fg))
+                        :box '(:line-width 1))
     (set-face-attribute 'mode-line nil
                         :foreground fui-fg
                         :background fui-deep-clouds
                         :box '(:line-width 1)
-                        ;; :box nil
                         :height 40)
     (set-face-attribute 'mode-line-inactive nil
                         :foreground fui-deep-clouds
