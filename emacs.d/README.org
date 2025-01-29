@@ -735,6 +735,12 @@ Finally, introducing =move-text= provides a quick way to swap consecutive lines.
   (use-package speedrect
     :tags '("CORE" "NAVIGATION")
     :config (speedrect-mode))
+
+  (use-package locs-and-refs
+    :tags '("CORE" "NAVIGATION")
+    :init
+    (define-globalized-minor-mode global-locs-and-refs-mode locs-and-refs-mode
+      (locs-and-refs-mode)))
 #+end_src
 
 * DONE Session [100%]
