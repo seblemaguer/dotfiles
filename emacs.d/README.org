@@ -5328,7 +5328,21 @@ CLOSED: [2023-10-27 Fri 09:32]
 :PROPERTIES:
 :ID:       432507f1-450f-451e-92c7-ae0a15b3c44b
 :END:
+
 #+begin_src emacs-lisp
+  (use-package project-x
+    :ensure (:type git :host github :repo "karthink/project-x")
+    :after project
+    :config
+    (add-hook 'project-find-functions 'project-x-try-local 90)
+    (add-hook 'kill-emacs-hook 'project-x--window-state-write)
+    (setq project-switch-commands #'project-x-windows
+          project-x-local-identifier '("package.json" "pyproject.toml" ".project"))
+
+    :bind (("C-x p w" . project-x-window-state-save)
+           ("C-x p j" . project-x-window-state-load)))
+
+
   (use-package projection
     :tags '("PROJECT")
     ;; Enable the `projection-hook' feature.
