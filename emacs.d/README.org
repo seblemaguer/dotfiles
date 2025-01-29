@@ -1255,6 +1255,15 @@ Combined with =org-superstar=, this leads to the ultimate org-mode list manageme
     (global-org-bulletproof-mode +1))
 #+end_src
 
+*** DONE Helper for long table
+CLOSED: [2025-01-18 Sat 12:09]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package lte
+    :tags '("ORG" "VISUAL")
+    :hook ((org-mode markdown-mode) . lte-truncate-table-mode))
+#+END_SRC
+
 *** DONE Babel
 CLOSED: [2021-01-03 Sun 13:10]
 :PROPERTIES:
@@ -5426,6 +5435,40 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
     ((shell-mode-hook . comint-mime-setup)
      (inferior-python-mode-hook . comint-mime-setup)))
 
+  (use-package comint-histories
+    :tags '("TERM")
+    :config
+    (comint-histories-mode 1)
+
+    (setq comint-histories-global-filters '((lambda (x) (<= (length x) 3))))
+
+    (comint-histories-add-history gdb
+      :predicates '((lambda () (string-match-p "^(gdb)" (comint-histories-get-prompt))))
+      :length 2000)
+
+    (comint-histories-add-history python
+      :predicates '((lambda () (or (derived-mode-p 'inferior-python-mode)
+                                   (string-match-p "^>>>" (comint-histories-get-prompt)))))
+      :length 2000)
+
+    (comint-histories-add-history ielm
+      :predicates '((lambda () (derived-mode-p 'inferior-emacs-lisp-mode)))
+      :length 2000)
+
+    (comint-histories-add-history shell
+      :predicates '((lambda () (derived-mode-p 'shell-mode)))
+      :filters '("^ls" "^cd")
+      :length 2000)
+
+    (define-key comint-mode-map (kbd "C-r") #'(lambda () (interactive)
+                                                (let ((ivy-sort-functions-alist nil)
+                                                      (ivy-prescient-enable-sorting nil)
+                                                      (vertico-sort-function nil)
+                                                      (vertico-sort-override-function nil)
+                                                      (vertico-prescient-enable-sorting nil)
+                                                      (selectrum-should-sort nil)
+                                                      (selectrum-prescient-enable-sorting nil))
+                                                  (call-interactively #'comint-histories-search-history)))))
 #+END_SRC
 
 * DONE File manager [100%]
