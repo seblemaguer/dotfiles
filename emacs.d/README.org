@@ -3908,10 +3908,8 @@ For CSV file, I rely on =csv-mode= but I add more separators.
    (use-package csv-mode
      :tags '("PROGRAMMING" "DATA")
      :hook
-     (csv-mode . csv-align-mode)
-
-     :config
-     (setq csv-separators '("," ";" ":" " " "	")))
+     (csv-mode . csv-guess-set-separator)
+     (csv-mode . csv-align-mode))
 
    (use-package rainbow-csv
      :ensure (rainbow-csv :type git :host github :repo "emacs-vs/rainbow-csv")
