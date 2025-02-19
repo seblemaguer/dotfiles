@@ -1067,6 +1067,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
           org-src-fontify-natively t
           org-src-tab-acts-natively t
           org-hide-emphasis-markers t
+          org-latex-prefer-user-labels t
           org-global-properties '(("Effort_ALL" . "0:15 0:30 0:45 1:00 1:30 2:00")
                                   ("STYLE_ALL" . "habit"))
 
@@ -1810,15 +1811,6 @@ The only important bits are:
                                                    'regexp ".*\[[0-9]*%\]\\([ ]*[:].*[:]\\)\?$")))))
                                         nil
                                         nil)
-                                       ("cr" "Unscheduled TO-READ"
-                                        ((todo "TO-READ"
-                                               ((org-agenda-overriding-header "\nUnscheduled TODO")
-                                                (org-agenda-skip-function
-                                                 '(org-agenda-skip-entry-if
-                                                   'scheduled
-                                                   'regexp ".*\[[0-9]*%\]\\([ ]*[:].*[:]\\)\?$")))))
-                                        nil
-                                        nil)
                                        ("j" "Planning Table"
                                         agenda ""
                                         ((org-agenda-overriding-header "")
@@ -1878,6 +1870,7 @@ As I have my own way of being organized, I redefined completely the groups.
 
             ;; CD part
             (:discard (:and (:category "RELEASE" :tag "noexport")))
+            (:discard (:and (:category "RELEASE" :tag "ignore")))
             (:discard (:and (:category "RELEASE" :todo "CANCELLED")))
             (:name "Today's releases"
                    :and (:todo "RELEASE" :date today)
