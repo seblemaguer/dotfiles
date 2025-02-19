@@ -5979,52 +5979,15 @@ As I am quite absent-minded, I use a reminder to not forget the attachment: =mes
       (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
       (visual-line-mode))
 
-    (setq message-auto-save-directory nil
+    (setq user-full-name "Sébastien Le Maguer"
+          smtpmail-servers-requiring-authorization ".*"
+          message-auto-save-directory nil
           message-citation-line-function 'message-insert-formatted-citation-line
           message-citation-line-format  "\n\n-----------------------\nOn %a, %b %d %Y (%-H:%M %Z), %N wrote:\n"
           message-sendmail-f-is-evil nil
           message-kill-buffer-on-exit t
           message-signature-file nil
           message-fill-column 100))
-
-  (use-builtin smtpmail-multi
-    :load-path default-plugin-dir
-    :tags '("CONNECTED" "MAIL")
-    :after mu4e
-    :config
-    (defun smtpmail-try-auth-methods (process supported-extensions host port
-                                              &optional ask-for-password)
-      "Hijacked version of `smtpmail-try-auth-methods' to ensure the use of secrets and keepassxc."
-      (setq port
-            (if port
-                (format "%s" port)
-              "smtp"))
-
-      (let* ((mechs (seq-intersection smtpmail-auth-supported
-                                      (cdr-safe (assoc 'auth supported-extensions)) #'eq))
-             (password (secrets-get-secret keepass-db (format "%s:%s:%s" host port smtpmail-smtp-user)))
-             (result ""))
-
-        (while (and mechs
-                    (stringp result))
-          (setq result (catch 'done
-                         (smtpmail-try-auth-method
-                          process (intern-soft (pop mechs)) smtpmail-smtp-user password))))
-
-        ;; A string result is an error.
-        (if (stringp result)
-            (throw 'done result)
-          result)))
-
-    ;; Define default environment
-    (setq user-full-name "Sébastien Le Maguer"
-          smtpmail-multi-default-account 'uh
-          message-send-mail-function 'smtpmail-multi-send-it
-          mail-host-address "helsinki.fi"
-
-          ;; Debug part
-          smtpmail-debug-info nil
-          smtpmail-debug-verbose nil))
 
   (use-package org-msg
     :ensure (org-msg :host github :repo "jeremy-compostella/org-msg")
