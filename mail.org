@@ -4,7 +4,7 @@
 #+DATE: 19 June 2021
 #+DESCRIPTION:
 #+KEYWORDS:
-#+LANGUAGE:  fr
+#+LANGUAGE:  en
 #+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
