@@ -414,14 +414,10 @@
   # Load znap
   export ZNAP_ROOT_DIR="$HOME/.cache/znap"
   ZNAP_REPO_DIR="$ZNAP_ROOT_DIR/zsh-snap"
-  ZNAP_ZSH="$ZNAP_REPO_DIR/znap.zsh"
-  ZNAP_LOG="$ZNAP_REPO_DIR/znap.log"
-  if [ ! -d "$ZNAP_ROOT_DIR" ]; then
-      mkdir $ZNAP_ROOT_DIR
-      git clone --depth 1 -- https://github.com/marlonrichert/zsh-snap.git $ZNAP_REPO_DIR
-      source $ZNAP_REPO_DIR/install.zsh
-  fi
-  source $ZNAP_ZSH
+  [[ -r $ZNAP_REPO_DIR/znap.zsh ]] ||
+      git clone --depth 1 -- \
+          https://github.com/marlonrichert/zsh-snap.git $ZNAP_REPO_DIR
+  source $ZNAP_REPO_DIR/znap.zsh
 
   # Aliases
   znap source djui/alias-tips
