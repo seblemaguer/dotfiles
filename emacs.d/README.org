@@ -51,7 +51,7 @@ CLOSED: [2021-01-03 Sun 10:52]
 The file =tangle.el= contains the backbone to configure elpaca.
 In order to avoid duplication and potential mismatch, we simply transclude the needed part from this file.
 
-#+transclude: [[file:~/.emacs.d/tangle.el]] :lines 3-57 :src emacs-lisp
+#+transclude: [[file:~/.emacs.d/tangle.el]] :lines 3-59 :src emacs-lisp
 
 Now, we introduce some really useful macros:
 
@@ -237,7 +237,7 @@ one to generate the emacs init file from =~/.emacs.d/README.org= and one to byte
 Again, the file =tangle.el= is designed to support everything needed for the tangling of the main configuration.
 Therefore, we use the definition part straight up from this script:
 
-#+transclude: [[file:~/.emacs.d/tangle.el]] :lines 64-71 :src emacs-lisp
+#+transclude: [[file:~/.emacs.d/tangle.el]] :lines 66-73 :src emacs-lisp
 
 Now we can add the specific helper for our configuration:
 

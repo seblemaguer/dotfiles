@@ -52,6 +52,9 @@
   ;; Assume :ensure t unless otherwise specified.
   (setq elpaca-use-package-by-default t))
 
+;; Ensure that the proper compat is used to get compat-macs
+(use-package compat :ensure t)
+
 ;; Block until current queue processed.
 (elpaca-wait)
 
