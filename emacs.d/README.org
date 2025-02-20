@@ -3043,15 +3043,11 @@ CLOSED: [2021-01-03 Sun 17:42]
   ;; Add extensions
   (use-package cape
     :tags '("COMPLETION")
-    :hook (corfu-mode . add-cape-completions)
+    :bind ("C-c p" . cape-prefix-map) ;; Alternative key: M-<tab>, M-p, M-+
     :init
-    (defun add-cape-completions ()
-      (add-to-list 'completion-at-point-functions #'cape-file)
-      (add-to-list 'completion-at-point-functions #'cape-keyword)
-      (add-to-list 'completion-at-point-functions #'cape-tex)
-      ;; (add-to-list 'completion-at-point-functions #'cape-symbol)
-      ;; (add-to-list 'completion-at-point-functions #'cape-line)
-      ))
+    (add-to-list 'completion-at-point-functions #'cape-file)
+    (add-to-list 'completion-at-point-functions #'cape-keyword)
+    (add-to-list 'completion-at-point-functions #'cape-tex))
 #+end_src
 
 *** DONE Vertico
