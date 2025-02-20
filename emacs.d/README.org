@@ -242,15 +242,16 @@ Therefore, we use the definition part straight up from this script:
 Now we can add the specific helper for our configuration:
 
 #+begin_src emacs-lisp
-  (defun tangle-main-config ()
-    "Tangle ~/.emacs.d/README.org to ~/.emacs.d/init.el."
+  (defun tangle-main-config (&optional with-private-conf)
+    "Tangle my emacs configuration. "
     (interactive)
 
     ;; Tangle to init.el
     (tangle-current-file (concat user-emacs-directory "README.org"))
 
     ;; Tangle to Private variables
-    (tangle-current-file (concat cloud-org-root-dir "perso/configuration/private.org"))
+    (when with-private-conf
+      (tangle-current-file (concat cloud-org-root-dir "perso/configuration/private.org")))
 
     ;; byte-compile plugins
     (byte-recompile-directory (expand-file-name default-plugin-dir) 0))
