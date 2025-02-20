@@ -7796,9 +7796,13 @@ Finally, I use =indicators= to show my relative position in the buffer.
                                   (trivial  . "purple")))
     )
 
+  (use-package breadcrumb
+    :tags '("VISUAL"))
+
   (use-package nano-modeline
     :ensure (nano-modeline :type git :host github :repo "rougier/nano-modeline")
     :tags '("VISUAL")
+    :after breadcrumb
     :hook
     (prog-mode            . nano-modeline-prog-mode)
     (text-mode            . nano-modeline-text-mode)
@@ -7905,7 +7909,20 @@ Finally, I use =indicators= to show my relative position in the buffer.
                '()))
 
     (add-hook 'slack-mode-hook #'nano-modeline-chat-mode)
-    (add-hook 'telega-chat-mode-hook #'nano-modeline-chat-mode))
+    (add-hook 'telega-chat-mode-hook #'nano-modeline-chat-mode)
+
+    ;; add Breadcrumb
+    (set-face-attribute 'breadcrumb-face nil :inherit 'nano-modeline-active)
+    (set-face-attribute 'breadcrumb-project-leaf-face nil :inherit 'nano-modeline-active)
+    (defun nano-modeline-buffer-name (&optional name)
+      "Updated nano-modeline buffer `name' formatting to support breadcrumb."
+      (if (require 'breadcrumb nil 'noerror)
+          (breadcrumb--header-line)
+        (propertize
+         (cond (name name)
+               ((buffer-narrowed-p) (format"%s [narrow]" (buffer-name)))
+               (t (buffer-name)))
+         'face (nano-modeline-face 'name)))))
 #+end_src
 
 ** DONE Prism
