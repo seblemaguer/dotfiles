@@ -244,7 +244,7 @@ Now we can add the specific helper for our configuration:
 #+begin_src emacs-lisp
   (defun tangle-main-config (&optional with-private-conf)
     "Tangle my emacs configuration. "
-    (interactive)
+    (interactive "P")
 
     ;; Tangle to init.el
     (tangle-current-file (concat user-emacs-directory "README.org"))
