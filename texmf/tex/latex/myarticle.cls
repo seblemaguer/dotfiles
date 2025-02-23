@@ -26,7 +26,7 @@
 \usepackage{graphicx} % Required for including pictures
 \usepackage{svg}
 
-\usepackage{xcolor} % Required for specifying colors by name
+\usepackage[svgnames,x11names,table]{xcolor}
 \definecolor{gmitblue}{RGB}{93,138,168}
 \definecolor{LightSkyBlue}{RGB}{135, 206, 250}
 \definecolor{dkgreen}{RGB}{0, 100, 0}
@@ -267,6 +267,15 @@ innerbottommargin=5pt]{cBox}
 \newenvironment{example}{\begin{exampleT}}{\hfill{\tiny\ensuremath{\blacksquare}}\end{exampleT}}
 \newenvironment{corollary}{\begin{cBox}\begin{corollaryT}}{\end{corollaryT}\end{cBox}}
 
+\surroundwithmdframed[
+  topline=false,
+  bottomline=false,
+  backgroundcolor=gmitblue!10,
+  rightline=false,
+  linecolor=gmitblue,
+  linewidth=3pt,
+]{quote}
+
 % ----------------------------------------------------------------------------------------
 %	REMARK ENVIRONMENT
 % ----------------------------------------------------------------------------------------
@@ -286,21 +295,28 @@ innerbottommargin=5pt]{cBox}
 \makeatletter
 \def\@maketitle{%
     \newpage
-    \null
-    \vskip 2em%
     \begin{tikzpicture}[remember picture,overlay]
-        \node[yshift=-3cm] at (current page.north west)
+        \node[yshift=-3cm] at (current page.north)
         {
             \begin{tikzpicture}[remember picture, overlay]
-                \draw[fill=gray!10] (0,0) rectangle
-                (\paperwidth,3cm);
-                \node[anchor=east,xshift=.9\paperwidth,rectangle,
-                rounded corners=20pt,inner sep=11pt,
-                fill=gmitblue]
-                {\Large\color{white}\@title};
+                % Title
+                \node[%
+                   % anchor=west, xshift=1cm, yshift=-1cm,
+                   rectangle, rounded corners=10pt, inner sep=10pt,
+                   line width=1mm, draw=gmitblue, fill=gmitblue!10
+                ]
+                {
+                    \begin{minipage}[t]{\linewidth}
+                        \centering
+                        {\LARGE\bfseries\@title\par}
+                        \vskip 1em
+                        {\large\@author}
+                    \end{minipage}
+                };
             \end{tikzpicture}
         };
     \end{tikzpicture}
+    \vspace{5mm}
 }
 \makeatother
 
