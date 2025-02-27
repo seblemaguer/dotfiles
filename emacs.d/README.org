@@ -7917,7 +7917,8 @@ Finally, I use =indicators= to show my relative position in the buffer.
     (set-face-attribute 'breadcrumb-project-leaf-face nil :inherit 'nano-modeline-active)
     (defun nano-modeline-buffer-name (&optional name)
       "Updated nano-modeline buffer `name' formatting to support breadcrumb."
-      (if (require 'breadcrumb nil 'noerror)
+      (if (and (require 'breadcrumb nil 'noerror)
+               (not (null (breadcrumb-project-crumbs))))
           (breadcrumb--header-line)
         (propertize
          (cond (name name)
