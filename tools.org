@@ -534,7 +534,7 @@ you can then active as follow
 
   [Service]
   Type=simple
-  ExecStart=%h/.local/bin/emailproxy --config-file %h/.config/emailproxy.cfg
+  ExecStart=%h/environment/local/bin/micromamba run -r %h/environment/local/micromamba/ -n local_environment emailproxy --config-file %h/.config/emailproxy.cfg --no-gui --external-auth
   TimeoutStopSec=20
   Restart=on-failure
 
