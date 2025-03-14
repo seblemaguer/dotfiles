@@ -7918,7 +7918,8 @@ Finally, I use =indicators= to show my relative position in the buffer.
     (defun nano-modeline-buffer-name (&optional name)
       "Updated nano-modeline buffer `name' formatting to support breadcrumb."
       (if (and (require 'breadcrumb nil 'noerror)
-               (not (null (breadcrumb-project-crumbs))))
+               (not (null (breadcrumb-project-crumbs)))
+               (not (derived-mode-p 'pdf-view-mode 'telega-image-mode 'telega-chat-mode 'telega-root-mode 'telega-webpage-mode)))
           (breadcrumb--header-line)
         (propertize
          (cond (name name)
