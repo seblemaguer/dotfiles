@@ -1049,7 +1049,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
 
     ;; Global
     (setq org-startup-indented t
-          org-startup-folded 'nofold
+          org-startup-folded 'show3levels
           org-image-actual-width nil
           org-enforce-todo-dependencies t
           org-cycle-separator-lines 2
