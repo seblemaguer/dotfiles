@@ -383,8 +383,6 @@
 * zsh
 ** Main
 #+begin_src shell :results output replace :tangle ~/.zshrc
-  #!/bin/zsh
-
   # Load profile
   if [[ "$PROFILE_LOADED" != "True" ]]
   then
@@ -419,120 +417,11 @@
           https://github.com/marlonrichert/zsh-snap.git $ZNAP_REPO_DIR
   source $ZNAP_REPO_DIR/znap.zsh
 
-  # Aliases
-  znap source djui/alias-tips
+  ########################################################################################
+  #### Theme
+  ########################################################################################
 
-  # Completion/helpers
-  znap source zsh-users/zsh-completions
-  znap source zsh-users/zsh-autosuggestions
-  znap source conda-incubator/conda-zsh-completion
-  znap source marlonrichert/zsh-hist
-
-  # oh-my-zsh
-  znap source ohmyzsh/ohmyzsh lib/{git,history,theme-and-appearance}
-  znap source ohmyzsh/ohmyzsh plugins/{colored-man-pages,colorize}
-  znap source ohmyzsh/ohmyzsh plugins/{archlinux,z}
-  znap source ohmyzsh/ohmyzsh plugins/{docker-compose,python}
-  fpath+=( ~[ohmyzsh]/{docker,fd,ripgrep,command-not-found} )
-
-  # Highlighting
-  znap source zsh-users/zsh-syntax-highlighting
-
-  # Theme
   znap prompt romkatv/powerlevel10k
-
-  ########################################################################################
-  #### Completion
-  ########################################################################################
-
-  zstyle ':autocomplete:*' default-context ''
-  zstyle ':autocomplete:*' min-delay 0.2  # float
-  zstyle ':autocomplete:*' min-input 2  # int
-  zstyle ':autocomplete:*' ignored-input '' # extended glob pattern
-  # '':     Always show completions.
-  # '..##': Don't show completions when the input consists of two or more dots.
-
-  zstyle ':autocomplete:*' list-lines 20
-  zstyle ':autocomplete:history-search:*' list-lines 20
-  zstyle ':autocomplete:history-incremental-search-*:*' list-lines 20
-  zstyle ':autocomplete:*' recent-dirs cdr
-  zstyle ':autocomplete:*' insert-unambiguous yes
-  zstyle ':autocomplete:*' widget-style menu-complete
-  zstyle ':autocomplete:*' fzf-completion no
-  zstyle ':autocomplete:*' add-space \
-         executables aliases functions builtins reserved-words commands
-
-  # Support ssh
-  zstyle -s ':completion:*:hosts' hosts _ssh_config
-  [[ -r ~/.ssh/config ]] && _ssh_config+=($(cat ~/.ssh/config | sed -ne 's/Host[=\t ]//p'))
-  zstyle ':completion:*:hosts' hosts $_ssh_config
-
-
-  ########################################################################################
-  #### Aliases / Helpers
-  ########################################################################################
-  # Some helpers
-  alias vi='vim'
-  alias watch='watch -x ' # NOTE: this is needed to expand aliases properly
-  alias spiny="conda run -n spiny spiny"
-  alias rm_import="conda run -n remarkable rm_import"
-  alias rm_export="conda run -n remarkable rm_export"
-
-  # Coloring some command
-  alias mvn="mvn-color"
-  alias grep='grep --color=auto'
-  alias fgrep='fgrep --color=auto'
-
-  # Network
-  alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
-
-  # Cluster aliases
-  alias msinfo='sinfo -o "%25N %.3a %.9P %10c  %10m  %25f  %20G %10l %50E"'
-  alias msqueue='squeue -o "%.8i %.9P %.20j %.8u %.8T %.10M %.12l %.8C %.15b %.15R"'
-  alias check_queue="msqueue | sed 's/[ \t]\+/ /g' | cut -d' ' -f5,6,10 | sed 's/:.*//g' | sort | uniq -c | grep -v 'USER STATE' | sed 's/^[ ]*//g' | sort -h"
-
-  # Docker cleaning aliases
-  alias clean_exited_cont='docker ps -a | grep Exited | cut -d " " -f 1 | xargs docker rm'
-  alias clean_bulk_images='docker images | grep "<none>" | sed "s/   */:/g" | cut -d ":" -f 3 | xargs docker rmi'
-
-  # Helper aliases
-  alias conda=micromamba
-  alias tangle_emacs_conf='~/environment/local/apps/emacs/bin/emacs -Q --batch --load "~/.emacs.d/tangle.el" "~/.emacs.d/README.org"'
-
-
-  ########################################################################################
-  #### Options
-  ########################################################################################
-  # = History
-  HISTSIZE=1000
-  SAVEHIST=1000
-  HISTFILE=~/.history
-
-  setopt histreduceblanks      # Remove useless blanks when commands i added to the history
-  setopt histignorespace       # Don't save commands starting with a space in the history
-  setopt histignorealldups     # Ignore duplicates in the history
-  setopt autocd                # Switching directories for lazy people
-  setopt autopushd             # When CD, add the directory to the directory stack
-  setopt pushdminus            # Provide a more intuitive way of popping the directory stack
-  setopt pushdsilent           # Avoid printing the directory stack everytime
-  setopt pushdtohome           # When the directory stack is empty, go to home
-  setopt pushdignoredups       # Discard duplicate when adding a directory to the directory stack
-  setopt nohup                 # Don't kill background jobs when I logout
-  setopt extendedglob          # See: http://zsh.sourceforge.net/Intro/intro_2.html
-  setopt globdots              # Do not require a leading '.' in a filename to be matched explicitly
-  setopt shwordsplit           # Causes field splitting to be performed on unquoted parameter expansions
-  setopt automenu              # Automatically use menu completion after the second consecutive request for completion
-  setopt cdablevars            # if argument of cd is not a directory, ty to expand by preceding by a '~'
-  setopt listpacked            # compact list of completions by making list of different sizes
-  setopt nolisttypes           # Don't show types in completion lists
-  setopt alwaystoend           # When completion, always move the cursor to end of the word
-  setopt correct               # Try to correct the spelling of commands
-  setopt no_nomatch            # https://github.com/robbyrussell/oh-my-zsh/issues/449
-  setopt no_rmstarsilent       # Disable annoying confirm
-
-  ########################################################################################
-  #### Emacs/Vterm specifics
-  ########################################################################################
 
   if [[ "$INSIDE_EMACS" = 'vterm' ]]
   then
@@ -582,38 +471,138 @@
   fi
 
   ########################################################################################
-  #### Define some keys
+  #### Load some plugins (unsorted)
+  ########################################################################################
+  # `znap prompt` also supports Oh-My-Zsh themes. Just make sure you load the
+  # required libs first:
+  znap source ohmyzsh/ohmyzsh lib/{git,theme-and-appearance}
+  znap prompt ohmyzsh/ohmyzsh robbyrussell
+
+  ##
+  # Load your plugins with `znap source`.
+  #
+  znap source marlonrichert/zsh-autocomplete
+  znap source marlonrichert/zsh-edit
+
+  # You can also choose to load one or more files specifically:
+  znap source sorin-ionescu/prezto modules/{environment,history}
+  znap source ohmyzsh/ohmyzsh 'lib/(*~(git|theme-and-appearance).zsh)' plugins/git
+  znap source ohmyzsh/ohmyzsh lib/{git,history,theme-and-appearance}
+  znap source ohmyzsh/ohmyzsh plugins/{colored-man-pages,colorize}
+  znap source ohmyzsh/ohmyzsh plugins/{docker-compose,python}
+
+
+
+  # No special syntax is needed to configure plugins. Just use normal Zsh
+  # statements:
+
+  znap source marlonrichert/zsh-hist
+  bindkey '^[q' push-line-or-edit
+  bindkey -r '^Q' '^[Q'
+
+  ZSH_AUTOSUGGEST_STRATEGY=( history )
+  znap source zsh-users/zsh-autosuggestions
+
+  ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
+  znap source zsh-users/zsh-syntax-highlighting
+
+
+  ##
+  # Cache the output of slow commands with `znap eval`.
+  #
+  znap eval   trapd00r/LS_COLORS "$( whence -a dircolors gdircolors ) -b LS_COLORS"
+  znap source marlonrichert/zcolors
+  znap eval   marlonrichert/zcolors "zcolors ${(q)LS_COLORS}"
+  znap eval   omz-git 'curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/git/git.plugin.zsh'
+
+  ########################################################################################
+  #### Options
+  ########################################################################################
+  # Configure command history
+  HISTFILE="$HOME/.zsh_history"
+  HISTSIZE=80000000
+  SAVEHIST=$HISTSIZE
+
+  setopt histreduceblanks      # Remove useless blanks when commands i added to the history
+  setopt histignorespace       # Don't save commands starting with a space in the history
+  setopt histignorealldups     # Ignore duplicates in the history
+  setopt autocd                # Switching directories for lazy people
+  setopt autopushd             # When CD, add the directory to the directory stack
+  setopt pushdminus            # Provide a more intuitive way of popping the directory stack
+  setopt pushdsilent           # Avoid printing the directory stack everytime
+  setopt pushdtohome           # When the directory stack is empty, go to home
+  setopt pushdignoredups       # Discard duplicate when adding a directory to the directory stack
+  setopt nohup                 # Don't kill background jobs when I logout
+  setopt extendedglob          # See: http://zsh.sourceforge.net/Intro/intro_2.html
+  setopt globdots              # Do not require a leading '.' in a filename to be matched explicitly
+  setopt shwordsplit           # Causes field splitting to be performed on unquoted parameter expansions
+  setopt automenu              # Automatically use menu completion after the second consecutive request for completion
+  setopt cdablevars            # if argument of cd is not a directory, ty to expand by preceding by a '~'
+  setopt listpacked            # compact list of completions by making list of different sizes
+  setopt nolisttypes           # Don't show types in completion lists
+  setopt alwaystoend           # When completion, always move the cursor to end of the word
+  setopt correct               # Try to correct the spelling of commands
+  setopt no_nomatch            # https://github.com/robbyrussell/oh-my-zsh/issues/449
+  setopt no_rmstarsilent       # Disable annoying confirm
+
+  znap install zsh-users/zsh-completions
+  ########################################################################################
+  #### Aliases / Helpers
   ########################################################################################
 
-  # Emacs type binding
-  bindkey -e
+  znap source djui/alias-tips
 
-  # Extra useful bindings
-  bindkey "^[[3~" delete-char # Delete should delete not add a tilde
+  alias conda=micromamba
+  alias tangle_emacs_conf='~/environment/local/apps/emacs/bin/emacs -Q --batch --load "~/.emacs.d/tangle.el" "~/.emacs.d/README.org"'
+  alias vi='vim'
+  alias watch='watch -x ' # NOTE: this is needed to expand aliases properly
+  alias open=xdg-open
 
-  # Up arrow:
-  bindkey '\e[A' up-line-or-search
-  bindkey '\eOA' up-line-or-search
+  # Conda environment aliases
+  alias spiny="conda run -n spiny spiny"
+  alias rm_import="conda run -n remarkable rm_import"
+  alias rm_export="conda run -n remarkable rm_export"
 
-  # Down arrow:
-  bindkey '\e[B' down-line-or-search
-  bindkey '\eOB' down-line-or-search
+  # Coloring some command
+  alias mvn="mvn-color"
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+
+  # Network
+  alias rsync="rsync --protect-args --exclude-from=$HOME/.rsyncignore"
+
+  # Cluster aliases
+  alias msinfo='sinfo -o "%25N %.3a %.9P %10c  %10m  %25f  %20G %10l %50E"'
+  alias msqueue='squeue -o "%.8i %.9P %.20j %.8u %.8T %.10M %.12l %.8C %.15b %.15R"'
+  alias check_queue="msqueue | sed 's/[ \t]\+/ /g' | cut -d' ' -f5,6,10 | sed 's/:.*//g' | sort | uniq -c | grep -v 'USER STATE' | sed 's/^[ ]*//g' | sort -h"
+
+  # Docker cleaning aliases
+  alias clean_exited_cont='docker ps -a | grep Exited | cut -d " " -f 1 | xargs docker rm'
+  alias clean_bulk_images='docker images | grep "<none>" | sed "s/   */:/g" | cut -d ":" -f 3 | xargs docker rmi'
 
   ########################################################################################
   #### Environment tools
   ########################################################################################
 
-  ## SDKMAN
-  export SDKMAN_DIR="$HOME/.sdkman"
-  [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+  znap function _pyenv pyenv              'eval "$( pyenv init - --no-rehash )"'
+  compctl -K    _pyenv pyenv
 
-  ## Kitty
-  if test -n "$KITTY_INSTALLATION_DIR"; then
-      export KITTY_SHELL_INTEGRATION="enabled"
-      autoload -Uz -- "$KITTY_INSTALLATION_DIR"/shell-integration/zsh/kitty-integration
-      kitty-integration
-      unfunction kitty-integration
-  fi
+  znap function _pip_completion pip       'eval "$( pip completion --zsh )"'
+  compctl -K    _pip_completion pip
+
+  znap function _python_argcomplete pipx  'eval "$( register-python-argcomplete pipx  )"'
+  complete -o nospace -o default -o bashdefault -F _python_argcomplete pipx
+
+  znap function _pipenv pipenv            'eval "$( pipenv --completion )"'
+  compdef       _pipenv pipenv
+
+  # Lazy load `sdkman`
+  export SDKMAN_DIR="$HOME/.sdkman"
+  znap function _sdk sdk 'source ~/.sdkman/bin/sdkman-init.sh'
+  compdef _sdk sdk
+
+  # Loading conda completion
+  znap install conda-incubator/conda-zsh-completion
 
   # >>> mamba initialize >>>
   # !! Contents within this block are managed by 'mamba init' !!
@@ -633,17 +622,9 @@
   # <<< mamba initialize <<<
 
   ########################################################################################
-  #### Theme / Visual
+  #### Terminal
   ########################################################################################
-
-  export TERM="xterm-256color"
-
-  # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-  # Initialization code that may require console input (password prompts, [y/n]
-  # confirmations, etc.) must go above this block; everything else may go below.
-  if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-      source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-  fi
+  export TERM="rxvt-unicode-256color"
 #+end_src
 
 ** P10K
