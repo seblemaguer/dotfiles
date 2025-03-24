@@ -6171,6 +6171,22 @@ I also redesigned the header buffer.
     (mu4e-get-mail-command "mbsync -a")
     (mu4e-update-interval (* 15 60)) ;; Update every 15min
 
+    :init
+    (defun mu4e-message-mailto (&optional url)
+      "Compose a new mail with metadata extracted from mailto: URL.
+  Taken from https://etienne.pflieger.bzh/emacs.d/init.html."
+      (let* ((mailto-data (message-parse-mailto-url
+                           (or url (pop command-line-args-left))))
+             (to (cadr (assoc "to" mailto-data)))
+             (subject (cadr (assoc "subject" mailto-data))))
+        (mu4e-compose-new to subject)))
+
+    (advice-add 'message-mailto
+                :override
+                (lambda (&optional url)
+                  (require 'mu4e)
+                  (mu4e-message-mailto url)))
+
     :config
 
     ;; Initialize private configuration
