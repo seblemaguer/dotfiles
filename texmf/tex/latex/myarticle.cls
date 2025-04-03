@@ -307,10 +307,11 @@ innerbottommargin=5pt]{cBox}
                 ]
                 {
                     \begin{minipage}[t]{\linewidth}
-                        \centering
-                        {\LARGE\bfseries\@title\par}
-                        \vskip 1em
-                        {\large\@author}
+                        \begin{center}
+                            {\LARGE\bfseries\@title\par}
+                            \vskip 1em
+                            {\large\@author}
+                        \end{center}
                     \end{minipage}
                 };
             \end{tikzpicture}
