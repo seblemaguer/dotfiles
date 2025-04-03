@@ -4514,6 +4514,14 @@ The configuration is pretty minimal - just associate the mode to the proper exte
              ("\\.udo\\'" . csound-mode))))
 #+end_src
 
+*** DONE UI
+CLOSED: [2025-03-02 Sun 21:15]
+#+BEGIN_SRC emacs-lisp
+  (use-package qml-ts-mode
+    :tags '("PROGRAMMING" "UI")
+    :ensure (qml-ts-mode :type git :host github :repo "xhcoding/qml-ts-mode"))
+#+END_SRC
+
 * DONE Writing / Reading [100%]
 :PROPERTIES:
 :ID:       804c1719-e469-4283-8dcf-59673df0f12a
