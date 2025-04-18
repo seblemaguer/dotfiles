@@ -524,6 +524,7 @@ This choice has been made due its the simplicity and its recursive nature.
     (bufler-list-group-separators '((0 . "\n")))
     (bufler-initial-face-depth 1)
     (bufler-filter-buffer-modes nil)
+    (bufler-columns '("Name" "Size" "AS" "VC" "Path"))
     (bufler-groups (bufler-defgroups
                      (group (group-or "Help/Info"
                                       (mode-match "*Help*" "^help\\(ful\\)?-.*")
@@ -619,7 +620,19 @@ This choice has been made due its the simplicity and its recursive nature.
                      ;; Subgroup collecting buffers in a version-control project,
                      ;; grouping them by directory.
                      (auto-mode)
-                     (auto-directory))))
+                     (auto-directory)))
+
+    :config
+    (bufler-define-column "AS" (:face bufler-path :max-width nil)
+      (ignore depth)
+      (let* ((buffer-file-name (buffer-file-name buffer)))
+        (if (and buffer-file-name
+                 (not (and buffer-file-name auto-save-visited-file-name))
+                 (file-newer-than-file-p
+                  (or buffer-auto-save-file-name (make-auto-save-file-name))
+                  buffer-file-name))
+            "*"
+          ""))))
 #+end_src
 
 ** DONE Minibuffer
