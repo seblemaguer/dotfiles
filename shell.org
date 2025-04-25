@@ -505,7 +505,6 @@
   # `znap prompt` also supports Oh-My-Zsh themes. Just make sure you load the
   # required libs first:
   znap source ohmyzsh/ohmyzsh lib/{git,theme-and-appearance}
-  znap prompt ohmyzsh/ohmyzsh robbyrussell
 
   ##
   # Load your plugins with `znap source`.
@@ -520,8 +519,6 @@
   znap source ohmyzsh/ohmyzsh plugins/{colored-man-pages,colorize}
   znap source ohmyzsh/ohmyzsh plugins/{docker-compose,python}
 
-
-
   # No special syntax is needed to configure plugins. Just use normal Zsh
   # statements:
 
@@ -534,7 +531,6 @@
 
   ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
   znap source zsh-users/zsh-syntax-highlighting
-
 
   ##
   # Cache the output of slow commands with `znap eval`.
@@ -575,6 +571,7 @@
   setopt no_rmstarsilent       # Disable annoying confirm
 
   znap install zsh-users/zsh-completions
+
   ########################################################################################
   #### Aliases / Helpers
   ########################################################################################
@@ -586,6 +583,7 @@
   alias vi='vim'
   alias watch='watch -x ' # NOTE: this is needed to expand aliases properly
   alias open=xdg-open
+  alias clear='/usr/bin/clear'
 
   # Conda environment aliases
   alias spiny="conda run -n spiny spiny"
@@ -612,18 +610,6 @@
   ########################################################################################
   #### Environment tools
   ########################################################################################
-
-  znap function _pyenv pyenv              'eval "$( pyenv init - --no-rehash )"'
-  compctl -K    _pyenv pyenv
-
-  znap function _pip_completion pip       'eval "$( pip completion --zsh )"'
-  compctl -K    _pip_completion pip
-
-  znap function _python_argcomplete pipx  'eval "$( register-python-argcomplete pipx  )"'
-  complete -o nospace -o default -o bashdefault -F _python_argcomplete pipx
-
-  znap function _pipenv pipenv            'eval "$( pipenv --completion )"'
-  compdef       _pipenv pipenv
 
   # Lazy load `sdkman`
   export SDKMAN_DIR="$HOME/.sdkman"
