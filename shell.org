@@ -502,19 +502,15 @@
   ########################################################################################
   #### Load some plugins (unsorted)
   ########################################################################################
-  # `znap prompt` also supports Oh-My-Zsh themes. Just make sure you load the
-  # required libs first:
-  znap source ohmyzsh/ohmyzsh lib/{git,theme-and-appearance}
-
-  ##
-  # Load your plugins with `znap source`.
-  #
+  # Marlonrichert
   znap source marlonrichert/zsh-autocomplete
   znap source marlonrichert/zsh-edit
+  znap source marlonrichert/zsh-hist
 
-  # You can also choose to load one or more files specifically:
+  # Prezto
   znap source sorin-ionescu/prezto modules/{environment,history}
-  znap source ohmyzsh/ohmyzsh 'lib/(*~(git|theme-and-appearance).zsh)' plugins/git
+
+  # Oh-my-zsh
   znap source ohmyzsh/ohmyzsh lib/{git,history,theme-and-appearance}
   znap source ohmyzsh/ohmyzsh plugins/{colored-man-pages,colorize}
   znap source ohmyzsh/ohmyzsh plugins/{docker-compose,python}
@@ -522,7 +518,6 @@
   # No special syntax is needed to configure plugins. Just use normal Zsh
   # statements:
 
-  znap source marlonrichert/zsh-hist
   bindkey '^[q' push-line-or-edit
   bindkey -r '^Q' '^[Q'
 
