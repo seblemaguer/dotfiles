@@ -1465,7 +1465,7 @@ We also defines additional link to support audios and videos.
     (org-link-set-parameters "video" :export #'endless/export-video-link)
     (org-link-set-parameters "audio" :export #'endless/export-audio-link)
 
-    (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/brave-browser %s")))
+    (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/firefox %s")))
 
   (use-package org-re-reveal
     :tags '("ORG")
