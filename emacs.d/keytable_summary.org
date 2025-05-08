@@ -241,6 +241,38 @@
 :PROPERTIES:
 :ID:       7e5dc902-76fe-4944-b525-cf2637d94c6b
 :END:
+#+NAME: org-roam-navigation-bindings
+| Key | Function                       | Label | Description |
+|-----+--------------------------------+-------+-------------|
+| l   | org-roam-buffer-toggle         |       |             |
+| f   | org-roam-node-find             |       |             |
+| g   | org-roam-ui-open               |       |             |
+| B   | consult-org-roam-backlinks     |       |             |
+| F   | consult-org-roam-forward-links |       |             |
+| s   | consult-org-roam-search        |       |             |
+| e   | consult-org-roam-file-find     |       |             |
+
+#+NAME: org-roam-creation-bindings
+| Key | Function               | Label            | Description |
+|-----+------------------------+------------------+-------------|
+| i   | org-roam-node-insert   | insert node link |             |
+| r   | org-roam-raw-id-insert | insert RAW id    |             |
+| c   | org-roam-capture       | call org-capture |             |
+
+#+NAME: org-roam-bibliography-bindings
+| Key | Function                    | Label | Description |
+|-----+-----------------------------+-------+-------------|
+| n   | org-noter                   |       |             |
+| m   | org-media-noter             |       |             |
+| b   | generate-bibliography-entry |       |             |
+
+#+NAME: org-roam-helpers-bindings
+| Key | Function                 | Label | Description |
+|-----+--------------------------+-------+-------------|
+| I   | org-id-get-create        |       |             |
+| a   | generate-org-heading-ids |       |             |
+| A   | generate-org-roam-ids    |       |             |
+| C   | org-clean-done-item      |       |             |
 
 * Citar
 :PROPERTIES:
@@ -1182,47 +1214,6 @@ CLOSED: [2023-11-25 Sat 10:17]
 :PROPERTIES:
 :ID:       a990aaf3-22aa-4b01-bf05-8ea41db7f56a
 :END:
-*** DONE Organisation [100%]
-:PROPERTIES:
-:ID:       86349db5-1730-4beb-9812-67d6daa5a520
-:END:
-**** DONE Org-roam
-CLOSED: [2023-11-23 Thu 17:56]
-:PROPERTIES:
-:ID:       c67cd9c1-d4c6-47c9-8450-8b5ff3fec6b2
-:END:
-#+NAME: org-roam-navigation-bindings
-| Key | Function                       | Label | Description |
-|-----+--------------------------------+-------+-------------|
-| l   | org-roam-buffer-toggle         |       |             |
-| f   | org-roam-node-find             |       |             |
-| g   | org-roam-ui-open               |       |             |
-| B   | consult-org-roam-backlinks     |       |             |
-| F   | consult-org-roam-forward-links |       |             |
-| s   | consult-org-roam-search        |       |             |
-| e   | consult-org-roam-file-find     |       |             |
-
-#+NAME: org-roam-creation-bindings
-| Key | Function               | Label            | Description |
-|-----+------------------------+------------------+-------------|
-| i   | org-roam-node-insert   | insert node link |             |
-| r   | org-roam-raw-id-insert | insert RAW id    |             |
-| c   | org-roam-capture       | call org-capture |             |
-
-#+NAME: org-roam-bibliography-bindings
-| Key | Function                    | Label | Description |
-|-----+-----------------------------+-------+-------------|
-| n   | org-noter                   |       |             |
-| m   | org-media-noter             |       |             |
-| b   | generate-bibliography-entry |       |             |
-
-#+NAME: org-roam-helpers-bindings
-| Key | Function                 | Label | Description |
-|-----+--------------------------+-------+-------------|
-| I   | org-id-get-create        |       |             |
-| a   | generate-org-heading-ids |       |             |
-| A   | generate-org-roam-ids    |       |             |
-| C   | org-clean-done-item      |       |             |
 
 * Commenting
 :PROPERTIES:
