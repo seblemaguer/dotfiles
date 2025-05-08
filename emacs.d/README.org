@@ -3329,7 +3329,7 @@ CLOSED: [2023-02-02 Thu 15:55]
 =popper= is a package providing shortcuts for a quick access to some family of buffers.
 I am using it mainly to show/hide my terminal faster.
 
-#+transclude: [[file:keytable_summary.org::Buffer]] :only-contents
+The keybindings are defined as part of the terminal/shell sections.
 
 #+begin_src emacs-lisp
   (use-package popper
@@ -5359,20 +5359,32 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
                     (message "Failed to open file: %s" path))))
           vterm-eval-cmds))
 
-  (use-package multi-vterm
+  (use-package mistty
     :tags '("TERM")
     :bind (
-      :map vterm-mode-map (
-        <<keybindings-gen(table=multi-vterm-mode-keybindings)>>
+      :map mistty-prompt-map (
+        <<keybindings-gen(table=mistty-prompt-keybindings)>>
       )
-    ))
-
-  (use-package drepl
-    :ensure (drepl :type git
-                   :host github
-                   :repo "astoff/drepl"
-                   :files ("*.el" "*.py"))
-    :tags '("TERM"))
+    )
+    :commands (mistty-mode)
+    :init
+    (defun mistty-zsh ()
+      "Spawn a MisTTY buffer with a zsh shell in it."
+      (interactive)
+      (with-current-buffer (generate-new-buffer "*terminal*")
+        (mistty-mode)
+        (pop-to-buffer (current-buffer))
+        (mistty-exec '("zsh")))
+      )
+    (defun mistty-ipython ()
+      "Spawn a MisTTY buffer with a ipython shell in it."
+      (interactive)
+      (with-current-buffer (generate-new-buffer "*ipython*")
+        (mistty-mode)
+        (pop-to-buffer (current-buffer))
+        (mistty-exec '("ipython")))
+      )
+    )
 
   (use-package comint-mime
     :tags '("TERM")

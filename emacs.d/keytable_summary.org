@@ -413,17 +413,6 @@
 | C-c C-o | embark-collect-snapshot |             |
 | C-c C-c | embark-act              |             |
 
-* Buffer
-:PROPERTIES:
-:ID:       fe233293-960b-446b-b0a5-45ce3538da6b
-:END:
-
-#+NAME: start-term-hydra-keybindings
-| Key | Function      | Label        | Description |
-|-----+---------------+--------------+-------------|
-| p   | drepl-ipython | Python Shell |             |
-| t   | multi-vterm   | VTerm        |             |
-
 * Environment
 :PROPERTIES:
 :ID:       027b62e3-d635-425c-b621-3ff8f387f467
@@ -686,12 +675,22 @@
 
 * Shell
 :PROPERTIES:
-:ID:       c273b162-1189-4c53-8cc5-c9d3d9732443
+:ID:       6e73bd37-2093-4745-b619-6e24e4491d77
 :END:
-#+NAME: multi-vterm-mode-keybindings
-| Key | Function                             | Description |
-|-----+--------------------------------------+-------------|
-| M-r | multi-vterm-rename-buffer            |             |
+#+NAME: start-term-hydra-keybindings
+| Key | Function       | Label         | Description |
+|-----+----------------+---------------+-------------|
+| p   | mistty-ipython | ipython Shell |             |
+| z   | mistty-zsh     | zsh shell     |             |
+
+#+NAME: mistty-prompt-keybindings
+| Key       | Function        | Description |
+|-----------+-----------------+-------------|
+| M-<up>    | mistty-send-key |             |
+| M-<down>  | mistty-send-key |             |
+| M-<left>  | mistty-send-key |             |
+| M-<right> | mistty-send-key |             |
+
 
 * File manager
 :PROPERTIES:
