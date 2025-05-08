@@ -15,7 +15,8 @@
 This is my emacs configuration file. It is under version control and available, among other
 configurations, at this repository: https://github.com/seblemaguer/dotfiles
 
-* Command line management
+* DONE Command line management
+CLOSED: [2025-05-08 Thu 09:57]
 :PROPERTIES:
 :ID:       42569b59-48db-4832-a639-18e3ec531b09
 :END:
@@ -42,7 +43,7 @@ For now, only the option =--no-connection= is defined in order enforce the loadi
     (setq no-connection t))
 #+end_src
 
-** DONE Elpaca
+* DONE Elpaca
 CLOSED: [2021-01-03 Sun 10:52]
 :PROPERTIES:
 :ID:       08b8b3b9-31a4-4436-9789-502e7ddd3ef1
@@ -62,7 +63,6 @@ Now, we introduce some really useful macros:
         :ensure nil
         ,@args))
 #+end_src
-
 
 * DONE Definition of no-web helper routines
 CLOSED: [2023-07-19 Wed 20:41]
@@ -144,7 +144,8 @@ As a result, we have now the following routines:
              "\n")
 #+end_src
 
-* Server
+* DONE Server
+CLOSED: [2025-05-08 Thu 09:57]
 :PROPERTIES:
 :ID:       ba09db2b-a424-46b3-b26a-6d199cddd6c9
 :END:
