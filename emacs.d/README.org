@@ -2895,6 +2895,16 @@ For the folding, I am relying on =outline-indent=.
 
     :custom
     (outline-indent-ellipsis " ▼ "))
+
+  (use-package savefold
+    :ensure (:type git :host github :repo "jcfk/savefold.el")
+    :tags '("FOLDING")
+    :init
+    (setq savefold-backends '(outline org)
+          savefold-directory (locate-user-emacs-file "savefold"))  ;; default
+
+    :config
+    (savefold-mode 1))
 #+end_src
 
 ** DONE Completing [100%]
