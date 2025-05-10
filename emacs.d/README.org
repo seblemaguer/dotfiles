@@ -5484,11 +5484,9 @@ I also replace a base deletion by moving the files/directories to the trash.
     )
 
     :custom
-    (dirvish-attributes '(dirvish-extras
-                          dirvish-vc
-                          dirvish-yank
-                          dirvish-subtree
-                          file-size))
+    (dired-listing-switches "-l --almost-all --human-readable --time-style=long-iso --group-directories-first --no-group")
+    (dirvish-attributes (append '(vc-state subtree-state all-the-icons collapse) ;; Order doesn't matter for these ones
+                                '(git-msg file-modes file-time file-size))) ;; Order = FIFO
 
     (dirvish-yank-keys '(("y" "Yank (paste) here"           dirvish-yank)
                          ("m" "Move here"                   dirvish-move)
@@ -5511,14 +5509,6 @@ I also replace a base deletion by moving the files/directories to the trash.
     ;; Enable mouse drag-and-drop files to other applications
     (setq dired-mouse-drag-files t                    ; added in Emacs 29
           mouse-drag-and-drop-region-cross-program t) ; added in Emacs 29
-
-    ;; Make sure to use the long name of flags when exists
-    ;; eg. use "--almost-all" instead of "-A"
-    ;; Otherwise some commands won't work properly
-    (setq dired-listing-switches
-          "-l --almost-all --human-readable --time-style=long-iso --group-directories-first --no-group"
-          dirvish-attributes
-          '(vc-state subtree-state all-the-icons collapse git-msg file-size))
 
     (defun dired-do-transfer-to-remarkable ()
       "Transfer the marked PDF files to the remarkable. Any other filetype will be ignored."
@@ -5547,7 +5537,10 @@ I also replace a base deletion by moving the files/directories to the trash.
 
   (use-package media-progress
     :ensure (media-progress :type git :host github :repo "jumper047/media-progress" :files ("media-progress.el")
-    :tags '("FILE_MANAGEMENT" "DIRED" "DESKTOP")))
+                            :tags '("FILE_MANAGEMENT" "DIRED" "DESKTOP"))
+    :custom
+    (media-progress-extensions (append dirvish-video-exts dirvish-audio-exts))
+    (media-progress-mpv-cfg-dir "~/.local/state/mpv"))
 
   (use-package media-progress-dirvish
     :ensure (media-progress-dirvish :type git :host github :repo "jumper047/media-progress" :files ("media-progress-dirvish.el"))
