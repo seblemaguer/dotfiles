@@ -95,7 +95,7 @@ def define_argument_parser() -> argparse.ArgumentParser:
     """
     parser = argparse.ArgumentParser(description="")
 
-    # Add options
+    # Add logging options
     parser.add_argument("-l", "--log_file", default=None, help="Logger file")
     parser.add_argument(
         "-v",
@@ -105,6 +105,9 @@ def define_argument_parser() -> argparse.ArgumentParser:
         help="increase output verbosity",
     )
 
+    # Add performative options
+    # TODO
+
     # Add arguments
     # TODO
 
@@ -113,12 +116,19 @@ def define_argument_parser() -> argparse.ArgumentParser:
 
 
 ###############################################################################
-#  Envelopping
+# Entry point
 ###############################################################################
-if __name__ == "__main__":
-    # Initialization
+def main():
+    # Initialization of the argument parser and the logger
     arg_parser = define_argument_parser()
     args = arg_parser.parse_args()
     logger = configure_logger(args)
 
     # TODO: your code comes here
+
+
+###############################################################################
+# Wrapping for directly calling the scripts
+###############################################################################
+if __name__ == "__main__":
+    main()

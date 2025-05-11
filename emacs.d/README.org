@@ -3284,7 +3284,13 @@ file type dedicated templates. The templates are available in =~/.emacs.d/third_
 
     ;; Coupling with auto-insert
     (setq auto-insert-alist nil)
-    (yatemplate-fill-alist))
+    (yatemplate-fill-alist)
+
+    ;; Force indentation to be fixed after insertion
+    (defun yatemplate-expand-yas-buffer ()
+      "Expand the whole buffer with `yas-expand-snippet'. This function has been redefined to disable the auto-indentation."
+      (let ((yas-indent-line 'fixed))
+        (yas-expand-snippet (buffer-string) (point-min) (point-max)))))
 #+end_src
 
 ** DONE Action triggering
