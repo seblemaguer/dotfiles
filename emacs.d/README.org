@@ -5750,6 +5750,7 @@ Because I need a break once and a while at work, I load both files on my work ma
 #+begin_src emacs-lisp
   (use-package elfeed-org
     :tags '("CONNECTED" "RSS")
+    :after (elfeed)
     :if (file-directory-p cloud-org-root-dir)
     :hook (elpaca-after-init . loading-elfeed)
     :commands (elfeed-org)
@@ -5802,6 +5803,7 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
   (use-package elfeed-tube-mpv
     :ensure (:type git :host github :repo "karthink/elfeed-tube" :files ("elfeed-tube-mpv.el"))
     :tags '("CONNECTED" "RSS" "YOUTUBE")
+    :after (elfeed)
     :bind (
       :map elfeed-show-mode-map (
         <<keybindings-gen(table=elfeed-tube-mpv-keybindings)>>
@@ -5819,8 +5821,8 @@ I just need to define a default priority level for each feed.
 
 #+begin_src emacs-lisp
   (use-builtin sauron-elfeed
-    :after (sauron)
     :tags '("CONNECTED" "RSS" "NOTIFICATION")
+    :after (sauron elfeed)
     :commands (elfeed-update-background-start sauron-elfeed-start)
     :hook
     (elpaca-after-init . sauron-elfeed-start)
@@ -5842,6 +5844,7 @@ Using =elfeed-score= helps me to organize my feeds to have a better view of what
 #+begin_src emacs-lisp
   (use-package elfeed-score
     :tags '("CONNECTED" "RSS")
+    :after (elfeed)
     :config
     (elfeed-score-enable)
     (define-key elfeed-search-mode-map "=" elfeed-score-map)
@@ -5893,6 +5896,21 @@ Obviously this part is meant to evolve regularly!
    ("adjust-tags"))
 #+end_src
 
+*** DONE Searching
+CLOSED: [2025-05-13 Tue 08:47]
+=Cuckoo= provides additional helpers to search the *content* of the RSS feeds.
+
+#+BEGIN_SRC emacs-lisp
+    (use-package cuckoo-search
+      :tags '("CONNECTED" "RSS")
+      :after (elfeed)
+      :config
+      (cuckoo-search-global-mode t)  ;; necessary for smooth integration of cuckoo-search into Elfeed
+      :bind
+      (:map elfeed-search-mode-map
+            ("C" . cuckoo-search)
+            ("x" . cuckoo-search-saved-searches)))
+#+END_SRC
 ** DONE Mail [100%]
 CLOSED: [2021-01-05 Tue 09:08]
 :PROPERTIES:
