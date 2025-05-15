@@ -533,7 +533,6 @@
   znap eval   trapd00r/LS_COLORS "$( whence -a dircolors gdircolors ) -b LS_COLORS"
   znap source marlonrichert/zcolors
   znap eval   marlonrichert/zcolors "zcolors ${(q)LS_COLORS}"
-  znap eval   omz-git 'curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/git/git.plugin.zsh'
 
   ########################################################################################
   #### Options
