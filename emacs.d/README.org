@@ -257,6 +257,16 @@ Now we can add the specific helper for our configuration:
     ;; byte-compile plugins
     (byte-recompile-directory (expand-file-name default-plugin-dir) 0))
 #+end_src
+*** DONE Fix some keys redefinition with terminal
+CLOSED: [2025-05-14 Wed 17:08]
+Due to my terminal configuration f1..f4 are not mapped to what emacs expects, fix this.
+
+#+BEGIN_SRC emacs-lisp
+  (define-key input-decode-map "\eOP" [f1])
+  (define-key input-decode-map "\eOQ" [f2])
+  (define-key input-decode-map "\eOR" [f3])
+  (define-key input-decode-map "\eOS" [f4])
+#+END_SRC
 
 ** DONE Package management [100%]
 :PROPERTIES:
@@ -5318,7 +5328,8 @@ CLOSED: [2023-10-27 Fri 09:32]
     :config (projection-multi-embark-setup-command-map))
 #+end_src
 
-* Shell [100%]
+* DONE Shell [100%]
+CLOSED: [2025-05-15 Thu 19:42]
 :PROPERTIES:
 :ID:       075657a9-12e8-4cce-838f-956499275dad
 :END:
