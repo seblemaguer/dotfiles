@@ -407,6 +407,9 @@
   fi
   unset __mamba_setup
   # <<< mamba initialize <<<
+
+  # Project specific environment
+  [[ -f ~/environment/local/bin/direnv ]] && eval "$(direnv hook bash)"
 #+end_src
 
 * zsh
@@ -629,6 +632,11 @@
   fi
   unset __mamba_setup
   # <<< mamba initialize <<<
+
+
+  # Project specific environment
+  [[ -f ~/environment/local/bin/direnv ]] && znap source ohmyzsh/ohmyzsh plugins/direnv
+
 
   ########################################################################################
   #### Terminal

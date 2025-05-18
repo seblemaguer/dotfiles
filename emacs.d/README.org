@@ -7412,6 +7412,7 @@ CLOSED: [2021-01-05 Tue 13:13]
 :END:
 Because an important part of my environment relies on a properly configured shell (especially for environment variables),
 I use =exec-path-from-shell= to force to run a command using the shell environment.
+I also rely on =envrc= to load ~direnv~ configurations.
 
 #+begin_src emacs-lisp
   (use-package exec-path-from-shell
@@ -7433,6 +7434,11 @@ I use =exec-path-from-shell= to force to run a command using the shell environme
 
       :custom ((detached-show-output-on-attach t)
                (detached-shell-history-file "~/.bash_history"))))
+
+  (when (executable-find "direnv")
+    (use-package envrc
+      :tags '("SYSTEM")
+      :hook (after-init . envrc-global-mode)))
 #+end_src
 
 **** DONE Define some short for commands
