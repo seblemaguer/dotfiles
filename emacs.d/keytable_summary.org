@@ -682,6 +682,7 @@
 |-----+----------------+---------------+-------------|
 | p   | mistty-ipython | ipython Shell |             |
 | z   | mistty-zsh     | zsh shell     |             |
+| b   | mistty-bash    | bash shell    |             |
 
 #+NAME: mistty-prompt-keybindings
 | Key       | Function        | Description |

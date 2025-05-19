@@ -5404,6 +5404,14 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
     )
     :commands (mistty-mode)
     :init
+    (defun mistty-bash ()
+      "Spawn a MisTTY buffer with a bash shell in it."
+      (interactive)
+      (with-current-buffer (generate-new-buffer "*terminal*")
+        (mistty-mode)
+        (pop-to-buffer (current-buffer))
+        (mistty-exec '("bash")))
+      )
     (defun mistty-zsh ()
       "Spawn a MisTTY buffer with a zsh shell in it."
       (interactive)
