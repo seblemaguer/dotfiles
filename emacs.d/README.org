@@ -3778,8 +3778,9 @@ CLOSED: [2021-01-03 Sun 21:28]
          nil)))
     )
 
-  (use-package eldoc ;; NOTE: required to ensure version consistency with eglot
-    :defer t)
+   ;; NOTE: required to ensure version consistency with eglot
+  (use-package eldoc :defer t)
+  (use-package flymake :defer t)
 
   (use-package eglot
     :tags '("IDE" "PROGRAMMING")
