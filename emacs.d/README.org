@@ -2012,7 +2012,7 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
           org-mru-clock-keep-formatting t
           org-clock-persist t)
 
-    (defadvice org-clock-in (after sacha activate)
+    (define-advice org-clock-in (after sacha activate)
       "Set this task's status to 'CURRENT'."
       (org-todo "CURRENT"))
 
@@ -2066,7 +2066,7 @@ This is why I use this configuration.
     :config
     (setq org-archive-default-command 'org-archive-subtree)
 
-    (defadvice org-archive-subtree (around fix-hierarchy activate)
+    (define-advice org-archive-subtree (around fix-hierarchy activate)
       (let* ((fix-archive-p (and (not current-prefix-arg)
                                  (not (use-region-p))))
              (afile  (car (org-archive--compute-location
