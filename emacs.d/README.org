@@ -2917,6 +2917,7 @@ For the folding, I am relying on =outline-indent=.
 
   (use-package savefold
     :ensure (:type git :host github :repo "jcfk/savefold.el")
+    :disabled t
     :tags '("FOLDING")
     :init
     (setq savefold-backends '(outline org)
