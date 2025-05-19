@@ -690,17 +690,23 @@ I also use buffer-terminator to avoid the explosion of opened buffers (which are
     :ensure  vlf
     :tags '("CORE")
     :init (setq vlf-application 'dont-ask))
+
+  (use-package bufferfile
+    :tags '("CORE")
+    :custom
+    (bufferfile-use-vc t))
 #+end_src
 
 ** DONE Navigation
-CLOSED: [2021-03-01 Mon 09:27]
+CLOSED: [2025-05-19 Mon 09:28]
 :PROPERTIES:
 :ID:       1a4b5853-49d4-437a-922a-8fedb01ec74a
 :END:
 To have a better scrolling/navigation, I rely on two packages =fast-scroll and =goto-last-point=.
 =fast-scroll= disables some hooks while scrolling and therefore makes it smoother.
 =goto-last-point= enables me to go back to the position before the move happened.
-Finally, introducing =move-text= provides a quick way to swap consecutive lines.
+Introducing =move-text= provides a quick way to swap consecutive lines.
+Finally, =ddp= is used to supper query-based search in the buffer (this depends on some system commands such as yq, jq, ...).
 
 #+transclude: [[file:keytable_summary.org::goto-last-point-entry-keybindings]]
 #+transclude: [[file:keytable_summary.org::trail-entry-keybindings]]
@@ -766,6 +772,9 @@ Finally, introducing =move-text= provides a quick way to swap consecutive lines.
     :init
     (define-globalized-minor-mode global-locs-and-refs-mode locs-and-refs-mode
       (locs-and-refs-mode)))
+
+  (use-package ddp
+    :tags '("CORE" "NAVIGATION"))
 #+end_src
 
 * DONE Session [100%]
