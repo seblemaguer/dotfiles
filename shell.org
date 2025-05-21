@@ -636,12 +636,6 @@
 
   # Project specific environment
   [[ -f ~/environment/local/bin/direnv ]] && znap source ohmyzsh/ohmyzsh plugins/direnv
-
-
-  ########################################################################################
-  #### Terminal
-  ########################################################################################
-  export TERM="rxvt-unicode-256color"
 #+end_src
 
 ** P10K
