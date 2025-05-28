@@ -58,6 +58,14 @@
 ;; Block until current queue processed.
 (elpaca-wait)
 
+(unload-feature 'eldoc t)
+(setq custom-delayed-init-variables '())
+(defvar global-eldoc-mode nil)
+
+(elpaca eldoc
+  (require 'eldoc)
+  (global-eldoc-mode)) ;; This is usually enabled by default by Emacs
+
 ;; Transclusion is needed, so install it :)
 (use-package org :ensure t)
 (use-package org-transclusion :ensure t)
