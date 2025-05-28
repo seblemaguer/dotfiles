@@ -1904,7 +1904,6 @@ As I have my own way of being organized, I redefined completely the groups.
 
             ;; CD part
             (:discard (:and (:category "RELEASE" :tag "noexport")))
-            (:discard (:and (:category "RELEASE" :tag "ignore")))
             (:discard (:and (:category "RELEASE" :todo "CANCELLED")))
             (:name "Today's releases"
                    :and (:todo "RELEASE" :date today)
