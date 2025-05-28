@@ -2011,9 +2011,10 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
           org-mru-clock-keep-formatting t
           org-clock-persist t)
 
-    (define-advice org-clock-in (after sacha activate)
+    (defun org-clock-in-advice ()
       "Set this task's status to 'CURRENT'."
       (org-todo "CURRENT"))
+    (advice-add 'org-clock-in :after #'org-clock-in-advice)
 
     (defun sacha/org-clock-in-if-starting ()
       "Clock in when the task is marked CURRENT."
@@ -2065,7 +2066,8 @@ This is why I use this configuration.
     :config
     (setq org-archive-default-command 'org-archive-subtree)
 
-    (define-advice org-archive-subtree (around fix-hierarchy activate)
+    (defun org-archive-fix-hierarchy-subtree ()
+      ""
       (let* ((fix-archive-p (and (not current-prefix-arg)
                                  (not (use-region-p))))
              (afile  (car (org-archive--compute-location
@@ -2103,7 +2105,8 @@ This is why I use this configuration.
                       (cl-incf level)))
                   (widen)
                   (org-end-of-subtree t t)
-                  (org-paste-subtree level tree-text)))))))))
+                  (org-paste-subtree level tree-text))))))))
+    (advice-add 'org-archive-subtree :around #'org-archive-fix-hierarchy-subtree))
 #+end_src
 
 **** Cleaning helper
