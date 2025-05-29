@@ -3779,18 +3779,15 @@ CLOSED: [2021-01-03 Sun 21:28]
          (project-root (project-current))
          nil)))
     )
+  (use-package list-projects
+    :tags '("IDE" "PROGRAMMING")
+    :defer t)
 
   (use-package flymake :defer t)
   (use-package eglot
     :tags '("IDE" "PROGRAMMING")
     :ensure (:wait t)
     :defer t
-    :hook
-    ((c-mode-hook      . eglot-ensure)
-     (c++-mode-hook    . eglot-ensure)
-     (racket-mode-hook . eglot-ensure)
-     (python-mode      . eglot-ensure))
-
     :init
     (defun my-eglot-organize-imports () (interactive)
            (eglot-code-actions nil nil "source.organizeImports" t))
@@ -3800,7 +3797,18 @@ CLOSED: [2021-01-03 Sun 21:28]
                  '(((c-mode c++-mode) . ("clangd"))))
 
     (add-to-list 'eglot-server-programs
-                 '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio"))))
+                 '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio")))
+
+
+    (setq-default eglot-workspace-configuration '(
+                            :basedpyright (:typeCheckingMode "recommended")
+                            :basedpyright.analysis (
+                                :diagnosticSeverityOverrides (
+                                    :reportUnusedCallResult "none"
+                                )
+                                :inlayHints (:callArgumentNames :json-false)
+                            )))
+    )
 
   (use-package eglot-booster
     :ensure (eglot-booster
