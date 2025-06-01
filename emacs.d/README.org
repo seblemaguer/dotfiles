@@ -6201,7 +6201,7 @@ I also redesigned the header buffer.
   (use-package mu4e
     :ensure (mu4e :host github
                   :repo "djcb/mu"
-                  :tag "v1.12.8"
+                  :tag "v1.12.11"
                   :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el"
                           "build/mu4e/mu4e.info")
                   :main "mu4e/mu4e.el"
