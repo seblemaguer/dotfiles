@@ -2968,8 +2968,7 @@ CLOSED: [2021-01-03 Sun 17:42]
 
     :hook (before-save . corfu-quit)
     :init
-    (global-corfu-mode)
-    )
+    (global-corfu-mode))
 
   (use-package corfu-history
     :tags '("COMPLETION")
@@ -3844,7 +3843,7 @@ This package is in its early stage so more configuration will be required for fu
     :defer t
     :hook
     (kill-emacs . dape-breakpoint-save)
-    (after-init . dape-breakpoint-load)
+    (elpaca-after-init . dape-breakpoint-load)
 
     :bind (:map dape-global-map (
       ("T" . dape-transient)
@@ -7475,7 +7474,7 @@ I also rely on =envrc= to load ~direnv~ configurations.
   (when (executable-find "direnv")
     (use-package envrc
       :tags '("SYSTEM")
-      :hook (after-init . envrc-global-mode)))
+      :hook (elpaca-after-init . envrc-global-mode)))
 #+end_src
 
 **** DONE Define some short for commands
