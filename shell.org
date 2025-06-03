@@ -518,12 +518,6 @@
   znap source ohmyzsh/ohmyzsh plugins/{colored-man-pages,colorize}
   znap source ohmyzsh/ohmyzsh plugins/{docker-compose,python}
 
-  # No special syntax is needed to configure plugins. Just use normal Zsh
-  # statements:
-
-  bindkey '^[q' push-line-or-edit
-  bindkey -r '^Q' '^[Q'
-
   ZSH_AUTOSUGGEST_STRATEGY=( history )
   znap source zsh-users/zsh-autosuggestions
 
@@ -536,6 +530,14 @@
   znap eval   trapd00r/LS_COLORS "$( whence -a dircolors gdircolors ) -b LS_COLORS"
   znap source marlonrichert/zcolors
   znap eval   marlonrichert/zcolors "zcolors ${(q)LS_COLORS}"
+
+  ########################################################################################
+  #### Redefine some keys
+  ########################################################################################
+  bindkey              '^I'         menu-complete
+  bindkey "$terminfo[kcbt]" reverse-menu-complete
+  bindkey '^[q' push-line-or-edit
+  bindkey -r '^Q' '^[Q'
 
   ########################################################################################
   #### Options
@@ -636,6 +638,11 @@
 
   # Project specific environment
   [[ -f ~/environment/local/bin/direnv ]] && znap source ohmyzsh/ohmyzsh plugins/direnv
+
+  ########################################################################################
+  #### Terminal
+  ########################################################################################
+  export TERM="xterm-256color"
 #+end_src
 
 ** P10K
