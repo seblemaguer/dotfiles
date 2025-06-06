@@ -5797,7 +5797,6 @@ Because I need a break once and a while at work, I load both files on my work ma
 #+begin_src emacs-lisp
   (use-package elfeed-org
     :tags '("CONNECTED" "RSS")
-    :after (elfeed)
     :if (file-directory-p cloud-org-root-dir)
     :hook (elpaca-after-init . loading-elfeed)
     :commands (elfeed-org)
