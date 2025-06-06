@@ -2385,7 +2385,6 @@ I am using ~jinx~ as it supports nicely English and Finnish.
 #+begin_src emacs-lisp
   (use-package jinx
     :tags '("CORE" "WRITING" "HELPERS")
-    :hook (emacs-startup . global-jinx-mode)
     :bind (("M-$"   . jinx-correct)
            ("C-M-$" . jinx-languages)))
 #+end_src
