@@ -1072,11 +1072,22 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
     :hook
     (org-after-todo-statistics . org-summary-todo)
     (before-save . org-agenda-generate-id)
+    (org-after-todo-state-change . toggle-ordered-tag)
 
     :bind (:map org-mode-map (
       <<keybindings-gen(table=org-additional-keybindings)>>
       <<keybindings-gen(table=org-effort-keybindings)>>
     ))
+
+    :init
+    (defun toggle-ordered-tag ()
+      "Helper to toggle the \"ordered\" tag when the \"ORDERED\" todo state is activated."
+      (let* ((tags (org-get-tags nil t)))
+        (if (string= org-state "ORDERED")
+            (when (not (member "ordered" tags))
+              (setq tags (add-to-list 'tags "ordered")))
+          (setq tags (delete "ordered" tags)))
+        (org-set-tags tags)))
 
     :config
 
@@ -1764,9 +1775,7 @@ I also introduced =org-tree-slide= to enjoy quick presentation
     :ensure (:host github :repo "KaratasFurkan/org-rainbow-tags")
     :custom
     (org-rainbow-tags-hash-start-index 10)
-    (org-rainbow-tags-extra-face-attributes
-     ;; Default is '(:weight 'bold)
-     '(:inverse-video t :box t :weight 'bold))
+    (org-rainbow-tags-extra-face-attributes '(:inverse-video t :box t :weight 'bold))
     :hook
     (org-mode . org-rainbow-tags-mode)
     (org-agenda-finalize . org-rainbow-tags-mode))
@@ -8176,8 +8185,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
      :fileicon
      (emacs emacs Emacs)
      (org org ORG)
-     (image review Review)
-     ))
+     (image review Review)))
 #+end_src
 
 ** DONE Helpers [100%]
