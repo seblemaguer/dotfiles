@@ -378,42 +378,32 @@ CLOSED: [2024-03-13 Wed 22:59]
 :SOURCE:   https://ph-uhl.com/emacs-password-management-on-linux/
 :ID:       af4f58fe-aa6a-48e8-8fe9-b892333fd190
 :END:
-Rely on the secret service protocol to retrieve the passwords.
+All my passwords are stored in a keepassxc database. I am relying on keepass-mode which itself relies on =keepassxc-cli=.
 
 #+begin_src emacs-lisp
-  ;; Load and patch secrets
-  (use-builtin secrets
-    :commands (secrets-search-items
-               secrets-get-secret
-               secrets-get-attributes)
-    :config
-    ;; Adds a patch to fix behavior with KeepassXC
-    (defun secrets-unlock-item (collection item)
-      "Unlock item labeled ITEM from collection labeled COLLECTION.
-    If successful, return the object path of the item."
-      (let ((item-path (secrets-item-path collection item)))
-        (unless (secrets-empty-path item-path)
-          (secrets-prompt
-           (cadr
-            (dbus-call-method
-             :session secrets-service secrets-path secrets-interface-service
-             "Unlock" `(:array :object-path ,item-path)))))
-        item-path))
+  (if (executable-find "keepassxc-cli")
+      (use-package keepass-mode
+        :tags '("CORE" "PASSWORDS")
+        :mode ("\\.kdbx$")
+        :init
+        (defun keepass-get-password (db entry)
+          "Helper to retrieve the password of an `entry' from a keepass database `db' using keepass-mode helpers."
+          (let ((orig-buffer (current-buffer)))
+            (with-current-buffer (find-file-noselect db)
+              (keepass-mode-get "Password" entry))))
 
-    ;; Adds a patch to fix behavior with KeepassXC
-    (defun secrets-get-secret (collection item)
-      "Return the secret of item labeled ITEM in COLLECTION.
-    If there are several items labeled ITEM, it is undefined which
-    one is returned.  If there is no such item, return nil.
+        (defun keepass-get-username (db entry)
+          "Helper to retrieve the username of an `entry' from a keepass database `db' using keepass-mode helpers."
+          (let ((orig-buffer (current-buffer)))
+            (with-current-buffer (find-file-noselect db)
+              (keepass-mode-get "UserName" entry))))
 
-    ITEM can also be an object path, which is used if contained in COLLECTION."
-      (let ((item-path (secrets-unlock-item collection item)))
-        (unless (secrets-empty-path item-path)
-          (dbus-byte-array-to-string
-           (nth 2
-                (dbus-call-method
-                 :session secrets-service item-path secrets-interface-item
-                 "GetSecret" :object-path secrets-session-path)))))))
+        (defun keepass-get-url (db entry)
+          "Helper to retrieve the URL of an `entry' from a keepass database `db' using keepass-mode helpers."
+          (let ((orig-buffer (current-buffer)))
+            (with-current-buffer (find-file-noselect db)
+              (keepass-mode-get "URL" entry)))))
+    (warn "keepassxc-cli is not available. No passwords will be accessible"))
 #+END_SRC
 
 *** DONE Private configuration
