@@ -381,10 +381,11 @@ CLOSED: [2024-03-13 Wed 22:59]
 All my passwords are stored in a keepassxc database. I am relying on keepass-mode which itself relies on =keepassxc-cli=.
 
 #+begin_src emacs-lisp
-  (if (executable-find "keepassxc-cli")
+  (when (executable-find "keepassxc-cli")
       (use-package keepass-mode
         :tags '("CORE" "PASSWORDS")
         :mode ("\\.kdbx$")
+        :commands (keepass-mode-get)
         :init
         (defun keepass-get-password (db entry)
           "Helper to retrieve the password of an `entry' from a keepass database `db' using keepass-mode helpers."
@@ -403,7 +404,10 @@ All my passwords are stored in a keepassxc database. I am relying on keepass-mod
           (let ((orig-buffer (current-buffer)))
             (with-current-buffer (find-file-noselect db)
               (keepass-mode-get "URL" entry)))))
-    (warn "keepassxc-cli is not available. No passwords will be accessible"))
+    (warn "keepassxc-cli is not available. No passwords will be accessible")
+
+    (elpaca-wait)
+    (find-file keepass-db))
 #+END_SRC
 
 *** DONE Private configuration
@@ -447,8 +451,7 @@ the upstream has some priority issues with ERC; I would like to ignore some even
 
 #+begin_src emacs-lisp
   (use-package alert
-    :tags '("CORE" "NOTIFICATION")
-    )
+    :tags '("CORE" "NOTIFICATION"))
 
   (use-package sauron
     :ensure (:protocol ssh :type git :host github :repo "seblemaguer/sauron" :branch "functional")
