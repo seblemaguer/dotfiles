@@ -5654,17 +5654,15 @@ Also, I am using the configuration of =smerge-mode= from https://github.com/alph
         (append-to-buffer bufb (region-beginning) (region-end))
         (ediff-buffers bufa bufb))))
 
-    (use-builtin smerge-mode
-      :tags '("DIFF")
-      :hook
-      (prog-mode . smerge-mode)
-      (magit-diff-visit-file . (lambda ()
-                                 (when smerge-mode
-                                   (unpackaged/smerge-hydra/body))))
-      :config
-      (defhydra unpackaged/smerge-hydra
-        (:color pink :hint nil :post (smerge-auto-leave))
-        "
+  (use-builtin smerge-mode
+    :tags '("DIFF")
+    :hook
+    (prog-mode . smerge-mode)
+
+    :config
+    (defhydra unpackaged/smerge-hydra
+      (:color pink :hint nil :post (smerge-auto-leave))
+      "
     ^Move^       ^Keep^               ^Diff^                 ^Other^
     ^^-----------^^-------------------^^---------------------^^-------
     _n_ext       _b_ase               _<_: upper/base        _C_ombine
@@ -5673,28 +5671,28 @@ Also, I am using the configuration of =smerge-mode= from https://github.com/alph
     ^^           _a_ll                _R_efine
     ^^           _RET_: current       _E_diff
     "
-        ("n" smerge-next)
-        ("p" smerge-prev)
-        ("b" smerge-keep-base)
-        ("u" smerge-keep-upper)
-        ("l" smerge-keep-lower)
-        ("a" smerge-keep-all)
-        ("RET" smerge-keep-current)
-        ("\C-m" smerge-keep-current)
-        ("<" smerge-diff-base-upper)
-        ("=" smerge-diff-upper-lower)
-        (">" smerge-diff-base-lower)
-        ("R" smerge-refine)
-        ("E" smerge-ediff)
-        ("C" smerge-combine-with-next)
-        ("r" smerge-resolve)
-        ("k" smerge-kill-current)
-        ("ZZ" (lambda ()
-                (interactive)
-                (save-buffer)
-                (bury-buffer))
-         "Save and bury buffer" :color blue)
-        ("q" nil "cancel" :color blue)))
+      ("n" smerge-next)
+      ("p" smerge-prev)
+      ("b" smerge-keep-base)
+      ("u" smerge-keep-upper)
+      ("l" smerge-keep-lower)
+      ("a" smerge-keep-all)
+      ("RET" smerge-keep-current)
+      ("\C-m" smerge-keep-current)
+      ("<" smerge-diff-base-upper)
+      ("=" smerge-diff-upper-lower)
+      (">" smerge-diff-base-lower)
+      ("R" smerge-refine)
+      ("E" smerge-ediff)
+      ("C" smerge-combine-with-next)
+      ("r" smerge-resolve)
+      ("k" smerge-kill-current)
+      ("ZZ" (lambda ()
+              (interactive)
+              (save-buffer)
+              (bury-buffer))
+       "Save and bury buffer" :color blue)
+      ("q" nil "cancel" :color blue)))
 #+end_src
 
 ** DONE Trashed
@@ -7285,8 +7283,7 @@ Integrate the clipboard to Emacs by using the package =cliphist=.
 #+begin_src emacs-lisp
   (when (executable-find "parcellite")
     (use-package cliphist
-      :tags '("DESKTOP")
-      ))
+      :tags '("DESKTOP")))
 #+end_src
 
 *** DONE Bluetooth
