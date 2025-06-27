@@ -383,14 +383,11 @@ All my passwords are stored in a keepassxc database. I am relying on keepass-mod
 #+begin_src emacs-lisp
   (if (executable-find "keepassxc-cli")
       (use-package keepass-mode
+        :ensure (:protocol ssh :type git :host github :repo "seblemaguer/keepass-mode")
         :tags '("CORE" "PASSWORDS")
         :mode ("\\.kdbx$")
         :commands (keepass-mode-get)
-        :hook (elpaca-after-init . load-keepass-buffer)
         :init
-        (defun load-keepass-buffer ()
-          "Load the keepass buffer"
-          (find-file keepass-db))
 
         (defun keepass-get-password (db entry)
           "Helper to retrieve the password of an `entry' from a keepass database `db' using keepass-mode helpers."
