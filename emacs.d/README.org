@@ -4856,17 +4856,15 @@ Finally, I use bibclean-format to have a clean final bibtex file.
           bibtex-autokey-titlewords 1)
 
     (defun bibtex-tidy-buffer ()
-      "Apply bibtex-tidy to clean the current bibtex buffer and `bibtex-sort-buffer' ."
+      "Apply bibtex-tidy to clean and sort the current bibtex buffer."
       (interactive)
-      (let ((cmd (format "bibtex-tidy %s %s %s -m %s"
+      (let ((cmd (format "bibtex-tidy %s %s %s --v2 -m %s"
                          "--curly --numeric --space=4 --align=13 --no-escape"
                          "--duplicates=key,doi --trailing-commas --no-remove-dupe-fields"
-                         "--sort-fields=title,shorttitle,author,year,month,day,journal,booktitle,location,on,publisher,address,series,volume,number,pages,doi,isbn,issn,url,urldate,copyright,category,note,metadata"
+                         "--sort --merge last"
                          (shell-quote-argument (buffer-file-name)))))
-        ;; (message cmd)
         (shell-command cmd)
-        (revert-buffer t t t)
-        (bibtex-sort-buffer))))
+        (revert-buffer t t t))))
 
   (use-package bibtex-utils
     :tags '("WRITING" "BIBTEX")
