@@ -2445,7 +2445,6 @@ CLOSED: [2022-02-10 Thu 07:04]
       )))
 
     :config
-    (org-roam-db-autosync-mode)
 
     (cl-defun org-roam-raw-id-insert (&optional filter-fn)
       "Find an Org-roam node and insert (where the point is) the raw id.
@@ -2516,13 +2515,47 @@ CLOSED: [2022-02-10 Thu 07:04]
          "${hierarchy:*}"
          (propertize "${backlinkscount:6}" 'face 'org-tag))))
 
+  (use-package org-mem
+    :if (file-directory-p cloud-org-root-dir)
+    :tags '("ORG" "USER" "CONNECTED")
+    :after org-roam
+    :custom
+    (org-mem-watch-dirs `(cloud-org-root-dir))
+    (org-mem-do-sync-with-org-id t)
+    (org-roam-db-update-on-save nil)
+    (org-mem-roamy-do-overwrite-real-db t)
+
+    :hook
+    (org-mem-post-full-scan-functions . #'my-set-agenda-files)
+
+    :config
+    (org-mem-updater-mode)
+    (org-mem-roamy-db-mode)
+    (defun my-set-agenda-files (&rest _)
+      (setq org-agenda-files
+            (cl-loop
+             for file in (org-mem-all-files)
+             unless (string-search "archive" file)
+             when (seq-find (lambda (entry)
+                              (or (org-mem-entry-active-timestamps entry)
+                                  (org-mem-entry-todo-state entry)
+                                  (org-mem-entry-scheduled entry)
+                                  (org-mem-entry-deadline entry)))
+                            (message file)
+                            (org-mem-entries-in file))
+             collect file))))
+
+
   (use-package org-roam-protocol
     :ensure (:host github :repo "org-roam/org-roam" :files ("extensions/org-roam-protocol.el"))
+    :if (file-directory-p cloud-org-root-dir)
     :tags '("ORG" "USER")
     :after org-roam)
 
   (use-package org-roam-ui
     :ensure (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
+    :disabled t
+    :if (file-directory-p cloud-org-root-dir)
     :tags '("ORG" "USER" "DESKTOP")
     :after (org-roam eaf-browser)
     :config
@@ -2534,12 +2567,14 @@ CLOSED: [2022-02-10 Thu 07:04]
   (use-package citar-org-roam
     :ensure (:type git :host github :repo "emacs-citar/citar-org-roam")
     :after citar org-roam
+    :if (file-directory-p cloud-org-root-dir)
     :tags '("BIBLIOGRAPHY" "USER" "ORG")
     :no-require
     :config (citar-org-roam-mode))
 
   (use-package consult-org-roam
     :after org-roam
+    :if (file-directory-p cloud-org-root-dir)
     :tags '("ORG" "USER" "COMPLETION")
     :commands (consult-org-roam-mode)
     ;; :init
@@ -2557,6 +2592,7 @@ CLOSED: [2022-02-10 Thu 07:04]
   (use-package org-roam-project-dashboard
     :ensure (:protocol ssh :type git :host github :repo "seblemaguer/org-roam-project-dashboard")
     :tags '("ORG" "PROJECT_MANAGEMENT")
+    :if (file-directory-p cloud-org-root-dir)
     :commands (org-roam-project-dashboard-show)
     :custom
     (org-roam-project-dashboard-list-tags '("research" "tools" "duties" "application" "perso" "teaching" "training"))
