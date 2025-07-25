@@ -6228,256 +6228,316 @@ I also redesigned the header buffer.
 #+transclude: [[file:keytable_summary.org::Mu4e]] :only-contents
 
 #+begin_src emacs-lisp
-  (use-package mu4e
-    :ensure (mu4e :host github
-                  :repo "djcb/mu"
-                  :tag "v1.12.11"
-                  :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el"
-                          "build/mu4e/mu4e.info")
-                  :main "mu4e/mu4e.el"
-                  :pre-build (("./autogen.sh") ("ninja" "-C" "build")
-                              (make-symbolic-link (expand-file-name "./build/mu/mu")
-                                                  (expand-file-name "~/environment/local/bin/mu") 'ok-if-exists))
-                  :build (:not elpaca--compile-info))
-    :tags '("CONNECTED" "MAIL")
-    :commands (mu4e)
+    (use-package mu4e
+      :ensure (mu4e :host github
+                    :repo "djcb/mu"
+                    :tag "v1.12.11"
+                    :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el"
+                            "build/mu4e/mu4e.info")
+                    :main "mu4e/mu4e.el"
+                    :pre-build (("./autogen.sh") ("ninja" "-C" "build")
+                                (make-symbolic-link (expand-file-name "./build/mu/mu")
+                                                    (expand-file-name "~/environment/local/bin/mu") 'ok-if-exists))
+                    :build (:not elpaca--compile-info))
+      :tags '("CONNECTED" "MAIL")
+      :commands (mu4e)
 
-    ;; :hook
-    ;; (elpaca-after-init . (lambda () (mu4e t)))
+      ;; :hook
+      ;; (elpaca-after-init . (lambda () (mu4e t)))
 
-    :pretty-hydra
-    ((:color blue :hint nil)
-     ("General" (
-        <<hydra-keybindings-gen(table=mu4e-hydra-general-keybindings)>>
+      :pretty-hydra
+      ((:color blue :hint nil)
+       ("General" (
+          <<hydra-keybindings-gen(table=mu4e-hydra-general-keybindings)>>
+        )
+
+        "Search" (
+          <<hydra-keybindings-gen(table=mu4e-hydra-search-keybindings)>>
+        )
+
+        "Mark" (
+          <<hydra-keybindings-gen(table=mu4e-hydra-mark-keybindings)>>
+        )
+
+        "Miscellany" (
+          <<hydra-keybindings-gen(table=mu4e-hydra-misc-keybindings)>>
+        )
+
+        "Switches" (
+          <<hydra-keybindings-gen(table=mu4e-hydra-switches-keybindings)>>
+        )))
+
+      :bind (
+        :map mu4e-headers-mode-map (
+          <<keybindings-gen(table=mu4e-headers-mode-keybindings)>>
+        )
+
+        :map mu4e-main-mode-map (
+          <<keybindings-gen(table=mu4e-main-mode-keybindings)>>
+        )
+
+        :map message-mode-map (
+          <<keybindings-gen(table=message-mode-keybindings)>>
+        )
       )
 
-      "Search" (
-        <<hydra-keybindings-gen(table=mu4e-hydra-search-keybindings)>>
-      )
+      :custom
+      ;; File management
+      (mu4e-maildir "~/mail")
+      (mu4e-attachment-dir "~/Downloads/")
+      (mu4e-change-filenames-when-moving t)
 
-      "Mark" (
-        <<hydra-keybindings-gen(table=mu4e-hydra-mark-keybindings)>>
-      )
+      ;; User interaction
+      (mail-user-agent 'mu4e-user-agent)
+      (mu4e-compose-forward-as-attachment nil)
+      (mu4e-hide-index-messages t)
+      (mu4e-compose-context-policy 'ask-if-none)
+      (mu4e-confirm-quit nil)
+      (mu4e-compose-dont-reply-to-self t)
+      (mu4e-update-interval nil)
 
-      "Miscellany" (
-        <<hydra-keybindings-gen(table=mu4e-hydra-misc-keybindings)>>
-      )
+      ;; Gui
+      (mu4e-view-show-addresses t)
+      (mu4e-view-show-images t)
+      (mu4e-view-use-gnus t)
+      (mu4e-use-fancy-chars t)
 
-      "Switches" (
-        <<hydra-keybindings-gen(table=mu4e-hydra-switches-keybindings)>>
-      )))
+      ;; headers
+      (mu4e-headers-date-format "%a %d %b %Y")
+      (mu4e-headers-time-format "%H:%M:%S")
 
-    :bind (
-      :map mu4e-headers-mode-map (
-        <<keybindings-gen(table=mu4e-headers-mode-keybindings)>>
-      )
+      ;; update
+      (mu4e-get-mail-command "mbsync -a")
+      (mu4e-update-interval (* 15 60)) ;; Update every 15min
 
-      :map mu4e-main-mode-map (
-        <<keybindings-gen(table=mu4e-main-mode-keybindings)>>
-      )
+      :init
+      (defun mu4e-message-mailto (&optional url)
+        "Compose a new mail with metadata extracted from mailto: URL.
+    Taken from https://etienne.pflieger.bzh/emacs.d/init.html."
+        (let* ((mailto-data (message-parse-mailto-url
+                             (or url (pop command-line-args-left))))
+               (to (cadr (assoc "to" mailto-data)))
+               (subject (cadr (assoc "subject" mailto-data))))
+          (mu4e-compose-new to subject)))
 
-      :map message-mode-map (
-        <<keybindings-gen(table=message-mode-keybindings)>>
-      )
-    )
+      (advice-add 'message-mailto
+                  :override
+                  (lambda (&optional url)
+                    (require 'mu4e)
+                    (mu4e-message-mailto url)))
 
-    :custom
-    ;; File management
-    (mu4e-maildir "~/mail")
-    (mu4e-attachment-dir "~/Downloads/")
-    (mu4e-change-filenames-when-moving t)
+      :config
 
-    ;; User interaction
-    (mail-user-agent 'mu4e-user-agent)
-    (mu4e-compose-forward-as-attachment nil)
-    (mu4e-hide-index-messages t)
-    (mu4e-compose-context-policy 'ask-if-none)
-    (mu4e-confirm-quit nil)
-    (mu4e-compose-dont-reply-to-self t)
-    (mu4e-update-interval nil)
+      ;; Initialize private configuration
+      (when (fboundp 'load-mu4e-and-smtp)
+        (load-mu4e-and-smtp))
 
-    ;; Gui
-    (mu4e-view-show-addresses t)
-    (mu4e-view-show-images t)
-    (mu4e-view-use-gnus t)
-    (mu4e-use-fancy-chars t)
+      ;; Deal with contexts
+      (require 'mu4e-context)
 
-    ;; headers
-    (mu4e-headers-date-format "%a %d %b %Y")
-    (mu4e-headers-time-format "%H:%M:%S")
+      (when (fboundp 'set-mu4e-contexts)
+        (set-mu4e-contexts))
 
-    ;; update
-    (mu4e-get-mail-command "mbsync -a")
-    (mu4e-update-interval (* 15 60)) ;; Update every 15min
+      (setq mu4e-context-policy 'pick-first
+            mu4e-user-mail-address-list (delq nil
+                                              (mapcar (lambda (context)
+                                                        (when (mu4e-context-vars context)
+                                                          (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
+                                                      mu4e-contexts)))
 
-    :init
-    (defun mu4e-message-mailto (&optional url)
-      "Compose a new mail with metadata extracted from mailto: URL.
-  Taken from https://etienne.pflieger.bzh/emacs.d/init.html."
-      (let* ((mailto-data (message-parse-mailto-url
-                           (or url (pop command-line-args-left))))
-             (to (cadr (assoc "to" mailto-data)))
-             (subject (cadr (assoc "subject" mailto-data))))
-        (mu4e-compose-new to subject)))
+      ;; Deal with bookmarks
+      (require 'mu4e-bookmarks)
 
-    (advice-add 'message-mailto
-                :override
-                (lambda (&optional url)
-                  (require 'mu4e)
-                  (mu4e-message-mailto url)))
+      (when (fboundp 'set-mu4e-bookmarks)
+        (set-mu4e-bookmarks))
 
-    :config
+      (add-to-list 'mu4e-bookmarks
+                   '(:name  "Drafts"
+                            :query "flag:draft"
+                            :key ?d))
 
-    ;; Initialize private configuration
-    (when (fboundp 'load-mu4e-and-smtp)
-      (load-mu4e-and-smtp))
+      ;; SMTP needs to be here (FIXME: don't really know why)
+      (when (fboundp 'set-smtpmail-multi-accounts)
+        (set-smtpmail-multi-accounts))
 
-    ;; Deal with contexts
-    (require 'mu4e-context)
+      ;; use imagemagick, if available
+      (when (fboundp 'imagemagick-register-types)
+        (imagemagick-register-types))
 
-    (when (fboundp 'set-mu4e-contexts)
-      (set-mu4e-contexts))
+      (defun mu4e~headers-line-apply-flag-face (msg line)
+        line)
 
-    (setq mu4e-context-policy 'pick-first
-          mu4e-user-mail-address-list (delq nil
-                                            (mapcar (lambda (context)
-                                                      (when (mu4e-context-vars context)
-                                                        (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
-                                                    mu4e-contexts)))
+      (defun mu4e~headers-field-apply-basic-properties (msg field val width)
+        (cl-case field
+          (:subject
+           (propertize
+            (concat
+             (mu4e~headers-thread-prefix (mu4e-message-field msg :thread))
+             (truncate-string-to-width val 600))
+            'face
+            (let ((flags (mu4e-message-field msg :flags)))
+              (cond
+               ((memq 'trashed flags) 'mu4e-trashed-face)
+               ((memq 'draft flags) 'mu4e-draft-face)
+               ((or (memq 'unread flags) (memq 'new flags))
+                'mu4e-unread-face)
+               ((memq 'flagged flags) 'mu4e-flagged-face)
+               ((memq 'replied flags) 'mu4e-replied-face)
+               ((memq 'passed flags) 'mu4e-forwarded-face)
+               (t 'mu4e-header-face)))))
+          (:thread-subject
+           (propertize
+            (mu4e~headers-thread-subject msg)
+            'face 'font-lock-doc-face))
+          ((:maildir :path :message-id) val)
+          ((:to :from :cc :bcc)
+           (propertize
+            (mu4e~headers-contact-str val)
+            'face 'font-lock-function-name-face))
+          (:from-or-to (mu4e~headers-from-or-to msg))
+          (:date
+           (propertize
+            (format-time-string mu4e-headers-date-format val)
+            'face 'font-lock-string-face))
+          (:mailing-list (mu4e~headers-mailing-list val))
+          (:human-date
+           (propertize
+            (mu4e~headers-human-date msg)
+            'help-echo (format-time-string
+                        mu4e-headers-long-date-format
+                        (mu4e-msg-field msg :date))
+            'face 'font-lock-string-face))
+          (:flags
+           (propertize (mu4e~headers-flags-str val)
+                       'help-echo (format "%S" val)
+                       'face 'font-lock-type-face))
+          (:tags
+           (propertize
+            (mapconcat 'identity val ", ")
+            'face 'font-lock-builtin-face))
+          (:size (mu4e-display-size val))
+          (t (mu4e~headers-custom-field msg field)))))
 
-    ;; Deal with bookmarks
-    (require 'mu4e-bookmarks)
+    (use-package mu4e-thread-folding
+      :ensure (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
+      :tags '("CONNECTED" "MAIL")
+      :after (mu4e)
+      :hook (mu4e-headers-mode . mu4e-thread-folding-mode)
+      :custom-face
+      (mu4e-thread-folding-root-unfolded-face
+       ((t (:extend t :background "#dce6f9" :weight bold :overline nil :underline nil))))
+      (mu4e-thread-folding-root-folded-face
+       ((t (:extend t :background "#eef3fc" :overline nil :underline nil))))
+      (mu4e-thread-folding-child-face
+       ((t (:extend t :background "#eef3fc" :underline nil))))
+      (mu4e-thread-folding-root-prefix-face
+       ((t (:extend t :background "#dce6f9" :overline nil :underline nil))))
 
-    (when (fboundp 'set-mu4e-bookmarks)
-      (set-mu4e-bookmarks))
+      :config
 
-    (add-to-list 'mu4e-bookmarks
-                 '(:name  "Drafts"
-                          :query "flag:draft"
-                          :key ?d))
+      (setq mu4e-headers-thread-child-prefix '("├>" . "┣▶ ")
+            mu4e-headers-thread-last-child-prefix '("└>" . "┗▶ ")
+            mu4e-headers-thread-connection-prefix '("│" . "┃ ")
+            mu4e-headers-thread-blank-prefix '(" " . "  ")
+            mu4e-headers-thread-orphan-prefix '("┬>" . "┳▶ ")
+            mu4e-headers-thread-single-orphan-prefix '("─>" . "━▶ ")
+            mu4e-headers-thread-duplicate-prefix '("=" . "≡ "))
 
-    ;; SMTP needs to be here (FIXME: don't really know why)
-    (when (fboundp 'set-smtpmail-multi-accounts)
-      (set-smtpmail-multi-accounts))
+      (add-to-list 'mu4e-header-info-custom
+                   '(:empty . (:name "Empty"
+                                     :shortname ""
+                                     :function (lambda (msg)
+                                        (let ((maildir (replace-regexp-in-string
+                                                        "\\`/?\\([^/]+\\)/.*\\'" "\\1"
+                                                        (mu4e-message-field msg :maildir))))
+                                                 (propertize "\u2588" 'face
+                                                             `(:foreground ,(cdr (assoc maildir mail-account-color-dict)))))))))
 
-    ;; use imagemagick, if available
-    (when (fboundp 'imagemagick-register-types)
-      (imagemagick-register-types))
+      (add-to-list 'mu4e-header-info-custom
+                   '(:account .
+                               (:name "Account"
+                                      :shortname "Account"
+                                      :help "which account/maildir this email belongs to"
+                                      :function
+                                      (lambda (msg)
+                                        (let ((maildir (replace-regexp-in-string
+                                                        "\\`/?\\([^/]+\\)/.*\\'" "\\1"
+                                                        (mu4e-message-field msg :maildir))))
+                                           (replace-regexp-in-string
+                                            "^gmail"
+                                            (propertize "g" 'face 'bold-italic)
+                                            maildir))))))
 
-    (defun mu4e~headers-line-apply-flag-face (msg line)
-      line)
+      (defvar my-mu4e-unwanted-subject-tags
+        '("[External]" "[EXTERNAL]")
+        "List of tags to strip from email subject lines in mu4e headers.")
 
-    (defun mu4e~headers-field-apply-basic-properties (msg field val width)
-      (cl-case field
-        (:subject
-         (propertize
-          (concat
-           (mu4e~headers-thread-prefix (mu4e-message-field msg :thread))
-           (truncate-string-to-width val 600))
-          'face
-          (let ((flags (mu4e-message-field msg :flags)))
-            (cond
-             ((memq 'trashed flags) 'mu4e-trashed-face)
-             ((memq 'draft flags) 'mu4e-draft-face)
-             ((or (memq 'unread flags) (memq 'new flags))
-              'mu4e-unread-face)
-             ((memq 'flagged flags) 'mu4e-flagged-face)
-             ((memq 'replied flags) 'mu4e-replied-face)
-             ((memq 'passed flags) 'mu4e-forwarded-face)
-             (t 'mu4e-header-face)))))
-        (:thread-subject
-         (propertize
-          (mu4e~headers-thread-subject msg)
-          'face 'font-lock-doc-face))
-        ((:maildir :path :message-id) val)
-        ((:to :from :cc :bcc)
-         (propertize
-          (mu4e~headers-contact-str val)
-          'face 'font-lock-function-name-face))
-        (:from-or-to (mu4e~headers-from-or-to msg))
-        (:date
-         (propertize
-          (format-time-string mu4e-headers-date-format val)
-          'face 'font-lock-string-face))
-        (:mailing-list (mu4e~headers-mailing-list val))
-        (:human-date
-         (propertize
-          (mu4e~headers-human-date msg)
-          'help-echo (format-time-string
-                      mu4e-headers-long-date-format
-                      (mu4e-msg-field msg :date))
-          'face 'font-lock-string-face))
-        (:flags
-         (propertize (mu4e~headers-flags-str val)
-                     'help-echo (format "%S" val)
-                     'face 'font-lock-type-face))
-        (:tags
-         (propertize
-          (mapconcat 'identity val ", ")
-          'face 'font-lock-builtin-face))
-        (:size (mu4e-display-size val))
-        (t (mu4e~headers-custom-field msg field)))))
+      (defun my-mu4e-strip-subject-tags (subject)
+        "Strip unwanted tags (e.g. [External]) from SUBJECT string."
+        (let ((case-fold-search t))  ;; Make it case-insensitive
+          (dolist (tag my-mu4e-unwanted-subject-tags subject)
+            (setq subject (replace-regexp-in-string
+                           (concat "^" (regexp-quote tag) "[ \t]*") "" subject)))))
 
-  (use-package mu4e-thread-folding
-    :ensure (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
-    :tags '("CONNECTED" "MAIL")
-    :after (mu4e)
-    :hook (mu4e-headers-mode . mu4e-thread-folding-mode)
-    :custom-face
-    (mu4e-thread-folding-root-unfolded-face
-     ((t (:extend t :background "#dce6f9" :weight bold :overline nil :underline nil))))
-    (mu4e-thread-folding-root-folded-face
-     ((t (:extend t :background "#eef3fc" :overline nil :underline nil))))
-    (mu4e-thread-folding-child-face
-     ((t (:extend t :background "#eef3fc" :underline nil))))
-    (mu4e-thread-folding-root-prefix-face
-     ((t (:extend t :background "#dce6f9" :overline nil :underline nil))))
 
-    :config
+      (defun mu4e~headers-thread-subject (msg)
+        "Get the subject for MSG if it is the first one in a thread.
+  Otherwise, return the thread-prefix without the subject-text. In
+  other words, show the subject of a thread only once, similar to
+  e.g. \"mutt\"."
+        (let* ((tinfo (mu4e-message-field msg :meta))
+               (subj (my-mu4e-strip-subject-tags (mu4e-msg-field msg :subject))))
+          (concat ;; prefix subject with a thread indicator
+           (mu4e~headers-thread-prefix tinfo)
+           (if (plist-get tinfo :thread-subject)
+               (truncate-string-to-width subj 600) ""))))
 
-    (setq mu4e-headers-thread-child-prefix '("├>" . "┣▶ ")
-          mu4e-headers-thread-last-child-prefix '("└>" . "┗▶ ")
-          mu4e-headers-thread-connection-prefix '("│" . "┃ ")
-          mu4e-headers-thread-blank-prefix '(" " . "  ")
-          mu4e-headers-thread-orphan-prefix '("┬>" . "┳▶ ")
-          mu4e-headers-thread-single-orphan-prefix '("─>" . "━▶ ")
+      (defun mu4e~headers-field-value (msg field)
+        "Get the value for MSG FIELD."
+        (let ((val (mu4e-message-field msg field)))
+          (cl-case field
+            (:subject
+             (concat ;; prefix subject with a thread indicator
+              (mu4e~headers-thread-prefix (mu4e-message-field msg :meta))
+              ;;  "["(plist-get (mu4e-message-field msg :meta) :path) "] "
+              ;; work-around: emacs' display gets really slow when lines are too long;
+              ;; so limit subject length to 600
+              (truncate-string-to-width (my-mu4e-strip-subject-tags val) 600)))
+            (:thread-subject ;; if not searching threads, fall back to :subject
+             (if mu4e-search-threads
+                 (mu4e~headers-thread-subject msg)
+               (my-mu4e-strip-subject-tags (mu4e~headers-field-value msg :subject))))
+            ((:maildir :path :message-id) val)
+            ((:to :from :cc :bcc) (mu4e~headers-contact-str val))
+            ;; if we (ie. `user-mail-address' is the 'From', show
+            ;; 'To', otherwise show From
+            (:from-or-to (mu4e~headers-from-or-to msg))
+            (:date (format-time-string mu4e-headers-date-format val))
+            (:list (or val ""))
+            (:mailing-list (mu4e~headers-mailing-list (mu4e-msg-field msg :list)))
+            (:human-date (propertize (mu4e~headers-human-date msg)
+                                     'help-echo (format-time-string
+                                                 mu4e-headers-long-date-format
+                                                 (mu4e-msg-field msg :date))))
+            (:flags (propertize (mu4e~headers-flags-str val)
+                                'help-echo (format "%S" val)))
+            (:tags (propertize (mapconcat 'identity val ", ")))
+            (:size (mu4e-display-size val))
+            (t (mu4e~headers-custom-field-value msg field)))))
 
-          mu4e-headers-thread-duplicate-prefix '("=" . "≡ "))
+      (defun my-mu4e-subject-formatter (msg)
+        "Custom subject formatter that strips [EXTERNAL] tag."
+        (my-mu4e-strip-subject-tags (mu4e-message-field msg :subject)))
 
-    (add-to-list 'mu4e-header-info-custom
-                 '(:empty . (:name "Empty"
-                                   :shortname ""
-                                   :function (lambda (msg)
-                                      (let ((maildir (replace-regexp-in-string
-                                                      "\\`/?\\([^/]+\\)/.*\\'" "\\1"
-                                                      (mu4e-message-field msg :maildir))))
-                                               (propertize "\u2588" 'face
-                                                           `(:foreground ,(cdr (assoc maildir mail-account-color-dict)))))))))
-
-    (add-to-list 'mu4e-header-info-custom
-                 '(:account .
-                             (:name "Account"
-                                    :shortname "Account"
-                                    :help "which account/maildir this email belongs to"
-                                    :function
-                                    (lambda (msg)
-                                      (let ((maildir (replace-regexp-in-string
-                                                      "\\`/?\\([^/]+\\)/.*\\'" "\\1"
-                                                      (mu4e-message-field msg :maildir))))
-                                         (replace-regexp-in-string
-                                          "^gmail"
-                                          (propertize "g" 'face 'bold-italic)
-                                          maildir))))))
-
-    (setq mu4e-headers-fields  '((:empty         .    1)
-                                 (:account       .   10)
-                                 (:human-date    .   18)
-                                 (:recipnum      .    2)
-                                 (:size          .    6)
-                                 (:flags         .    6)
-                                 (:mailing-list  .   10)
-                                 (:from          .   22)
-                                 (:subject       .  nil))))
+      (setq mu4e-headers-fields  '((:empty           .    1)
+                                   (:account         .   10)
+                                   (:human-date      .   18)
+                                   (:recipnum        .    2)
+                                   (:size            .    6)
+                                   (:flags           .    6)
+                                   (:mailing-list    .   10)
+                                   (:from            .   22)
+                                   (:subject  .  nil))))
 #+end_src
 
 **** DONE Notification
