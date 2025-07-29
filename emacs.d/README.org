@@ -5019,7 +5019,7 @@ As a fallback, I am using google-translate via the package =go-translate=.
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :commands (wordreference-search))
 
-  (use-package go-translate
+  (use-package gt
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :bind (
       <<keybindings-gen(table=gt-translate-entry-keybindings)>>

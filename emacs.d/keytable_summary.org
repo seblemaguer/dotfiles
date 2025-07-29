@@ -588,7 +588,7 @@
 #+NAME: gt-translate-entry-keybindings
 | Key     | Function         | Description |
 |---------+------------------+-------------|
-| C-c t t | gt-do-translate |             |
+| C-c t t | gt-translate |             |
 
 * Version Control
 :PROPERTIES:
