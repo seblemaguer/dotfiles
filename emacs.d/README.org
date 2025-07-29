@@ -4051,6 +4051,20 @@ However, I had to do extra-configurations to have outline support and a better f
         (indent-region begin end))))
 #+end_src
 
+*** DONE HDF5
+CLOSED: [2025-07-29 Tue 10:05]
+
+For python binary files, I tend to prefer the use of the hdf5 format.
+=hdf5-viewer= provides an easy way to inspect the files.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package hdf5-viewer
+    :ensure (hdf5-viewer :type git :host github :repo "hdf5-viewer/hdf5-viewer")
+    :tags '("PROGRAMMING" "DATA")
+    :config
+    (hdf5-viewer-find-file-mode t))
+#+END_SRC
+
 ** DONE Configuration [100%]
 CLOSED: [2021-01-04 Mon 07:03]
 :PROPERTIES:
