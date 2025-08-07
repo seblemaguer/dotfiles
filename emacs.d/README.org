@@ -5208,6 +5208,11 @@ It will require in case of first installation to run the following command: ~(tr
           (browse-url (parse-url url))
           (message "opening repo %s" url)))))
 
+  (use-package magit-prime
+    :tags '("VC" "GIT")
+    :hook
+    (magit-pre-refresh . magit-prime-refresh-cache))
+
   (use-package magit-tbdiff
     :tags '("VC" "GIT")
     :after magit)
