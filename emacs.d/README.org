@@ -8012,7 +8012,7 @@ Finally, I use =indicators= to show my relative position in the buffer.
                    '(min-height . 1)  '(height . 45)
                    '(min-width  . 1)  '(width  . 81)
                    '(vertical-scroll-bars  . nil)
-                   '(internal-border-width . 24)
+                   '(internal-border-width . 1)
                    '(left-fringe           . 15)
                    '(right-fringe          . 15)
                    '(tool-bar-lines        . 0)
@@ -8912,7 +8912,6 @@ The main helper, mapped to *<f1>* contains the global operations which are inter
 
   (global-set-key (kbd "<f1>") 'main-hydra/body)
 #+end_src
-
 
 ** DONE Remapped bindings [100%]
 CLOSED: [2021-01-05 Tue 10:01]
