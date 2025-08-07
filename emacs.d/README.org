@@ -716,6 +716,14 @@ Finally, =ddp= is used to supper query-based search in the buffer (this depends 
     (fast-scroll-config)
     (fast-scroll-mode 1))
 
+  (use-package ultra-scroll
+    :tags '("CORE" "NAVIGATION")
+    :init
+    (setq scroll-conservatively 3 ; or whatever value you prefer, since v0.4
+          scroll-margin 0)        ; important: scroll-margin>0 not yet supported
+    :config
+    (ultra-scroll-mode 1))
+
   (use-package goto-last-point
     ;; NOTE: the original repo is a pain to access with ssh, using the emacsmirror
     :ensure (goto-last-point :type git :host github :repo "emacsmirror/goto-last-point")
