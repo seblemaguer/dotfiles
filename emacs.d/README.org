@@ -686,7 +686,9 @@ I also use buffer-terminator to avoid the explosion of opened buffers (which are
   (use-package bufferfile
     :tags '("CORE")
     :custom
-    (bufferfile-use-vc t))
+    (bufferfile-verbose t)
+    (bufferfile-use-vc t)
+    (bufferfile-delete-switch-to 'parent-directory))
 #+end_src
 
 ** DONE Navigation
