@@ -8012,7 +8012,7 @@ Finally, I use =indicators= to show my relative position in the buffer.
                    '(min-height . 1)  '(height . 45)
                    '(min-width  . 1)  '(width  . 81)
                    '(vertical-scroll-bars  . nil)
-                   '(internal-border-width . 1)
+                   '(internal-border-width . 15)
                    '(left-fringe           . 15)
                    '(right-fringe          . 15)
                    '(tool-bar-lines        . 0)
