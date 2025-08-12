@@ -4919,12 +4919,13 @@ Finally, I use bibclean-format to have a clean final bibtex file.
       "Apply bibtex-tidy to clean and sort the current bibtex buffer."
       (interactive)
       (let ((cmd (format "bibtex-tidy %s %s %s --v2 -m %s"
-                         "--curly --numeric --space=4 --align=13 --no-escape"
+                         (shell-quote-argument (buffer-file-name))
+                         "--curly --numeric --space=4 --align=13 --no-escape --enclosing-braces=title,journal,publisher,author"
                          "--duplicates=key,doi --trailing-commas --no-remove-dupe-fields"
-                         "--sort --merge last"
-                         (shell-quote-argument (buffer-file-name)))))
+                         "--sort --merge last")))
         (shell-command cmd)
-        (revert-buffer t t t))))
+        (revert-buffer t t t)))
+    )
 
   (use-package bibtex-utils
     :tags '("WRITING" "BIBTEX")
