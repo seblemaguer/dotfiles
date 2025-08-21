@@ -542,6 +542,12 @@ you can then active as follow
   }
 #+END_SRC
 
+* sqlite
+#+BEGIN_SRC sh :tangle ~/.config/sqlite3/sqliterc :mkdirp yes
+  .mode columns
+  .header on
+#+END_SRC
+
 * Emailproxy
 :PROPERTIES:
 :ID:       16b778ce-cf4d-4f18-ad08-c4a60610ecd3
