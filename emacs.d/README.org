@@ -754,6 +754,22 @@ Finally, =ddp= is used to supper query-based search in the buffer (this depends 
       <<keybindings-gen(table=trail-entry-keybindings)>>
     ))
 
+  (use-package float-narrow-indirect
+    :ensure (:host github :repo "yibie/float-narrow-indirect")
+    :tags '("CORE" "NAVIGATION")
+    :bind (
+      ("C-c n f" . fni-narrow-to-region-floating)
+      ("C-c n t" . fni-toggle-focus)
+      ("C-c n c" . fni-clear-aggregation)
+    )
+
+    :config
+    (setq fni-floating-window-size         '(0.3 . 0.5) ;; Size of floating windows (width . height) as ratio of parent frame
+          fni-floating-frame-border-color  "#ecf0f1" ;; Border color for floating frames
+          fni-floating-frame-transparency  '(95 . 90) ;; Transparency for floating frames (active . inactive)
+          fni-buf-name-prefix              "NI-"
+          fni-buf-name-separator           "::"))
+
   (use-builtin savehist
     :tags '("CORE" "NAVIGATION")
     :init
