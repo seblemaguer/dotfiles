@@ -6586,6 +6586,12 @@ I also redesigned the header buffer.
                                    (:mailing-list    .   10)
                                    (:from            .   22)
                                    (:subject  .  nil))))
+
+  (use-package mu4e-walk
+    :tags '("CONNECTED" "MAIL")
+    :after mu4e
+    :hook
+    (mu4e-compose-mode . mu4e-walk-add-keybindings-compose-mode))
 #+end_src
 
 **** DONE Notification
