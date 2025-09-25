@@ -5208,8 +5208,8 @@ It will require in case of first installation to run the following command: ~(tr
                   (add-face-text-property
                    (match-beginning 1) (match-end 1) props))))))))
 
-    (advice-add 'magit-status :after 'add-magit-faces)
-    (advice-add 'magit-refresh-buffer :after 'add-magit-faces)
+    ;; (advice-add 'magit-status :after 'add-magit-faces)
+    ;; (advice-add 'magit-refresh-buffer :after 'add-magit-faces)
 
     ;; Opening repo externally
     (defun parse-url (url)
