@@ -349,7 +349,8 @@ The following hooks are provided by the package:
   (elpaca-wait)
 #+end_src
 
-*** Transient
+*** DONE Transient
+CLOSED: [2025-08-16 Sat 15:11]
 :PROPERTIES:
 :ID:       ba96bded-c66a-4aae-b3c8-693cc61032f7
 :END:
@@ -358,7 +359,8 @@ The following hooks are provided by the package:
     :tags '("CORE"))
 #+end_src
 
-*** Documentation
+*** DONE Documentation
+CLOSED: [2025-08-16 Sat 15:11]
 :PROPERTIES:
 :ID:       70aa9321-e665-4d1e-b63c-770e92cf6453
 :END:
@@ -8537,7 +8539,7 @@ For the documentation and the reasoning behind the definition of the bindings, r
 
 #+transclude: [[file:keytable_summary.org::Functional keybindings]] :only-contents
 
-**** DONE Initialise matcha (and the global bindings for better readibility)
+*** DONE Initialise matcha (and the global bindings for better readibility)
 CLOSED: [2023-11-25 Sat 10:00]
 :PROPERTIES:
 :ID:       6a838fe1-9c36-4831-85d5-6b37298b2402
@@ -8761,7 +8763,7 @@ CLOSED: [2023-11-25 Sat 10:00]
     (matcha-setup))
 #+END_SRC
 
-**** TODO Define the transient helper bindings
+*** TODO Define the transient helper bindings
 :PROPERTIES:
 :ID:       31d549b6-3664-4f48-a728-95bd3f96b06e
 :END:
