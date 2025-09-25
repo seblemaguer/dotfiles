@@ -7325,10 +7325,7 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
     (emms-browser-make-filter
      "not-played"
      (lambda (track)
-       (not (funcall (emms-browser-filter-only-recent 365) track))))
-
-    (emms-browser-set-filter (assoc "all" emms-browser-filters))
-    )
+       (not (funcall (emms-browser-filter-only-recent 365) track)))))
 #+end_src
 
 ** DONE TV/Show
