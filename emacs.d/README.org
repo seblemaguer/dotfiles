@@ -1131,7 +1131,6 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
           org-cycle-include-plain-lists t
           org-src-fontify-natively t
           org-src-tab-acts-natively t
-          org-hide-emphasis-markers t
           org-latex-prefer-user-labels t
           org-global-properties '(("Effort_ALL" . "0:15 0:30 0:45 1:00 1:30 2:00")
                                   ("STYLE_ALL" . "habit"))
@@ -1749,6 +1748,7 @@ I also introduced =org-tree-slide= to enjoy quick presentation
     ;; Org styling, hide markup etc.
     (setq org-hide-emphasis-markers t
           org-pretty-entities t
+          org-pretty-entities-include-sub-superscripts nil
           org-ellipsis "…")
 
     ;; Agenda styling
