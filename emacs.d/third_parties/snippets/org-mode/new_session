@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: session_entry
-# key: <session
+# key: ses_
 
 # --
 
@@ -10,28 +10,27 @@
 :SESSION: $2
 :END:
 
-`(make-string (+ (org-current-level) 2) ?*)` Vocabulary
-#+NAME: vocab-$2
-#+CAPTION: Session $3 Vocabulary
-| Written | Spoken | Meaning   | Example (Written)   | Example (Spoken)   |
-|---------+--------+-----------+---------------------+--------------------|
-|         |        |           |                     |                    |
+`(make-string (+ (org-current-level) 2) ?*)` Sanakirja
+#+NAME: sanakirja-$2
+#+CAPTION: Session $3 Sanakirja
+| Sana | Puhekieli | Tuttu | Tarvitenet | Englantia | Vastakohta | Lause |
+|------+-----------+-------+------------+-----------+------------+-------|
+|      |           |       |            |           |            |       |
 
-`(make-string (+ (org-current-level) 2) ?*)` Colloquial Expressions
-#+NAME: colloquial-$2
-#+CAPTION: Session $3 Colloquial Expressions
-| Expression | Literal Meaning | Usage / Real Meaning |
-|------------+-----------------+----------------------|
-|            |                 |                      |
+`(make-string (+ (org-current-level) 2) ?*)` Puhekielen ilmaisut
+#+NAME: ilmaisut-$2
+#+CAPTION: Session $3 Puhekielen ilmaisut
+| Ilmaisu | Tuttu | Tarvitenet | Kirjaimellinen merkitys | Todellinen merkitys |
+|         |       |            |                         |                     |
+|---------+-------+------------+-------------------------+---------------------|
+|         |       |            |                         |                     |
 
-`(make-string (+ (org-current-level) 2) ?*)` Grammar Notes
+`(make-string (+ (org-current-level) 2) ?*)` Kielioppi
 
-`(make-string (+ (org-current-level) 2) ?*)` Dialogues
+`(make-string (+ (org-current-level) 2) ?*)` Dialogit
 
-`(make-string (+ (org-current-level) 2) ?*)` Exercises
+`(make-string (+ (org-current-level) 2) ?*)` harjoitukset
 
-`(make-string (+ (org-current-level) 2) ?*)` Pronunciation Notes
+`(make-string (+ (org-current-level) 2) ?*)` Kulttuuriset muistiinpanot
 
-`(make-string (+ (org-current-level) 2) ?*)` Cultural Notes
-
-`(make-string (+ (org-current-level) 2) ?*)` Homework
+`(make-string (+ (org-current-level) 2) ?*)` Läksyt
