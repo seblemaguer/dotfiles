@@ -5257,6 +5257,10 @@ It will require in case of first installation to run the following command: ~(tr
     (add-to-list 'treesit-language-source-alist
                  '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit"))))
 
+  (use-package conventional
+    :tags '("VC" "GIT")
+    :mode ("COMMIT_EDITMSG" . conventional-commits-mode))
+
   (when (executable-find "gh")
     (use-package consult-gh
       :tags '("VC" "GIT" "GITHUB")
