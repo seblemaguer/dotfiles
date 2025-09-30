@@ -1108,6 +1108,8 @@
 |-----+------------------+-----------------------+-------------|
 | b   | consult-bookmark | List bookmarks        |             |
 | B   | bookmark-set     | Bookmark current file |             |
+| d   | bookmark-delete  | Delete bookmark       |             |
+| j   | bookmark-jump    | Jump to bookmark      |             |
 
 #+NAME: mail-main-keybindings
 | Key | Function         | Label        | Description |
@@ -1151,11 +1153,12 @@
 :ID:       8a8f7941-14a4-4f1f-b711-c3db57694dd7
 :END:
 
-*** TODO Project / Code management [50%]
+*** DONE Project / Code management [100%]
 :PROPERTIES:
 :ID:       7c408623-09ce-4e59-bd28-c1348d3ebb0a
 :END:
-**** TODO Entry
+**** DONE Entry
+CLOSED: [2025-09-30 Tue 10:29]
 :PROPERTIES:
 :ID:       229c99e4-d862-45a4-9721-0938847842ea
 :END:
@@ -1166,6 +1169,7 @@
 | G   | Eglot...    | matcha-eglot       |
 | p   | Project...  | matcha-project     |
 | f   | Checking... | my-matcha-flycheck |
+| P   | Profiling   | my-matcha-profiler |
 
 **** DONE Checking/Lint - Flycheck
 CLOSED: [2023-11-25 Sat 10:17]
@@ -1205,6 +1209,15 @@ CLOSED: [2023-11-25 Sat 10:17]
 |-----+----------------+---------------------|
 | j   | Next Error     | flycheck-next-error |
 | k   | Previous Error | flycheck-prev-error |
+
+**** DONE Profiling
+CLOSED: [2025-09-30 Tue 10:28]
+#+NAME: profiler-menu-bindings
+| Key | Label  | Function        |
+|-----+--------+-----------------|
+| s   | Start  | profiler-start  |
+| x   | Stop   | profiler-stop   |
+| r   | Report | profiler-report |
 
 *** TODO IDE Helpers [%]
 :PROPERTIES:
