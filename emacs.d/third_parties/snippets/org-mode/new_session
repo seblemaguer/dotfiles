@@ -21,7 +21,6 @@
 #+NAME: ilmaisut-$2
 #+CAPTION: Session $3 Puhekielen ilmaisut
 | Ilmaisu | Tuttu | Tarvitenet | Kirjaimellinen merkitys | Todellinen merkitys |
-|         |       |            |                         |                     |
 |---------+-------+------------+-------------------------+---------------------|
 |         |       |            |                         |                     |
 
@@ -31,6 +30,6 @@
 
 `(make-string (+ (org-current-level) 2) ?*)` harjoitukset
 
-`(make-string (+ (org-current-level) 2) ?*)` Kulttuuriset muistiinpanot
+`(make-string (+ (org-current-level) 2) ?*)` Kulttuurisen muistiinpanot
 
 `(make-string (+ (org-current-level) 2) ?*)` Läksyt
