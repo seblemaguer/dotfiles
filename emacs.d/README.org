@@ -1434,6 +1434,16 @@ CLOSED: [2023-10-27 Fri 09:40]
     ))
 #+end_src
 
+*** DONE Highlight some parts of a table
+CLOSED: [2025-10-01 Wed 09:28]
+=org-table-highlight= provide a neat way to visualise some columns, rows or cells of org tables.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-table-highlight
+    :tags '("ORG")
+    :hook (org-mode . org-table-highlight-mode))
+#+END_SRC
+
 *** DONE Helpers
 CLOSED: [2021-02-27 Sat 08:38]
 :PROPERTIES:
