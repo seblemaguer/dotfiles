@@ -4888,13 +4888,33 @@ CLOSED: [2022-03-08 Tue 16:11]
 :PROPERTIES:
 :ID:       95bb6b9f-c354-47a8-96a8-f8459ee93bce
 :END:
-As an academic, I spend a lot of my time in Overleaf, but I prefer to edit in emacs, so =emacs-overleaf= is key!
+As I am using overleaf to write academic papers (and actually everything else),
+
 #+begin_src emacs-lisp
-  (use-package emacs-overleaf
-    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/emacs-overleaf")
+  (use-package overleaf
     :tags '("WRITING" "LATEX" "CONNECTED")
-    :commands (overleaf-setup overleaf-manual-save overleaf-mode)
-    :custom (overleaf-auto-sync "never"))
+    :after auctex
+    :hook (LaTeX-mode . overleaf-mode)
+    :custom
+    (overleaf-use-nerdfont nil "Use nerfont icons for the modeline.")
+
+    :config
+    ;; Example: load/save cookies from GPG encrypted file.
+    ;;          (remove the .gpg extension to save unencrypted)
+    (let ((cookie-file "~/.overleaf-cookies.gpg"))
+      (setq overleaf-save-cookies
+            (overleaf-save-cookies-to-file cookie-file))
+      (setq overleaf-cookies
+            (overleaf-read-cookies-from-file cookie-file)))
+
+    ;; Example: load cookies from firefox
+    (setq overleaf-cookies
+          `((".overleaf.com"
+             ,(format "overleaf_session2=%S" (keepass-get-password keepass-db "overleaf-api"))
+             ,(string-to-number (keepass-get-attribute keepass-db "overleaf-api" "expiry_time")))))
+
+    (with-eval-after-load 'latex
+      (keymap-set LaTeX-mode-map "C-c o" overleaf-command-map)))
 #+end_src
 
 ** DONE Bibtex
