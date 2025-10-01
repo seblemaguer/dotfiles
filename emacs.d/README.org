@@ -390,24 +390,24 @@ All my passwords are stored in a keepassxc database. I am relying on keepass-mod
         :mode ("\\.kdbx$")
         :commands (keepass-mode-get)
         :init
+        (defun keepass-get-attribute (db entry attribute)
+          "Helper to retrieve the `attribute' of an `entry' from a keepass database `db' using keepass-mode helpers."
+          (let ((orig-buffer (current-buffer)))
+            (with-current-buffer (find-file-noselect db)
+              (keepass-mode-get attribute entry))))
 
         (defun keepass-get-password (db entry)
           "Helper to retrieve the password of an `entry' from a keepass database `db' using keepass-mode helpers."
-          (let ((orig-buffer (current-buffer)))
-            (with-current-buffer (find-file-noselect db)
-              (keepass-mode-get "Password" entry))))
+          (keepass-get-attribute db entry "Password"))
 
         (defun keepass-get-username (db entry)
           "Helper to retrieve the username of an `entry' from a keepass database `db' using keepass-mode helpers."
-          (let ((orig-buffer (current-buffer)))
-            (with-current-buffer (find-file-noselect db)
-              (keepass-mode-get "UserName" entry))))
+          (keepass-get-attribute db entry "Username"))
 
         (defun keepass-get-url (db entry)
           "Helper to retrieve the URL of an `entry' from a keepass database `db' using keepass-mode helpers."
-          (let ((orig-buffer (current-buffer)))
-            (with-current-buffer (find-file-noselect db)
-              (keepass-mode-get "URL" entry)))))
+          (keepass-get-attribute db entry "URL")))
+
     (warn "keepassxc-cli is not available. No passwords will be accessible"))
 #+END_SRC
 
