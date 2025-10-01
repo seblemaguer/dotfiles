@@ -1328,9 +1328,12 @@ Combined with =org-superstar=, this leads to the ultimate org-mode list manageme
 
 *** DONE Helper for long table
 CLOSED: [2025-01-18 Sat 12:09]
+=lte= is an helper to edit long tables in the buffer indirection way.
+However, it causes it issue with the way I use =org-noted=, so for now it is disabled
 
 #+BEGIN_SRC emacs-lisp
   (use-package lte
+    :disabled t
     :tags '("ORG" "VISUAL")
     :hook ((org-mode markdown-mode) . lte-truncate-table-mode))
 #+END_SRC
