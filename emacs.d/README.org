@@ -706,6 +706,7 @@ Finally, =ddp= is used to supper query-based search in the buffer (this depends 
 
 #+transclude: [[file:keytable_summary.org::goto-last-point-entry-keybindings]]
 #+transclude: [[file:keytable_summary.org::trail-entry-keybindings]]
+#+transclude: [[file:keytable_summary.org::float-narrow-indirect-entry-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package fast-scroll
@@ -760,9 +761,7 @@ Finally, =ddp= is used to supper query-based search in the buffer (this depends 
     :ensure (:host github :repo "yibie/float-narrow-indirect")
     :tags '("CORE" "NAVIGATION")
     :bind (
-      ("C-c n f" . fni-narrow-to-region-floating)
-      ("C-c n t" . fni-toggle-focus)
-      ("C-c n c" . fni-clear-aggregation)
+      <<keybindings-gen(table=float-narrow-indirect-entry-keybindings)>>
     )
 
     :config
@@ -3098,8 +3097,6 @@ CLOSED: [2021-01-03 Sun 17:42]
     ;; enable corfu-candidate-overlay mode globally
     ;; this relies on having corfu-auto set to nil
     (corfu-candidate-overlay-mode +1))
-
-
 
   ;; Add extensions
   (use-package cape

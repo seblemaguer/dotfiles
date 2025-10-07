@@ -36,9 +36,9 @@
 :END:
 
 #+NAME: bufler-entry-keybindings
-| Key     | Functon | Description |
-|---------+---------+-------------|
-| C-x C-b | bufler  |             |
+| Key     | Function | Description |
+|---------+----------+-------------|
+| C-x C-b | bufler   |             |
 
 * Navigation
 :PROPERTIES:
@@ -46,17 +46,24 @@
 :END:
 
 #+NAME: goto-last-point-entry-keybindings
-| Key | Functon         | Description |
+| Key | Function        | Description |
 |-----+-----------------+-------------|
 | C-< | goto-last-point |             |
 
 #+NAME: trail-entry-keybindings
-| Key   | Functon                      | Description |
+| Key   | Function                     | Description |
 |-------+------------------------------+-------------|
 | C-M-= | trail-mark                   |             |
 | C-M-' | trail-list                   |             |
 | C-M-[ | trail-find-and-jump-previous |             |
 | C-M-] | trail-find-and-jump-next     |             |
+
+#+NAME: float-narrow-indirect-entry-keybindings
+| Key     | Function                      | Description |
+|---------+-------------------------------+-------------|
+| C-c n f | fni-narrow-to-region-floating |             |
+| C-c n t | fni-toggle-focus              |             |
+| C-c n c | fni-clear-aggregation         |             |
 
 * Org-mode
 :PROPERTIES:
@@ -74,7 +81,7 @@
 :END:
 
 #+NAME: org-effort-keybindings
-| Key       | Functon                    | Description |
+| Key       | Function                   | Description |
 |-----------+----------------------------+-------------|
 | C-c C-x e | org-set-effort-to-schedule |             |
 | C-c C-s   | org-schedule-effort        |             |
@@ -85,7 +92,7 @@
 :END:
 
 #+NAME: org-transclusion-keybindings
-| Key         | Functon                     | Description |
+| Key         | Function                    | Description |
 |-------------+-----------------------------+-------------|
 | C-c t i     | org-transclusion-add        |             |
 | C-c t r     | org-transclusion-remove     |             |
@@ -99,7 +106,7 @@
 :END:
 
 #+NAME: org-menu-keybindings
-| Key   | Functon  | Description |
+| Key   | Function | Description |
 |-------+----------+-------------|
 | C-c m | org-menu |             |
 
@@ -298,7 +305,7 @@
 :END:
 
 #+NAME: vundo-entry-keybindings
-| Key   | Functon | Description |
+| Key   | Function | Description |
 |-------+---------+-------------|
 | C-x u | vundo   |             |
 
@@ -312,7 +319,7 @@
 :END:
 
 #+NAME: helm-info-entry-keybindings
-| Key   | Functon   | Description |
+| Key   | Function  | Description |
 |-------+-----------+-------------|
 | C-h i | helm-info |             |
 
@@ -322,7 +329,7 @@
 :END:
 
 #+NAME: marginalia-entry-keybindings
-| Key   | Functon          | Description |
+| Key   | Function         | Description |
 |-------+------------------+-------------|
 | C-M-a | marginalia-cycle |             |
 
@@ -392,7 +399,7 @@
 | M-s L | consult-line-multi      | needed by consult-line to detect isearch |
 
 #+NAME: consult-flycheck-entry-keybindings
-| Key | Functon          | Description |
+| Key | Function         | Description |
 |-----+------------------+-------------|
 | !   | consult-flycheck |             |
 
@@ -476,7 +483,7 @@
 :END:
 
 #+NAME: devdocs-entry-keybindings
-| Key   | Functon              | Description |
+| Key   | Function             | Description |
 |-------+----------------------+-------------|
 | M-s d | devdocs-browser-open |             |
 
@@ -486,7 +493,7 @@
 :END:
 
 #+NAME: consult-recoll-entry-keybindings
-| Key   | Functon        | Description |
+| Key   | Function       | Description |
 |-------+----------------+-------------|
 | M-g t | consult-recoll |             |
 
@@ -499,7 +506,7 @@
 :ID:       fafc2ef0-90f1-4100-b768-47c614f1a65d
 :END:
 #+NAME: yaml-pro-keybindings
-| Key     | Functon                    | Description |
+| Key     | Function                   | Description |
 |---------+----------------------------+-------------|
 | C-c M-p | yaml-pro-move-subtree-up   |             |
 | C-c M-n | yaml-pro-move-subtree-down |             |
@@ -691,7 +698,6 @@
 | M-<down>  | mistty-send-key |             |
 | M-<left>  | mistty-send-key |             |
 | M-<right> | mistty-send-key |             |
-
 
 * File manager
 :PROPERTIES:
