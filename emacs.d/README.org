@@ -2039,6 +2039,8 @@ Based on Sacha Chua blog post, I use the following configuration to clock-in/clo
 It deviates from Sacha's blog solely on the states; as I am using my own org states.
 
 #+transclude: [[file:keytable_summary.org::org-mru-clock-keybindings]]
+#+transclude: [[file:keytable_summary.org::org-clock-convenience-keybindings]]
+
 
 #+begin_src emacs-lisp
   (use-package org-mru-clock
@@ -2085,9 +2087,10 @@ It deviates from Sacha's blog solely on the states; as I am using my own org sta
 
   (use-package org-clock-convenience
     :tags '("ORG")
-    :bind (:map org-agenda-mode-map
-                ("<S-up>" . org-clock-convenience-timestamp-up)
-                ("<S-down>" . org-clock-convenience-timestamp-down)))
+    :bind (
+      :map org-agenda-mode-map
+       <<keybindings-gen(table=org-clock-convenience-keybindings)>>
+    ))
 #+end_src
 
 *** DONE Archiving
@@ -2223,6 +2226,8 @@ CLOSED: [2023-07-22 Sat 23:18]
 :END:
 =olivetti= provides a nice way to read document without distraction.
 
+#+transclude: [[file:keytable_summary.org::olivetti-entry-keybindings]]
+
 #+begin_src emacs-lisp
   (use-package olivetti
     :preface
@@ -2237,12 +2242,19 @@ CLOSED: [2023-07-22 Sat 23:18]
     (olivetti-enable-visual-line-mode nil)
     (olivetti-window-local t)
 
-    :bind
-    ("C-1" . fk/smart-C-x-1)
+    :bind (
+      <<keybindings-gen(table=olivetti-entry-keybindings)>>
+    )
 
     :hook
     (Info-mode . olivetti-mode)
     (ewww . olivetti-mode)
+
+    :init
+    (define-globalized-minor-mode global-olivetti-mode olivetti-mode
+      (lambda ()
+        (unless (minibufferp)
+          (olivetti-mode 1))))
 
     :config
     (defun fk/smart-C-x-1 ()
@@ -2422,11 +2434,14 @@ CLOSED: [2024-06-04 Tue 15:56]
 :END:
 I am using ~jinx~ as it supports nicely English and Finnish.
 
+#+transclude: [[file:keytable_summary.org::jinx-entry-keybindings]]
+
 #+begin_src emacs-lisp
   (use-package jinx
     :tags '("CORE" "WRITING" "HELPERS")
-    :bind (("M-$"   . jinx-correct)
-           ("C-M-$" . jinx-languages)))
+    :bind (
+      <<keybindings-gen(table=jinx-entry-keybindings)>>
+    ))
 #+end_src
 
 ** DONE Fundamentals
@@ -3020,6 +3035,9 @@ CLOSED: [2021-01-03 Sun 17:42]
 :ID:       f1d3c4c5-4319-47b7-a688-0db0f93afe40
 :END:
 
+#+transclude: [[file:keytable_summary.org::corfu-doc-entry-keybindings]]
+#+transclude: [[file:keytable_summary.org::cape-entry-keybindings]]
+
 #+begin_src emacs-lisp
   (use-package corfu
     :tags '("COMPLETION")
@@ -3048,25 +3066,24 @@ CLOSED: [2021-01-03 Sun 17:42]
   (use-package corfu-history
     :tags '("COMPLETION")
     :ensure (:host github :repo "minad/corfu" :files ("extensions/corfu-history.el"))
+    :after corfu
     :config
     (add-to-list 'savehist-additional-variables 'corfu-history)
     (corfu-history-mode 1)
     (savehist-mode 1)
     :custom
     (corfu-history-length 200)
-    :demand
-    :after corfu)
+    :demand)
 
   (use-package corfu-doc
     :tags '("COMPLETION")
     :ensure (:host github :repo "minad/corfu" :files ("extensions/corfu-doc.el"))
     :disabled t
-    :bind
-    (:map corfu-map
-     ("M-p" . corfu-doc-scroll-down)
-     ("M-n" . corfu-doc-scroll-up)
-     ("M-d" . corfu-doc-toggle))
-    :after corfu)
+    :after corfu
+    :bind (
+      :map corfu-map
+      <<keybindings-gen(table=corfu-doc-entry-keybindings)>>
+    ))
 
 
   ;; A few more useful configurations...
@@ -3090,9 +3107,6 @@ CLOSED: [2021-01-03 Sun 17:42]
                    :repo "https://code.bsdgeek.org/adam/corfu-candidate-overlay"
                    :files (:defaults "*.el"))
     :after corfu
-    :bind (
-        ("C-<tab>" . completion-at-point)
-    )
     :config
     ;; enable corfu-candidate-overlay mode globally
     ;; this relies on having corfu-auto set to nil
@@ -3101,7 +3115,9 @@ CLOSED: [2021-01-03 Sun 17:42]
   ;; Add extensions
   (use-package cape
     :tags '("COMPLETION")
-    :bind ("C-c p" . cape-prefix-map) ;; Alternative key: M-<tab>, M-p, M-+
+    :bind (
+        <<keybindings-gen(table=cape-entry-keybindings)>>
+    )
     :init
     (add-to-list 'completion-at-point-functions #'cape-file)
     (add-to-list 'completion-at-point-functions #'cape-keyword)
@@ -3212,9 +3228,8 @@ For now, I am using the default configuration.
     :tags '("COMPLETION")
     :after vertico
     :bind (
-      :map minibuffer-local-map (
-        <<keybindings-gen(table=marginalia-entry-keybindings)>>
-      )
+      :map minibuffer-local-map
+       <<keybindings-gen(table=marginalia-entry-keybindings)>>
     )
 
     ;; The :init configuration is always executed (Not lazy!)
@@ -3300,9 +3315,8 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
     :tags '("COMPLETION")
     :after (:all consult flycheck)
     :bind (
-      :map flycheck-command-map (
-        <<keybindings-gen(table=consult-flycheck-entry-keybindings)>>
-      )
+      :map flycheck-command-map
+      <<keybindings-gen(table=consult-flycheck-entry-keybindings)>>
     ))
 #+end_src
 
@@ -3913,6 +3927,8 @@ CLOSED: [2023-11-15 Wed 20:50]
 =dape= provides a debugger interface relying on the protocol DAP.
 This package is in its early stage so more configuration will be required for futher improvement.
 
+#+transclude: [[file:keytable_summary.org::dape-entry-keybindings]]
+
 #+BEGIN_SRC emacs-lisp
   (use-package jsonrpc ;; NOTE: required to ensure version consistency with eglot and dape
     :defer t)
@@ -3924,9 +3940,10 @@ This package is in its early stage so more configuration will be required for fu
     (kill-emacs . dape-breakpoint-save)
     (elpaca-after-init . dape-breakpoint-load)
 
-    :bind (:map dape-global-map (
-      ("T" . dape-transient)
-    ))
+    :bind (
+      :map dape-global-map
+      <<keybindings-gen(table=dape-entry-keybindings)>>
+    )
 
     :config
     ;; Info buffers to the right
@@ -4542,15 +4559,16 @@ I use =python-mls= to enhance the REPL environment.
 I also use =jinja2= as a template format
 Finally, I use =numpydoc= to deal with the documentation.
 
-
 #+transclude: [[file:keytable_summary.org::python-entry-keybindings]]
+#+transclude: [[file:keytable_summary.org::python-tdd-entry-keybindings]]
 
 #+begin_src emacs-lisp
   (use-builtin python
     :tags '("PROGRAMMING" "PYTHON")
-    :bind (:map python-mode-map (
+    :bind (
+      :map python-mode-map
       <<keybindings-gen(table=python-entry-keybindings)>>
-    ))
+    )
 
     :hook
     (python-ts-mode . eglot-ensure)
@@ -5389,6 +5407,9 @@ CLOSED: [2023-10-27 Fri 09:32]
 :ID:       432507f1-450f-451e-92c7-ae0a15b3c44b
 :END:
 
+#+transclude: [[file:keytable_summary.org::project-x-entry-keybindings]]
+#+transclude: [[file:keytable_summary.org::projection-entry-keybindings]]
+
 #+begin_src emacs-lisp
   (use-package project-x
     :ensure (:type git :host github :repo "karthink/project-x")
@@ -5399,8 +5420,9 @@ CLOSED: [2023-10-27 Fri 09:32]
     (setq project-switch-commands #'project-x-windows
           project-x-local-identifier '("package.json" "pyproject.toml" ".project"))
 
-    :bind (("C-x p w" . project-x-window-state-save)
-           ("C-x p j" . project-x-window-state-load)))
+    :bind (
+      <<keybindings-gen(table=project-x-entry-keybindings)>>
+    ))
 
 
   (use-package projection
@@ -5412,10 +5434,8 @@ CLOSED: [2023-10-27 Fri 09:32]
     (with-eval-after-load 'project
       (require 'projection))
 
-    ;; Access pre-configured projection commands from a keybinding of your choice.
-    ;; Run `M-x describe-keymap projection-map` for a list of available commands.
     :bind-keymap
-    ("C-x P" . projection-map))
+    <<keybindings-gen(table=projection-entry-keybindings)>>)
 
   (use-package projection-multi
     :tags '("PROJECT"))
@@ -5795,11 +5815,16 @@ CLOSED: [2023-02-02 Thu 15:56]
 :PROPERTIES:
 :ID:       4a892707-0e2b-4d71-b8ac-ecc726e5eb67
 :END:
+
+#+transclude: [[file:keytable_summary.org::file-info-entry-keybindings]]
+
 #+begin_src emacs-lisp
-    (use-package file-info
-      :ensure (:host github :repo "artawower/file-info.el")
-      :tags '("FILE_MANAGEMENT")
-      :bind (("C-c d" . 'file-info-show)))
+  (use-package file-info
+    :ensure (:host github :repo "artawower/file-info.el")
+    :tags '("FILE_MANAGEMENT")
+    :bind (
+      <<keybindings-gen(table=file-info-entry-keybindings)>>
+    ))
 #+end_src
 
 ** DONE Syncthing
@@ -5895,7 +5920,8 @@ CLOSED: [2022-07-25 Mon 07:44]
 :END:
 Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to play the video from the feed.
 
-#+transclude: [[file:keytable_summary.org::Elfeed/Youtube]] :only-contents
+#+transclude: [[file:keytable_summary.org::elfeed-tube-entry-keybindings]]
+#+transclude: [[file:keytable_summary.org::elfeed-tube-mpv-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package elfeed-tube
@@ -6018,16 +6044,18 @@ Obviously this part is meant to evolve regularly!
 CLOSED: [2025-05-13 Tue 08:47]
 =Cuckoo= provides additional helpers to search the *content* of the RSS feeds.
 
+#+transclude: [[file:keytable_summary.org::cuckoo-search-keybindings]]
+
 #+BEGIN_SRC emacs-lisp
     (use-package cuckoo-search
       :tags '("CONNECTED" "RSS")
       :after (elfeed)
       :config
       (cuckoo-search-global-mode t)  ;; necessary for smooth integration of cuckoo-search into Elfeed
-      :bind
-      (:map elfeed-search-mode-map
-            ("C" . cuckoo-search)
-            ("x" . cuckoo-search-saved-searches)))
+      :bind (
+        :map elfeed-search-mode-map
+        <<keybindings-gen(table=cuckoo-search-keybindings)>>
+      ))
 #+END_SRC
 ** DONE Mail [100%]
 CLOSED: [2021-01-05 Tue 09:08]
@@ -7360,9 +7388,8 @@ I just modified a couple of bindings to fit my French keyboard layout (the other
   (use-package subed
     :ensure (subed :type git :host github :repo "sachac/subed" :files ("subed/*.el"))
     :bind (
-      :map subed-mode-map (
-          <<keybindings-gen(table=subed-keybindings)>>
-      )
+      :map subed-mode-map
+      <<keybindings-gen(table=subed-keybindings)>>
     )
     :hook
     (subed-mode . subed-disable-sync-point-to-player)
@@ -7885,13 +7912,17 @@ To install Anki-Connect:
  2. Input =2055492159= into the text box labeled =Code= and press the OK button to proceed.
  3. Restart Anki when prompted to do so in order to complete the installation of Anki-Connect.
 
+#+transclude: [[file:keytable_summary.org::anki-entry-keybindings]]
+
 #+begin_src emacs-lisp
   (when (executable-find "anki")
     (use-package anki-editor
       :tags '("HELPERS" "DESKTOP" "ORG")
       :ensure (:host github :repo "orgtre/anki-editor")
-      :bind (:map anki-editor-mode-map
-                  ("C-c r" . org-desc2anki))
+      :bind (
+        :map anki-editor-mode-map
+        <<keybindings-gen(table=anki-entry-keybindings)>>
+      )
       :config
       (defun org-desc2anki (start end)
         "Convert current region containing desription list (<bulgarian> :: <english) to anki reverse card format."
@@ -7910,9 +7941,7 @@ To install Anki-Connect:
     (use-builtin anki-editor-ui
       :tags '("HELPERS" "DESKTOP" "ORG")
       :defer t
-      :after anki-editor
-      :bind (:map anki-editor-mode-map
-                  ("C-c e" . anki-editor-ui)))
+      :after anki-editor)
     )
 #+end_src
 
@@ -7938,11 +7967,15 @@ In order to install the server simply run the following:
 
 Also, it may be useful to modify the variable =OLLAMA_MODELS= in the service file as the default path is =/usr/share/ollama/models=.
 
+#+transclude: [[file:keytable_summary.org::ellama-entry-keybindings]]
+
 #+begin_src emacs-lisp
   (when (executable-find "ollama")
     (use-package ellama
       :tags '("HELPERS" "HEAVY" "GPU")
-      :bind ("C-c e" . ellama-transient-main-menu)
+      :bind (
+        <<keybindings-gen(table=ellama-entry-keybindings)>>
+      )
       :init
       (setopt ellama-language "Finnish")
 

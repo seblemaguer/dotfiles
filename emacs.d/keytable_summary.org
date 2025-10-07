@@ -134,10 +134,16 @@
 :END:
 
 #+NAME: org-mru-clock-keybindings
-| Key         | function                         | Description |
+| Key         | Function                        | Description |
 |-------------+----------------------------------+-------------|
 | C-c C-x i   | org-mru-clock-in                 |             |
 | C-c C-x C-j | org-mru-clock-select-recent-task |             |
+
+#+NAME: org-clock-convenience-keybindings
+| Key    | Function                             | Description |
+|--------+--------------------------------------+-------------|
+| S-<up>   | org-clock-convenience-timestamp-up   |             |
+| S-<down> | org-clock-convenience-timestamp-down |             |
 
 ** Presentation
 :PROPERTIES:
@@ -306,13 +312,38 @@
 
 #+NAME: vundo-entry-keybindings
 | Key   | Function | Description |
-|-------+---------+-------------|
-| C-x u | vundo   |             |
+|-------+----------+-------------|
+| C-x u | vundo    |             |
+
+** Project management
+#+NAME: project-x-entry-keybindings
+| Key     | Function                    | Description |
+|---------+-----------------------------+-------------|
+| C-x p w | project-x-window-state-save |             |
+| C-x p j | project-x-window-state-load |             |
+
+#+NAME: projection-entry-keybindings
+| Key   | Function       | Description |
+|-------+----------------+-------------|
+| C-x P | projection-map |             |
 
 * Completion
 :PROPERTIES:
 :ID:       3ad984e7-0bed-4937-ad0e-75fff7a80f5a
 :END:
+** Corfu
+#+NAME: corfu-doc-entry-keybindings
+| Key | Function              | Description |
+|-----+-----------------------+-------------|
+| M-p | corfu-doc-scroll-down |             |
+| M-n | corfu-doc-scroll-up   |             |
+| M-d | corfu-doc-toggle      |             |
+
+#+NAME: cape-entry-keybindings
+| Key     | Function            | Description |
+|---------+---------------------+-------------|
+| C-<tab> | completion-at-point |             |
+| C-c p   | cape-prefix-map     |             |
 ** Helm
 :PROPERTIES:
 :ID:       3d02cc27-a582-4e15-8921-4fff2269d409
@@ -566,10 +597,21 @@
 |---------+---------------------+-------------|
 | C-c C-n | numpydoc-generate   |             |
 
+#+NAME: python-tdd-entry-keybindings
+| Key     | Function                    | Description |
+|---------+-----------------------------+-------------|
+| C-c C-t | python-tdd-mode-command-map |             |
+
 * Writing
 :PROPERTIES:
 :ID:       c1caab20-f777-48ec-8a5d-981b315e2575
 :END:
+** Olivetti
+#+NAME: olivetti-entry-keybindings
+| Key | Function       | Description |
+|-----+----------------+-------------|
+| C-1 | fk/smart-C-x-1 |             |
+
 ** Bibtex
 :PROPERTIES:
 :ID:       0b94b8e6-bbc3-42f7-b01b-b6bfa7b9674b
@@ -596,6 +638,12 @@
 | Key     | Function         | Description |
 |---------+------------------+-------------|
 | C-c t t | gt-translate |             |
+** Spelling
+#+NAME: jinx-entry-keybindings
+| Key   | Function       | Description |
+|-------+----------------+-------------|
+| M-$   | jinx-correct   |             |
+| C-M-$ | jinx-languages |             |
 
 * Version Control
 :PROPERTIES:
@@ -737,11 +785,17 @@
 |------------+----------------------+-------------|
 | <C-return> | dired-launch-command |             |
 
+** File information
+#+NAME: file-info-entry-keybindings
+| Key   | Function       | Description |
+|-------+----------------+-------------|
+| C-c d | file-info-show |             |
+
 * Online
 :PROPERTIES:
 :ID:       fe43ad7a-802c-407c-99a4-0fc74606c2ca
 :END:
-*** Elfeed/Youtube
+*** Elfeed
 :PROPERTIES:
 :ID:       c8b5cd19-f55f-4025-8ee9-5295f6f5db0b
 :END:
@@ -758,6 +812,11 @@
 | C-c C-p | elfeed-tube-mpv             |             |
 | C-c C-w | elfeed-tube-mpv-where       |             |
 
+#+NAME: cuckoo-search-keybindings
+| Key | Function                  | Description |
+|-----+---------------------------+-------------|
+| C   | cuckoo-search             |             |
+| x   | cuckoo-search-saved-searches |             |
 ** Mail
 :PROPERTIES:
 :ID:       76f94138-3b0d-4f96-a067-4a76512f4553
@@ -1030,7 +1089,18 @@
 | Key | Function                | Description                     |
 |-----+-------------------------+---------------------------------|
 | ?   | prodigy-display-process | Display the process information |
+** Anki
+#+NAME: anki-entry-keybindings
+| Key   | Function       | Description |
+|-------+----------------+-------------|
+| C-c r | org-desc2anki  |             |
+| C-c e | anki-editor-ui |             |
 
+** llama
+#+NAME: ellama-entry-keybindings
+| Key   | Function | Description |
+|-------+----------+-------------|
+| C-c e | ellama-transient-main-menu   |             |
 * Visual
 :PROPERTIES:
 :ID:       e3b9a8a2-488f-4044-8740-2e595313e76d
@@ -1229,6 +1299,12 @@ CLOSED: [2025-09-30 Tue 10:28]
 :PROPERTIES:
 :ID:       fd949d9e-3c39-4631-bf2b-e685386465ef
 :END:
+**** debugging
+#+NAME: dape-entry-keybindings
+| Key | Function       | Description |
+|-----+----------------+-------------|
+| T   | dape-transient |             |
+
 *** TODO RSS/SX/Reddit [%]
 :PROPERTIES:
 :ID:       a990aaf3-22aa-4b01-bf05-8ea41db7f56a
