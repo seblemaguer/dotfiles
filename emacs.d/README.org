@@ -3830,6 +3830,12 @@ I also added the support of =scopeline= which provides an indicator about the sc
   (use-package tree-sitter-langs
     :tags '("IDE" "PROGRAMMING" "TREE-SITTER"))
 
+  (use-builtin treesit
+    :config
+    (add-to-list 'treesit-language-source-alist '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit")))
+    (add-to-list 'treesit-language-source-alist '(python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")))
+    (add-to-list 'treesit-language-source-alist '(yaml . ("https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0"))))
+
   (use-package scopeline
     :tags '("IDE" "PROGRAMMING" "TREE-SITTER")
     :after tree-sitter
@@ -4484,8 +4490,7 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
 
   ;; Subpackages
   (use-package groovy-imports
-    :tags '("PROGRAMMING" "JAVA" "GROOVY")
-    )
+    :tags '("PROGRAMMING" "JAVA" "GROOVY"))
 
   (use-package kotlin-mode
     :tags '("PROGRAMMING" "JAVA" "KOTLIN")
@@ -5241,10 +5246,7 @@ It will require in case of first installation to run the following command: ~(tr
     :ensure (:host github :repo "danilshvalov/git-commit-ts-mode")
     :tags '("VC" "GIT")
     :custom
-    (git-commit-major-mode #'git-commit-ts-mode)
-    :init
-    (add-to-list 'treesit-language-source-alist
-                 '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit"))))
+    (git-commit-major-mode #'git-commit-ts-mode))
 
   (use-package conventional
     :tags '("VC" "GIT")
