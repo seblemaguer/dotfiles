@@ -3843,9 +3843,10 @@ I also added the support of =scopeline= which provides an indicator about the sc
 
   (use-builtin treesit
     :config
-    (add-to-list 'treesit-language-source-alist '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit")))
-    (add-to-list 'treesit-language-source-alist '(python . ("https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")))
-    (add-to-list 'treesit-language-source-alist '(yaml . ("https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0"))))
+    (add-to-list 'treesit-language-source-alist '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit" "v0.3.3")))
+    (add-to-list 'treesit-language-source-alist '(python    . ("https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")))
+    (add-to-list 'treesit-language-source-alist '(bash      . ("https://github.com/tree-sitter/tree-sitter-bash" "v0.23.3")))
+    (add-to-list 'treesit-language-source-alist '(yaml      . ("https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0"))))
 
   (use-package scopeline
     :tags '("IDE" "PROGRAMMING" "TREE-SITTER")
