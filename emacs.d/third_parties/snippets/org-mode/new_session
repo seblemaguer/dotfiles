@@ -1,0 +1,35 @@
+# -*- mode: snippet -*-
+# name: session_entry
+# key: ses_
+
+# --
+
+`(make-string (+ (org-current-level) 1) ?*)` $1
+:PROPERTIES:
+:DATE:    `(format-time-string "%Y-%m-%d")`
+:SESSION: $2
+:END:
+
+`(make-string (+ (org-current-level) 2) ?*)` Sanakirja
+#+NAME: sanakirja-$2
+#+CAPTION: Session $3 Sanakirja
+| Sana | Puhekieli | Tuttu | Tarvitenet | Englantia | Vastakohta | Lause |
+|------+-----------+-------+------------+-----------+------------+-------|
+|      |           |       |            |           |            |       |
+
+`(make-string (+ (org-current-level) 2) ?*)` Puhekielen ilmaisut
+#+NAME: ilmaisut-$2
+#+CAPTION: Session $3 Puhekielen ilmaisut
+| Ilmaisu | Tuttu | Tarvitenet | Kirjaimellinen merkitys | Todellinen merkitys |
+|---------+-------+------------+-------------------------+---------------------|
+|         |       |            |                         |                     |
+
+`(make-string (+ (org-current-level) 2) ?*)` Kielioppi
+
+`(make-string (+ (org-current-level) 2) ?*)` Dialogit
+
+`(make-string (+ (org-current-level) 2) ?*)` harjoitukset
+
+`(make-string (+ (org-current-level) 2) ?*)` Kulttuurisen muistiinpanot
+
+`(make-string (+ (org-current-level) 2) ?*)` Läksyt

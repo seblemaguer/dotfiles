@@ -12,12 +12,17 @@ LICENSE
     Created: `(format-time-string "%e %B %Y")`
 """
 
-# Arguments
+# Core Python
 import argparse
 
 # Messaging/logging
 import logging
 from logging.config import dictConfig
+try:
+    import pythonjsonlogger
+    JSON_LOGGER = True
+except Exception:
+    JSON_LOGGER = False
 
 ###############################################################################
 # global constants
@@ -70,9 +75,18 @@ def configure_logger(args) -> logging.Logger:
 
     # Add file handler if file logging required
     if args.log_file is not None:
+        cur_formatter_key = "f"
+        if JSON_LOGGER:
+            logging_config["formatters"]["j"] = {
+                '()': 'pythonjsonlogger.json.JsonFormatter',
+                'fmt': '%(asctime)s %(levelname)s %(filename)s %(lineno)d %(message)s',
+                'rename_fields': {'asctime': 'time', 'levelname': 'level', 'lineno': 'line_number'}
+            }
+            cur_formatter_key = "j"
+
         logging_config["handlers"]["f"] = {
             "class": "logging.FileHandler",
-            "formatter": "f",
+            "formatter": cur_formatter_key,
             "level": LEVEL[log_level],
             "filename": args.log_file,
         }
@@ -95,7 +109,7 @@ def define_argument_parser() -> argparse.ArgumentParser:
     """
     parser = argparse.ArgumentParser(description="")
 
-    # Add options
+    # Add logging options
     parser.add_argument("-l", "--log_file", default=None, help="Logger file")
     parser.add_argument(
         "-v",
@@ -105,6 +119,9 @@ def define_argument_parser() -> argparse.ArgumentParser:
         help="increase output verbosity",
     )
 
+    # Add performative options
+    # TODO
+
     # Add arguments
     # TODO
 
@@ -113,12 +130,19 @@ def define_argument_parser() -> argparse.ArgumentParser:
 
 
 ###############################################################################
-#  Envelopping
+# Entry point
 ###############################################################################
-if __name__ == "__main__":
-    # Initialization
+def main():
+    # Initialization of the argument parser and the logger
     arg_parser = define_argument_parser()
     args = arg_parser.parse_args()
     logger = configure_logger(args)
 
     # TODO: your code comes here
+
+
+###############################################################################
+# Wrapping for directly calling the scripts
+###############################################################################
+if __name__ == "__main__":
+    main()

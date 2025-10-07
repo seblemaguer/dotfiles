@@ -1,8 +1,11 @@
+:PROPERTIES:
+:ID:       `(org-id-new nil)`
+:END:
 #+TITLE: ${1:Title}
 #+DATE: `(format-time-string "%e %B %Y")`
 #+DESCRIPTION:
 #+KEYWORDS:
-#+LANGUAGE:  fr
+#+LANGUAGE:  en
 #+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
@@ -11,5 +14,3 @@
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
 
 $0
-
-* COMMENT some extra configuration

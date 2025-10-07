@@ -1,7 +1,5 @@
-** REVIEW %?%:description
+** TODO [[%:link][%?%:description]]
 :LOGBOOK:
 - Added: %U
 :END:
-%:link
-
 %i

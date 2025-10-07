@@ -4,7 +4,7 @@
 #+DATE: 19 June 2021
 #+DESCRIPTION:
 #+KEYWORDS:
-#+LANGUAGE:  fr
+#+LANGUAGE:  en
 #+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
@@ -49,7 +49,7 @@
 
   "Theme "
   Plugin 'itchyny/lightline.vim'
-  Bundle 'sonph/onehalf', {'rtp': 'vim/'}
+  Plugin 'cocopon/iceberg.vim'
 
   call vundle#end()
   filetype plugin indent on
@@ -119,8 +119,8 @@
   syntax on
   set t_Co=256
   set cursorline
-  colorscheme onehalflight
-  let g:lightline = { 'colorscheme': 'onehalfdark' }
+  colorscheme iceberg
+  let g:lightline = { 'colorscheme': 'iceberg' }
 
   if exists('+termguicolors')
       let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
