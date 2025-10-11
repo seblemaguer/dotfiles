@@ -2922,13 +2922,11 @@ As I tend to read using a remarkable, I also added a helper to transfer the arti
     :after (:any org pdf-view)
     :custom
     (org-noter-doc-split-fraction '(0.7 . 0.3))
-    (org-noter-property-doc-file "INTERLEAVE_PDF")
-    (org-noter-property-note-location "INTERLEAVE_PAGE_NOTE")
 
     (defun org-noter-transfer-to-rm ()
       "Import the PDF associated with the current Org mode node to remarkable."
       (interactive)
-      (let ((pdf-file (org-entry-get (point) "INTERLEAVE_PDF")))
+      (let ((pdf-file (org-entry-get (point) "NOTER_DOCUMENT")))
         (if (and pdf-file (file-exists-p pdf-file))
             (shell-command (format "conda run -n remarkable rm_import -t / \"%s\"" pdf-file))
           (message "No associated PDF found or PDF file doesn't exist")))))
