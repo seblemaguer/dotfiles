@@ -8037,8 +8037,16 @@ I also need =rainbow-mode= to help visualize the colors when editing the themes.
 Finally, I use =indicators= to show my relative position in the buffer.
 
 #+begin_src emacs-lisp
-  (use-package rainbow-mode
-    :tags '("VISUAL"))
+  (use-package colorful-mode
+    :tags '("VISUAL")
+    :custom
+    (colorful-use-prefix t)
+    (colorful-only-strings 'only-prog)
+    (css-fontify-colors nil)
+
+    :config
+    (global-colorful-mode t)
+    (add-to-list 'global-colorful-modes 'helpful-mode))
 
   (use-package flatfluc-theme
     :tags '("VISUAL")
