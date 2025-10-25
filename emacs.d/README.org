@@ -3892,6 +3892,12 @@ CLOSED: [2021-01-03 Sun 21:28]
     :tags '("IDE" "PROGRAMMING")
     :after eglot
     :config (eglot-booster-mode))
+
+    (use-package mason
+      :ensure (:host github :repo "deirn/mason.el")
+      :tags '("IDE" "PROGRAMMING")
+      :config
+      (mason-ensure))
 #+end_src
 
 ** DONE Dape/debug
