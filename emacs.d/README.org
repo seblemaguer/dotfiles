@@ -3861,6 +3861,14 @@ CLOSED: [2021-01-03 Sun 21:28]
     (defun my-eglot-organize-imports () (interactive)
            (eglot-code-actions nil nil "source.organizeImports" t))
 
+    (setq native-comp-speed 3
+          native-comp-compiler-options '("-march=znver3" "-Ofast" "-g0" "-fno-finite-math-only"
+                                         "-fgraphite-identity" "-floop-nest-optimize" "-fdevirtualize-at-ltrans"
+                                         "-fipa-pta" "-fno-semantic-interposition" "-flto=auto" "-fuse-linker-plugin")
+          native-comp-driver-options '("-march=znver3" "-Ofast" "-g0" "-fno-finite-math-only"
+                                       "-fgraphite-identity" "-floop-nest-optimize" "-fdevirtualize-at-ltrans"
+                                       "-fipa-pta" "-fno-semantic-interposition" "-flto=auto" "-fuse-linker-plugin"))
+
     :config
     (add-to-list 'eglot-server-programs
                  '(((c-mode c++-mode) . ("clangd"))))
