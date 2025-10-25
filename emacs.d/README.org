@@ -124,8 +124,7 @@ As a result, we have now the following routines:
                      (format "(\"%s\" %s %s)" key function options))
                    (if (string= "" options)
                      (format "(\"%s\" %s \"%s\")" key function label)
-                     (format "(\"%s\" %s \"%s\" %s)" key function label options)))
-                   ))
+                     (format "(\"%s\" %s \"%s\" %s)" key function label options)))))
              table
              "\n")
 #+end_src
@@ -499,8 +498,7 @@ This plugin is in charge to managing the communication and avoid any cycle.
     :tags '("CORE" "NOTIFICATION")
     :hook (elpaca-after-init . sauron-mode-line-start-hidden)
     :config
-    (setq sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron)
-    )
+    (setq sauron-event-added-functions 'sauron-mode-line-notifier-from-sauron))
 #+end_src
 
 ** DONE Buffer listing
@@ -1439,8 +1437,7 @@ CLOSED: [2025-10-01 Wed 09:28]
 
 #+BEGIN_SRC emacs-lisp
   (use-package org-table-highlight
-    :tags '("ORG")
-    :hook (org-mode . org-table-highlight-mode))
+    :tags '("ORG"))
 #+END_SRC
 
 *** DONE Helpers
@@ -1521,8 +1518,7 @@ We also defines additional link to support audios and videos.
           org-export-with-sub-superscripts nil
           org-export-html-style-extra "<link rel=\"stylesheet\" href=\"org.css\" type=\"text/css\" />"
           org-export-html-style-include-default nil
-          org-export-htmlize-output-type 'css ; Do not generate internal css formatting for HTML exports
-          )
+          org-export-htmlize-output-type 'css)
 
     (org-link-set-parameters "video" :export #'endless/export-video-link)
     (org-link-set-parameters "audio" :export #'endless/export-audio-link)
@@ -1530,8 +1526,7 @@ We also defines additional link to support audios and videos.
     (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/ungoogled-chromium %s")))
 
   (use-package org-re-reveal
-    :tags '("ORG")
-    )
+    :tags '("ORG"))
 
   (use-package org-re-reveal-citeproc
     :tags '("ORG")
@@ -1629,8 +1624,8 @@ This package is mainly use to bookmark webpages from the web browser.
 
   (use-builtin org-protocol ;; org-contrib
     :after (org-contrib)
-    :tags '("ORG")
-    )
+    :tags '("ORG"))
+
 #+end_src
 
 ** DONE Capturing [100%]
@@ -1688,8 +1683,7 @@ I also use capturing mechanism to save recipes and some interesting websites.
                    :type entry
                    :file ,(concat cloud-org-root-dir "todo/todo.org")
                    :headline "To Sort"
-                   :template-file ,(format "%s/third_parties/org-capture-templates/chat.org" user-emacs-directory)))))
-    )
+                   :template-file ,(format "%s/third_parties/org-capture-templates/chat.org" user-emacs-directory))))))
 #+end_src
 
 *** DONE Cooking
@@ -1731,8 +1725,7 @@ format. This is really useful to homogeneise documentation.
 #+begin_src emacs-lisp
   (use-package org-web-tools
     :after (org)
-    :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED")
-    )
+    :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED"))
 #+end_src
 
 ** DONE Visual
@@ -1789,8 +1782,7 @@ I also introduced =org-tree-slide= to enjoy quick presentation
             ("ORDERED"       :background "light green"   :foreground "black" :weight bold :box (:line-width 2 :style released-button))
 
             ;; Done and complete
-            ("DONE"          :background "forest green"  :foreground "lightgray" :weight bold :box (:line-width 2 :style released-button))
-            )))
+            ("DONE"          :background "forest green"  :foreground "lightgray" :weight bold :box (:line-width 2 :style released-button)))))
 
   (use-package org-appear
     :tags '("VISUAL" "ORG")
@@ -1882,7 +1874,7 @@ The only important bits are:
                                                 (org-agenda-skip-function
                                                  '(org-agenda-skip-entry-if
                                                    'scheduled
-                                                   'regexp ".*\[[0-9]*%\]\\([ ]*[:].*[:]\\)\?$")))))
+                                                   'regexp ".*\\[\\([0-9]+%\\|[0-9]+/[0-9]+\\)\\]$")))))
                                         nil
                                         nil)
                                        ("j" "Planning Table"
@@ -1985,8 +1977,7 @@ As I have my own way of being organized, I redefined completely the groups.
                    :order 6)
 
             ;; Ignore anything which doesn't have a todo "keyword"
-            (:discard (:todo nil))
-            )))
+            (:discard (:todo nil)))))
 #+end_src
 
 *** DONE Sidebar
@@ -1998,8 +1989,7 @@ With =org-sidebar= I have easily access to the todos of the *current* org file.
 
 #+begin_src emacs-lisp
   (use-package org-sidebar
-    :tags '("ORG" "VISUAL")
-    )
+    :tags '("ORG" "VISUAL"))
 #+end_src
 
 ** DONE Encryption
@@ -2368,8 +2358,7 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
 
   (when (executable-find "diffpdf")
     (use-package diffpdf
-      :tags '("DOCUMENT" "DESKTOP")
-      ))
+      :tags '("DOCUMENT" "DESKTOP")))
 #+end_src
 
 *** DONE Grepping
@@ -2640,8 +2629,7 @@ CLOSED: [2022-02-10 Thu 07:04]
 
     :config
     (consult-customize consult-org-roam-forward-links
-                       :preview-key "M-.")
-    )
+                       :preview-key "M-."))
 
   (use-package org-roam-project-dashboard
     :ensure (:protocol ssh :type git :host github :repo "seblemaguer/org-roam-project-dashboard")
@@ -2879,8 +2867,7 @@ This function makes extensive use of =org-element=.
                                      (concat cloud-org-root-dir "bibliography/attachments/pdfs/articles/")))
                    (file-name-directory
                     (buffer-file-name
-                     (window-buffer (minibuffer-selected-window))))
-                   ))
+                     (window-buffer (minibuffer-selected-window))))))
              (current-level (car (org-heading-components))))
 
         (save-excursion
@@ -2897,8 +2884,7 @@ This function makes extensive use of =org-element=.
                                (headline (:title "Detailed notes" :level ,(+ current-level 1))
                                          (property-drawer nil ((node-property (:key "INTERLEAVE_PDF" :value ,pdf)))))
 
-                               "\n"
-                               )))))))
+                               "\n")))))))
 
     (setq orb-preformat-keywords '("citekey" "title" "url" "author-or-editor" "keywords" "file")
           orb-process-file-keyword t
@@ -3183,9 +3169,7 @@ Once again, nothing fancy here, the configuration to have a better UX.
           helm-split-window-default-side 'below ;; open helm buffer in another window
           helm-split-window-inside-p t ;; open helm buffer inside current window, not occupy whole other window
           helm-candidate-number-limit 200 ; limit the number of displayed canidates
-          helm-move-to-line-cycle-in-source nil ; move to end or beginning of source when reaching top or bottom of source.
-          )
-    )
+          helm-move-to-line-cycle-in-source nil)) ; move to end or beginning of source when reaching top or bottom of source.
 #+end_src
 
 *** DONE Extension [100%]
@@ -3261,7 +3245,7 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
 
       :map isearch-mode-map
       <<keybindings-gen(table=consult-isearch-mode-keybindings)>>
-     )
+    )
 
     ;; ;; Enable automatic preview at point in the *Completions* buffer. This is
     ;; ;; relevant when you use the default completion UI. You may want to also
@@ -3305,8 +3289,7 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
 
     ;; Optionally configure the narrowing key.
     ;; Both < and C-+ work reasonably well.
-    (setq consult-narrow-key "<") ;; (kbd "C-+")
-    )
+    (setq consult-narrow-key "<"))
 
   ;; Optionally add the `consult-flycheck' command.
   (use-package consult-flycheck
@@ -3556,9 +3539,7 @@ I also rely on =fancy-compilation= to enhance the the output in the compilation 
 
      ("Compilation Errors" (
        <<hydra-keybindings-gen(table=compilation-hydra-keybindings)>>
-      )
-     )
-    )
+     )))
 
     :init
     (setq compilation-scroll-output t)
@@ -3594,8 +3575,7 @@ I also rely on =fancy-compilation= to enhance the the output in the compilation 
   (use-package compile-multi
     :ensure (compile-multi :host github
                            :repo "mohkale/compile-multi")
-    :tags '("IDE" "COMPILATION")
-    )
+    :tags '("IDE" "COMPILATION"))
 #+end_src
 
 *** DONE Flychecking
@@ -3621,8 +3601,7 @@ I also use =flycheck-posframe= to have a quick idea of what is going on at the p
 
      ("Errors" (
        <<hydra-keybindings-gen(table=flycheck-errors-bindings)>>
-      )
-    ))
+      )))
 
     :config
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
@@ -3784,8 +3763,7 @@ Dash (https://www.kapeli.com/dash) provides a set of full documentation to downl
     )
 
     :custom
-    (devdocs-browser-cache-directory "~/shared/docset")
-  )
+    (devdocs-browser-cache-directory "~/shared/docset"))
 #+end_src
 
 ** DONE Recoll
@@ -3868,8 +3846,8 @@ CLOSED: [2021-01-03 Sun 21:28]
       (when (project-current)
         (project-remember-projects-under
          (project-root (project-current))
-         nil)))
-    )
+         nil))))
+
   (use-package list-projects
     :tags '("IDE" "PROGRAMMING")
     :defer t)
@@ -3897,9 +3875,7 @@ CLOSED: [2021-01-03 Sun 21:28]
                                 :diagnosticSeverityOverrides (
                                     :reportUnusedCallResult "none"
                                 )
-                                :inlayHints (:callArgumentNames :json-false)
-                            )))
-    )
+                                :inlayHints (:callArgumentNames :json-false)))))
 
   (use-package eglot-booster
     :ensure (eglot-booster
@@ -4045,8 +4021,7 @@ The configuration relies on =json-mode= for the main part and =json-reformat= fo
     :mode ("\\.json$"))
 
   (use-package json-reformat
-    :tags '("PROGRAMMING" "DATA" "CONFIGURATION" "FORMATTING")
-    )
+    :tags '("PROGRAMMING" "DATA" "CONFIGURATION" "FORMATTING"))
 #+end_src
 
 *** DONE Praat
@@ -4487,8 +4462,7 @@ I strongly rely on LSP, so the configuration consists mainly on loading major mo
 #+begin_src emacs-lisp
 
   (use-package java-snippets
-    :tags '("PROGRAMMING" "JAVA" "COMPLETION")
-    )
+    :tags '("PROGRAMMING" "JAVA" "COMPLETION"))
 
   (use-package groovy-mode
     :tags '("PROGRAMMING" "JAVA" "GROOVY")
@@ -4733,8 +4707,7 @@ using the ~enquote~ command to do some quotation in latex and prepare a proper p
                       "--with-packagedatadir=$PWD/"
                       "--with-lispdir=$PWD/tex-site.el")
                      ("make"))
-                   :version (lambda (_) (require 'auctex) AUCTeX-version)
-                   ))
+                   :version (lambda (_) (require 'auctex) AUCTeX-version)))
 
   (use-builtin tex
     :tags '("WRITING" "LATEX")
@@ -4870,9 +4843,7 @@ I could have used the auctex default sequence, but I prefer to have an homogeneo
         (set (make-local-variable 'font-lock-defaults)
              '((("^!.*" . font-lock-warning-face) ; LaTeX error
                 ("^-+$" . font-lock-builtin-face) ; latexmk divider
-                ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-builtin-face)
-                ;; .....
-                )))
+                ("^\\(?:Overfull\\|Underfull\\|Tight\\|Loose\\).*" . font-lock-builtin-face))))
 
         ;; special-mode makes it read-only which prevents input from TeX.
         (setq buffer-read-only nil))
@@ -4953,8 +4924,7 @@ Finally, I use bibclean-format to have a clean final bibtex file.
     :bind (
       :map bibtex-mode-map (
         <<keybindings-gen(table=bibtex-tidy-entry-keybindings)>>
-      )
-    )
+    ))
 
     :config
     (defun bibtex-generate-autokey ()
@@ -4993,8 +4963,7 @@ Finally, I use bibclean-format to have a clean final bibtex file.
                          "--duplicates=key,doi --trailing-commas --no-remove-dupe-fields"
                          "--sort --merge last")))
         (shell-command cmd)
-        (revert-buffer t t t)))
-    )
+        (revert-buffer t t t))))
 
   (use-package bibtex-utils
     :tags '("WRITING" "BIBTEX")
@@ -5044,8 +5013,7 @@ I just added =grip-mode= to have a proper preview of the file.
     :bind (
       :map markdown-mode-command-map (
         <<keybindings-gen(table=grip-mode-entry-keybindings)>>
-      )
-    ))
+    )))
 #+end_src
 
 ** DONE Writing helpers
@@ -5131,8 +5099,7 @@ As a fallback, I am using google-translate via the package =go-translate=.
                                   (en2fr . ,(gt-translator
                                               :taker   (gt-taker :langs '(en fr) :text 'word)
                                               :engines (gt-google-engine)
-                                              :render  (gt-overlay-render)))
-                                  )))
+                                              :render  (gt-overlay-render))))))
 #+end_src
 
 * DONE Version Control / Project Management [100%]
@@ -5195,8 +5162,7 @@ It will require in case of first installation to run the following command: ~(tr
     :bind (
       :map magit-mode-map (
         <<keybindings-gen(table=magit-browse-keybindings)>>
-      )
-    )
+    ))
 
     :config
 
@@ -5293,13 +5259,11 @@ I use =gitignore-snippets= to provide starting gitignore content;
  and =git-patch= to send a patch via email (if necessary obviously.)
 #+begin_src emacs-lisp
   (use-package gitignore-snippets
-    :tags '("VC" "GIT")
-    )
+    :tags '("VC" "GIT"))
 
   (use-package git-timemachine
     :tags '("VC" "GIT")
-    :commands (git-timemachine-toggle)
-    )
+    :commands (git-timemachine-toggle))
 
   (use-package gitpatch
     :tags '("VC" "GIT" "CONNECTED")
@@ -5348,8 +5312,7 @@ To interact with github in emacs, I rely on three packages:
 
       :map diff-mode-map (
         <<keybindings-gen(table=github-review-diff-keybindings)>>
-      )
-    )
+    ))
 
     :config
     (defun my/github-review-kill-suggestion ()
@@ -5396,8 +5359,7 @@ The package =gist= provides a nice way of dealing with gists.
 
       "Remote" (
        <<hydra-keybindings-gen(table=gist-mode-hydra-remote-keybindings)>>
-      )
-     )))
+      ))))
 #+end_src
 
 ** DONE Project management
@@ -5512,8 +5474,8 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
     :bind (
       :map mistty-prompt-map (
         <<keybindings-gen(table=mistty-prompt-keybindings)>>
-      )
-    )
+    ))
+
     :commands (mistty-mode)
     :init
     (defun mistty-bash ()
@@ -5522,25 +5484,23 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
       (with-current-buffer (generate-new-buffer "*terminal*")
         (mistty-mode)
         (pop-to-buffer (current-buffer))
-        (mistty-exec '("bash")))
-      )
+        (mistty-exec '("bash"))))
+
     (defun mistty-zsh ()
       "Spawn a MisTTY buffer with a zsh shell in it."
       (interactive)
       (with-current-buffer (generate-new-buffer "*terminal*")
         (mistty-mode)
         (pop-to-buffer (current-buffer))
-        (mistty-exec '("zsh")))
-      )
+        (mistty-exec '("zsh"))))
+
     (defun mistty-ipython ()
       "Spawn a MisTTY buffer with a ipython shell in it."
       (interactive)
       (with-current-buffer (generate-new-buffer "*ipython*")
         (mistty-mode)
         (pop-to-buffer (current-buffer))
-        (mistty-exec '("ipython")))
-      )
-    )
+        (mistty-exec '("ipython")))))
 
   (use-package comint-mime
     :tags '("TERM")
@@ -5626,8 +5586,7 @@ I also replace a base deletion by moving the files/directories to the trash.
       ([remap dired-sort-toggle-or-edit] . dirvish-quicksort)
       ([remap dired-do-redisplay]        . dirvish-ls-switches-menu)
       ([remap dired-summary]             . dirvish-dispatch)
-      ([remap dired-do-copy]             . dirvish-yank-menu)
-    )
+      ([remap dired-do-copy]             . dirvish-yank-menu))
 
     :custom
     (dired-listing-switches "-l --almost-all --human-readable --time-style=long-iso --group-directories-first --no-group")
@@ -5668,14 +5627,14 @@ I also replace a base deletion by moving the files/directories to the trash.
     (defun restart-remarkable-ui ()
       "Restarting the ReMarkable UI to acknowledge the presence of the new PDF files."
       (interactive)
-      (call-process "/bin/ssh" nil "*remarkable*" nil "remarkable" "systemctl" "restart" "xochitl"))
-    )
+      (call-process "/bin/ssh" nil "*remarkable*" nil "remarkable" "systemctl" "restart" "xochitl")))
 
   (use-package dired-launch
     :tags '("FILE_MANAGEMENT" "DIRED")
-    :bind (:map dired-mode-map (
-                 <<keybindings-gen(table=dired-launch-entry-keybindings)>>
-          ))
+    :bind (
+      :map dired-mode-map (
+          <<keybindings-gen(table=dired-launch-entry-keybindings)>>
+    ))
 
     :config
     (setq dired-launch-default-launcher '("xdg-open"))
@@ -7063,12 +7022,10 @@ As it requires more investigation, I disabled this packaged for now.
 #+begin_src emacs-lisp
   ;; Not automatically loaded by md4rd
   (use-package tree-mode
-    :tags '("CONNECTED" "EXCHANGE" "REDDIT")
-    )
+    :tags '("CONNECTED" "EXCHANGE" "REDDIT"))
 
   (use-builtin cl-extra
-    :tags '("CONNECTED" "EXCHANGE" "REDDIT")
-    )
+    :tags '("CONNECTED" "EXCHANGE" "REDDIT"))
 
   (use-package md4rd
     :tags '("CONNECTED" "EXCHANGE" "REDDIT")
@@ -7148,8 +7105,7 @@ It is connected to =youtube-dl= to download the video.
     :bind (
       :map ytdious-mode-map (
         <<keybindings-gen(table=ytdious-mode-keybindings)>>
-      )
-    )
+    ))
 
     :custom (ytdious-sort-criterion 'upload_date)
     :init
@@ -7457,8 +7413,7 @@ No extra configuration is needed.
 
 #+begin_src emacs-lisp
   (use-package bluetooth
-    :tags '("DESKTOP")
-    )
+    :tags '("DESKTOP"))
 #+end_src
 
 *** DONE Emacs and the web browser
@@ -7490,8 +7445,7 @@ Using =atomic-chrome= coupled with the ~GhostText~ addon, I edit such text in Em
 
      :map atomic-chrome-edit-mode-map
        ("C-c C-c" . nil)
-     )
-    )
+    ))
 #+end_src
 
 *** DONE Emacs Application Framework (EAF)
@@ -7506,8 +7460,7 @@ As for =mu4e=, my environment scripts are taking care of the compilation.
 
 #+begin_src emacs-lisp :tangle no
   (use-package epc
-    :tags '("DESKTOP")
-    )
+    :tags '("DESKTOP"))
 
   (use-package eaf
     :ensure (eaf :type git
@@ -7685,8 +7638,7 @@ The package =docker= is already configured to provide everything to interact wit
   (when (executable-find "docker")
     (use-package docker
       :commands (docker)
-      :tags '("SYSTEM")
-      ))
+      :tags '("SYSTEM"))
 #+end_src
 
 **** DONE Conda
@@ -7773,8 +7725,7 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
        :fetcher github
        :repo "purcell/osx-location"
        :files ("*.el" "EmacsLocationHelper")
-       :version (lambda (_) "0.4") ;; NOTE: dirty hack to ensure the version is properly set
-       ))
+       :version (lambda (_) "0.4")))
 
   (use-package elcontext
     :ensure (:protocol ssh :type git :host github :repo "seblemaguer/elcontext" :branch "fix_missing_hydras_2")
@@ -7940,8 +7891,7 @@ To install Anki-Connect:
     (use-builtin anki-editor-ui
       :tags '("HELPERS" "DESKTOP" "ORG")
       :defer t
-      :after anki-editor)
-    )
+      :after anki-editor))
 #+end_src
 
 *** DONE LLMs
@@ -7975,6 +7925,7 @@ Also, it may be useful to modify the variable =OLLAMA_MODELS= in the service fil
       :bind (
         <<keybindings-gen(table=ellama-entry-keybindings)>>
       )
+
       :init
       (setopt ellama-language "Finnish")
 
@@ -8020,8 +7971,7 @@ Also, it may be useful to modify the variable =OLLAMA_MODELS= in the service fil
 
       :config
       ;; send last message in chat buffer with C-c C-c
-      (add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message))
-    )
+      (add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message)))
 #+end_src
 
 * DONE Visual [100%]
@@ -8051,15 +8001,6 @@ Finally, I use =indicators= to show my relative position in the buffer.
   (use-package flatfluc-theme
     :tags '("VISUAL")
     :init
-    ;; Clean some unused information
-    (tooltip-mode -1)
-    (scroll-bar-mode -1)
-    (tool-bar-mode -1)
-
-    ;;disable splash screen and startup message
-    (setq inhibit-startup-message t)
-    (setq initial-scratch-message nil)
-
     ;; Default frame settings
     (setq default-frame-alist
           (append (list
@@ -8101,8 +8042,7 @@ Finally, I use =indicators= to show my relative position in the buffer.
                                   (moderate . ,fui-sunflower)
                                   (normal   . ,fui-turquoise)
                                   (low      . "blue")
-                                  (trivial  . "purple")))
-    )
+                                  (trivial  . "purple"))))
 
   (use-package breadcrumb
     :tags '("VISUAL"))
@@ -8427,8 +8367,7 @@ I also add =xhair= to visualize where I am (line + column) when I need to align 
     ))
 
   (use-package xhair
-    :tags '("VISUAL")
-    )
+    :tags '("VISUAL"))
 #+end_src
 
 *** DONE Filling
@@ -8441,8 +8380,7 @@ This is functionality is provided by =visual-fill-column=.
 
 #+BEGIN_SRC emacs-lisp
   (use-builtin visual-fill-column
-    :tags '("VISUAL")
-    )
+    :tags '("VISUAL"))
 #+END_SRC
 
 *** DONE Indentation
@@ -8591,6 +8529,7 @@ CLOSED: [2023-11-25 Sat 10:00]
     :bind (
       <<keybindings-gen(table=functional-keybindings)>>
     )
+
     :commands (matcha-magit matcha-eglot matcha-project)
     :init
     (defun my-matcha-consult-ripgrep-default-directory ()
@@ -8656,8 +8595,7 @@ CLOSED: [2023-11-25 Sat 10:00]
          (recent . recentf-open-files)
          (buffer . switch-to-buffer)
          (mx . execute-extended-command)
-         (git-grep . vc-git-grep))
-        )
+         (git-grep . vc-git-grep)))
       "List of alists of common commands that different packages provide."
       :type 'list
       :group 'matcha)
