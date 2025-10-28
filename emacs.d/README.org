@@ -3995,6 +3995,7 @@ For CSV file, I rely on =csv-mode= but I add more separators.
  #+begin_src emacs-lisp
    (use-package csv-mode
      :tags '("PROGRAMMING" "DATA")
+     :mode ("\\.csv$" "\\.tsv$" "\\.psv$")
      :hook
      (csv-mode . csv-guess-set-separator)
      (csv-mode . csv-align-mode))
