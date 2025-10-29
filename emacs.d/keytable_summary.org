@@ -1091,10 +1091,10 @@
 | ?   | prodigy-display-process | Display the process information |
 ** Anki
 #+NAME: anki-entry-keybindings
-| Key   | Function       | Description |
-|-------+----------------+-------------|
-| C-c r | org-desc2anki  |             |
-| C-c e | anki-editor-ui |             |
+| Key   | Function                                        | Description |
+|-------+-------------------------------------------------+-------------|
+| C-c r | org-language-learning-merge-tables              |             |
+| C-c H | org-language-learning-export-current-table-html |             |
 
 ** llama
 #+NAME: ellama-entry-keybindings
