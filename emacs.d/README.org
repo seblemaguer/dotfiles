@@ -7653,7 +7653,7 @@ The package =docker= is already configured to provide everything to interact wit
   (when (executable-find "docker")
     (use-package docker
       :commands (docker)
-      :tags '("SYSTEM"))
+      :tags '("SYSTEM")))
 #+end_src
 
 **** DONE Conda
