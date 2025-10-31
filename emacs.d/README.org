@@ -2960,7 +2960,6 @@ The only configuration here is to activate it globally.
 
 #+begin_src emacs-lisp
   (use-package vundo
-    ;; :ensure (:type git :host github :repo "casouri/vundo")
     :tags '("UNDOING")
     :bind (
       <<keybindings-gen(table=vundo-entry-keybindings)>>
@@ -6105,7 +6104,7 @@ As I am quite absent-minded, I use a reminder to not forget the attachment: =mes
           message-fill-column 100))
 
   (use-package org-msg
-    :ensure (org-msg :type git :host github :repo "seblemaguer/org-msg" :branch "some_fixes")
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/org-msg" :branch "some_fixes")
     :bind (:map org-msg-edit-mode-map (
       <<keybindings-gen(table=org-msg-edit-keybindings)>>
     ))
@@ -7880,7 +7879,7 @@ Therefore, I rely on the following process:
 #+begin_src emacs-lisp
   (use-package org-language-learning
     :tags '("HELPERS" "DESKTOP" "ORG")
-    :ensure (:host github :repo "seblemaguer/org-language-learning"))
+    :ensure (:protocol ssh :host github :repo "seblemaguer/org-language-learning"))
 #+end_src
 
 *** DONE LLMs
