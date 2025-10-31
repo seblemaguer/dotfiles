@@ -4898,7 +4898,7 @@ As I am using overleaf to write academic papers (and actually everything else),
   (use-package overleaf
     :tags '("WRITING" "LATEX" "CONNECTED")
     :after auctex
-    :hook (LaTeX-mode . overleaf-mode)
+    ;; :hook (LaTeX-mode . overleaf-mode)
     :custom
     (overleaf-use-nerdfont nil "Use nerfont icons for the modeline.")
 
