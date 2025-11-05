@@ -1,0 +1,19 @@
+# -*- mode: snippet -*-
+# name: diet_week
+# key: dietw_
+
+# --
+
+`(make-string (+ (org-current-level) 1) ?*)` Week $1
+:PROPERTIES:
+:WEEK: $1
+:FOCUS:
+:END:
+
+
+`(make-string (+ (org-current-level) 2) ?*)` Overview
+#+BEGIN_SRC emacs-lisp :exports results :results value raw :eval yes
+(org-diet-generate-current-week-overview)
+#+end_src
+
+`(make-string (+ (org-current-level) 2) ?*)` Daily Log

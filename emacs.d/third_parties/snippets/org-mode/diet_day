@@ -1,0 +1,25 @@
+# -*- mode: snippet -*-
+# name: diet_day
+# key: dietd_
+
+# --
+
+`(make-string (- (org-current-level) 1) ?*)` <`(format-time-string "%Y-%m-%d")`>
+:PROPERTIES:
+:WEIGHT:
+:WAIST_SIZE:
+:ENERGY:
+:MOOD:
+:ACTIVITY:
+:SLEEP:
+:END:
+
+`(make-string (org-current-level) ?*)` Meals
+|  Time | Meal | Dish             | Notes                   |
+|-------+------+------------------+-------------------------|
+
+`(make-string (org-current-level) ?*)`  Water intake
+|  Time | Amount (L)|
+|-------+-----------|
+
+`(make-string (org-current-level) ?*)` Reflection
