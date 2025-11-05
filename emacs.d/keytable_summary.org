@@ -2,16 +2,16 @@
 :ID:       6331ccf2-06a5-4f9d-af11-f1d912d10a36
 :END:
 #+TITLE: Keymaps and keystrokes used in the configuration
-#+DATE: 27 October 2023
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
-#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   H:5 num:nil toc:nil prop:nil \n:nil @:nil ::nil |:t ^:t -:t f:t *:t <:t todo:nil stat:nil
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
-#+COLUMNS: %55ITEM(Details) %8Effort(Effort){:} %8CLOCKSUM(Clocked){:}
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/default.css" />
+# #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/main.css" />
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
+#+HTML_HEAD: <script src='default.js'></script>
+#+LATEX_CLASS: myarticle
 
 * Hydra
 :PROPERTIES:

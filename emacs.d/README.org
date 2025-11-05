@@ -3,10 +3,16 @@
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
-#+OPTIONS:   H:5 num:t toc:t prop:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t c:nil
+#+OPTIONS: creator:comment d:(not LOGBOOK) date:t e:t email:nil f:t inline:t
+#+OPTIONS: num:nil p:nil pri:nil stat:nil tags:t tasks:t tex:t timestamp:t
+#+OPTIONS: toc:nil
+#+OPTIONS: todo:nil |:t
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/main.css" />
+#+HTML_HEAD: <script src='https://seblemaguer.github.io/lib/default.js'></script>
+#+LATEX_CLASS: myarticle
 
 #+PROPERTY: header-args:emacs-lisp  :mkdirp yes :lexical t :exports code
 #+PROPERTY: header-args:emacs-lisp+ :tangle ~/.emacs.d/init.el
@@ -1499,6 +1505,16 @@ We also defines additional link to support audios and videos.
     :after ox
     :requires (htmlize)
     :tags '("ORG")
+    :custom
+    (org-html-head-include-default-style nil)
+    ;; (org-export-html-style-extra "<link rel=\"stylesheet\" href=\"org.css\" type=\"text/css\" />")
+    (org-export-with-sub-superscripts nil)
+    (org-html-inline-images t)
+    (org-html-htmlize-output-type 'css)
+    (org-html-xml-declaration '(("html" . "")
+                                ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
+                                ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>")))
+
     :init
     (defun endless/export-audio-link (path desc format)
       "Export org audio links to hmtl."
@@ -1511,16 +1527,6 @@ We also defines additional link to support audios and videos.
         (html (format "<video controls src=\"%s\">%s</video>" path (or desc "")))))
 
     :config
-    (setq org-html-xml-declaration '(("html" . "")
-                                     ("was-html" . "<?xml version=\"1.0\" encoding=\"%s\"?>")
-                                     ("php" . "<?php echo \"<?xml version=\\\"1.0\\\" encoding=\\\"%s\\\" ?>\"; ?>"))
-          org-html-inline-images t
-          org-export-with-sub-superscripts nil
-          ;; org-export-html-style-extra "<link rel=\"stylesheet\" href=\"org.css\" type=\"text/css\" />"
-          org-html-head-include-default-style nil
-          ;; org-export-html-style-include-default nil
-          org-html-htmlize-output-type 'css)
-
     (org-link-set-parameters "video" :export #'endless/export-video-link)
     (org-link-set-parameters "audio" :export #'endless/export-audio-link)
 
