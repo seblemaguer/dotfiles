@@ -45,12 +45,12 @@
 ;;       "https://git.savannah.gnu.org/gitweb/?p=emacs/nongnu.git;a=blob_plain;f=elpa-packages;hb=HEAD")
 (setq elpaca-queue-limit 5)
 
+
 ;; Install use-package support
 (elpaca elpaca-use-package
-  ;; Enable :ensure use-package keyword.
   (elpaca-use-package-mode)
-  ;; Assume :ensure t unless otherwise specified.
-  (setq elpaca-use-package-by-default t))
+  (setq elpaca-use-package-by-default t
+        use-package-always-defer nil))
 
 ;; Ensure that the proper compat is used to get compat-macs
 (use-package compat :ensure t)
