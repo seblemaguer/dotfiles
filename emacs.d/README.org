@@ -4981,7 +4981,7 @@ Finally, I use bibclean-format to have a clean final bibtex file.
       (interactive)
       (let ((cmd (format "bibtex-tidy %s %s %s --v2 -m %s"
                          (shell-quote-argument (buffer-file-name))
-                         "--curly --numeric --space=4 --align=13 --no-escape --enclosing-braces=title,journal,publisher,author"
+                         "--curly --numeric --space=4 --align=13 --no-escape --enclosing-braces=title,journal,publisher"
                          "--duplicates=key,doi --trailing-commas --no-remove-dupe-fields"
                          "--sort --merge last")))
         (shell-command cmd)
