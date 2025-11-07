@@ -18,7 +18,7 @@
 |  Time | Meal | Dish             | Notes                   |
 |-------+------+------------------+-------------------------|
 
-`(make-string (org-current-level) ?*)`  Water intake
+`(make-string (org-current-level) ?*)` Water intake
 |  Time | Amount (L)|
 |-------+-----------|
 
