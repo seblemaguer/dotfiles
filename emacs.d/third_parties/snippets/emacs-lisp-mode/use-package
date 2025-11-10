@@ -1,6 +1,6 @@
 # -*- mode: snippet -*-
 # name: use-package
-# key: use-package
+# key: up_
 # --
 (use-package ${1:name}
   :ensure t
