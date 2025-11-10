@@ -1497,14 +1497,10 @@ Both configurations relies on =htmlize= to deal with the coloring part.
 We also defines additional link to support audios and videos.
 
 #+begin_src emacs-lisp
-  (use-package htmlize
-    :tags '("ORG")
-    )
-
   (use-builtin ox-html ;; org-contrib
     :after ox
-    :requires (htmlize)
     :tags '("ORG")
+    :commands (org-html-export-to-html org-html-export-as-html)
     :custom
     (org-html-head-include-default-style nil)
     ;; (org-export-html-style-extra "<link rel=\"stylesheet\" href=\"org.css\" type=\"text/css\" />")
@@ -1530,7 +1526,7 @@ We also defines additional link to support audios and videos.
     (org-link-set-parameters "video" :export #'endless/export-video-link)
     (org-link-set-parameters "audio" :export #'endless/export-audio-link)
 
-    (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/ungoogled-chromium %s")))
+    (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/firefox %s")))
 
   (use-package org-re-reveal
     :tags '("ORG"))
