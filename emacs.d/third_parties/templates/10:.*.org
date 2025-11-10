@@ -6,11 +6,21 @@
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
-#+OPTIONS:   H:3 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t c:nil
+#+OPTIONS: creator:comment d:(not LOGBOOK) date:t e:t email:nil f:t inline:t
+#+OPTIONS: num:nil p:nil pri:nil prop:nil stat:nil tags:t tasks:t tex:t timestamp:t
+#+OPTIONS: toc:nil
+#+OPTIONS: todo:nil |:t
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
 #+COLUMNS: %55ITEM(Details) %8Effort(Effort){:} %8CLOCKSUM(Clocked){:}
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/default.css" />
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/main.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/print.css" />
+#+HTML_HEAD: <script src="https://seblemaguer.github.io/lib/default.js"></script>
+#+HTML_HEAD: <script src="https://seblemaguer.github.io/lib/print.js"></script>
+#+HTML_HEAD: <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+#+LATEX_CLASS: myarticle
+#+PROPERTY: header-args :eval never-export
 
 $0

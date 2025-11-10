@@ -11,18 +11,24 @@
 :END:
 
 `(make-string (+ (org-current-level) 2) ?*)` Sanakirja
+:PROPERTIES:
+:TABLE_TYPE: vocab
+:END:
 #+NAME: sanakirja-$2
 #+CAPTION: Session $3 Sanakirja
-| Sana | Puhekieli | Tuttu | Tarvitenet | Englantia | Vastakohta | Lause |
-|------+-----------+-------+------------+-----------+------------+-------|
-|      |           |       |            |           |            |       |
+| Sana | Puhekieli | Tier | Englantia | Vastakohta | Lause |
+|------+-----------+------+-----------+------------+-------|
+|      |           |      |           |            |       |
 
 `(make-string (+ (org-current-level) 2) ?*)` Puhekielen ilmaisut
+:PROPERTIES:
+:TABLE_TYPE: Ilmaisut
+:END:
 #+NAME: ilmaisut-$2
 #+CAPTION: Session $3 Puhekielen ilmaisut
-| Ilmaisu | Tuttu | Tarvitenet | Kirjaimellinen merkitys | Todellinen merkitys |
-|---------+-------+------------+-------------------------+---------------------|
-|         |       |            |                         |                     |
+| Ilmaisu | Tier | Kirjaimellinen merkitys | Todellinen merkitys |
+|---------+------+-------------------------+---------------------|
+|         |      |                         |                     |
 
 `(make-string (+ (org-current-level) 2) ?*)` Kielioppi
 

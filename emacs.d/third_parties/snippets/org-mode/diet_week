@@ -6,7 +6,6 @@
 
 `(make-string (+ (org-current-level) 1) ?*)` Week $1
 :PROPERTIES:
-:WEEK: $1
 :FOCUS:
 :END:
 

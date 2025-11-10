@@ -15,8 +15,8 @@
 :END:
 
 `(make-string (org-current-level) ?*)` Meals
-|  Time | Meal | Dish             | Notes                   |
-|-------+------+------------------+-------------------------|
+|  Time | Meal | Dish             | Recipe | Notes                   |
+|-------+------+------------------+--------+-------------------------|
 
 `(make-string (org-current-level) ?*)` Water intake
 |  Time | Amount (L)|
