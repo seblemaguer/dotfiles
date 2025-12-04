@@ -2917,7 +2917,7 @@ As I tend to read using a remarkable, I also added a helper to transfer the arti
       (interactive)
       (let ((pdf-file (org-entry-get (point) "NOTER_DOCUMENT")))
         (if (and pdf-file (file-exists-p pdf-file))
-            (shell-command (format "conda run -n remarkable rm_import -t / \"%s\"" pdf-file))
+            (shell-command (format "micromamba run -n local_environment rm_import -t / \"%s\"" pdf-file))
           (message "No associated PDF found or PDF file doesn't exist")))))
 #+end_src
 
