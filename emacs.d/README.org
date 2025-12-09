@@ -8410,19 +8410,14 @@ To do so, I use =abridge-diff=.
 #+begin_src emacs-lisp
   (use-package diff-hl
     :tags '("VISUAL")
+    :custom
+    (diff-hl-draw-borders t)
+
     :hook ((elpaca-after-init . global-diff-hl-mode)
-           (dired-mode . diff-hl-dired-mode-unless-remote))
+           (dired-mode   . diff-hl-dired-mode-unless-remote)
+           (diff-hl-mode . diff-hl-flydiff-mode))
 
-    :init (setq diff-hl-draw-borders t)
     :config
-
-    ;; Highlight on-the-fly
-    (require 'diff-hl-flydiff)
-    (diff-hl-flydiff-mode 1)
-
-    (require 'diff-hl-dired)
-
-    ;; Integration with magit
     (with-eval-after-load 'magit
       (add-hook 'magit-post-refresh-hook #'diff-hl-magit-post-refresh)))
 
