@@ -7095,6 +7095,7 @@ I am using its extension =metal-archives-shopping-list= to maintain a list of re
 
 #+begin_src emacs-lisp
   (use-package metal-archives-shopping-list
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/metal-archives.el")
     :tags '("CONNECTED" "RELEASE")
     :if (file-directory-p cloud-org-root-dir)
     :commands (metal-archives-shopping-list-update
