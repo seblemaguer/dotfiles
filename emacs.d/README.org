@@ -7976,6 +7976,19 @@ Also, it may be useful to modify the variable =OLLAMA_MODELS= in the service fil
       (add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message)))
 #+end_src
 
+*** DONE Weather forecast
+CLOSED: [2025-12-10 Wed 18:02]
+
+#+BEGIN_SRC emacs-lisp
+  (use-package sparkweather
+    :tags '("HELPER")
+    :ensure (:host github :repo "aglet/sparkweather")
+    :after calendar
+    :custom
+    (calendar-latitude  60.1695)
+    (calendar-longitude 24.9355))
+#+END_SRC
+
 * DONE Visual [100%]
 :PROPERTIES:
 :ID:       4624b657-41a9-4f0a-9ed5-7f9670603d83
