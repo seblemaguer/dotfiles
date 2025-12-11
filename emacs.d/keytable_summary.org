@@ -315,7 +315,25 @@
 |-------+----------+-------------|
 | C-x u | vundo    |             |
 
+** Folding
+:PROPERTIES:
+:ID:       6c752bb8-97ed-4268-9260-649b39efe854
+:END:
+
+#+NAME: kirigami-entry-keybindings
+| Key       | Function               | Description           |
+|-----------+------------------------+-----------------------|
+| C-c @ o   | kirigami-open-fold     | Open fold at point    |
+| C-c @ O   | kirigami-open-fold-rec | Open fold recursively |
+| C-c @ m   | kirigami-close-folds   | Close all folds       |
+| C-c @ c   | kirigami-close-fold    | Close fold at point   |
+| C-c @ r   | kirigami-open-folds    | Open all folds        |
+| C-c @ TAB | kirigami-toggle-fold   | Toggle fold at point  |
+
 ** Project management
+:PROPERTIES:
+:ID:       b34a664d-62bf-4e51-910b-79600f82e875
+:END:
 #+NAME: project-x-entry-keybindings
 | Key     | Function                    | Description |
 |---------+-----------------------------+-------------|

@@ -2980,6 +2980,8 @@ CLOSED: [2021-01-04 Mon 09:00]
 :END:
 For the folding, I am relying on =outline-indent=.
 
+#+transclude: [[file:keytable_summary.org::Folding]] :only-contents
+
 #+begin_src emacs-lisp
   (use-package outline-indent
     :tags '("FOLDING")
@@ -3003,6 +3005,13 @@ For the folding, I am relying on =outline-indent=.
 
     :config
     (savefold-mode 1))
+
+  (use-package kirigami
+    :ensure (kirigami :type git :host github :repo "jamescherti/kirigami.el")
+    :tags '("FOLDING")
+    :bind (
+        <<keybindings-gen(table=kirigami-entry-keybindings)>>
+    ))
 #+end_src
 
 ** DONE Completing [100%]
