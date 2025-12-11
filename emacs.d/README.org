@@ -7999,7 +7999,8 @@ I deviate from it by prefering my emacs (color) theme (=flatfluc-theme=) and I t
 Concerning the layout, I needed to add a specific font resolution for my surface.
 This is done in the ~config~ part of the package loading.
 I also need =rainbow-mode= to help visualize the colors when editing the themes.
-Finally, I use =indicators= to show my relative position in the buffer.
+I use =indicators= to show my relative position in the buffer.
+Finally, I like to know which buffer I am currently using, and the package ~auto-dim-other-buffers~ provides a nice way to change the background of the focussed/unfocussed window.
 
 #+begin_src emacs-lisp
   (use-package colorful-mode
@@ -8188,6 +8189,24 @@ Finally, I use =indicators= to show my relative position in the buffer.
                ((buffer-narrowed-p) (format"%s [narrow]" (buffer-name)))
                (t (buffer-name)))
          'face (nano-modeline-face 'name)))))
+
+  (use-package auto-dim-other-buffers
+    :tags '("VISUAL")
+    :custom
+    (auto-dim-other-buffers-dim-on-focus-out t)
+    (auto-dim-other-buffers-dim-on-switch-to-minibuffer t)
+
+    :custom-face
+    (auto-dim-other-buffers-hide ((((background light)) :foreground "#dbe4f1" :background "#dbe4f1")
+                                  (t                    :foreground "#ecf0f1" :background "#ecf0f1")))
+    (auto-dim-other-buffers      ((((background light)) :background "#dbe4f1")
+                                  (t                    :background "#ecf0f1")))
+    :config
+    ;; ensure org-indent face is properly hidden
+    (when (boundp 'auto-dim-other-buffers-affected-faces)
+      (push '(org-indent . auto-dim-other-buffers-hide-face)
+            auto-dim-other-buffers-affected-faces))
+    (auto-dim-other-buffers-mode t))
 #+end_src
 
 ** DONE Prism
