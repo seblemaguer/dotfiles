@@ -350,6 +350,9 @@
 :ID:       3ad984e7-0bed-4937-ad0e-75fff7a80f5a
 :END:
 ** Corfu
+:PROPERTIES:
+:ID:       5ebe22af-eb16-4fdc-b8cf-7413869f4247
+:END:
 #+NAME: corfu-doc-entry-keybindings
 | Key | Function              | Description |
 |-----+-----------------------+-------------|
@@ -625,6 +628,9 @@
 :ID:       c1caab20-f777-48ec-8a5d-981b315e2575
 :END:
 ** Olivetti
+:PROPERTIES:
+:ID:       2d31ae6b-57d1-4e05-a3e1-3e4a0a88eec8
+:END:
 #+NAME: olivetti-entry-keybindings
 | Key | Function       | Description |
 |-----+----------------+-------------|
@@ -657,6 +663,9 @@
 |---------+------------------+-------------|
 | C-c t t | gt-translate |             |
 ** Spelling
+:PROPERTIES:
+:ID:       051c5aaa-7096-4b39-ac7c-570c5b987349
+:END:
 #+NAME: jinx-entry-keybindings
 | Key   | Function       | Description |
 |-------+----------------+-------------|
@@ -804,6 +813,9 @@
 | <C-return> | dired-launch-command |             |
 
 ** File information
+:PROPERTIES:
+:ID:       f4ec1329-ecc3-4acd-8209-2c3a56cce148
+:END:
 #+NAME: file-info-entry-keybindings
 | Key   | Function       | Description |
 |-------+----------------+-------------|
@@ -1108,6 +1120,9 @@
 |-----+-------------------------+---------------------------------|
 | ?   | prodigy-display-process | Display the process information |
 ** Anki
+:PROPERTIES:
+:ID:       167fc33d-25e3-4ea2-8963-b6221f7ae39b
+:END:
 #+NAME: anki-entry-keybindings
 | Key   | Function                                        | Description |
 |-------+-------------------------------------------------+-------------|
@@ -1115,6 +1130,9 @@
 | C-c H | org-language-learning-export-current-table-html |             |
 
 ** llama
+:PROPERTIES:
+:ID:       8a2e2fa0-3902-420c-a991-61e229b5ce2c
+:END:
 #+NAME: ellama-entry-keybindings
 | Key   | Function | Description |
 |-------+----------+-------------|
@@ -1306,6 +1324,9 @@ CLOSED: [2023-11-25 Sat 10:17]
 
 **** DONE Profiling
 CLOSED: [2025-09-30 Tue 10:28]
+:PROPERTIES:
+:ID:       577a5b25-5e7e-4716-95b4-1eec0bae392e
+:END:
 #+NAME: profiler-menu-bindings
 | Key | Label  | Function        |
 |-----+--------+-----------------|
@@ -1318,6 +1339,9 @@ CLOSED: [2025-09-30 Tue 10:28]
 :ID:       fd949d9e-3c39-4631-bf2b-e685386465ef
 :END:
 **** debugging
+:PROPERTIES:
+:ID:       aebf9a33-22e4-4661-b6f7-12af2dab571a
+:END:
 #+NAME: dape-entry-keybindings
 | Key | Function       | Description |
 |-----+----------------+-------------|
