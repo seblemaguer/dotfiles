@@ -6885,7 +6885,7 @@ Because, I prefer to have the completion system, =company=, configured locally f
 #+begin_src emacs-lisp
   (use-package slack
     :tags '("CONNECTED" "CHAT" "SLACK")
-    :commands (slack-start)
+    :commands (slack-start slack-refresh-token)
     :no-require t
 
     :custom-face
