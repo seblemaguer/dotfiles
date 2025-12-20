@@ -7510,22 +7510,24 @@ Using =atomic-chrome= coupled with the ~GhostText~ addon, I edit such text in Em
 #+begin_src emacs-lisp
   (use-package atomic-chrome
     :tags '("DESKTOP")
+    :ensure (atomic-chrome
+               :repo "KarimAziev/atomic-chrome"
+               :type git
+               :host github)
     :hook
     (elpaca-after-init . atomic-chrome-start-server)
 
     :commands
     (atomic-chrome-start-server)
 
-    :init
-    (setq atomic-chrome-server-ghost-text-port 4666
-          atomic-chrome-default-major-mode 'org-mode)
-
     :bind (
       <<keybindings-gen(table=atomic-chrome-keybindings)>>
 
      :map atomic-chrome-edit-mode-map
        ("C-c C-c" . nil)
-    ))
+    )
+    :config
+    (setq-default atomic-chrome-extension-type-list '(atomic-chrome)))
 #+end_src
 
 *** DONE Emacs Application Framework (EAF)
