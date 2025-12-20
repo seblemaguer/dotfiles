@@ -4625,6 +4625,22 @@ Finally, I use =numpydoc= to deal with the documentation.
     :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
     :after python
     :commands (numpydoc-generate))
+
+  (use-package python-tdd-mode
+    :ensure (python-tdd-mode :type git :host github :repo "marcwebbie/tdd-mode")
+    :tags '("PROGRAMMING" "PYTHON")
+    :hook (python-ts-mode . python-tdd-mode)
+    :bind (
+      :map python-tdd-mode-command-map
+      <<keybindings-gen(table=python-tdd-entry-keybindings)>>
+    )
+
+    :config
+    (setq python-tdd-mode-test-runner 'pytest
+          python-tdd-mode-auto-run-on-save nil
+          python-tdd-mode-scroll-output t
+          python-tdd-mode-buffer-popup t
+          python-tdd-mode-blink-enabled nil))
 #+end_src
 
 *** DONE Shell
@@ -5125,6 +5141,10 @@ As a fallback, I am using google-translate via the package =go-translate=.
     :ensure (:type git :host github :repo "emacsmirror/wordreference")
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :commands (wordreference-search))
+
+  (use-package wiktionary-bro
+    :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
+    :commands (wiktionary-bro-dwim))
 
   (use-package gt
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
