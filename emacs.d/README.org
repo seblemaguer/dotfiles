@@ -3903,21 +3903,52 @@ CLOSED: [2021-01-03 Sun 21:28]
              :host github
              :repo "jdtsmith/eglot-booster"
              :pre-build (
-               (when (file-exists-p (expand-file-name "~/environment/local/bin/emacs-lsp-booster"))
-                 (delete-file (expand-file-name "~/environment/local/bin/emacs-lsp-booster")))
-               ("wget" "https://github.com/blahgeek/emacs-lsp-booster/releases/download/v0.2.0/emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")
-               ("unzip" "emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")
-               (rename-file "emacs-lsp-booster" (expand-file-name "~/environment/local/bin/"))
-               (delete-file "emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")))
+                         (when (file-exists-p (expand-file-name "~/environment/local/bin/emacs-lsp-booster"))
+                           (delete-file (expand-file-name "~/environment/local/bin/emacs-lsp-booster")))
+                         ("wget" "https://github.com/blahgeek/emacs-lsp-booster/releases/download/v0.2.0/emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")
+                         ("unzip" "emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")
+                         (rename-file "emacs-lsp-booster" (expand-file-name "~/environment/local/bin/"))
+                         (delete-file "emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")))
     :tags '("IDE" "PROGRAMMING")
     :after eglot
     :config (eglot-booster-mode))
 
-    (use-package mason
-      :ensure (:host github :repo "deirn/mason.el")
-      :tags '("IDE" "PROGRAMMING")
-      :config
-      (mason-ensure))
+  (use-package mason
+    :ensure (:host github :repo "deirn/mason.el")
+    :tags '("IDE" "PROGRAMMING")
+    :config
+    (mason-ensure))
+
+  (use-package flyover
+    :tags '("IDE" "PROGRAMMING")
+    ;; :hook (flycheck-mode . #'flyover-mode)
+    :custom
+    (flyover-levels '(error warning info))
+    (flyover-use-theme-colors nil)
+    (flyover-text-tint nil)
+    (flyover-text-tint-percent 50)
+    (flyover-hide-checker-name t)
+    (flyover-show-at-eol t)
+    (flyover-hide-when-cursor-is-on-same-line t)
+    (flyover-show-virtual-line t)
+    (flyover-line-position-offset 0)
+    (flyover-virtual-line-type 'curved-dotted-arrow)
+
+    :custom-face
+    (flyover-error   ((t :background "#FFCCCB"
+                         :foreground "#000000"
+                         :height 0.9
+                         :weight normal)))
+
+    (flyover-warning ((t :background "#FDBA84"
+                         :foreground "#000000"
+                         :height 0.9
+                         :weight normal)))
+
+    (flyover-info    ((t :background "#CCFFCB"
+                         :foreground "#000000"
+                         :height 0.9
+                         :weight normal))))
 #+end_src
 
 ** DONE Dape/debug
