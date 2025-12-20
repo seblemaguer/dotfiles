@@ -15,11 +15,13 @@
 :END:
 
 `(make-string (org-current-level) ?*)` Meals
-|  Time | Meal | Dish             | Recipe | Notes                   |
-|-------+------+------------------+--------+-------------------------|
+| Time | Meal | Dish | Hunger Score Before | Hunger Score After | Recipe | Notes |
+|------+------+------+---------------------+--------------------+--------+-------|
+|      |      |      |                     |                    |        |       |
 
 `(make-string (org-current-level) ?*)` Water intake
-|  Time | Amount (L)|
-|-------+-----------|
+| Time | Amount (L) |
+|------+------------|
+|      |            |
 
 `(make-string (org-current-level) ?*)` Reflection
