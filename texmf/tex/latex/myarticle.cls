@@ -51,7 +51,6 @@
 }
 
 
-\usepackage{booktabs} % Required for nicer horizontal rules in tables
 
 % ----------------------------------------------------------------------------------------
 %	MARGINS
@@ -189,8 +188,9 @@
 \newtheorem{definitionT}{Definition}[section]
 \newtheorem{corollaryT}[dummy]{Corollary}
 
-\theoremstyle{gmitbluenum}
+\theoremstyle{gmitbluenumbox}
 \newtheorem{proposition}[dummy]{Proposition}
+\newtheorem{noteT}{Note}
 
 % ----------------------------------------------------------------------------------------
 %	DEFINITION OF COLORED BOXES
@@ -266,6 +266,7 @@ innerbottommargin=5pt]{cBox}
 \newenvironment{definition}{\begin{dBox}\begin{definitionT}}{\end{definitionT}\end{dBox}}
 \newenvironment{example}{\begin{exampleT}}{\hfill{\tiny\ensuremath{\blacksquare}}\end{exampleT}}
 \newenvironment{corollary}{\begin{cBox}\begin{corollaryT}}{\end{corollaryT}\end{cBox}}
+\newenvironment{note}{\begin{cBox}\begin{noteT}}{\end{noteT}\end{cBox}}
 
 \surroundwithmdframed[
   topline=false,
@@ -317,7 +318,7 @@ innerbottommargin=5pt]{cBox}
             \end{tikzpicture}
         };
     \end{tikzpicture}
-    \vspace{5mm}
+    \vspace{1cm}
 }
 \makeatother
 
@@ -442,9 +443,8 @@ innerbottommargin=5pt]{cBox}
 \usepackage[english]{babel}
 \usepackage[autostyle]{csquotes}
 
-% = SI units
+% = SI units\captionsetup[table]{position=bottom}
 \usepackage[detect-all]{siunitx}
-
 
 % = table tweakery
 \usepackage{tabularx}
@@ -481,17 +481,32 @@ innerbottommargin=5pt]{cBox}
 
 % = citations
 \usepackage[
+% style=numeric-comp,
+style=authoryear-comp,
+hyperref=true,
+backref=true,
 backend=biber,
-style=authoryear-icomp,
 maxcitenames=2,
 maxbibnames=2,
 uniquelist=false,
 isbn=false,
 url=false,
-doi=false,
-natbib=true
+doi=true,
+natbib=true,
+block=none
 ]{biblatex}
 
+
+\DeclareFieldFormat{labelprefix}{\textcolor{green!60!black}{#1}}
+\DeclareFieldFormat{labelnumber}{\textcolor{green!60!black}{#1}}
+\DeclareFieldFormat{extranumber}{\textcolor{green!60!black}{#1}}
+\DeclareFieldFormat{labelnumberwidth}{\mkbibbrackets{\textcolor{green!60!black}{#1}}}
+\DeclareFieldFormat{labelalpha}{\textcolor{green!60!black}{#1}}
+\DeclareFieldFormat{extraalpha}{\textcolor{green!60!black}{#1}}
+\DeclareFieldFormat{labelalphawidth}{\mkbibbrackets{\textcolor{green!60!black}{#1}}}
+
+
+\setlength{\bibitemsep}{0.2cm}
 \makeatletter
 
 \newrobustcmd*{\parentexttrack}[1]{%
@@ -569,7 +584,9 @@ natbib=true
   {}%
   \multicitedelim}
 {\usebibmacro{textcite:postnote}}
-\renewcommand*{\bibfont}{\footnotesize}
+
+
+\renewcommand*{\bibfont}{\normalsize}
 \renewcommand{\cite}[1]{\citep{#1}}
 
 
