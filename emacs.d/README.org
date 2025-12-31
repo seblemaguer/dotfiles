@@ -6349,7 +6349,8 @@ I also redesigned the header buffer.
       :tags '("CONNECTED" "MAIL")
       :commands (mu4e)
 
-      ;; :hook
+      :hook
+      (mu4e-update-pre . etc/imapfilter)
       ;; (elpaca-after-init . (lambda () (mu4e t)))
 
       :pretty-hydra
@@ -6444,6 +6445,19 @@ I also redesigned the header buffer.
 
       (when (fboundp 'set-mu4e-contexts)
         (set-mu4e-contexts))
+
+      (defun etc/imapfilter ()
+        "Run imapfilter (if available, else imply indicates that it is not available)."
+        (message "Running imapfilter...")
+        (with-current-buffer (get-buffer-create "*imapfilter*")
+          (goto-char (point-max))
+          (insert "---\n")
+          (if (executable-find "imapfilter")
+              (progn
+                (call-process "imapfilter" nil (current-buffer) nil "-v")
+                (message "Running imapfilter...done"))
+            (insert "imapfilter is not available")
+            (message "Running imapfilter...FAILED"))))
 
       (setq mu4e-context-policy 'pick-first
             mu4e-user-mail-address-list (delq nil
