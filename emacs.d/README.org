@@ -6996,8 +6996,7 @@ CLOSED: [2021-05-20 Thu 17:33]
     ;; FIXME: telega-transient doesn't work for now
     ;; (require 'telega-transient)
     ;; (telega-transient-mode 1)
-    (setq telega-chat-show-deleted-messages-for 'all
-          telega-tdlib-min-version "1.7.0")
+    (setq telega-chat-show-deleted-messages-for 'all)
 
     (require 'telega-mnz)
     (add-hook 'telega-load-hook 'global-telega-mnz-mode)
