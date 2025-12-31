@@ -2801,7 +2801,7 @@ CLOSED: [2022-02-10 Thu 07:09]
           bibtex-completion-pdf-open-function (lambda (fpath)
                                                 (call-process "open" nil 0 nil fpath)))
 
-    (add-to-list 'safe-local-variable-values '(org-latex-reference-command . "\\cref{%s}"))
+    (add-to-list 'safe-local-variable-values '(org-latex-reference-command . "\\cref{%s}")))
 #+end_src
 
 *** DONE citar
