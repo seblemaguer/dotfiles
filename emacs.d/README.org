@@ -2971,8 +2971,23 @@ The only configuration here is to activate it globally.
     )
 
     :config
-    (setq vundo-glyph-alist vundo-unicode-symbols)
-    (set-face-attribute 'vundo-default nil :family "Symbola"))
+    (setq vundo-compact-display t
+          vundo-glyph-alist vundo-unicode-symbols
+          vundo-window-max-height 10))
+
+  (use-package undo-fu
+    :tags '("UNDOING")
+    :custom
+    (undo-limit        (* 5 1024 1024)) ;; 500kb
+    (undo-strong-limit (* 2 1024 1024)) ;; 2mb
+    (undo-outer-limit  (* 10 1024 1024))) ;; 10 mb
+
+  (use-package undo-fu-session
+    :tags '("UNDOING")
+    :hook (elpaca-after-init . undo-fu-session-global-mode)
+    :custom
+    (undo-fu-session-file-limit 100)
+    (undo-fu-session-incompatible-files '("/COMMIT_EDITMSG\\'" "/git-rebase-todo\\'")))
 #+end_src
 
 ** DONE Folding
