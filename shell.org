@@ -87,6 +87,9 @@
   export LC_ALL=$cur_locale
   export LANG=$cur_locale
 
+  # Help APT to properly render the "search"
+  export APT_PAGER='less -R'
+
   ###################################################################################
   ### Toolkit
   ###################################################################################
