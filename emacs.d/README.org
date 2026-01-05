@@ -7020,7 +7020,8 @@ Because, I prefer to have the completion system, =company=, configured locally f
     ;; Register the teams (configuration defined in a private file)
     (when (fboundp 'slack-register-teams)
       (slack-register-teams))
-      (defun sauron-slack-notifier (message room team)
+
+    (defun sauron-slack-notifier (message room team)
       (if (slack-message-notify-p message room team)
           (let ((team-name (oref team name))
                 (room-name (slack-room-name room team))
@@ -7101,6 +7102,52 @@ CLOSED: [2021-05-20 Thu 17:33]
       (puni-disable-puni-mode)))
 #+END_SRC
 
+*** DONE Ement
+I use matrix a lot, so I use =ement= as a client.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ement
+    :tags '("CONNECTED" "CHAT" "MATRIX")
+    :custom
+    (ement-room-timestamp-format "%d-%m-%Y %H:%M:%S")
+    (ement-room-message-format-spec "[%t] %S> %B%r")
+    (ement-room-left-margin-width 0)
+    (ement-room-right-margin-width 0)
+    (ement-room-list-auto-update nil)
+
+    :custom-face
+    (ement-room-read-receipt-marker ((t (:height 0.1 :background "red"))))
+    (ement-room-fully-read-marker ((t (:height 0.1 :background "green"))))
+
+    :commands (ement-connect)
+    :config
+
+    (require 'ement-lib)
+
+    ;; NOTE: this is dirty but it helps to get rid of timestamps' header I don't want to see
+    (defun ement-room--no-ts-headers (&optional start-node end-node)
+      "Redefinition to inhibate the header!")
+    (advice-add 'ement-room--insert-ts-headers :override #'ement-room--no-ts-headers)
+
+    (defun ement-notify--notifications-sauron (event room session)
+      "Call `notifications-notify' for EVENT in ROOM on SESSION."
+      (pcase-let* (((cl-struct ement-event sender content) event)
+                   ((cl-struct ement-room avatar (display-name room-displayname)) room)
+                   ((map body) content)
+                   (room-name (or room-displayname (ement--room-display-name room)))
+                   (sender-name (ement--user-displayname-in room sender))
+                   (title (format "%s in %s" sender-name room-name)))
+        ;; TODO: Encode HTML entities.
+        (when (and (stringp body)
+                   (not (s-starts-with? "#" room-name)))
+          ;; If event has no body, it was probably redacted or something, so don't notify.
+          (truncate-string-to-width body 60)
+          (sauron-add-event
+           (intern room-name) 2 body
+           (lambda () (ement-room-view room session))))))
+    (advice-add 'ement-notify--notifications-notify :override #'ement-notify--notifications-sauron))
+#+END_SRC
+
 *** DONE Global helpers
 CLOSED: [2021-01-05 Tue 09:31]
 :PROPERTIES:
@@ -7112,7 +7159,8 @@ This section provides three helper functions to connect/disconnect all my chatti
   (defun communication-start ()
     "Routine to start all chats."
     (interactive)
-    (circe-start)
+    ;; (circe-start)
+    (ement-start)
     (telega)
     (slack-start))
 
@@ -7120,9 +7168,10 @@ This section provides three helper functions to connect/disconnect all my chatti
     "Routine to shutdown all chats"
     (interactive)
 
-    (circe-command-GQUIT "time to go back to the real life")
+    ;; (circe-command-GQUIT "time to go back to the real life")
     (telega-kill t)
     (slack-ws-close)
+    (ement-disconnect)
 
     ;; Clean buffers
     (dolist (buf (buffer-list))
