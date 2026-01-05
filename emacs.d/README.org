@@ -8378,10 +8378,10 @@ Finally, I like to know which buffer I am currently using, and the package ~auto
     (auto-dim-other-buffers-dim-on-switch-to-minibuffer t)
 
     :custom-face
-    (auto-dim-other-buffers-hide ((((background light)) :foreground "#dbe4f1" :background "#dbe4f1")
-                                  (t                    :foreground "#ecf0f1" :background "#ecf0f1")))
-    (auto-dim-other-buffers      ((((background light)) :background "#dbe4f1")
-                                  (t                    :background "#ecf0f1")))
+    (auto-dim-other-buffers-hide ((((background light)) :foreground ,fui-light-blue :background ,fui-light-blue)
+                                  (t                    :background ,fui-clouds)))
+    (auto-dim-other-buffers      ((((background light)) :background ,fui-light-blue)
+                                  (t                    :background ,fui-clouds)))
     :config
     ;; ensure org-indent face is properly hidden
     (when (boundp 'auto-dim-other-buffers-affected-faces)
