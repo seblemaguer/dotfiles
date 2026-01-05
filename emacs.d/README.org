@@ -3839,18 +3839,53 @@ CLOSED: [2023-06-08 Thu 18:27]
 
 Tree-sitter is neat way of dealing with syntax highlighting.
 It is fast and configurable.
+I also shamelessly use the helpers provided in by Andrey Listopadov in https://andreyor.st/posts/2024-03-05-accepting-your-own-solutions-to-your-own-problems/.
 I also added the support of =scopeline= which provides an indicator about the score of the current block.
 
 #+begin_src emacs-lisp
-  (use-package tree-sitter-langs
-    :tags '("IDE" "PROGRAMMING" "TREE-SITTER"))
-
   (use-builtin treesit
+    :tags '("IDE" "PROGRAMMING" "TREE-SITTER")
+    :custom
+    (treesit-font-lock-level 2)
+
+    :preface
+    (defun treesit-p ()
+      "Check if Emacs was built with treesiter in a protable way."
+      (and (fboundp 'treesit-available-p)
+           (treesit-available-p))))
+
+  (use-package treesit-langs
+    :ensure (:fetcher github :repo "emacs-tree-sitter/treesit-langs" :wait t)
+    :custom (treesit-langs-bundle-version "0.12.329")
+    :when (treesit-p)
+    :demand t
+    :preface
+    (cl-defun treesit-install-and-remap (lang &key url revision source-dir modes remap org-src)
+      "Convenience function for installing and enabling a ts-* mode.
+
+  LANG is the language symbol.  URL is the Git repository URL for
+  the grammar.  REVISION is the Git tag or branch of the desired
+  version, defaulting to the latest default branch.  SOURCE-DIR is
+  the relative subdirectory in the repository in which the
+  grammar’s parser.c file resides, defaulting to \"src\".  MODES is
+  a list of modes to remap to a symbol REMAP."
+      (when (and (fboundp 'treesit-available-p)
+                 (treesit-available-p))
+        (unless (treesit-language-available-p lang)
+            (add-to-list 'treesit-language-source-alist (list lang url revision source-dir))
+            (treesit-install-language-grammar lang))
+        (when (and remap (treesit-ready-p lang))
+          (dolist (mode modes)
+            (add-to-list
+             'major-mode-remap-alist
+             (cons mode remap))))
+        (when (and org-src (treesit-ready-p lang))
+          (eval-after-load 'org
+            (lambda ()
+              (add-to-list 'org-src-lang-modes org-src))))))
+
     :config
-    (add-to-list 'treesit-language-source-alist '(gitcommit . ("https://github.com/gbprod/tree-sitter-gitcommit" "v0.3.3")))
-    (add-to-list 'treesit-language-source-alist '(python    . ("https://github.com/tree-sitter/tree-sitter-python" "v0.23.6")))
-    (add-to-list 'treesit-language-source-alist '(bash      . ("https://github.com/tree-sitter/tree-sitter-bash" "v0.23.3")))
-    (add-to-list 'treesit-language-source-alist '(yaml      . ("https://github.com/tree-sitter-grammars/tree-sitter-yaml" "v0.7.0"))))
+    (treesit-langs-major-mode-setup))
 
   (use-package scopeline
     :tags '("IDE" "PROGRAMMING" "TREE-SITTER")
@@ -4622,9 +4657,14 @@ Finally, I use =numpydoc= to deal with the documentation.
     (python-ts-mode . eglot-ensure)
 
     :init
+    (treesit-install-and-remap 'python
+  			     :url "https://github.com/tree-sitter/tree-sitter-python"
+  			     :modes '(python-mode)
+  			     :remap 'python-ts-mode
+  			     :org-src '("python" . python-ts))
+
     (setq-default indent-tabs-mode nil)
-    (setq-default python-indent-offset 4)
-    (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode)))
+    (setq-default python-indent-offset 4))
 
   (use-package jinja2-mode
     :tags '("PROGRAMMING" "PYTHON" "TEMPLATE")
@@ -4761,7 +4801,15 @@ CLOSED: [2025-03-02 Sun 21:15]
 #+BEGIN_SRC emacs-lisp
   (use-package qml-ts-mode
     :tags '("PROGRAMMING" "UI")
-    :ensure (qml-ts-mode :type git :host github :repo "xhcoding/qml-ts-mode"))
+    :ensure (qml-ts-mode :type git :host github :repo "xhcoding/qml-ts-mode")
+    :when (treesit-p)
+    :config
+    (treesit-install-and-remap 'qmljs
+                               :url "https://github.com/yuja/tree-sitter-qmljs.git"
+                               :revision "0.3.0"
+    			     :remap 'qml-ts-mode
+    			     :org-src '("qml" . qml-ts)))
+
 #+END_SRC
 
 * DONE Writing / Reading [100%]
