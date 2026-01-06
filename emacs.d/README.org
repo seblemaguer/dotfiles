@@ -4090,14 +4090,13 @@ For CSV file, I rely on =csv-mode= but I add more separators.
      :tags '("PROGRAMMING" "DATA")
      :mode ("\\.csv$" "\\.tsv$" "\\.psv$")
      :hook
+     ((csv-mode tsv-mode) . rainbow-csv-mode)
      (csv-mode . csv-guess-set-separator)
      (csv-mode . csv-align-mode))
 
    (use-package rainbow-csv
      :ensure (rainbow-csv :type git :host github :repo "emacs-vs/rainbow-csv")
-     :tags '("PROGRAMMING" "DATA")
-     :hook
-     (csv-mode . rainbow-csv-mode))
+     :tags '("PROGRAMMING" "DATA"))
  #+end_src
 
 *** DONE CUE
