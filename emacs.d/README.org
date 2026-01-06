@@ -1103,6 +1103,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
     ))
 
     :init
+    (add-to-list 'safe-local-variable-values '(org-latex-reference-command . "\\cref{%s}"))
     (defun toggle-ordered-tag ()
       "Helper to toggle the \"ordered\" tag when the \"ORDERED\" todo state is activated."
       (let* ((tags (org-get-tags nil t)))
@@ -1285,8 +1286,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
     (defun org-agenda-generate-id ()
       "Helper to be used in a hook to generate org ids only if the buffer is part of the org-agenda files"
       (when (member (buffer-file-name) org-agenda-files)
-        (generate-org-heading-ids)))
-    )
+        (generate-org-heading-ids))))
 
   ;; Elpaca should wait org to be loaded
   (elpaca-wait)
@@ -2799,9 +2799,7 @@ CLOSED: [2022-02-10 Thu 07:09]
             (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
             (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
           bibtex-completion-pdf-open-function (lambda (fpath)
-                                                (call-process "open" nil 0 nil fpath)))
-
-    (add-to-list 'safe-local-variable-values '(org-latex-reference-command . "\\cref{%s}")))
+                                                (call-process "open" nil 0 nil fpath))))
 #+end_src
 
 *** DONE citar
