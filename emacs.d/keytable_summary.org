@@ -767,12 +767,10 @@
 | b   | mistty-bash    | bash shell    |             |
 
 #+NAME: mistty-prompt-keybindings
-| Key       | Function        | Description |
-|-----------+-----------------+-------------|
-| M-<up>    | mistty-send-key |             |
-| M-<down>  | mistty-send-key |             |
-| M-<left>  | mistty-send-key |             |
-| M-<right> | mistty-send-key |             |
+| Key      | Function         | Description |
+|----------+------------------+-------------|
+| M-<up>   | mistty-send-up   |             |
+| M-<down> | mistty-send-down |             |
 
 * File manager
 :PROPERTIES:

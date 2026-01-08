@@ -5641,7 +5641,15 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
       (with-current-buffer (generate-new-buffer "*ipython*")
         (mistty-mode)
         (pop-to-buffer (current-buffer))
-        (mistty-exec '("ipython")))))
+        (mistty-exec '("ipython"))))
+
+    (defun mistty-send-down ()
+      (interactive)
+      (mistty-send-string "\e[B"))
+
+    (defun mistty-send-up ()
+      (interactive)
+      (mistty-send-string "\e[A")))
 
   (use-package comint-mime
     :tags '("TERM")
