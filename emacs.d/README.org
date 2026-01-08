@@ -2945,6 +2945,20 @@ I added a package which builds on top of =org-media-note= (named =org-media-note
     ))
 #+end_src
 
+*** DONE Zotero
+CLOSED: [2026-01-08 Thu 15:27]
+I personally tend to avoid Zotero as it is just yet-another overhead, but some colleagues like it so I try to play nicely (sometimes :D).
+To authenticate, my pivate configuration defines the helper =set-zotero-token=.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package zotero
+    :ensure t
+    :commands (zotero-browser)
+    :init
+    (require 'zotero-browser)
+    (set-zotero-token (system-name)))
+#+END_SRC
+
 * DONE Environment [100%]
 :PROPERTIES:
 :ID:       8d072ea6-0173-49c8-b1ea-315e70b2981d
