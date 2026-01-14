@@ -74,6 +74,7 @@
 | Key       | Function                               | Description |
 |-----------+----------------------------------------+-------------|
 | C-c C-x t | org-checkbox-toggle-insertion-deletion |             |
+| C-c C-x n | org-set-beamer-note                    |             |
 
 ** Effort
 :PROPERTIES:
