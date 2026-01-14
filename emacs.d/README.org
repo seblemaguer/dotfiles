@@ -5148,12 +5148,15 @@ CLOSED: [2021-01-04 Mon 12:22]
 Markdown is the main language used to write READMEs in collaborative projects.
 While I prefer it org-mode, I still have to use it for collaborative purposes.
 Consequently, I have to get a proper configuration.
-Luckily, =markdown-mode= provide more than enough.
+Luckily, =markdown-mode= provide more than enough (and it requires =edit-indirect= to be installed to edit code blocks).
 I just added =grip-mode= to have a proper preview of the file.
 
 #+transclude: [[file:keytable_summary.org::Markdown]] :only-contents
 
 #+begin_src emacs-lisp
+  (use-package edit-indirect
+    :tags '("WRITING" "MARKDOWN"))
+
   (use-package markdown-mode
     :tags '("WRITING" "MARKDOWN")
     :mode ("\\.md$"))
