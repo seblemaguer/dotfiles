@@ -53,10 +53,7 @@
         use-package-always-defer nil))
 
 ;; Ensure that the proper compat is used to get compat-macs
-(use-package compat :ensure t)
-
-;; Block until current queue processed.
-(elpaca-wait)
+(use-package compat :ensure (:wait t))
 
 (unload-feature 'eldoc t)
 (setq custom-delayed-init-variables '())
@@ -67,9 +64,7 @@
   (global-eldoc-mode)) ;; This is usually enabled by default by Emacs
 
 ;; Transclusion is needed, so install it :)
-(use-package org :ensure t)
-(use-package org-transclusion :ensure t)
-(elpaca-wait)
+(use-package org-transclusion :ensure (:wait t))
 
 ;; Define helper function
 (defun tangle-current-file (file)

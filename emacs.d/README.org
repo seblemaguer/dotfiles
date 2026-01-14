@@ -58,7 +58,7 @@ CLOSED: [2021-01-03 Sun 10:52]
 The file =tangle.el= contains the backbone to configure elpaca.
 In order to avoid duplication and potential mismatch, we simply transclude the needed part from this file.
 
-#+transclude: [[file:~/.emacs.d/tangle.el]] :lines 3-68 :src emacs-lisp
+#+transclude: [[file:~/.emacs.d/tangle.el]] :lines 3-65 :src emacs-lisp
 
 Now, we introduce some really useful macros:
 
@@ -243,7 +243,7 @@ one to generate the emacs init file from =~/.emacs.d/README.org= and one to byte
 Again, the file =tangle.el= is designed to support everything needed for the tangling of the main configuration.
 Therefore, we use the definition part straight up from this script:
 
-#+transclude: [[file:~/.emacs.d/tangle.el]] :lines 74-82 :src emacs-lisp
+#+transclude: [[file:~/.emacs.d/tangle.el]] :lines 69-77 :src emacs-lisp
 
 Now we can add the specific helper for our configuration:
 
@@ -298,9 +298,8 @@ The specification respects the following syntax:
 
 #+begin_src emacs-lisp
   (use-package use-package-tags
-    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/use-package-tags")
+    :ensure (:wait t :protocol ssh :type git :host github :repo "seblemaguer/use-package-tags")
     :config
-
     (when no-connection
         (setq use-package-tags-default-tag-list '("!CONNECTED")))
 
@@ -309,10 +308,6 @@ The specification respects the following syntax:
             (,work-hostname                 . ("ALL"))
             ("mackenzie"                    . ("!MAIL" "!RSS" "!USER" "!GUI" "!MULTIMEDIA" "!CHAT" "!DESKTOP"))
             (,use-package-tags-default-host . ("CORE" "ORG" "!USER" "!DESKTOP")))))
-
-
-  ;; Block until current queue processed.
-  (elpaca-wait)
 #+end_src
 
 *** DONE Hydra
@@ -349,9 +344,8 @@ The following hooks are provided by the package:
 
 #+begin_src emacs-lisp
   (use-package on
+    :ensure (:wait t)
     :tags '("CORE"))
-
-  (elpaca-wait)
 #+end_src
 
 *** DONE Transient
@@ -460,7 +454,7 @@ the upstream has some priority issues with ERC; I would like to ignore some even
     :tags '("CORE" "NOTIFICATION"))
 
   (use-package sauron
-    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/sauron" :branch "functional")
+    :ensure (:wait t :protocol ssh :type git :host github :repo "seblemaguer/sauron" :branch "functional")
     :tags '("CORE" "NOTIFICATION")
     :commands (sauron-start-hidden sauron-add-event)
 
@@ -475,17 +469,16 @@ the upstream has some priority issues with ERC; I would like to ignore some even
        (string= (plist-get props :event) "quit")))
 
     (setq sauron-separate-frame nil ;; The notification is on the same window ?
-	  sauron-sticky-frame t
-	  sauron-max-line-length nil ;; No max. length for the line
-	  sauron-modules '(sauron-org sauron-appt) ;; reduced the default modules
-	  sauron-column-alist '(( timestamp  .  20)
-				( origin     .  20)
-				( priority   .   4)
-				( message    . nil))
-	  sauron-org-exclude-todo-states (list "CURRENT" "EXEC-STARTED" "PAUSED" "DELEGATED" "WAITING")
-	  sauron-prio-org-minutes-left-list '((15 4))
-	  sauron-insensitivity-handler 'sauron-keep-priority))
-  (elpaca-wait)
+          sauron-sticky-frame t
+          sauron-max-line-length nil ;; No max. length for the line
+          sauron-modules '(sauron-org sauron-appt) ;; reduced the default modules
+          sauron-column-alist '(( timestamp  .  20)
+        			( origin     .  20)
+        			( priority   .   4)
+        			( message    . nil))
+          sauron-org-exclude-todo-states (list "CURRENT" "EXEC-STARTED" "PAUSED" "DELEGATED" "WAITING")
+          sauron-prio-org-minutes-left-list '((15 4))
+          sauron-insensitivity-handler 'sauron-keep-priority))
 #+end_src
 
 *** DONE Sauron/Alert/Modeline integration
@@ -1091,6 +1084,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
 
 #+begin_src emacs-lisp
   (use-package org
+    :ensure (:wait t)
     :tags '("ORG")
     :hook
     (org-after-todo-statistics . org-summary-todo)
@@ -1283,18 +1277,17 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
           (re-search-forward "^\\(\\s-*\\)- \\(.*\\)" (line-end-position) t)
           (replace-match "\\1- [ ] \\2"))))
 
+    (defun org-set-beamer-note ()
+      "Helper to just the set the BEAMER_env property to NOTE."
+      (org-set-property "BEAMER_env" "NOTE"))
     (defun org-agenda-generate-id ()
       "Helper to be used in a hook to generate org ids only if the buffer is part of the org-agenda files"
       (when (member (buffer-file-name) org-agenda-files)
         (generate-org-heading-ids))))
 
-  ;; Elpaca should wait org to be loaded
-  (elpaca-wait)
-
-  (use-package org-contrib)
-
-  ;; Elpaca should wait org-contrib to be loaded
-  (elpaca-wait)
+  (use-package org-contrib
+    :ensure (:wait t)
+    :tags '("ORG"))
 #+end_src
 
 ** DONE Source [100%]
@@ -6852,6 +6845,7 @@ Finally, the account definition is done in the private configuration file (so it
 #+begin_src emacs-lisp
   (use-package circe
     :tags '("CONNECTED" "CHAT" "IRC")
+    :ensure (:wait t)
     :commands (circe circe-server-buffers)
     :init
     (defun circe-network-connected-p (network)
@@ -6891,9 +6885,6 @@ Finally, the account definition is done in the private configuration file (so it
     ;; Formatting / Visual
     (enable-circe-color-nicks)
     (enable-circe-display-images))
-
-  ;; Elpaca should wait circe to be ready!
-  (elpaca-wait)
 
   (use-builtin lui-logging
     :tags '("CONNECTED" "CHAT" "IRC")
@@ -7394,6 +7385,7 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
 #+begin_src emacs-lisp
   (use-package emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
+    :ensure (:wait t)
     :commands (emms emms-browse-by-artist with-current-emms-playlist)
     :bind (
       <<keybindings-gen(table=emms-keybindings)>>
@@ -7485,9 +7477,6 @@ Finally, I activated the browser and assigned the multimedia keys to be understo
         			   (/ (round total-playing-time) 60) (% (round total-playing-time) 60))
           (sit-for 2))))
     (add-hook 'emms-player-seeked-functions #'emms-indicate-seek 'append))
-
-  ;; Wait for elpaca so that the other packages are ready if necessary !
-  (elpaca-wait)
 
   (use-builtin emms-info-metaflac ;; emms
     :tags '("MULTIMEDIA" "MUSIC" "ENTERTAINMENT")
