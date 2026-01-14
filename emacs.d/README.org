@@ -6249,7 +6249,6 @@ As I am quite absent-minded, I use a reminder to not forget the attachment: =mes
           message-fill-column 100))
 
   (use-package org-msg
-    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/org-msg" :branch "some_fixes")
     :bind (:map org-msg-edit-mode-map (
       <<keybindings-gen(table=org-msg-edit-keybindings)>>
     ))
@@ -6427,8 +6426,8 @@ I also redesigned the header buffer.
       :tags '("CONNECTED" "MAIL")
       :commands (mu4e)
 
-      :hook
-      (mu4e-update-pre . etc/imapfilter)
+      ;; :hook
+      ;; (mu4e-update-pre . etc/imapfilter)
       ;; (elpaca-after-init . (lambda () (mu4e t)))
 
       :pretty-hydra
