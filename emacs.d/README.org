@@ -5397,6 +5397,25 @@ It will require in case of first installation to run the following command: ~(tr
 
       ;; set the default folder for cloning repositories, By default Consult-GH will confirm this before cloning
       (setq consult-gh-default-clone-directory "~/tmp/to_sort_repos")))
+
+  (use-package orgit
+    :tags '("VC" "GIT" "ORG"))
+
+  (use-package orgit-file
+    :tags '("VC" "GIT" "ORG")
+    :custom
+    ;; Create orgit-file links only in magit-blob-mode buffers
+    (orgit-file-link-to-file-use-orgit 'blob-buffers-only)
+
+    ;; Use abbreviated revision hashes (7-8 characters)
+    (orgit-file-abbreviate-revisions t)
+
+    ;; Export text search patterns as URL fragments for browser highlighting
+    (orgit-file-export-text-fragments t)
+
+    :bind
+    ;; Explicit link creation in any buffer
+    ("C-c g l" . orgit-file-store))
 #+end_src
 
 *** DONE Git helpers
