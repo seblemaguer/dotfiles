@@ -2647,7 +2647,10 @@ CLOSED: [2022-02-10 Thu 07:04]
                                              :inverse-video t)))
     (org-roam-project-dashboard-header   ((t :inherit outline-1 :weight ultra-bold :height 150)))
     (org-roam-project-dashboard-project  ((t :inherit outline-2 :weight bold)))
-    (org-roam-project-dashboard-task     ((t :inherit outline-4))))
+    (org-roam-project-dashboard-task     ((t :inherit outline-4)))
+
+    :init
+    (advice-add 'org-roam-project-dashboard-show :before (lambda (&rest _args) (org-roam-db-sync))))
 #+end_src
 
 *** DONE vulpea
