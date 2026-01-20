@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: beamer_note
+# key: bnote_
+
+# --
+
+`(make-string (org-current-level) ?*)` Notes :B_NOTE:
+:PROPERTIES:
+:BEAMER_ENV: noteNH
+:END:
