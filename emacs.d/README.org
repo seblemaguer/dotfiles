@@ -1543,7 +1543,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
 #+begin_src emacs-lisp
   (use-builtin ox-latex ;; org-contrib
     :after (org-contrib)
-    :tags '("ORG")
+    :tags '("ORG" "LATEX")
     :after ox
     :config
     (setq org-latex-listings t
@@ -1560,7 +1560,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
 
   (use-builtin ox-beamer ;; org-contrib
     :after (org-contrib)
-    :tags '("ORG")
+    :tags '("ORG" "LATEX")
     :after ox
     :config
     (defun my-beamer-bold (contents backend info)
@@ -1570,9 +1570,16 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
 
   (use-builtin ox-bibtex ;; org-contrib
     :after (org-contrib)
-    :tags '("ORG")
+    :tags '("ORG" "LATEX")
     :after ox
     :defer t)
+
+  (use-builtin org-gradle-export
+    :tags '("ORG" "GRADLE" "LATEX")
+    :load-path default-plugin-dir
+    :custom
+    (org-gradle-export-nb-workers 1)
+    (org-gradle-export-log-level 'info))
 #+end_src
 
 *** DONE Markdown
