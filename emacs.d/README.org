@@ -6237,28 +6237,31 @@ CLOSED: [2021-01-05 Tue 08:27]
 :ID:       a25d3b9f-25bf-4a2b-b0c8-f5bbda3dfa9c
 :END:
 To compose emails, I rely on the combination of multiple packages.
-Obviously, the entry point is the package =message= whose ~message-mode~ is the major mode used to edit new emails.
-I configured the package to support some additional features like a proper signature and a proper formatting.
-I also updated the citation line/format.
 
 As I am using multiple account, I use the package =smtpmail-multi= to sort this out.
 I also had to redefine the function ~smtpmail-try-auth-methods~ to support keepassxc and secret services.
 To do so, the assumption is that every SMTP credential is labeled as =<host>:<port>:<user>=.
 The default account is my work email as it is my most used account.
 
-Because I sometimeswant to send rich emails, I use =org-msg= which relies on the HTML exporter provided by =org= to generate HTML emails.
+Because I want send rich emails, I use =org-msg= which relies on the HTML exporter provided by =org= to generate HTML emails.
 I also use ~varuga~ to send calendar invite.
 As I am quite absent-minded, I use a reminder to not forget the attachment: =message-attachment-reminder=.
 
 #+transclude: [[file:keytable_summary.org::Org-msg]] :only-contents
 
 #+begin_src emacs-lisp
-  (use-builtin message
-    :tags '("CONNECTED" "MAIL")
+  (use-package org-msg
+    :ensure t
+    :bind (:map org-msg-edit-mode-map (
+      <<keybindings-gen(table=org-msg-edit-keybindings)>>
+    ))
+
     :hook
-    (message-mode . format-hook-message)
+    (org-msg-edit-mode . format-hook-message)
+    (elpaca-after-init . org-msg-mode)
 
     :config
+
     (defun format-hook-message ()
       "Specify some formatting rules for email message writing."
       (auto-fill-mode -1)
@@ -6275,18 +6278,8 @@ As I am quite absent-minded, I use a reminder to not forget the attachment: =mes
           message-sendmail-f-is-evil nil
           message-kill-buffer-on-exit t
           message-signature-file nil
-          message-fill-column 100))
+          message-fill-column 100)
 
-  (use-package org-msg
-    :bind (:map org-msg-edit-mode-map (
-      <<keybindings-gen(table=org-msg-edit-keybindings)>>
-    ))
-
-    :hook
-    (mu4e-compose-pre  . org-msg-mode)
-    (org-msg-edit-mode . format-hook-message)
-
-    :config
     (defun myorg/mu4e-compose-org-msg()
       (org-hide-block-all)
       (org-hide-drawer-all))
@@ -6444,7 +6437,7 @@ I also redesigned the header buffer.
     (use-package mu4e
       :ensure (mu4e :host github
                     :repo "djcb/mu"
-                    :tag "v1.12.11"
+                    :tag "v1.12.15"
                     :files ("mu4e/*.el" "build/mu4e/mu4e-meta.el" "build/mu4e/mu4e-config.el"
                             "build/mu4e/mu4e.info")
                     :main "mu4e/mu4e.el"
@@ -6488,10 +6481,6 @@ I also redesigned the header buffer.
 
         :map mu4e-main-mode-map (
           <<keybindings-gen(table=mu4e-main-mode-keybindings)>>
-        )
-
-        :map message-mode-map (
-          <<keybindings-gen(table=message-mode-keybindings)>>
         )
       )
 
@@ -6591,84 +6580,6 @@ I also redesigned the header buffer.
       (when (fboundp 'imagemagick-register-types)
         (imagemagick-register-types))
 
-      (defun mu4e~headers-line-apply-flag-face (msg line)
-        line)
-
-      (defun mu4e~headers-field-apply-basic-properties (msg field val width)
-        (cl-case field
-          (:subject
-           (propertize
-            (concat
-             (mu4e~headers-thread-prefix (mu4e-message-field msg :thread))
-             (truncate-string-to-width val 600))
-            'face
-            (let ((flags (mu4e-message-field msg :flags)))
-              (cond
-               ((memq 'trashed flags) 'mu4e-trashed-face)
-               ((memq 'draft flags) 'mu4e-draft-face)
-               ((or (memq 'unread flags) (memq 'new flags))
-                'mu4e-unread-face)
-               ((memq 'flagged flags) 'mu4e-flagged-face)
-               ((memq 'replied flags) 'mu4e-replied-face)
-               ((memq 'passed flags) 'mu4e-forwarded-face)
-               (t 'mu4e-header-face)))))
-          (:thread-subject
-           (propertize
-            (mu4e~headers-thread-subject msg)
-            'face 'font-lock-doc-face))
-          ((:maildir :path :message-id) val)
-          ((:to :from :cc :bcc)
-           (propertize
-            (mu4e~headers-contact-str val)
-            'face 'font-lock-function-name-face))
-          (:from-or-to (mu4e~headers-from-or-to msg))
-          (:date
-           (propertize
-            (format-time-string mu4e-headers-date-format val)
-            'face 'font-lock-string-face))
-          (:mailing-list (mu4e~headers-mailing-list val))
-          (:human-date
-           (propertize
-            (mu4e~headers-human-date msg)
-            'help-echo (format-time-string
-                        mu4e-headers-long-date-format
-                        (mu4e-msg-field msg :date))
-            'face 'font-lock-string-face))
-          (:flags
-           (propertize (mu4e~headers-flags-str val)
-                       'help-echo (format "%S" val)
-                       'face 'font-lock-type-face))
-          (:tags
-           (propertize
-            (mapconcat 'identity val ", ")
-            'face 'font-lock-builtin-face))
-          (:size (mu4e-display-size val))
-          (t (mu4e~headers-custom-field msg field)))))
-
-    (use-package mu4e-thread-folding
-      :ensure (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
-      :tags '("CONNECTED" "MAIL")
-      :after (mu4e)
-      :hook (mu4e-headers-mode . mu4e-thread-folding-mode)
-      :custom-face
-      (mu4e-thread-folding-root-unfolded-face
-       ((t (:extend t :background "#dce6f9" :weight bold :overline nil :underline nil))))
-      (mu4e-thread-folding-root-folded-face
-       ((t (:extend t :background "#eef3fc" :overline nil :underline nil))))
-      (mu4e-thread-folding-child-face
-       ((t (:extend t :background "#eef3fc" :underline nil))))
-      (mu4e-thread-folding-root-prefix-face
-       ((t (:extend t :background "#dce6f9" :overline nil :underline nil))))
-
-      :config
-
-      (setq mu4e-headers-thread-child-prefix '("├>" . "┣▶ ")
-            mu4e-headers-thread-last-child-prefix '("└>" . "┗▶ ")
-            mu4e-headers-thread-connection-prefix '("│" . "┃ ")
-            mu4e-headers-thread-blank-prefix '(" " . "  ")
-            mu4e-headers-thread-orphan-prefix '("┬>" . "┳▶ ")
-            mu4e-headers-thread-single-orphan-prefix '("─>" . "━▶ ")
-            mu4e-headers-thread-duplicate-prefix '("=" . "≡ "))
 
       (add-to-list 'mu4e-header-info-custom
                    '(:empty . (:name "Empty"
@@ -6695,68 +6606,7 @@ I also redesigned the header buffer.
                                             (propertize "g" 'face 'bold-italic)
                                             maildir))))))
 
-      (defvar my-mu4e-unwanted-subject-tags
-        '("[External]" "[EXTERNAL]")
-        "List of tags to strip from email subject lines in mu4e headers.")
-
-      (defun my-mu4e-strip-subject-tags (subject)
-        "Strip unwanted tags (e.g. [External]) from SUBJECT string."
-        (let ((case-fold-search t))  ;; Make it case-insensitive
-          (dolist (tag my-mu4e-unwanted-subject-tags subject)
-            (setq subject (replace-regexp-in-string
-                           (concat "^" (regexp-quote tag) "[ \t]*") "" subject)))))
-
-
-      (defun mu4e~headers-thread-subject (msg)
-        "Get the subject for MSG if it is the first one in a thread.
-  Otherwise, return the thread-prefix without the subject-text. In
-  other words, show the subject of a thread only once, similar to
-  e.g. \"mutt\"."
-        (let* ((tinfo (mu4e-message-field msg :meta))
-               (subj (my-mu4e-strip-subject-tags (mu4e-msg-field msg :subject))))
-          (concat ;; prefix subject with a thread indicator
-           (mu4e~headers-thread-prefix tinfo)
-           (if (plist-get tinfo :thread-subject)
-               (truncate-string-to-width subj 600) ""))))
-
-      (defun mu4e~headers-field-value (msg field)
-        "Get the value for MSG FIELD."
-        (let ((val (mu4e-message-field msg field)))
-          (cl-case field
-            (:subject
-             (concat ;; prefix subject with a thread indicator
-              (mu4e~headers-thread-prefix (mu4e-message-field msg :meta))
-              ;;  "["(plist-get (mu4e-message-field msg :meta) :path) "] "
-              ;; work-around: emacs' display gets really slow when lines are too long;
-              ;; so limit subject length to 600
-              (truncate-string-to-width (my-mu4e-strip-subject-tags val) 600)))
-            (:thread-subject ;; if not searching threads, fall back to :subject
-             (if mu4e-search-threads
-                 (mu4e~headers-thread-subject msg)
-               (my-mu4e-strip-subject-tags (mu4e~headers-field-value msg :subject))))
-            ((:maildir :path :message-id) val)
-            ((:to :from :cc :bcc) (mu4e~headers-contact-str val))
-            ;; if we (ie. `user-mail-address' is the 'From', show
-            ;; 'To', otherwise show From
-            (:from-or-to (mu4e~headers-from-or-to msg))
-            (:date (format-time-string mu4e-headers-date-format val))
-            (:list (or val ""))
-            (:mailing-list (mu4e~headers-mailing-list (mu4e-msg-field msg :list)))
-            (:human-date (propertize (mu4e~headers-human-date msg)
-                                     'help-echo (format-time-string
-                                                 mu4e-headers-long-date-format
-                                                 (mu4e-msg-field msg :date))))
-            (:flags (propertize (mu4e~headers-flags-str val)
-                                'help-echo (format "%S" val)))
-            (:tags (propertize (mapconcat 'identity val ", ")))
-            (:size (mu4e-display-size val))
-            (t (mu4e~headers-custom-field-value msg field)))))
-
-      (defun my-mu4e-subject-formatter (msg)
-        "Custom subject formatter that strips [EXTERNAL] tag."
-        (my-mu4e-strip-subject-tags (mu4e-message-field msg :subject)))
-
-      (setq mu4e-headers-fields  '((:empty           .    1)
+      (setq mu4e-headers-fields  '((:empty           .   1)
                                    (:account         .   10)
                                    (:human-date      .   18)
                                    (:recipnum        .    2)
@@ -6764,7 +6614,35 @@ I also redesigned the header buffer.
                                    (:flags           .    6)
                                    (:mailing-list    .   10)
                                    (:from            .   22)
-                                   (:subject  .  nil))))
+                                   (:subject  .  nil)))
+
+      )
+
+    (use-package mu4e-thread-folding
+      :ensure (mu4e-thread-folding :type git :host github :repo "rougier/mu4e-thread-folding")
+      :tags '("CONNECTED" "MAIL")
+      :disabled t
+      :after (mu4e)
+      :hook (mu4e-headers-mode . mu4e-thread-folding-mode)
+      :custom-face
+      (mu4e-thread-folding-root-unfolded-face
+       ((t (:extend t :background "#dce6f9" :weight bold :overline nil :underline nil))))
+      (mu4e-thread-folding-root-folded-face
+       ((t (:extend t :background "#eef3fc" :overline nil :underline nil))))
+      (mu4e-thread-folding-child-face
+       ((t (:extend t :background "#eef3fc" :underline nil))))
+      (mu4e-thread-folding-root-prefix-face
+       ((t (:extend t :background "#dce6f9" :overline nil :underline nil))))
+
+      :config
+
+      (setq mu4e-headers-thread-child-prefix '("├>" . "┣▶ ")
+            mu4e-headers-thread-last-child-prefix '("└>" . "┗▶ ")
+            mu4e-headers-thread-connection-prefix '("│" . "┃ ")
+            mu4e-headers-thread-blank-prefix '(" " . "  ")
+            mu4e-headers-thread-orphan-prefix '("┬>" . "┳▶ ")
+            mu4e-headers-thread-single-orphan-prefix '("─>" . "━▶ ")
+            mu4e-headers-thread-duplicate-prefix '("=" . "≡ ")))
 
   (use-package mu4e-walk
     :tags '("CONNECTED" "MAIL")

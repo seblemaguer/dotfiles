@@ -955,11 +955,6 @@
 | u   | mu4e-update-mail-and-index |                                                              |
 | q   | previous-buffer            | Override the "exit" mu4e to always keep it in the background |
 
-#+NAME: message-mode-keybindings
-| Key     | Function            | Description |
-|---------+---------------------+-------------|
-| C-c C-a | mail-add-attachment |             |
-
 ** Messaging
 :PROPERTIES:
 :ID:       11cc3359-59b3-4902-9848-ce6a1bf57d64
