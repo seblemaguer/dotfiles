@@ -5816,7 +5816,7 @@ I also replace a base deletion by moving the files/directories to the trash.
       (mapc (lambda (x)
               (when (s-ends-with-p ".pdf" x t)
                 (message "Transfering \"%S\" to the reMarkable" x)
-                (call-process "pdf2remarkable" nil nil nil x)))
+                (call-process "rm_import" nil nil nil x)))
             (dired-get-marked-files nil nil nil nil t)))
 
     (defun restart-remarkable-ui ()
