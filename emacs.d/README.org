@@ -3343,6 +3343,12 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
       :map flycheck-command-map
       <<keybindings-gen(table=consult-flycheck-entry-keybindings)>>
     ))
+
+  (use-package consult-vulpea
+    :tags '("COMPLETION" "ORG")
+    :after (:all consult vulpea)
+    :config
+    (consult-vulpea-mode 1))
 #+end_src
 
 ** DONE Templating [100%]
