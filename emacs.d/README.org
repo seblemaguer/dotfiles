@@ -1578,7 +1578,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
     :tags '("ORG" "GRADLE" "LATEX")
     :load-path default-plugin-dir
     :custom
-    (org-gradle-export-nb-workers 1)
+    (org-gradle-export-nb-workers 5)
     (org-gradle-export-log-level 'info))
 #+end_src
 
@@ -2463,6 +2463,7 @@ CLOSED: [2022-02-10 Thu 07:04]
     :commands (org-roam-setup)
     :custom
     (org-roam-directory cloud-org-root-dir)
+    (org-directory cloud-org-root-dir)
     (org-roam-file-exclude-regexp '(".stversions/" ".stfolder/"))
     (org-roam-database-connector 'sqlite-builtin)
 
