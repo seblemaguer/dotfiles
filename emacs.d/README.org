@@ -1577,8 +1577,9 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
   (use-builtin org-gradle-export
     :tags '("ORG" "GRADLE" "LATEX")
     :load-path default-plugin-dir
+    :commands (org-gradle-export-beamer-student org-gradle-export-beamer-teacher org-gradle-export-beamer)
     :custom
-    (org-gradle-export-nb-workers 5)
+    (org-gradle-export-nb-workers 1)
     (org-gradle-export-log-level 'info))
 #+end_src
 
