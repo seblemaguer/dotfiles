@@ -4720,6 +4720,14 @@ Finally, I use =numpydoc= to deal with the documentation.
           python-tdd-mode-scroll-output t
           python-tdd-mode-buffer-popup t
           python-tdd-mode-blink-enabled nil))
+
+  (use-package ein
+    :tags '("PROGRAMMING" "PYTHON" "IDE")
+    :commands (ein:run)
+    :custom-face
+    (ein:codecell-input-area-face      ((t :background "#E8F9FF")))
+    (ein:markdowncell-input-area-face  ((t :background "#E8FFF0")))
+    (ein:cell-output-area              ((t :background "#FFEDE8"))))
 #+end_src
 
 *** DONE Shell
