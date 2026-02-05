@@ -5401,6 +5401,14 @@ It will require in case of first installation to run the following command: ~(tr
     (magit-todos-recursive t)
     (magit-todos-depth 10))
 
+  (use-package magit-pre-commit
+    :tags '("VC" "GIT")
+    :after magit)
+
+  (use-package magit-git-toolbelt
+    :tags '("VC" "GIT")
+    :after magit)
+
   (use-package why-this
     :tags '("VC" "GIT"))
 
