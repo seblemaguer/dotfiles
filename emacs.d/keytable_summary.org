@@ -942,10 +942,6 @@
 | Key       | Function                     | Description |
 |-----------+------------------------------+-------------|
 | <tab>     | mu4e-headers-toggle-at-point |             |
-| <left>    | mu4e-headers-fold-at-point   |             |
-| <S-left>  | mu4e-headers-fold-all        |             |
-| <right>   | mu4e-headers-unfold-at-point |             |
-| <S-right> | mu4e-headers-unfold-all      |             |
 | #         | mu4e-view-pipe               |             |
 | .         | mu4e-hydra/body              |             |
 
