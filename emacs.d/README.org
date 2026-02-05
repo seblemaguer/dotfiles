@@ -2363,6 +2363,11 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
   (when (executable-find "diffpdf")
     (use-package diffpdf
       :tags '("DOCUMENT" "DESKTOP")))
+
+  (use-package pdffontetc
+    :after pdf-tools
+    :commands (pdffontetc-display-combined-metadata-and-font-info)
+    :tags '("DOCUMENT" "DESKTOP"))
 #+end_src
 
 *** DONE Grepping
