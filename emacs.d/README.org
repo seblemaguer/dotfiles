@@ -401,7 +401,7 @@ All my passwords are stored in a keepassxc database. I am relying on keepass-mod
 
         (defun keepass-get-username (db entry)
           "Helper to retrieve the username of an `entry' from a keepass database `db' using keepass-mode helpers."
-          (keepass-get-attribute db entry "Username"))
+          (keepass-get-attribute db entry "UserName"))
 
         (defun keepass-get-url (db entry)
           "Helper to retrieve the URL of an `entry' from a keepass database `db' using keepass-mode helpers."
