@@ -4849,6 +4849,21 @@ CLOSED: [2025-03-02 Sun 21:15]
     			     :org-src '("qml" . qml-ts)))
 
 #+END_SRC
+** DONE Databases [100%]
+*** DONE sqlite
+CLOSED: [2026-02-12 Thu 09:27]
+The main database format I am using for now is sqlite.
+=elsqlite= is a neat project which provides a nice way of inspecting it.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package elsqlite
+    :tags '("PROGRAMMING" "DATABASES")
+    :bind (:map elsqlite-table-mode-map (
+        ("M-u" . elsqlite-table-back-to-schema)
+     ))
+    :config
+    (elsqlite-enable-auto-open))
+#+END_SRC
 
 * DONE Writing / Reading [100%]
 :PROPERTIES:
