@@ -3329,17 +3329,21 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
 
     ;; For some commands and buffer sources it is useful to configure the
     ;; :preview-key on a per-command basis using the `consult-customize' macro.
-    (consult-customize consult-theme
-                       :preview-key '(:debounce 0.2 any)
-                       consult-ripgrep consult-git-grep consult-grep
+    (consult-customize consult-ripgrep consult-git-grep consult-grep consult-man
                        consult-bookmark consult-recent-file consult-xref
-                       consult--source-bookmark consult--source-recent-file
-                       consult--source-project-recent-file
-                       :preview-key "M-.")
+                       consult-source-bookmark consult-source-file-register
+                       consult-source-recent-file consult-source-project-recent-file
+                       :preview-key '(:debounce 0.4 any))
 
     ;; Optionally configure the narrowing key.
     ;; Both < and C-+ work reasonably well.
-    (setq consult-narrow-key "<"))
+    (setq consult-narrow-key "<")
+
+    ;; TODO: what is that?
+    (add-to-list 'consult-preview-allowed-hooks 'hl-todo-mode)
+    (add-to-list 'consult-preview-allowed-hooks 'elide-head-mode)
+    (add-to-list 'consult-preview-allowed-hooks 'global-org-modern-mode)
+    (add-to-list 'consult-preview-allowed-hooks 'global-hl-todo-mode))
 
   ;; Optionally add the `consult-flycheck' command.
   (use-package consult-flycheck
@@ -3944,9 +3948,8 @@ CLOSED: [2021-01-03 Sun 21:28]
     :defer t)
 
   (use-package flymake :defer t)
-  (use-package eglot
+  (use-builtin eglot
     :tags '("IDE" "PROGRAMMING")
-    :ensure (:wait t)
     :defer t
     :init
     (defun my-eglot-organize-imports () (interactive)
