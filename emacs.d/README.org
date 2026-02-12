@@ -4714,7 +4714,7 @@ Finally, I use =numpydoc= to deal with the documentation.
     :commands (numpydoc-generate))
 
   (use-package python-tdd-mode
-    :ensure (python-tdd-mode :type git :host github :repo "marcwebbie/tdd-mode")
+    :ensure (python-tdd-mode :type git :host github :repo "seblemaguer/python-tdd-mode" :branch "fix_global_conflict")
     :tags '("PROGRAMMING" "PYTHON")
     :hook (python-ts-mode . python-tdd-mode)
     :bind (
