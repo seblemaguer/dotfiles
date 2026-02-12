@@ -6325,6 +6325,7 @@ As I am quite absent-minded, I use a reminder to not forget the attachment: =mes
       (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
       (visual-line-mode))
 
+    ;; Main part is coming from https://gitlab.com/jdm204/dotfiles/-/blob/master/config.org
     (setq user-full-name "Sébastien Le Maguer"
           smtpmail-servers-requiring-authorization ".*"
           message-auto-save-directory nil
@@ -6333,131 +6334,25 @@ As I am quite absent-minded, I use a reminder to not forget the attachment: =mes
           message-sendmail-f-is-evil nil
           message-kill-buffer-on-exit t
           message-signature-file nil
-          message-fill-column 100)
-
-    (defun myorg/mu4e-compose-org-msg()
-      (org-hide-block-all)
-      (org-hide-drawer-all))
-
-    ;; Org HTML Styling (from https://github.com/jeremy-compostella/org-msg/issues/143#issuecomment-1412904472)
-    (defconst cpm-org-msg-style
-      (let* ((font-family '(font-family . "\"Helvetica\", \"Arial\", sans-serif"))
-             (font-size '(font-size . "12pt"))
-             (font `(,font-family ,font-size))
-             (line-height '(line-height . "1.5"))
-             (bold '(font-weight . "bold"))
-             (theme-color "#0071c5")
-             (color `(color . ,theme-color))
-             (table `(,@font (margin-top . "0px")))
-             (ftl-number `(,@font ,color ,bold (text-align . "left")))
-             (inline-modes '(asl c c++ conf cpp csv diff ditaa emacs-lisp
-                                 fundamental ini json makefile man org plantuml
-                                 python sh xml))
-             (inline-src `((color . ,(face-foreground 'default))
-                           (background-color . ,(face-background 'default))))
-             (code-src
-              (mapcar (lambda (mode)
-                        `(code ,(intern (concat "src src-" (symbol-name mode)))
-                               ,inline-src))
-                      inline-modes))
-             (base-quote '((padding-left . "5px") (margin-left . "10px")
-                           (margin-top . "10px") (margin-bottom . "0")
-                           (font-style . "italic") (background . "#f9f9f9")))
-             (quote-palette '("#324e72" "#6a3a4c" "#7a4900" "#ff34ff"
-                              "#ff4a46" "#008941" "#006fa6" "#a30059"
-                              "#ffdbe5" "#000000" "#0000a6" "#63ffac"))
-             (quotes
-              (mapcar (lambda (x)
-                        (let ((c (nth x quote-palette)))
-                          `(blockquote ,(intern (format "quote%d" (1+ x)))
-                                       (,@base-quote
-                                        (color . ,c)
-                                        (border-left . ,(concat "3px solid "
-                                                                (org-msg-lighten c)))))))
-                      (number-sequence 0 (1- (length quote-palette))))))
-        `((del nil (,@font (color . "grey") (border-left . "none")
-                           (text-decoration . "line-through") (margin-bottom . "0px")
-                           (margin-top . "10px") (line-height . "11pt")))
-          (a nil (,color))
-          (a reply-header ((color . "black") (text-decoration . "none")))
-          (div reply-header ((padding . "3.0pt 0in 0in 0in")
-                             (border-top . "solid #e1e1e1 1.0pt")
-                             (margin-bottom . "20px")))
-          (span underline ((text-decoration . "underline")))
-          (li nil (,@font ,line-height (margin-bottom . "0px")
-                          (margin-top . "2px")))
-          (nil org-ul ((list-style-type . "disc")))
-          (nil org-ol (,@font ,line-height (margin-bottom . "0px")
-                              (margin-top . "0px") (margin-left . "30px")
-                              (padding-top . "0px") (padding-left . "5px")))
-          (nil signature (,@font (margin-bottom . "20px") (white-space . "pre-line")))
-          (blockquote quote0 ,(append base-quote '((border-left . "3px solid #ccc"))))
-          ,@quotes
-          (code nil (,font-size (font-family . "monospace") (background . "#f9f9f9")))
-          ,@code-src
-          (nil linenr ((padding-right . "1em")
-                       (color . "black")
-                       (background-color . "#aaaaaa")))
-          (pre nil ((line-height . "12pt")
-                    ,@inline-src
-                    (margin . "0px")
-                    (font-size . "9pt")
-                    (font-family . "monospace")))
-          (div org-src-container ((margin-top . "10px")))
-          (nil figure-number ,ftl-number)
-          (nil table-number)
-          (caption nil ((text-align . "left")
-                        (background . ,theme-color)
-                        (color . "white")
-                        ,bold))
-          (nil t-above ((caption-side . "top")))
-          (nil t-bottom ((caption-side . "bottom")))
-          (nil listing-number ,ftl-number)
-          (nil figure ,ftl-number)
-          (nil org-src-name ,ftl-number)
-
-          (table nil (,@table ,line-height (border-collapse . "collapse")))
-          (th nil ((border . "1px solid white")
-                   (background-color . ,theme-color)
-                   (color . "white")
-                   (padding-left . "10px") (padding-right . "10px")))
-          (td nil (,@table (padding-left . "10px") (padding-right . "10px")
-                           (background-color . "#f9f9f9") (border . "1px solid white")))
-          (td org-left ((text-align . "left")))
-          (td org-right ((text-align . "right")))
-          (td org-center ((text-align . "center")))
-
-          (div outline-text-4 ((margin-left . "15px")))
-          (div outline-4 ((margin-left . "10px")))
-          (h4 nil ((margin-bottom . "0px") (font-size . "12pt")
-                   (text-decoration . "underline") ,font-family))
-          (h3 nil ((margin-bottom . "0px") ,color (font-size . "12pt")
-                   ,font-family))
-          (h2 nil ((margin-top . "20px") (margin-bottom . "20px")
-                   ,color (font-size . "13pt") ,font-family))
-          (h1 nil ((margin-top . "20px")
-                   (margin-bottom . "20px") ,color (font-size . "16pt")
-                   ,font-family))
-          (p nil ((text-decoration . "none") (margin-bottom . "0px")
-                  (margin-top . "10px") (line-height . "1.25") (padding-bottom . "5px") ,font-size
-                  ,font-family))
-          (div nil (,@font (line-height . "1.25"))))))
-
-    ;; Main part is coming from https://gitlab.com/jdm204/dotfiles/-/blob/master/config.org
-    (setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:nil"
+          message-fill-column 130
+          org-msg-enforce-css (org-msg-css-file-to-list (format "%s/third_parties/styles/org-msg.css" user-emacs-directory))
+          org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:nil"
           org-msg-greeting-name-limit 3
           org-msg-startup "hidestars indent inlineimages"
           org-msg-default-alternatives '((new	       . (text))
                                          (reply-to-html  . (text html))
                                          (reply-to-text  . (text)))
           org-msg-convert-citation t
-          org-msg-enforce-css cpm-org-msg-style
           org-msg-signature (format
                              "\n\n#+begin_signature\n--\n%s\n#+end_signature"
                              (with-temp-buffer
                                (insert-file-contents
                                 (format "%s/third_parties/mail/signature" user-emacs-directory))
                                (buffer-string))))
+
+    (defun myorg/mu4e-compose-org-msg()
+      (org-hide-block-all)
+      (org-hide-drawer-all))
 
     (advice-add 'org-msg-post-setup :after 'myorg/mu4e-compose-org-msg))
 

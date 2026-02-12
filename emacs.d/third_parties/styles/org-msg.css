@@ -1,0 +1,398 @@
+/* from https://github.com/jeremy-compostella/org-msg/issues/143#issuecomment-1412904472 */
+div {
+  line-height: 1.25;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+p {
+  font-family: "Helvetica", "Arial", sans-serif;
+  font-size: 12pt;
+  padding-bottom: 5px;
+  line-height: 1.25;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  text-decoration: none;
+}
+h1 {
+  font-family: "Helvetica", "Arial", sans-serif;
+  font-size: 16pt;
+  color: #0071c5;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+h2 {
+  font-family: "Helvetica", "Arial", sans-serif;
+  font-size: 13pt;
+  color: #0071c5;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+h3 {
+  font-family: "Helvetica", "Arial", sans-serif;
+  font-size: 12pt;
+  color: #0071c5;
+  margin-bottom: 0px;
+}
+h4 {
+  font-family: "Helvetica", "Arial", sans-serif;
+  text-decoration: underline;
+  font-size: 12pt;
+  margin-bottom: 0px;
+}
+div.outline-4 {
+  margin-left: 10px;
+}
+div.outline-text-4 {
+  margin-left: 15px;
+}
+td.org-center {
+  text-align: center;
+}
+td.org-right {
+  text-align: right;
+}
+td.org-left {
+  text-align: left;
+}
+td {
+  border: 1px solid white;
+  background-color: #f9f9f9;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-top: 0px;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+th {
+  padding-right: 10px;
+  padding-left: 10px;
+  color: white;
+  background-color: #0071c5;
+  border: 1px solid white;
+}
+table {
+  border-collapse: collapse;
+  line-height: 1.5;
+  margin-top: 0px;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+.org-src-name {
+  text-align: left;
+  font-weight: bold;
+  color: #0071c5;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+.figure {
+  text-align: left;
+  font-weight: bold;
+  color: #0071c5;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+.listing-number {
+  text-align: left;
+  font-weight: bold;
+  color: #0071c5;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+.t-bottom {
+  caption-side: bottom;
+}
+.t-above {
+  caption-side: top;
+}
+caption {
+  font-weight: bold;
+  color: white;
+  background: #0071c5;
+  text-align: left;
+}
+.table-number {
+}
+.figure-number {
+  text-align: left;
+  font-weight: bold;
+  color: #0071c5;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+div.org-src-container {
+  margin-top: 10px;
+}
+pre {
+  font-family: monospace;
+  font-size: 9pt;
+  margin: 0px;
+  background-color: #ecf0f1;
+  color: #425d78;
+  line-height: 12pt;
+}
+.linenr {
+  background-color: #aaaaaa;
+  color: black;
+  padding-right: 1em;
+}
+code.src src-xml {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-sh {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-python {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-plantuml {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-org {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-man {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-makefile {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-json {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-ini {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-fundamental {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-emacs-lisp {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-ditaa {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-diff {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-csv {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-cpp {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-conf {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-c++ {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-c {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code.src src-asl {
+  background-color: #ecf0f1;
+  color: #425d78;
+}
+code {
+  background: #f9f9f9;
+  font-family: monospace;
+  font-size: 12pt;
+}
+blockquote.quote12 {
+  border-left: 3px solid #32feff;
+  color: #63ffac;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote11 {
+  border-left: 3px solid #3232ff;
+  color: #0000a6;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote10 {
+  border-left: 3px solid #000000;
+  color: #000000;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote9 {
+  border-left: 3px solid #ffffff;
+  color: #ffdbe5;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote8 {
+  border-left: 3px solid #ff3232;
+  color: #a30059;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote7 {
+  border-left: 3px solid #3232ff;
+  color: #006fa6;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote6 {
+  border-left: 3px solid #32ff32;
+  color: #008941;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote5 {
+  border-left: 3px solid #ff3232;
+  color: #ff4a46;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote4 {
+  border-left: 3px solid #ff32fe;
+  color: #ff34ff;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote3 {
+  border-left: 3px solid #ff3232;
+  color: #7a4900;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote2 {
+  border-left: 3px solid #ff3232;
+  color: #6a3a4c;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote1 {
+  border-left: 3px solid #3232ff;
+  color: #324e72;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+blockquote.quote0 {
+  border-left: 3px solid #ccc;
+  background: #f9f9f9;
+  font-style: italic;
+  margin-bottom: 0;
+  margin-top: 10px;
+  margin-left: 10px;
+  padding-left: 5px;
+}
+.signature {
+  white-space: pre-line;
+  margin-bottom: 20px;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+.org-ol {
+  padding-left: 5px;
+  padding-top: 0px;
+  margin-left: 30px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  line-height: 1.5;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+.org-ul {
+  list-style-type: disc;
+}
+li {
+  margin-top: 2px;
+  margin-bottom: 0px;
+  line-height: 1.5;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
+span.underline {
+  text-decoration: underline;
+}
+div.reply-header {
+  margin-bottom: 20px;
+  border-top: solid #e1e1e1 1pt;
+  padding: 3pt 0in 0in 0in;
+}
+a.reply-header {
+  text-decoration: none;
+  color: black;
+}
+a {
+  color: #0071c5;
+}
+del {
+  line-height: 11pt;
+  margin-top: 10px;
+  margin-bottom: 0px;
+  text-decoration: line-through;
+  border-left: none;
+  color: grey;
+  font-size: 12pt;
+  font-family: "Helvetica", "Arial", sans-serif;
+}
