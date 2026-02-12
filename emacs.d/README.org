@@ -5236,17 +5236,25 @@ CLOSED: [2022-12-31 Sat 20:10]
 :PROPERTIES:
 :ID:       1658e59f-9c64-42e9-af37-bab265edddfe
 :END:
-As I have the luck to deal with multiple languages (french, english and bulgarian), I need to have a quick access to some translations.
-WordReference is my first choice as I find it quite complete and accurate.
-As a fallback, I am using google-translate via the package =go-translate=.
+As I have the luck to deal with multiple languages (French, English, Finnish and Bulgarian), I need to have a quick access to some translations and dictionaries.
+My main point of entry is =glosbe= but sometimes need to go a bit more detailed.
+For this, I am using google-translate via the package =go-translate=.
 
 #+transclude: [[file:keytable_summary.org::Translation]] :only-contents
 
 #+begin_src emacs-lisp
-  (use-package wordreference
-    :ensure (:type git :host github :repo "emacsmirror/wordreference")
+  (use-package glosbe
+    :ensure (:host github :repo "seblemaguer/glosbe.el")
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
-    :commands (wordreference-search))
+    :commands (glosbe-translate-word)
+    :custom
+    (glosbe-default-from "en")
+    (glosbe-default-to "fi")
+
+    :custom-face
+    (glosbe-translation-entry-face     ((t :inherit outline-1 :weight ultra-bold :height 150)))
+    (glosbe-entry-pos-face             ((t :inherit outline-1 :weight bold :height 100)))
+    (glosbe-entry-category-header-face ((t :inherit outline-2 :weight bold))))
 
   (use-package wiktionary-bro
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
