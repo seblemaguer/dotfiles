@@ -866,6 +866,7 @@
 | C-c RET b   | message-goto-bcc                |             |
 | C-c RET o   | org-msg-goto-body               |             |
 | C-c RET s   | message-goto-subject            |             |
+| C-c @       | org-msg-insert-recipient-mailto |             |
 
 *** Mu4e
 :PROPERTIES:
