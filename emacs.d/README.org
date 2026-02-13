@@ -6564,9 +6564,8 @@ I also redesigned the header buffer.
                                    (:flags           .    6)
                                    (:mailing-list    .   10)
                                    (:from            .   22)
-                                   (:subject  .  nil)))
-
-      )
+                                   (:subject  .  nil))
+            rfc2047-quote-decoded-words-containing-tspecials t))
 
   (use-package mu4e-walk
     :tags '("CONNECTED" "MAIL")
