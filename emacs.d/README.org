@@ -3534,6 +3534,16 @@ It is really convenient for quick note taking.
     (setq initial-major-mode 'autoscratch-mode))
 #+end_src
 
+** DONE Filling
+CLOSED: [2026-02-19 Thu 16:33]
+I am tuned to semantic filling, so using =fancy-fill-paragraph= enables this in a pretty neat way.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package fancy-fill-paragraph
+    :tags '("HELPERS")
+    :bind ("M-q" . fancy-fill-paragraph))
+#+END_SRC
+
 * DONE IDE [100%]
 :PROPERTIES:
 :ID:       64a070b9-dc83-46ce-aa97-11cb12a1a545
