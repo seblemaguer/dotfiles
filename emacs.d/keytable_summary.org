@@ -616,9 +616,10 @@
 :ID:       89f2e84b-8d7b-42c9-821b-b2762b1bdee0
 :END:
 #+NAME: python-entry-keybindings
-| Key     | Function            | Description |
-|---------+---------------------+-------------|
-| C-c C-n | numpydoc-generate   |             |
+| Key     | Function          | Description |
+|---------+-------------------+-------------|
+| C-c C-n | numpydoc-generate |             |
+| C-h .   | pydoc-at-point    |             |
 
 #+NAME: python-tdd-entry-keybindings
 | Key     | Function                    | Description |

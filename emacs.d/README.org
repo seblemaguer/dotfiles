@@ -4746,6 +4746,10 @@ Finally, I use =numpydoc= to deal with the documentation.
     (ein:codecell-input-area-face      ((t :background "#E8F9FF")))
     (ein:markdowncell-input-area-face  ((t :background "#E8FFF0")))
     (ein:cell-output-area              ((t :background "#FFEDE8"))))
+
+  (use-package pydoc
+    :tags '("PROGRAMMING" "PYTHON" "DOCUMENTATION")
+    :commands (pydoc pydoc-at-point))
 #+end_src
 
 *** DONE Shell
