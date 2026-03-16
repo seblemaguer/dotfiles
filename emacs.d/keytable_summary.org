@@ -662,9 +662,13 @@
 :ID:       361c027b-f41e-4a41-9ffd-9bb8a32b58bb
 :END:
 #+NAME: gt-translate-entry-keybindings
-| Key     | Function         | Description |
-|---------+------------------+-------------|
-| C-c t t | gt-translate |             |
+| Key     | Function                  | Description |
+|---------+---------------------------+-------------|
+| C-c t t | gt-translate              |             |
+| C-c t f | gt-translate-fi           |             |
+| C-c t e | gt-translate-en           |             |
+| C-c t k | gt-delete-render-overlays |             |
+
 ** Spelling
 :PROPERTIES:
 :ID:       051c5aaa-7096-4b39-ac7c-570c5b987349

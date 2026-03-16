@@ -5321,7 +5321,34 @@ For this, I am using google-translate via the package =go-translate=.
                                   (en2fr . ,(gt-translator
                                               :taker   (gt-taker :langs '(en fr) :text 'word)
                                               :engines (gt-google-engine)
-                                              :render  (gt-overlay-render))))))
+                                              :render  (gt-overlay-render)))))
+
+
+    (defun gt-translator-copy-of-presets-from-name (tsn)
+      (let* ((tss (gt-ensure-plain gt-preset-translators))
+             (translator (alist-get tsn tss nil nil #'string-equal)))
+        (list (clone translator) tsn)))
+
+    (defun gt-switch-translator-from-name (name)
+      "Switch `gt-default-translator' to another defined in `gt-preset-translators'."
+      (interactive)
+      (cl-destructuring-bind (translator name)
+          (gt-translator-copy-of-presets-from-name name)
+        (setq gt-default-translator translator)
+        (gt-ensure-default-translator)
+        (message "Switch default translator to: %s" name)))
+
+    (defun gt-translate-fi ()
+      "Helper to translate Finnish to English."
+      (interactive)
+      (gt-switch-translator-from-name 'fi2en)
+      (gt-translate))
+
+    (defun gt-translate-en ()
+      "Helper to translate English to Finnish."
+      (interactive)
+      (gt-switch-translator-from-name 'en2fi)
+      (gt-translate)))
 #+end_src
 
 * DONE Version Control / Project Management [100%]
