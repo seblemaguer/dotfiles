@@ -6364,7 +6364,6 @@ As I am quite absent-minded, I use a reminder to not forget the attachment: =mes
       (auto-fill-mode -1)
       (visual-fill-column-mode -1)
       (diff-hl-mode -1)
-      (setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
       (visual-line-mode))
 
     ;; Main part is coming from https://gitlab.com/jdm204/dotfiles/-/blob/master/config.org
@@ -8100,7 +8099,7 @@ Finally, I like to know which buffer I am currently using, and the package ~auto
 
     ;; Fringe bits
     (setq-default indicate-buffer-boundaries 'right)
-
+    (setq visual-line-fringe-indicators '(left-curly-arrow))
     ;; Highlight current line
     (global-hl-line-mode)
 
