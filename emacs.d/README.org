@@ -5276,6 +5276,9 @@ For this, I am using google-translate via the package =go-translate=.
     :ensure (:host github :repo "seblemaguer/glosbe.el")
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")
     :commands (glosbe-translate-word)
+    :bind (
+      <<keybindings-gen(table=glosbe-translate-entry-keybindings)>>
+    )
     :custom
     (glosbe-default-from "en")
     (glosbe-default-to "fi")
@@ -5283,7 +5286,21 @@ For this, I am using google-translate via the package =go-translate=.
     :custom-face
     (glosbe-translation-entry-face     ((t :inherit outline-1 :weight ultra-bold :height 150)))
     (glosbe-entry-pos-face             ((t :inherit outline-1 :weight bold :height 100)))
-    (glosbe-entry-category-header-face ((t :inherit outline-2 :weight bold))))
+    (glosbe-entry-category-header-face ((t :inherit outline-2 :weight bold)))
+
+    :config
+    (defun glosbe-translate-word-fi (word)
+      "Helper to find the translation of an Finnish `word' in English."
+      (interactive
+       (list (read-string (format "Word [%s]: " (thing-at-point 'word)) (thing-at-point 'word))))
+      (glosbe-translate-word "fi" "en" word))
+
+
+    (defun glosbe-translate-word-en (word)
+      "Helper to find the translation of an English `word' in Finnish."
+      (interactive
+       (list (read-string (format "Word [%s]: " (thing-at-point 'word)) (thing-at-point 'word))))
+      (glosbe-translate-word "en" "fi" word)))
 
   (use-package wiktionary-bro
     :tags '("WRITING" "HELPERS" "TRANSLATION" "CONNECTED")

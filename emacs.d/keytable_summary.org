@@ -669,6 +669,13 @@
 | C-c t e | gt-translate-en           |             |
 | C-c t k | gt-delete-render-overlays |             |
 
+#+NAME: glosbe-translate-entry-keybindings
+| Key     | Function                 | Description |
+|---------+--------------------------+-------------|
+| C-c g t | glosbe-translate-word    |             |
+| C-c g f | glosbe-translate-word-fi |             |
+| C-c g e | glosbe-translate-word-en |             |
+
 ** Spelling
 :PROPERTIES:
 :ID:       051c5aaa-7096-4b39-ac7c-570c5b987349
