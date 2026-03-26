@@ -7906,6 +7906,16 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
            (concat "/sudo::" (buffer-file-name))))
         (goto-char position))))
 
+  (use-package tramp-hlo
+    :tags '("SYSTEM" "SERVER" "CONNECTED")
+    :disabled t ;; SLM TODO: check this when emacs-stable will move to 31
+    :config
+    (tramp-hlo-setup))
+
+  (use-package tramp-rpc
+    :ensure (:url "https://github.com/ArthurHeymans/emacs-tramp-rpc" :rev :newest :lisp-dir "lisp")
+    :tags '("SYSTEM" "SERVER" "CONNECTED")
+    :after tramp)
 
   (use-package slurm-mode
     :ensure (:protocol ssh :type git :host github :repo "seblemaguer/slurm.el" :branch "explicit-username")
