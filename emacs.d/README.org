@@ -5213,12 +5213,17 @@ I just added =grip-mode= to have a proper preview of the file.
 #+transclude: [[file:keytable_summary.org::Markdown]] :only-contents
 
 #+begin_src emacs-lisp
+  (use-package md-ts-mode
+    :tags '("WRITING" "MARKDOWN")
+    :mode ("\\.md\\'" . md-ts-mode)
+    :defer t)
+
+  (use-package markdown-indent-mode
+    :tags '("WRITING" "MARKDOWN")
+    :hook (md-ts-mode . markdown-indent-mode))
+
   (use-package edit-indirect
     :tags '("WRITING" "MARKDOWN"))
-
-  (use-package markdown-mode
-    :tags '("WRITING" "MARKDOWN")
-    :mode ("\\.md$"))
 
   (use-package grip-mode
     :tags '("WRITING" "MARKDOWN" "DESKTOP")
