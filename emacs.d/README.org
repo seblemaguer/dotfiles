@@ -3354,6 +3354,9 @@ It is a nice extension to =Vertico= which brings to functionalities close to the
       <<keybindings-gen(table=consult-flycheck-entry-keybindings)>>
     ))
 
+  (use-package consult-symbol
+    :tags '("COMPLETION" "DOCUMENTATION"))
+
   (use-package consult-vulpea
     :tags '("COMPLETION" "ORG")
     :after (:all consult vulpea)

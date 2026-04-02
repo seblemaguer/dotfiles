@@ -398,6 +398,7 @@
 | C-c h | consult-history      |             |
 | C-c m | consult-mode-command |             |
 | C-c k | consult-kmacro       |             |
+| C-h o | consult-symbol       |             |
 
 #+NAME: consult-ctrl-x-keybindings
 | Key     | Function                | Description |
