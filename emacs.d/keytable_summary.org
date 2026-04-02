@@ -151,10 +151,10 @@
 :ID:       a08824f2-634a-4340-b544-a8b3cb180478
 :END:
 #+NAME: org-tree-slide-keybindings
-| Key      | function                          | Description |
-|----------+-----------------------------------+-------------|
-| C-<left> | org-tree-slide-move-previous-tree |             |
-| C-<right | org-tree-slide-move-next-tree     |             |
+| Key       | function                          | Description |
+|-----------+-----------------------------------+-------------|
+| C-<left>  | org-tree-slide-move-previous-tree |             |
+| C-<right> | org-tree-slide-move-next-tree     |             |
 
 ** Media-noter
 :PROPERTIES:
