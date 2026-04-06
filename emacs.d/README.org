@@ -387,27 +387,18 @@ All my passwords are stored in a keepassxc database. I am relying on keepass-mod
         :ensure (:protocol ssh :type git :host github :repo "seblemaguer/keepass-mode")
         :tags '("CORE" "PASSWORDS")
         :mode ("\\.kdbx$")
-        :commands (keepass-mode-get)
+        :commands (keepass-mode-get))
+
+    (use-builtin keepass-mode-auth-source
+        :tags '("CORE" "PASSWORDS")
+        :mode ("\\.kdbx$")
+        :commands (keepass-auth-source-enable)
         :init
-        (defun keepass-get-attribute (db entry attribute)
-          "Helper to retrieve the `attribute' of an `entry' from a keepass database `db' using keepass-mode helpers."
-          (let ((orig-buffer (current-buffer)))
-            (with-current-buffer (find-file-noselect db)
-              (keepass-mode-get attribute entry))))
+        (setq auth-sources `(,keepass-db))
+        (keepass-auth-source-enable))
 
-        (defun keepass-get-password (db entry)
-          "Helper to retrieve the password of an `entry' from a keepass database `db' using keepass-mode helpers."
-          (keepass-get-attribute db entry "Password"))
-
-        (defun keepass-get-username (db entry)
-          "Helper to retrieve the username of an `entry' from a keepass database `db' using keepass-mode helpers."
-          (keepass-get-attribute db entry "UserName"))
-
-        (defun keepass-get-url (db entry)
-          "Helper to retrieve the URL of an `entry' from a keepass database `db' using keepass-mode helpers."
-          (keepass-get-attribute db entry "URL")))
-
-    (warn "keepassxc-cli is not available. No passwords will be accessible"))
+    (warn "keepassxc-cli is not available. No passwords will be accessible")
+  )
 #+END_SRC
 
 *** DONE Private configuration
@@ -6588,10 +6579,6 @@ I also redesigned the header buffer.
                    '(:name  "Drafts"
                             :query "flag:draft"
                             :key ?d))
-
-      ;; SMTP needs to be here (FIXME: don't really know why)
-      (when (fboundp 'set-smtpmail-multi-accounts)
-        (set-smtpmail-multi-accounts))
 
       ;; use imagemagick, if available
       (when (fboundp 'imagemagick-register-types)
