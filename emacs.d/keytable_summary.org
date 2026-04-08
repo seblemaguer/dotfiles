@@ -332,7 +332,7 @@
 | C-c @ r   | kirigami-open-folds    | Open all folds        |
 | C-c @ TAB | kirigami-toggle-fold   | Toggle fold at point  |
 
-#+NAME: occult-entry-keybindinds
+#+NAME: occult-entry-keybindings
 | Key     | Function          | Description               |
 |---------+-------------------+---------------------------|
 | C-c @ z | occult-toggle     | Toggle region folding     |
