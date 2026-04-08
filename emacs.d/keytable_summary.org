@@ -332,6 +332,12 @@
 | C-c @ r   | kirigami-open-folds    | Open all folds        |
 | C-c @ TAB | kirigami-toggle-fold   | Toggle fold at point  |
 
+#+NAME: occult-entry-keybindinds
+| Key     | Function          | Description               |
+|---------+-------------------+---------------------------|
+| C-c @ z | occult-toggle     | Toggle region folding     |
+| C-c @ e | occult-reveal-all | Reveal all folded regions |
+
 ** Project management
 :PROPERTIES:
 :ID:       b34a664d-62bf-4e51-910b-79600f82e875

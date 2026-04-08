@@ -1363,12 +1363,16 @@ This section provides the configuration for babel by first configuring jupyter.
     (setq org-babel-default-header-args:sh      '((:results . "output replace"))
           org-babel-default-header-args:bash    '((:results . "output replace"))
           org-babel-default-header-args:shell   '((:results . "output replace"))
-          org-babel-default-header-args:python  '((:async . "yes")
+          org-babel-default-header-args:python  '((:async   . "yes")
                                                   (:session . "py")))
 
     ;; Define pathes for some tools
     (setq org-plantuml-jar-path "/usr/share/plantuml/plantuml.jar"
           org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"))
+
+  (use-package corg
+    :tags '(ORG)
+    :hook (org-mode . corg-setup))
 #+end_src
 
 *** DONE ID Generation
@@ -3041,6 +3045,12 @@ For the folding, I am relying on =outline-indent=.
     :tags '("FOLDING")
     :bind (
         <<keybindings-gen(table=kirigami-entry-keybindings)>>
+    ))
+
+  (use-package occult
+    :tags '("FOLDING")
+    :bind (
+        <<keybindings-gen(table=occult-entry-keybindings)>>
     ))
 #+end_src
 
