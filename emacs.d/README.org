@@ -5865,6 +5865,7 @@ I also replace a base deletion by moving the files/directories to the trash.
 
 #+begin_src emacs-lisp
   (use-package dirvish
+    :ensure  (dirvish :type git :host github :repo "seblemaguer/dirvish" :branch "fix_yank")
     :tags '("FILE_MANAGEMENT" "DIRED")
     :init
     ;; Let Dirvish take over Dired globally
@@ -5941,8 +5942,8 @@ I also replace a base deletion by moving the files/directories to the trash.
     (setq dired-launch-extensions-map nil))
 
   (use-package media-progress
-    :ensure (media-progress :type git :host github :repo "jumper047/media-progress" :files ("media-progress.el")
-                            :tags '("FILE_MANAGEMENT" "DIRED" "DESKTOP"))
+    :ensure (media-progress :type git :host github :repo "jumper047/media-progress" :files ("media-progress.el"))
+    :tags '("FILE_MANAGEMENT" "DIRED" "DESKTOP")
     :custom
     (media-progress-extensions (append dirvish-video-exts dirvish-audio-exts))
     (media-progress-mpv-cfg-dir "~/.local/state/mpv"))
