@@ -1514,7 +1514,7 @@ We also defines additional link to support audios and videos.
     (org-link-set-parameters "video" :export #'endless/export-video-link)
     (org-link-set-parameters "audio" :export #'endless/export-audio-link)
 
-    (add-to-list 'org-file-apps '("\\.x?html?\\'" . "/usr/bin/firefox %s")))
+    (add-to-list 'org-file-apps '("\\.x?html?\\'" . "helium %s")))
 
   (use-package org-re-reveal
     :tags '("ORG"))
@@ -7688,9 +7688,9 @@ I also rely on =envrc= to load ~direnv~ configurations.
                (detached-shell-history-file "~/.bash_history"))))
 
   (when (executable-find "direnv")
-    (use-package envrc
+    (use-package ben
       :tags '("SYSTEM")
-      :hook (elpaca-after-init . envrc-global-mode)))
+      :hook (elpaca-after-init . ben-global-mode)))
 #+end_src
 
 **** DONE Define some short for commands
