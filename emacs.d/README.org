@@ -7759,22 +7759,7 @@ However =SqrtMinusOne= developped the package [[https://github.com/SqrtMinusOne/
       :ensure (micromamba :host github :repo "SqrtMinusOne/micromamba.el")
       :init
       (defalias 'conda-activate 'micromamba-activate)
-      (defalias 'conda-deactivate 'micromamba-deactivate)
-      ;; :init
-      ;; (setq conda-anaconda-home (expand-file-name "~/environment/local/mamba"))
-
-      ;; (defun conda-hook ()
-      ;;   "Conda activation hook."
-      ;;   (setq conda-message-on-environment-switch nil)
-      ;;   (conda-env-autoactivate-mode t))
-
-      ;; :config
-      ;; (conda--get-config)
-
-      ;; :hook
-      ;; (python-mode . conda-hook)
-      ;; (ess-mode    . conda-hook)
-      ))
+      (defalias 'conda-deactivate 'micromamba-deactivate)))
 #+end_src
 
 *** DONE Dealing with processes
