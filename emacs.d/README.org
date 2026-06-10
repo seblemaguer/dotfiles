@@ -6938,10 +6938,6 @@ Because, I prefer to have the completion system, =company=, configured locally f
     (make-directory slack-profile-image-file-directory t)
     (make-directory slack-image-file-directory t)
 
-    ;; Register the teams (configuration defined in a private file)
-    (when (fboundp 'slack-register-teams)
-      (slack-register-teams))
-
     (defun sauron-slack-notifier (message room team)
       (if (slack-message-notify-p message room team)
           (let ((team-name (oref team name))
