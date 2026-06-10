@@ -3974,18 +3974,43 @@ CLOSED: [2021-01-03 Sun 21:28]
     :config
     (add-to-list 'eglot-server-programs
                  '(((c-mode c++-mode) . ("clangd"))))
-
     (add-to-list 'eglot-server-programs
                  '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio")))
+    (add-to-list 'eglot-server-programs
+                 '((markdown-mode text-mode org-mode) . ("harper-ls" "--stdio")))
 
-
-    (setq-default eglot-workspace-configuration '(
-                            :basedpyright (:typeCheckingMode "recommended")
-                            :basedpyright.analysis (
-                                :diagnosticSeverityOverrides (
-                                    :reportUnusedCallResult "none"
-                                )
-                                :inlayHints (:callArgumentNames :json-false)))))
+    (setq-default eglot-workspace-configuration
+                  '(:basedpyright (:typeCheckingMode "recommended")
+                    :basedpyright.analysis (
+                        :diagnosticSeverityOverrides (:reportUnusedCallResult "none")
+                        :inlayHints (:callArgumentNames :json-false)
+                    )
+                    :harper-ls (
+                        :userDictPath ""
+                        :workspaceDictPath ""
+                        :fileDictPath ""
+                        :linters (
+                            :SpellCheck t
+                            :SpelledNumbers :json-false
+                            :AnA t
+                            :SentenceCapitalization t
+                            :UnclosedQuotes t
+                            :WrongQuotes :json-false
+                            :LongSentences t
+                            :RepeatedWords t
+                            :Spaces t
+                            :Matcher t
+                            :CorrectNumberSuffix t
+                        )
+                        :codeActions (:ForceStable :json-false)
+                        :markdown (:IgnoreLinkTitle :json-false)
+                        :diagnosticSeverity "hint"
+                        :isolateEnglish :json-false
+                        :dialect "British"
+                        :maxFileLength 120000
+                        :ignoredLintsPath ""
+                        :excludePatterns [])
+                    )))
 
   (use-package eglot-booster
     :ensure (eglot-booster
