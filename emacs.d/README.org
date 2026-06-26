@@ -6212,7 +6212,7 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
     :ensure (:type git :host github :repo "karthink/elfeed-tube" :files (:defaults (:exclude "elfeed-tube-mpv.el")))
     :after elfeed
     :tags '("CONNECTED" "RSS" "YOUTUBE")
-    :defer t
+    :demand t
     :config
     ;; (setq elfeed-tube-auto-save-p nil) ; default value
     ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
@@ -6236,7 +6236,9 @@ Some of my feeds come from youtube so =elfeed-tube= provides a nice interface to
       :map elfeed-show-mode-map (
         <<keybindings-gen(table=elfeed-tube-mpv-keybindings)>>
       )
-    ))
+    )
+    :config
+    (setq elfeed-tube-mpv--available-p (executable-find "mpv")))
 #+end_src
 
 *** DONE Notification part
