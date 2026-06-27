@@ -264,6 +264,9 @@ Now we can add the specific helper for our configuration:
 #+end_src
 *** DONE Fix some keys redefinition with terminal
 CLOSED: [2025-05-14 Wed 17:08]
+:PROPERTIES:
+:ID:       04bbb5be-60e1-46a1-a1d5-f531a0477f84
+:END:
 Due to my terminal configuration f1..f4 are not mapped to what emacs expects, fix this.
 
 #+BEGIN_SRC emacs-lisp
@@ -332,6 +335,9 @@ While alternatives exist, I find this combination more straightforward and clean
 
 *** DONE "on"
 CLOSED: [2024-11-01 Fri 11:03]
+:PROPERTIES:
+:ID:       aaa3f2c1-4981-4076-8d50-7ba41e1e529a
+:END:
 The goal of this package is to provide some helpers to have a more refined control on "when" a package should be loaded.
 The following hooks are provided by the package:
   - on-first-input-hook :: when a key is stroke (before)
@@ -1315,6 +1321,9 @@ Combined with =org-superstar=, this leads to the ultimate org-mode list manageme
 
 *** DONE Helper for long table
 CLOSED: [2025-01-18 Sat 12:09]
+:PROPERTIES:
+:ID:       2ed7c319-f712-411a-8f2e-df3426074b34
+:END:
 =lte= is an helper to edit long tables in the buffer indirection way.
 However, it causes it issue with the way I use =org-noted=, so for now it is disabled
 
@@ -1427,6 +1436,9 @@ CLOSED: [2023-10-27 Fri 09:40]
 
 *** DONE Highlight some parts of a table
 CLOSED: [2025-10-01 Wed 09:28]
+:PROPERTIES:
+:ID:       d4596499-289c-4830-b58a-88c0f3637e03
+:END:
 =org-table-highlight= provide a neat way to visualise some columns, rows or cells of org tables.
 
 #+BEGIN_SRC emacs-lisp
@@ -2952,6 +2964,9 @@ I added a package which builds on top of =org-media-note= (named =org-media-note
 
 *** DONE Zotero
 CLOSED: [2026-01-08 Thu 15:27]
+:PROPERTIES:
+:ID:       6f306296-f0a3-4548-aab5-2a3c968274fe
+:END:
 I personally tend to avoid Zotero as it is just yet-another overhead, but some colleagues like it so I try to play nicely (sometimes :D).
 To authenticate, my pivate configuration defines the helper =set-zotero-token=.
 
@@ -3533,6 +3548,9 @@ It is really convenient for quick note taking.
 
 ** DONE Filling
 CLOSED: [2026-02-19 Thu 16:33]
+:PROPERTIES:
+:ID:       165ec710-dab6-44a5-a66e-6d951d586a59
+:END:
 I am tuned to semantic filling, so using =fancy-fill-paragraph= enables this in a pretty neat way.
 
 #+BEGIN_SRC emacs-lisp
@@ -4259,6 +4277,9 @@ However, I had to do extra-configurations to have outline support and a better f
 
 *** DONE HDF5
 CLOSED: [2025-07-29 Tue 10:05]
+:PROPERTIES:
+:ID:       3cb58d48-5718-4f41-b1a5-bb2c5dee2f37
+:END:
 
 For python binary files, I tend to prefer the use of the hdf5 format.
 =hdf5-viewer= provides an easy way to inspect the files.
@@ -4872,6 +4893,9 @@ The configuration is pretty minimal - just associate the mode to the proper exte
 
 *** DONE UI
 CLOSED: [2025-03-02 Sun 21:15]
+:PROPERTIES:
+:ID:       e4d77518-ef58-4fdb-88dc-afda651efffe
+:END:
 #+BEGIN_SRC emacs-lisp
   (use-package qml-ts-mode
     :tags '("PROGRAMMING" "UI")
@@ -4886,8 +4910,14 @@ CLOSED: [2025-03-02 Sun 21:15]
 
 #+END_SRC
 ** DONE Databases [100%]
+:PROPERTIES:
+:ID:       8f949156-6838-4ce0-841d-a55759802795
+:END:
 *** DONE sqlite
 CLOSED: [2026-02-12 Thu 09:27]
+:PROPERTIES:
+:ID:       dd56564e-94a8-4e05-8861-637ed924cc73
+:END:
 The main database format I am using for now is sqlite.
 =elsqlite= is a neat project which provides a nice way of inspecting it.
 
@@ -6328,6 +6358,9 @@ Obviously this part is meant to evolve regularly!
 
 *** DONE Searching
 CLOSED: [2025-05-13 Tue 08:47]
+:PROPERTIES:
+:ID:       76dd80a4-324a-442a-8fad-51231c44c107
+:END:
 =Cuckoo= provides additional helpers to search the *content* of the RSS feeds.
 
 #+transclude: [[file:keytable_summary.org::cuckoo-search-keybindings]]
@@ -7022,6 +7055,9 @@ CLOSED: [2021-05-20 Thu 17:33]
 #+END_SRC
 
 *** DONE Ement
+:PROPERTIES:
+:ID:       ee21c84d-4805-4a08-940d-480cb20e4704
+:END:
 I use matrix a lot, so I use =ement= as a client.
 
 #+BEGIN_SRC emacs-lisp
@@ -8047,6 +8083,9 @@ Also, it may be useful to modify the variable =OLLAMA_MODELS= in the service fil
 
 *** DONE Weather forecast
 CLOSED: [2025-12-10 Wed 18:02]
+:PROPERTIES:
+:ID:       e3113f27-18e4-452e-8aa9-43c0c97c1aa8
+:END:
 
 #+BEGIN_SRC emacs-lisp
   (use-package sparkweather
@@ -8564,6 +8603,9 @@ To do so, I use the package =emojify= which provides everything needed for this.
 
 *** DONE Replacing
 CLOSED: [2024-11-15 Fri 13:02]
+:PROPERTIES:
+:ID:       39aeb578-0009-409b-b9ff-501ce76e3500
+:END:
 #+BEGIN_SRC emacs-lisp
   (use-package visual-replace
     :tags '("VISUAL")
@@ -8577,6 +8619,9 @@ CLOSED: [2024-11-15 Fri 13:02]
 
 *** DONE Diverse set of visual helpers
 CLOSED: [2024-11-15 Fri 13:02]
+:PROPERTIES:
+:ID:       e6b4da00-0385-4f2e-9ba9-5f1f75a4ab1b
+:END:
 #+BEGIN_SRC emacs-lisp
   (defun display-current-time ()
     "Display the current time in the minibuffer with bold, different colors for date and time, and improved separators."
