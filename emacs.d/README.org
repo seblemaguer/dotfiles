@@ -790,6 +790,18 @@ Finally, =ddp= is used to supper query-based search in the buffer (this depends 
     :tags '("CORE" "NAVIGATION"))
 #+end_src
 
+** DONE Security
+CLOSED: [2026-07-24 Fri 15:49]
+Since emacs 30, all buffers are untrusted by default.
+=trust-manager= facilitates the management of buffers to be trusted or not.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package trust-manager
+    :demand t
+    :config
+    (trust-manager-mode))
+#+END_SRC
+
 * DONE Session [100%]
 :PROPERTIES:
 :ID:       1b1316db-efb2-427e-a6b3-ff5bbd6515d6
