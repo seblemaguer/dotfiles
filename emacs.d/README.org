@@ -5132,11 +5132,12 @@ Therefore, it is activated by default for latex but not for org files.
 #+end_src
 
 *** DONE Overleaf
-CLOSED: [2022-03-08 Tue 16:11]
+CLOSED: [2026-07-24 Fri 15:53]
 :PROPERTIES:
 :ID:       95bb6b9f-c354-47a8-96a8-f8459ee93bce
 :END:
-As I am using overleaf to write academic papers (and actually everything else),
+As I am using overleaf to write academic papers (and actually everything else).
+As a result, I am using 2 packages: =overleaf.el= to do live editing, =git-overleaf.el= for local editing.
 
 #+begin_src emacs-lisp
   (use-package overleaf
@@ -5144,26 +5145,34 @@ As I am using overleaf to write academic papers (and actually everything else),
     :after auctex
     :defer t
     ;; :hook (LaTeX-mode . overleaf-mode)
-    :custom
-    (overleaf-use-nerdfont nil "Use nerfont icons for the modeline.")
 
     :config
     ;; Example: load/save cookies from GPG encrypted file.
     ;;          (remove the .gpg extension to save unencrypted)
     (let ((cookie-file "~/.overleaf-cookies.gpg"))
-      (setq overleaf-save-cookies
-            (overleaf-save-cookies-to-file cookie-file))
-      (setq overleaf-cookies
-            (overleaf-read-cookies-from-file cookie-file)))
+      (setq overleaf-save-cookies (overleaf-save-cookies-to-file cookie-file)
+            overleaf-cookies (overleaf-read-cookies-from-file cookie-file)))
 
     ;; Example: load cookies from firefox
-    (setq overleaf-cookies
-          `((".overleaf.com"
-             ,(format "overleaf_session2=%S" (keepass-get-password keepass-db "overleaf-api"))
-             ,(string-to-number (keepass-get-attribute keepass-db "overleaf-api" "expiry_time")))))
+    (setq overleaf-cookies `((".overleaf.com"
+                              ,(format "overleaf_session2=%S"
+                                       (keepass-get-password keepass-db "overleaf-api"))
+                              ,(string-to-number (keepass-get-attribute keepass-db
+                                                                        "overleaf-api"
+                                                                        "expiry_time")))))
 
     (with-eval-after-load 'latex
       (keymap-set LaTeX-mode-map "C-c o" overleaf-command-map)))
+
+
+  (use-package git-overleaf
+    :tags '("WRITING" "LATEX" "CONNECTED")
+    :after auctex
+    :ensure t
+    :config
+    (let ((cookie-file "~/.overleaf-cookies.gpg"))
+      (setopt git-overleaf-auth-backend 'firefox-cookies
+              git-overleaf-cookie-storage "~/.overleaf-cookies.gpg")))
 #+end_src
 
 ** DONE Bibtex
@@ -8095,6 +8104,59 @@ CLOSED: [2025-12-10 Wed 18:02]
     :custom
     (calendar-latitude  60.1695)
     (calendar-longitude 24.9355))
+#+END_SRC
+
+*** DONE QRCode
+CLOSED: [2026-07-24 Fri 15:55]
+:PROPERTIES:
+:ID:       02ac32fc-13e0-42c8-815d-517433086e0d
+:END:
+Add helpers to support QR codes in emacs
+
+#+BEGIN_SRC emacs-lisp
+  (use-package qrencode
+    :defer t
+    :commands qrencode--encode-to-buffer
+    :init
+    (defun my-org-link-as-url (link)
+      "Return the final URL for LINK."
+      (cond
+       ((string-match "^/" link)
+        (concat my-blog-base-url (replace-regexp-in-string "^/" "" link)))
+       ((string-match "^\\(https://\\|file:\\)" link)
+        link)
+       (t
+        (dom-attr
+         (dom-by-tag
+          (with-temp-buffer
+            (insert (org-export-string-as link 'html t))
+            (xml-parse-region (point-min) (point-max)))
+          'a)
+         'href))))
+
+    (defun my-org-stored-link-as-url (&optional link insert)
+      "Copy the stored link as a plain URL.
+    If LINK is specified, use that instead."
+      (interactive (list nil current-prefix-arg))
+      (setq link (or link (caar org-stored-links)))
+      (let ((url (if link
+                     (my-org-link-as-url link)
+                   (error "No stored link"))))
+        (when (called-interactively-p 'any)
+          (if url
+              (if insert (insert url) (kill-new url))
+            (error "Could not find URL.")))
+        url))
+
+    (defun my-org-link-qr (url)
+      "Display a QR code for URL in a buffer."
+      (let ((buf (save-window-excursion (qrencode--encode-to-buffer (my-org-stored-link-as-url url)))))
+        (if (> (frame-width) 80)
+            (display-buffer-in-side-window buf '((side . right)))
+          (display-buffer buf))))
+
+    (with-eval-after-load 'embark-org
+      (define-key embark-org-link-map (kbd "Q") #'my-org-link-qr)))
 #+END_SRC
 
 * DONE Visual [100%]
