@@ -4913,22 +4913,22 @@ CLOSED: [2025-03-02 Sun 21:15]
 :PROPERTIES:
 :ID:       8f949156-6838-4ce0-841d-a55759802795
 :END:
-*** DONE sqlite
-CLOSED: [2026-02-12 Thu 09:27]
-:PROPERTIES:
-:ID:       dd56564e-94a8-4e05-8861-637ed924cc73
-:END:
-The main database format I am using for now is sqlite.
-=elsqlite= is a neat project which provides a nice way of inspecting it.
+=clutch= is a SQL client. I am mainly using it with sqlite, but it supports postgres & mysql which I am also using sporadically.
 
 #+BEGIN_SRC emacs-lisp
-  (use-package elsqlite
+  (use-package clutch
     :tags '("PROGRAMMING" "DATABASES")
-    :bind (:map elsqlite-table-mode-map (
-        ("M-u" . elsqlite-table-back-to-schema)
-     ))
     :config
-    (elsqlite-enable-auto-open))
+    (setq clutch-connect-timeout-seconds 10
+          clutch-read-idle-timeout-seconds 30
+          clutch-query-timeout-seconds 20
+          clutch-jdbc-rpc-timeout-seconds 15)
+
+    (defun clutch-insert-sqlite-table-list-query ()
+      """Helper to generate and insert the query to list all the tables in a SQLite databse."""
+      (interactive)
+      (insert "SELECT name FROM sqlite_schema WHERE type ='table' AND name NOT LIKE 'sqlite_%';")))
+
 #+END_SRC
 
 * DONE Writing / Reading [100%]
