@@ -4007,6 +4007,8 @@ CLOSED: [2021-01-03 Sun 21:28]
     (add-to-list 'eglot-server-programs
                  '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio")))
     (add-to-list 'eglot-server-programs
+                 '((qml-mode qml-ts-mode) . ("qml-language-server")))
+    (add-to-list 'eglot-server-programs
                  '((markdown-mode text-mode org-mode) . ("harper-ls" "--stdio")))
 
     (setq-default eglot-workspace-configuration
