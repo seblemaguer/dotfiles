@@ -1927,6 +1927,18 @@ The only important bits are:
     (setq calendar-holidays suomalainen-kalenteri)) ;; FIXME: should be more flexible than this
 #+end_src
 
+*** DONE Habit / Recurrent tasks
+CLOSED: [2026-09-01 Tue 13:52]
+#+BEGIN_SRC emacs-lisp
+  (use-package org-habit-ng
+    :tags '("ORG" "USER")
+    :after org
+    :init
+    (add-to-list 'org-modules 'org-habit)
+    :config
+    (org-habit-ng-mode 1))
+#+END_SRC
+
 *** DONE Super agenda
 CLOSED: [2021-01-03 Sun 14:22]
 :PROPERTIES:
