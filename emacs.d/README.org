@@ -1477,6 +1477,16 @@ For whatever reason, it is required to *explicitly* configure =transient=.
     )))
 #+END_SRC
 
+*** DONE Drawing
+CLOSED: [2026-09-03 Thu 14:26]
+It is now possible to draw on a browser and save the image to be inserted in an org file.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-draw
+    :tags '("ORG" "UI")
+    :commands (org-draw org-draw-edit org-draw-setup))
+#+END_SRC
+
 ** DONE Export [100%]
 :PROPERTIES:
 :ID:       f3eefeb0-0384-4ab3-91f9-bcdc66e347b1
@@ -1832,6 +1842,10 @@ I also introduced =org-tree-slide= to enjoy quick presentation
     :bind ((:map org-tree-slide-mode-map
       <<keybindings-gen(table=org-tree-slide-keybindings)>>
     )))
+
+  (use-package org-relative-date
+    :tags '("VISUAL" "ORG")
+    :hook (org-mode . org-relative-date-mode))
 #+end_src
 
 ** DONE Agenda [100%]
