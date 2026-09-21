@@ -1292,10 +1292,18 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
     (defun org-set-beamer-note ()
       "Helper to just the set the BEAMER_env property to NOTE."
       (org-set-property "BEAMER_env" "NOTE"))
+
     (defun org-agenda-generate-id ()
       "Helper to be used in a hook to generate org ids only if the buffer is part of the org-agenda files"
       (when (member (buffer-file-name) org-agenda-files)
-        (generate-org-heading-ids))))
+        (generate-org-heading-ids)))
+
+    (define-minor-mode org-highlight-translation-mode
+      "Helper mode to highlight translated word marked using square brackets."
+      :group 'org
+      (if org-highlight-translation-mode
+          (highlight-regexp "\\[[a-zA-Z ?'-]+\\]" 'font-lock-string-face)
+        (unhighlight-regexp "\\[[a-zA-Z ?'-]+\\]"))))
 
   (use-package org-contrib
     :ensure (:wait t)
