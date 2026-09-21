@@ -23,23 +23,19 @@
 %	VARIOUS REQUIRED PACKAGES AND CONFIGURATIONS
 % ----------------------------------------------------------------------------------------
 
-\usepackage{graphicx} % Required for including pictures
-\usepackage{svg}
+\RequirePackage{graphicx} % Required for including pictures
+\RequirePackage{svg}
 
-\usepackage[svgnames,x11names,table]{xcolor}
+\RequirePackage[svgnames,x11names,table]{xcolor}
 \definecolor{gmitblue}{RGB}{93,138,168}
 \definecolor{LightSkyBlue}{RGB}{135, 206, 250}
 \definecolor{dkgreen}{RGB}{0, 100, 0}
 
 
-\usepackage{lipsum} % Inserts dummy text
-
-\usepackage{tikz} % Required for drawing custom shapes
+\RequirePackage{tikz} % Required for drawing custom shapes
 \usetikzlibrary{shapes,shadows,calc}
 
-\usepackage[english]{babel} % English language/hyphenation
-
-\usepackage{enumitem} % Customize lists
+\RequirePackage{enumitem} % Customize lists
 \setlist{nolistsep} % Reduce spacing between bullet points and numbered lists
 % Redefine the description environment
 \setlist[description]{
@@ -56,7 +52,7 @@
 %	MARGINS
 % ----------------------------------------------------------------------------------------
 
-\usepackage{geometry} % Required for adjusting page dimensions and margins
+\RequirePackage{geometry} % Required for adjusting page dimensions and margins
 
 \geometry{
     paper=a4paper, % Paper size, change to letterpaper for US letter size
@@ -75,19 +71,19 @@
 %	FONTS
 % ----------------------------------------------------------------------------------------
 
-\usepackage{avant} % Use the Avantgarde font for headings
-\usepackage{mathptmx} % Use the Adobe Times Roman as the default text font together with math symbols from the Sym­bol, Chancery and Com­puter Modern fonts
+\RequirePackage{avant} % Use the Avantgarde font for headings
+\RequirePackage{mathptmx} % Use the Adobe Times Roman as the default text font together with math symbols from the Sym­bol, Chancery and Com­puter Modern fonts
 
-\usepackage{microtype} % Slightly tweak font spacing for aesthetics
-\usepackage[utf8]{inputenc} % Required for including letters with accents
-\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\RequirePackage{microtype} % Slightly tweak font spacing for aesthetics
+\RequirePackage[utf8]{inputenc} % Required for including letters with accents
+\RequirePackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
 
 
 % ----------------------------------------------------------------------------------------
 %	HEADERS AND FOOTERS
 % ----------------------------------------------------------------------------------------
-\usepackage{lastpage}
-\usepackage{fancyhdr}
+\RequirePackage{lastpage}
+\RequirePackage{fancyhdr}
 \usetikzlibrary{calc}
 \renewcommand{\headrulewidth}{0pt}
 
@@ -116,7 +112,7 @@
 %	THEOREM STYLES
 % ----------------------------------------------------------------------------------------
 
-\usepackage{amsmath,amsfonts,amssymb,amsthm} % For math equations, theorems, symbols, etc
+\RequirePackage{amsmath,amsfonts,amssymb,amsthm} % For math equations, theorems, symbols, etc
 
 \newcommand{\intoo}[2]{\mathopen{]}#1\,;#2\mathclose{[}}
 \newcommand{\ud}{\mathop{\mathrm{{}d}}\mathopen{}}
@@ -196,7 +192,7 @@
 %	DEFINITION OF COLORED BOXES
 % ----------------------------------------------------------------------------------------
 
-\usepackage[framemethod=default]{mdframed} % Required for creating the theorem, definition, exercise and corollary boxes
+\RequirePackage[framemethod=default]{mdframed} % Required for creating the theorem, definition, exercise and corollary boxes
 
 % Theorem box
 \newmdenv[skipabove=7pt,
@@ -275,6 +271,7 @@ innerbottommargin=5pt]{cBox}
   rightline=false,
   linecolor=gmitblue,
   linewidth=3pt,
+  leftmargin=1pt
 ]{quote}
 
 % ----------------------------------------------------------------------------------------
@@ -326,7 +323,7 @@ innerbottommargin=5pt]{cBox}
 % ----------------------------------------------------------------------------------------
 % SECTION HEADINGS
 % ----------------------------------------------------------------------------------------
-\usepackage[explicit]{titlesec} % Customize section titles
+\RequirePackage[explicit]{titlesec} % Customize section titles
 
 \makeatletter
 \renewcommand{\@seccntformat}[1]{\llap{\textcolor{gmitblue}{\csname the#1\endcsname}\hspace{1em}}}
@@ -352,10 +349,10 @@ innerbottommargin=5pt]{cBox}
 %	Listings
 % ----------------------------------------------------------------------------------------
 
-\usepackage{listings}
+\RequirePackage{listings}
 \lstset{
     % Colors
-    backgroundcolor=\color{gray!10},   % choose the background color. You must add \usepackage{color}
+    backgroundcolor=\color{gray!10},   % choose the background color. You must add \RequirePackage{color}
     commentstyle=\color{dkgreen},      % comment style
     stringstyle=\color{dkgreen},       % string style
     keywordstyle=\color{gmitblue},     % keyword style
@@ -410,77 +407,77 @@ innerbottommargin=5pt]{cBox}
 % ----------------------------------------------------------------------------------------
 %	BIBLIOGRAPHY AND INDEX
 % ----------------------------------------------------------------------------------------
-\usepackage{calc} % For simpler calculation - used for spacing the index letter headings correctly
-\usepackage{makeidx} % Required to make an index
+\RequirePackage{calc} % For simpler calculation - used for spacing the index letter headings correctly
+\RequirePackage{makeidx} % Required to make an index
 \makeindex % Tells LaTeX to create the files required for indexing
 
 
 % ----------------------------------------------------------------------------------------
 %	Some diverse content
 % ----------------------------------------------------------------------------------------
-\usepackage{parskip}
+\RequirePackage{parskip}
 % fonts and encoding
-\usepackage{lmodern}
-\usepackage{ifxetex}
+\RequirePackage{lmodern}
+\RequirePackage{ifxetex}
 \ifxetex
-\usepackage{mathspec}
+\RequirePackage{mathspec}
 \setprimaryfont{Times}
 \setallmonofonts{Courier}
 \else
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{mathptmx}
-\usepackage{sansmathfonts}
-\usepackage{helvet}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{mathptmx}
+\RequirePackage{sansmathfonts}
+\RequirePackage{helvet}
 \renewcommand\familydefault{phv}
 \fi
-\usepackage[normalem]{ulem}
-\usepackage{amsmath}
-\usepackage{textcomp}
-\usepackage{amssymb}
+\RequirePackage[normalem]{ulem}
+\RequirePackage{amsmath}
+\RequirePackage{textcomp}
+\RequirePackage{amssymb}
 
 % = i18n
-\usepackage[english]{babel}
-\usepackage[autostyle]{csquotes}
+\RequirePackage[english]{babel}
+\RequirePackage[autostyle]{csquotes}
 
 % = SI units\captionsetup[table]{position=bottom}
-\usepackage[detect-all]{siunitx}
+\RequirePackage[detect-all]{siunitx}
 
 % = table tweakery
-\usepackage{tabularx}
-\usepackage{tabulary}
-\usepackage{booktabs}
-\usepackage{color}
-\usepackage{colortbl}
-\usepackage{multirow}
-\usepackage{multicol}
-\usepackage{hhline}
-\usepackage{longtable}
-\usepackage{blkarray}
+\RequirePackage{tabularx}
+\RequirePackage{tabulary}
+\RequirePackage{booktabs}
+\RequirePackage{color}
+\RequirePackage{colortbl}
+\RequirePackage{multirow}
+\RequirePackage{multicol}
+\RequirePackage{hhline}
+\RequirePackage{longtable}
+\RequirePackage{blkarray}
 
 % = float tweakery
-\usepackage{subcaption}
+\RequirePackage{subcaption}
 \captionsetup{subrefformat=parens}
 \captionsetup[sub]{skip=3pt}
-\usepackage{adjustbox}
+\RequirePackage{adjustbox}
 
 % % = list tweakery
-% \usepackage{enumitem}
+% \RequirePackage{enumitem}
 % \setlist{leftmargin=*, nosep}
 
 % = listings
-\usepackage[cache=false]{minted}
+\RequirePackage[cache=false]{minted}
 \setminted{breaklines, breakbefore={/D_}, breakbeforesymbolpre={}, fontsize=\tiny}
 % hide lexer errors, adapted from https://github.com/gpoore/minted/issues/69#issuecomment-81612590
 \AtBeginEnvironment{multicols}{%
     \renewcommand{\fcolorbox}[4][]{#4}}
-\usepackage{tcolorbox}
-\usepackage{etoolbox}
+\RequirePackage{tcolorbox}
+\RequirePackage{etoolbox}
 \BeforeBeginEnvironment{minted}{\begin{tcolorbox}\fontsize{6}{6}\selectfont}
     \AfterEndEnvironment{minted}{\end{tcolorbox}}
 
 % = citations
-\usepackage[
+\RequirePackage[
 % style=numeric-comp,
 style=authoryear-comp,
 hyperref=true,
@@ -593,7 +590,7 @@ block=none
 % ----------------------------------------------------------------------------------------
 %	LINKS
 % ----------------------------------------------------------------------------------------
-\usepackage{hyperref}
+\RequirePackage{hyperref}
 \hypersetup{
     colorlinks = true,
     linkcolor=gmitblue,
@@ -601,7 +598,7 @@ block=none
     urlcolor=gmitblue,
     citecolor = green!60!black
 }
-\usepackage[capitalise, nameinlink, noabbrev, nosort]{cleveref}
+\RequirePackage[capitalise, nameinlink, noabbrev, nosort]{cleveref}
 \urlstyle{same}
 \makeatletter
 \let\@mycite\@cite
@@ -610,13 +607,13 @@ block=none
 
 
 % = draft stuff
-\usepackage[obeyFinal]{todonotes}
+\RequirePackage[obeyFinal]{todonotes}
 \setlength{\marginparwidth}{1.5cm}
 % \colorlet{seb}{red!20}
-% \usepackage{lipsum}
+% \RequirePackage{lipsum}
 
 % = acronym management
-\usepackage{expl3}
+\RequirePackage{expl3}
 \ExplSyntaxOn
 \tex_let:D \c_minus_one \scan_stop:
 \int_const:Nn \c_minus_one {-1}
