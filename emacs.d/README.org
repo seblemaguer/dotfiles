@@ -2334,7 +2334,7 @@ CLOSED: [2023-07-22 Sat 23:18]
 
     :hook
     (Info-mode . olivetti-mode)
-    (ewww . olivetti-mode)
+    (ewww-mode . olivetti-mode)
 
     :init
     (define-globalized-minor-mode global-olivetti-mode olivetti-mode
