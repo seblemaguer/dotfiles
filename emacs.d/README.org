@@ -4118,21 +4118,12 @@ CLOSED: [2021-01-03 Sun 21:28]
                         :excludePatterns [])
                     )))
 
-  (use-package eglot-booster
-    :ensure (eglot-booster
-             :type git
-             :host github
-             :repo "jdtsmith/eglot-booster"
-             :pre-build (
-                         (when (file-exists-p (expand-file-name "~/environment/local/bin/emacs-lsp-booster"))
-                           (delete-file (expand-file-name "~/environment/local/bin/emacs-lsp-booster")))
-                         ("wget" "https://github.com/blahgeek/emacs-lsp-booster/releases/download/v0.2.0/emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")
-                         ("unzip" "emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")
-                         (rename-file "emacs-lsp-booster" (expand-file-name "~/environment/local/bin/"))
-                         (delete-file "emacs-lsp-booster_v0.2.0_x86_64-unknown-linux-musl.zip")))
+  (use-package eglotx
     :tags '("IDE" "PROGRAMMING")
-    :after eglot
-    :config (eglot-booster-mode))
+    :disabled t
+    :demand t
+    :config
+    (eglotx-presets-mode 1))
 
   (use-package mason
     :ensure (:host github :repo "deirn/mason.el")
@@ -6775,7 +6766,7 @@ I also redesigned the header buffer.
                                    (:flags           .    6)
                                    (:mailing-list    .   10)
                                    (:from            .   22)
-                                   (:subject  .  nil))
+                                   (:subject         .  nil))
             rfc2047-quote-decoded-words-containing-tspecials t))
 
   (use-package mu4e-walk
