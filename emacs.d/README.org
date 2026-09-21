@@ -1585,7 +1585,47 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
                    "\\documentclass{myarticle}"
                    ("\\section{%s}" . "\\section*{%s}")
                    ("\\subsection{%s}" . "\\subsection*{%s}")
-                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+
+    (defun ox-latex-env-adjust-levels (tree backend info)
+      "Promote headlines nested inside LATEX_ENV headlines."
+      (org-element-map tree 'headline
+        (lambda (hl)
+          (let ((promote 0)
+                (parent (org-element-property :parent hl)))
+            ;; Count enclosing LATEX_ENV headlines.
+            (while parent
+              (when (and (eq (org-element-type parent) 'headline)
+                         (org-element-property :LATEX_ENV parent))
+                (cl-incf promote))
+              (setq parent (org-element-property :parent parent)))
+            ;; Adjust the level.
+            (when (> promote 0)
+              (org-element-put-property
+               hl :level
+               (max 1 (- (org-element-property :level hl)
+                         promote)))))))
+        tree)
+    (add-to-list 'org-export-filter-parse-tree-functions
+                 #'ox-latex-env-adjust-levels)
+
+    (defun ox-latex-env (orig headline contents info)
+      "Converts any headline with :LATEX_ENV: property to an environment.
+    To control the environment, you can add options in the property :LATEX_ENV_OPT:"
+      (let ((env (org-element-property :LATEX_ENV headline))
+            (options (org-element-property :LATEX_ENV_OPT headline)))
+        (if env
+            (concat (format "\\begin{%s}%s\n"
+                            env
+                            (if options
+                                (and (string-match "^\\[?\\(.*\\)\\]?$" options)
+    				   (match-string 1 options))
+                              ""))
+                    contents
+                    (format "\\end{%s}\n" env))
+          (funcall orig headline contents info))))
+
+    (advice-add 'org-latex-headline :around #'ox-latex-env))
 
   (use-builtin ox-beamer ;; org-contrib
     :after (org-contrib)
