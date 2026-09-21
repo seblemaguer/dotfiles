@@ -1239,7 +1239,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
                     ts-minute-end   (org-element-property :minute-end scheduled))
               (setq duration        (if ts-hour-end (- (+ (* ts-hour-end 60) ts-minute-end)
                                                        (+ (* ts-hour-start 60) ts-minute-start))
-                                        0))
+                                      0))
               (when (and (> duration 0) (not effort))
                 (message "%S" ts-hour-start)
                 (setq effort (format "%d:%02d" (/ duration 60) (% duration 60))))))
@@ -1268,13 +1268,16 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
       (yank))
 
     (defun generate-org-heading-ids ()
-      "Generate unique IDs for all headings in the current Org Mode file."
       (interactive)
-      (org-map-entries
-       (lambda ()
-         (org-id-get-create))
-       nil 'file)
-      (message "Generated IDs for all headings"))
+      (let (markers)
+        (org-map-entries
+         (lambda ()
+           (push (copy-marker (point)) markers))
+         nil 'file)
+        (dolist (marker markers)
+          (goto-char marker)
+          (org-id-get-create)
+          (set-marker marker nil))))
 
     (defun org-checkbox-toggle-insertion-deletion ()
       "Toggle the insertion/deletion of a checkbox for an org-mode list item."
@@ -1502,9 +1505,8 @@ This part contains some extra configurations which allows to write clean org doc
 
 #+begin_src emacs-lisp
   (use-builtin ox-extra ;; org-contrib
-    :after (org-contrib)
+    :after (org-contrib ox)
     :tags '("ORG")
-    :after ox
     :config
     (ox-extras-activate '(ignore-headlines latex-header-blocks)))
 #+end_src
@@ -1571,9 +1573,8 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
 
 #+begin_src emacs-lisp
   (use-builtin ox-latex ;; org-contrib
-    :after (org-contrib)
+    :after (org-contrib ox)
     :tags '("ORG" "LATEX")
-    :after ox
     :config
     (setq org-latex-listings t
           org-export-with-LaTeX-fragments t
@@ -1628,9 +1629,8 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
     (advice-add 'org-latex-headline :around #'ox-latex-env))
 
   (use-builtin ox-beamer ;; org-contrib
-    :after (org-contrib)
+    :after (org-contrib ox)
     :tags '("ORG" "LATEX")
-    :after ox
     :config
     (defun my-beamer-bold (contents backend info)
       (when (eq backend 'beamer)
@@ -1638,9 +1638,8 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
     (add-to-list 'org-export-filter-bold-functions 'my-beamer-bold))
 
   (use-builtin ox-bibtex ;; org-contrib
-    :after (org-contrib)
+    :after (org-contrib ox)
     :tags '("ORG" "LATEX")
-    :after ox
     :defer t)
 
   (use-builtin org-gradle-export
@@ -2257,7 +2256,7 @@ This is why I use this configuration.
           (progn
             (goto-char (point-min))
             (while (search-forward-regexp "^[\\*]+ \\(DONE\\|CANCELLED\\)" nil t)
-              (org-advertized-archive-subtree))
+              (org-archive-subtree))
             (message "Archive finished"))
         (message "No need to archive"))))
 
@@ -2658,7 +2657,7 @@ CLOSED: [2022-02-10 Thu 07:04]
     :tags '("ORG" "USER" "CONNECTED")
     :after org-roam
     :custom
-    (org-mem-watch-dirs `(cloud-org-root-dir))
+    (org-mem-watch-dirs (list cloud-org-root-dir))
     (org-mem-do-sync-with-org-id t)
     (org-roam-db-update-on-save nil)
     (org-mem-roamy-do-overwrite-real-db t)
@@ -2749,7 +2748,8 @@ CLOSED: [2022-02-10 Thu 07:04]
     (org-roam-project-dashboard-task     ((t :inherit outline-4)))
 
     :init
-    (advice-add 'org-roam-project-dashboard-show :before (lambda (&rest _args) (org-roam-db-sync))))
+    (defun org-roam-db-sync-advice (&rest _args) (org-roam-db-sync))
+    (advice-add 'org-roam-project-dashboard-show :before 'org-roam-db-sync-advice))
 #+end_src
 
 *** DONE vulpea
