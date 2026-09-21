@@ -4102,7 +4102,7 @@ CLOSED: [2021-01-03 Sun 21:28]
                             :SentenceCapitalization t
                             :UnclosedQuotes t
                             :WrongQuotes :json-false
-                            :LongSentences t
+                            :LongSentences nil
                             :RepeatedWords t
                             :Spaces t
                             :Matcher t
