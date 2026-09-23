@@ -7836,8 +7836,12 @@ I also rely on =envrc= to load ~direnv~ configurations.
 
   (when (executable-find "direnv")
     (use-package ben
-      :tags '("SYSTEM")
-      :hook (elpaca-after-init . ben-global-mode)))
+      :tags '("SYSTEM")))
+
+  (use-package pet
+    :tags '("SYSTEM" "PYTHON")
+    :config
+    (add-hook 'python-base-mode-hook 'pet-mode -10))
 #+end_src
 
 **** DONE Define some short for commands
