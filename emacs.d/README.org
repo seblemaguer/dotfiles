@@ -1302,8 +1302,8 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
       "Helper mode to highlight translated word marked using square brackets."
       :group 'org
       (if org-highlight-translation-mode
-          (highlight-regexp "\\[[a-zA-Z ?'-]+\\]" 'font-lock-string-face)
-        (unhighlight-regexp "\\[[a-zA-Z ?'-]+\\]"))))
+          (highlight-regexp "\\[[a-zA-Z ?'/-]+\\]" 'font-lock-string-face)
+        (unhighlight-regexp "\\[[a-zA-Z ?'/-]+\\]"))))
 
   (use-package org-contrib
     :ensure (:wait t)
