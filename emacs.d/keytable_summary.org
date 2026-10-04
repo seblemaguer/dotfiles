@@ -252,42 +252,37 @@
 | i   | pdf-misc-display-metadata | Info          |             |
 | u   | pdf-view-revert-buffer    | Revert buffer |             |
 
-* Org-Roam
+* Vulpea
 :PROPERTIES:
 :ID:       7e5dc902-76fe-4944-b525-cf2637d94c6b
 :END:
-#+NAME: org-roam-navigation-bindings
-| Key | Function                       | Label | Description |
-|-----+--------------------------------+-------+-------------|
-| l   | org-roam-buffer-toggle         |       |             |
-| f   | org-roam-node-find             |       |             |
-| g   | org-roam-ui-open               |       |             |
-| B   | consult-org-roam-backlinks     |       |             |
-| F   | consult-org-roam-forward-links |       |             |
-| s   | consult-org-roam-search        |       |             |
-| e   | consult-org-roam-file-find     |       |             |
+#+NAME: vulpea-navigation-bindings
+| Key | Function                 | Label | Description |
+|-----+--------------------------+-------+-------------|
+| l   | vulpea-ui-sidebar-toggle |       |             |
+| f   | vulpea-find              |       |             |
+| g   | vulpea-graph             |       |             |
 
-#+NAME: org-roam-creation-bindings
-| Key | Function               | Label            | Description |
-|-----+------------------------+------------------+-------------|
-| i   | org-roam-node-insert   | insert node link |             |
-| r   | org-roam-raw-id-insert | insert RAW id    |             |
-| c   | org-roam-capture       | call org-capture |             |
+#+NAME: vulpea-creation-bindings
+| Key | Function       | Label            | Description |
+|-----+----------------+------------------+-------------|
+| i   | vulpea-insert  | insert node link |             |
+| c   | vulpea-capture | call org-capture |             |
 
-#+NAME: org-roam-bibliography-bindings
+#+NAME: vulpea-bibliography-bindings
 | Key | Function                    | Label | Description |
 |-----+-----------------------------+-------+-------------|
 | n   | org-noter                   |       |             |
 | m   | org-media-noter             |       |             |
 | b   | generate-bibliography-entry |       |             |
 
-#+NAME: org-roam-helpers-bindings
+#+NAME: vulpea-helpers-bindings
 | Key | Function                 | Label | Description |
 |-----+--------------------------+-------+-------------|
 | I   | org-id-get-create        |       |             |
 | a   | generate-org-heading-ids |       |             |
-| A   | generate-org-roam-ids    |       |             |
 | C   | org-clean-done-item      |       |             |
+| d   | vulpea-doctor            |       |             |
 
 * Citar
 :PROPERTIES:
@@ -1192,7 +1187,7 @@
 |---------+-----------------------------------+------|
 | <f12>   | org-agenda                        |      |
 | S-<f12> | org-timeblock                     |      |
-| C-<f12> | org-roam-hydra/body               |      |
+| C-<f12> | vulpea-hydra/body         |      |
 | M-<f12> | org-roam-project-dashboard-show   |      |
 |---------+-----------------------------------+------|
 

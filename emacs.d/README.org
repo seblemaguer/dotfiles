@@ -216,7 +216,7 @@ Some default values related to emacs' core behaviour, like the garbage collector
     "The plugins directory")
 
   (defvar org-agenda-default-files `(,(concat cloud-org-root-dir"perso/music/shopping_list.org"))
-    "Agenda files which are not managed by org-roam/vulpea")
+    "Agenda files which are not managed by vulpea")
 
   ;; Don't screw up my files with custom
   (setq custom-file (concat user-emacs-directory "custom.el"))
@@ -601,7 +601,7 @@ This choice has been made due its the simplicity and its recursive nature.
                             ;; Remaining special buffers are grouped automatically by mode.
                             (auto-mode))
 
-                     ;; Subgroup collecting org-roam related buffers
+                     ;; Subgroup collecting vulpea related buffers
                      (group
                       (dir (if (bound-and-true-p cloud-org-root-dir)
                                cloud-org-root-dir
@@ -847,7 +847,7 @@ leads to this configuration
     (add-to-list 'recentf-exclude ".*todo.org")
     (add-to-list 'recentf-exclude "~/.emacs.d/calendars/.*")
 
-    ;; Org-roam or accessible via org-roam
+    ;; vulpea or accessible via vulpea
     (add-to-list 'recentf-exclude (concat cloud-org-root-dir ".*"))
     (add-to-list 'recentf-exclude (concat (abbreviate-file-name cloud-org-root-dir) ".*" ))
 
@@ -2524,256 +2524,48 @@ CLOSED: [2022-02-10 Thu 07:08]
 :PROPERTIES:
 :ID:       26023bd0-4a96-4240-abbe-819ff08b312e
 :END:
-In this section, the global note taking part is configured.
-It relies on three packages:
-=org-roam= which is the core of the workflow,
-=org-roam-protocol= to enhance the navigation,
-and =org-roam-ui= for a better navigation.
-=vulpea= is used to bridge =org-roam= and =org-agenda=.
+In this section, the global note taking part is configured. It relies on =vulpea= (=org-roam= was nice but =vulpea= fits more my logic).
 
-*** DONE org-roam part
-CLOSED: [2022-02-10 Thu 07:04]
-:PROPERTIES:
-:ID:       6aaa332d-dc7d-4abf-a4fb-0e2ff5f322f1
-:END:
-#+transclude: [[file:keytable_summary.org::Org-Roam]] :only-contents
-
-#+begin_src emacs-lisp
-  (use-package org-roam
-    :ensure (:host github :repo "org-roam/org-roam")
-    :tags '("ORG" "USER" "CONNECTED")
-    :if (file-directory-p cloud-org-root-dir)
-    :commands (org-roam-setup)
-    :custom
-    (org-roam-directory cloud-org-root-dir)
-    (org-directory cloud-org-root-dir)
-    (org-roam-file-exclude-regexp '(".stversions/" ".stfolder/"))
-    (org-roam-database-connector 'sqlite-builtin)
-
-    :init
-    (add-hook 'after-init-hook 'org-roam-setup)
-    (setq org-roam-v2-ack t
-          browse-url-galeon-program nil
-          browse-url-netscape-program nil)
-
-    :pretty-hydra
-    ((:title "ORG Roam" :color teal :hint nil)
-     ("Navigation" (
-        <<hydra-keybindings-gen(table=org-roam-navigation-bindings)>>
-     )
-
-      "Creation" (
-        <<hydra-keybindings-gen(table=org-roam-creation-bindings)>>
-      )
-
-      "Bibliography" (
-        <<hydra-keybindings-gen(table=org-roam-bibliography-bindings)>>
-      )
-
-      "Helpers" (
-        <<hydra-keybindings-gen(table=org-roam-helpers-bindings)>>
-      )))
-
-    :config
-
-    (cl-defun org-roam-raw-id-insert (&optional filter-fn)
-      "Find an Org-roam node and insert (where the point is) the raw id.
-  FILTER-FN is a function to filter out nodes: it takes an `org-roam-node',
-  and when nil is returned the node will be filtered out."
-      (interactive)
-      (unwind-protect
-          ;; Group functions together to avoid inconsistent state on quit
-          (atomic-change-group
-            (let* (region-text
-                   beg end
-                   (_ (when (region-active-p)
-                        (setq beg (set-marker (make-marker) (region-beginning)))
-                        (setq end (set-marker (make-marker) (region-end)))
-                        (setq region-text (org-link-display-format (buffer-substring-no-properties beg end)))))
-                   (node (org-roam-node-read region-text filter-fn))
-                   (description (or region-text
-                                    (org-roam-node-formatted node))))
-              (if (org-roam-node-id node)
-                  (progn
-                    (when region-text
-                      (delete-region beg end)
-                      (set-marker beg nil)
-                      (set-marker end nil))
-                    (let ((id (org-roam-node-id node)))
-                      (insert id))))))
-        (deactivate-mark)))
-
-    (defun generate-org-roam-ids ()
-      "Generate unique IDs for all headings in the Org-Roam database."
-      (interactive)
-      (let ((files (org-roam-list-files)))
-        (dolist (file files)
-          (with-current-buffer (find-file-noselect file)
-            (org-mode)
-            (org-map-entries
-             (lambda ()
-               (org-id-get-create))
-             nil
-             'file)
-            (save-buffer))))
-      (message "Unique IDs generated for all Org-Roam files."))
-
-  (cl-defmethod org-roam-node-directories ((node org-roam-node))
-    (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
-        (format "(%s)" (car (split-string dirs "/")))
-      ""))
-
-  (cl-defmethod org-roam-node-hierarchy ((node org-roam-node))
-    (let ((level (org-roam-node-level node)))
-      (concat
-       (when (> level 0) (concat (org-roam-node-file-title node) " > "))
-       (when (> level 1) (concat (string-join (org-roam-node-olp node) " > ") " > "))
-       (org-roam-node-title node))))
-
-  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
-    (let* ((count (caar (org-roam-db-query
-                         [:select (funcall count source)
-                                  :from links
-                                  :where (= dest $s1)
-                                  :and (= type "id")]
-                         (org-roam-node-id node)))))
-      (format "[%d]" count)))
-
-  (setq org-roam-node-display-template
-        (concat
-         (propertize "${directories} / " 'face 'org-tag)
-         "${hierarchy:*}"
-         (propertize "${backlinkscount:6}" 'face 'org-tag))))
-
-  (use-package org-mem
-    :if (file-directory-p cloud-org-root-dir)
-    :tags '("ORG" "USER" "CONNECTED")
-    :after org-roam
-    :custom
-    (org-mem-watch-dirs (list cloud-org-root-dir))
-    (org-mem-do-sync-with-org-id t)
-    (org-roam-db-update-on-save nil)
-    (org-mem-roamy-do-overwrite-real-db t)
-
-    :hook
-    (org-mem-post-full-scan-functions . #'my-set-agenda-files)
-
-    :config
-    (org-mem-updater-mode)
-    (org-mem-roamy-db-mode)
-    (defun my-set-agenda-files (&rest _)
-      (setq org-agenda-files
-            (cl-loop
-             for file in (org-mem-all-files)
-             unless (string-search "archive" file)
-             when (seq-find (lambda (entry)
-                              (or (org-mem-entry-active-timestamps entry)
-                                  (org-mem-entry-todo-state entry)
-                                  (org-mem-entry-scheduled entry)
-                                  (org-mem-entry-deadline entry)))
-                            (message file)
-                            (org-mem-entries-in file))
-             collect file))))
-
-
-  (use-package org-roam-protocol
-    :ensure (:host github :repo "org-roam/org-roam" :files ("extensions/org-roam-protocol.el"))
-    :if (file-directory-p cloud-org-root-dir)
-    :tags '("ORG" "USER")
-    :after org-roam)
-
-  (use-package org-roam-ui
-    :ensure (:host github :repo "org-roam/org-roam-ui" :branch "main" :files ("*.el" "out"))
-    :disabled t
-    :if (file-directory-p cloud-org-root-dir)
-    :tags '("ORG" "USER" "DESKTOP")
-    :after (org-roam eaf-browser)
-    :config
-    (setq org-roam-ui-sync-theme t
-          org-roam-ui-follow t
-          org-roam-ui-update-on-save t
-          org-roam-ui-open-on-start t))
-
-  (use-package citar-org-roam
-    :ensure (:type git :host github :repo "emacs-citar/citar-org-roam")
-    :after citar org-roam
-    :if (file-directory-p cloud-org-root-dir)
-    :tags '("BIBLIOGRAPHY" "USER" "ORG")
-    :no-require
-    :config (citar-org-roam-mode))
-
-  (use-package consult-org-roam
-    :after org-roam
-    :if (file-directory-p cloud-org-root-dir)
-    :tags '("ORG" "USER" "COMPLETION")
-    :commands (consult-org-roam-mode)
-    ;; :init
-    ;; (consult-org-roam-mode 1)
-    :custom
-    (consult-org-roam-grep-func #'consult-ripgrep)
-    (consult-org-roam-buffer-narrow-key ?r)
-    (consult-org-roam-buffer-after-buffers t)
-
-    :config
-    (consult-customize consult-org-roam-forward-links
-                       :preview-key "M-."))
-
-  (use-package org-roam-project-dashboard
-    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/org-roam-project-dashboard")
-    :tags '("ORG" "PROJECT_MANAGEMENT")
-    :if (file-directory-p cloud-org-root-dir)
-    :commands (org-roam-project-dashboard-show)
-    :custom
-    (org-roam-project-dashboard-list-tags '("research" "tools" "duties" "application" "perso" "teaching" "training"))
-    (org-roam-project-dashboard-threshold-tasks 5)
-
-    :custom-face
-    (org-roam-project-dashboard-todo     ((t :background "red1"
-                                             :foreground "black"
-                                             :weight bold
-                                             :box (:line-width 2 :style released-button))))
-    (org-roam-project-dashboard-priority ((t :foreground "#3498db"
-                                             :weight semibold
-                                             :box (:color "#ecf0f1" :line-width (-1 . -2))
-                                             :inverse-video t)))
-    (org-roam-project-dashboard-header   ((t :inherit outline-1 :weight ultra-bold :height 150)))
-    (org-roam-project-dashboard-project  ((t :inherit outline-2 :weight bold)))
-    (org-roam-project-dashboard-task     ((t :inherit outline-4)))
-
-    :init
-    (defun org-roam-db-sync-advice (&rest _args) (org-roam-db-sync))
-    (advice-add 'org-roam-project-dashboard-show :before 'org-roam-db-sync-advice))
-#+end_src
-
-*** DONE vulpea
-CLOSED: [2022-02-10 Thu 07:06]
-:PROPERTIES:
-:ID:       f3942b1a-a4c8-41e2-9f15-d8c37b8a41bf
-:END:
-For now, I don't really know the power of =vulpea= but I use it to bridge =org-roam= and =org-agenda=.
+#+transclude: [[file:keytable_summary.org::Vulpea]] :only-contents
 
 #+begin_src emacs-lisp
   (use-package vulpea
     :if (file-directory-p cloud-org-root-dir)
     :tags '("ORG" "USER" "CONNECTED")
-    :after org-roam
+    :pretty-hydra
+    ((:title "Vulpea" :color teal :hint nil)
+     ("Navigation" (
+                    <<hydra-keybindings-gen(table=vulpea-navigation-bindings)>>
+                    )
+      "Creation" (
+                  <<hydra-keybindings-gen(table=vulpea-creation-bindings)>>
+                  )
+      "Bibliography" (
+                      <<hydra-keybindings-gen(table=vulpea-bibliography-bindings)>>
+                      )
+      "Helpers" (
+                 <<hydra-keybindings-gen(table=vulpea-helpers-bindings)>>
+                 )))
+
     :hook
     (before-save . vulpea-project-update-tag)
-    :init
-    (advice-add 'org-agenda :before #'vulpea-agenda-files-update)
-    (advice-add 'org-todo-list :before #'vulpea-agenda-files-update)
-    :commands (vulpea-agenda-files-update)
-
     :config
+    (setq vulpea-db-sync-directories `(,cloud-org-root-dir)
+          vulpea-db-async-extraction 'full
+          vulpea-db-parse-method 'single-temp-buffer
+          vulpea-db-index-plain-links nil
+          vulpea-select-describe-fn #'vulpea-select-describe-outline-full)
 
-    (add-to-list 'org-tags-exclude-from-inheritance "project")
+    ;; 2. Enable auto-sync (scans your notes in the background on start)
+    (vulpea-db-autosync-mode +1)
+
 
     (defun vulpea-project-p ()
       "Return non-nil if current buffer has any todo entry.
 
-    TODO entries marked as done are ignored, meaning the this
-    function returns nil if current buffer contains only completed
-    tasks."
+  TODO entries marked as done are ignored, meaning the this
+  function returns nil if current buffer contains only completed
+  tasks."
       (org-element-map                          ; (2)
           (org-element-parse-buffer 'headline) ; (1)
           'headline
@@ -2781,6 +2573,14 @@ For now, I don't really know the power of =vulpea= but I use it to bridge =org-r
           (eq (org-element-property :todo-type h)
               'todo))
         nil 'first-match))                     ; (3)
+
+    ;; Refine the tag management
+    (defun vulpea-buffer-p ()
+      "Return non-nil if the currently visited buffer is a note."
+      (and buffer-file-name
+           (string-prefix-p
+            (expand-file-name (file-name-as-directory cloud-org-root-dir))
+            (file-name-directory buffer-file-name))))
 
     (defun vulpea-project-update-tag ()
       "Update PROJECT tag in the current buffer."
@@ -2800,32 +2600,30 @@ For now, I don't really know the power of =vulpea= but I use it to bridge =org-r
             ;; update tags if changed
             (when (or (seq-difference tags original-tags)
                       (seq-difference original-tags tags))
-              (apply #'vulpea-buffer-tags-set tags))))))
+              (apply #'vulpea-buffer-tags-set tags)))))))
 
-    (defun vulpea-buffer-p ()
-      "Return non-nil if the currently visited buffer is a note."
-      (and buffer-file-name
-           (string-prefix-p
-            (expand-file-name (file-name-as-directory org-roam-directory))
-            (file-name-directory buffer-file-name))))
+  (use-package vulpea-ui
+    :tags '("ORG" "USER" "CONNECTED"))
 
-    (defun vulpea-project-files ()
-      "Return a list of note files containing 'project' tag." ;
-      (seq-uniq
-       (seq-map
-        #'car
-        (org-roam-db-query
-         [:select [nodes:file]
-                  :from tags
-                  :left-join nodes
-                  :on (= tags:node-id nodes:id)
-                  :where (like tag (quote "%\"project\"%"))]))))
+  (use-package vulpea-agenda
+    :ensure (:protocol ssh :type git :host github :repo "darcamo/vulpea-agenda")
+    :tags '("ORG" "USER" "CONNECTED")
+    :custom
+    (vulpea-agenda-tags '("agenda" "project"))
+    :init
+    (vulpea-agenda-mode)
+    :config
+    (add-to-list 'org-tags-exclude-from-inheritance "project"))
 
-    (defun vulpea-agenda-files-update (&rest _)
-      "Update the value of `org-agenda-files'."
-      (setq org-agenda-files (vulpea-project-files))
-      (setq org-agenda-files (append org-agenda-files
-                                     org-agenda-default-files))))
+  (use-package vulpea-capf
+    :ensure (:protocol ssh :type git :host github :repo "neonmei/vulpea-capf")
+    :tags '("ORG" "USER" "CONNECTED")
+    :hook (org-mode . vulpea-capf-mode))
+
+  (use-package vulpea-graph
+    :ensure (:protocol ssh :type git :host github :repo "Arenile/vulpea-graph-ui" :files ("*.el" "assets"))
+    :tags '("ORG" "USER" "CONNECTED" "UI")
+    :commands (vulpea-graph vulpea-graph-mode))
 #+end_src
 
 ** DONE Bibliography management
@@ -2837,8 +2635,7 @@ In this section, the configuration is focused on the bibliography handling.
 It relies on the following packages:
 =ebib= to navigate the global bibliography,
 =org-ref= to bridge =org-mode= and the bibtex,
-=citar= to enhance the experience orf =org-cite=,
-and =org-roam-bibtex= to connect this managemente with =org-roam=.
+=citar= to enhance the experience orf =org-cite=.
 
 =org-noter= is used to connect =org-mode= with =pdf-tools=, and =org-media-noter= to connect org-mode with mpv videos
 These last packages are key to enable the browsing of the document in parallel to the navigation of the notes.
@@ -2922,22 +2719,10 @@ CLOSED: [2022-02-10 Thu 07:10]
 
     :custom
     (citar-bibliography slm~bib-files))
-#+end_src
 
-*** DONE org-roam-bibtex
-CLOSED: [2022-02-10 Thu 07:10]
-:PROPERTIES:
-:ID:       c6deecfe-f8a0-41f7-8cff-ed53885d455c
-:END:
-We also define the function =generate-bibliography-entry= which generate an org-mode formatted entry to be ready so that we can read the reference.
-This function makes extensive use of =org-element=.
-
-#+begin_src emacs-lisp
-  (use-package org-roam-bibtex
+  (use-package citar-vulpea
     :tags '("BIBLIOGRAPHY" "USER" "ORG")
-    :hook (org-roam-mode . org-roam-bibtex-mode)
-    :commands (org-roam-bibtex-mode)
-    :init
+    :config
     (defun generate-bibliography-entry ()
       "Generate an org mode bibliography entry."
       (interactive)
@@ -2975,11 +2760,7 @@ This function makes extensive use of =org-element=.
                                (headline (:title "Detailed notes" :level ,(+ current-level 1))
                                          (property-drawer nil ((node-property (:key "INTERLEAVE_PDF" :value ,pdf)))))
 
-                               "\n")))))))
-
-    (setq orb-preformat-keywords '("citekey" "title" "url" "author-or-editor" "keywords" "file")
-          orb-process-file-keyword t
-          orb-file-field-extensions '("pdf")))
+                               "\n"))))))))
 #+end_src
 
 *** DONE org-noter
