@@ -1342,21 +1342,6 @@ Combined with =org-superstar=, this leads to the ultimate org-mode list manageme
     (global-org-bulletproof-mode +1))
 #+end_src
 
-*** DONE Helper for long table
-CLOSED: [2025-01-18 Sat 12:09]
-:PROPERTIES:
-:ID:       2ed7c319-f712-411a-8f2e-df3426074b34
-:END:
-=lte= is an helper to edit long tables in the buffer indirection way.
-However, it causes it issue with the way I use =org-noted=, so for now it is disabled
-
-#+BEGIN_SRC emacs-lisp
-  (use-package lte
-    :disabled t
-    :tags '("ORG" "VISUAL")
-    :hook ((org-mode markdown-mode) . lte-truncate-table-mode))
-#+END_SRC
-
 *** DONE Babel
 CLOSED: [2021-01-03 Sun 13:10]
 :PROPERTIES:
@@ -3123,17 +3108,6 @@ For the folding, I am relying on =outline-indent=.
     :custom
     (outline-indent-ellipsis " ▼ "))
 
-  (use-package savefold
-    :ensure (:type git :host github :repo "jcfk/savefold.el")
-    :disabled t
-    :tags '("FOLDING")
-    :init
-    (setq savefold-backends '(outline org)
-          savefold-directory (locate-user-emacs-file "savefold"))  ;; default
-
-    :config
-    (savefold-mode 1))
-
   (use-package kirigami
     :ensure (kirigami :type git :host github :repo "jamescherti/kirigami.el")
     :tags '("FOLDING")
@@ -3776,14 +3750,6 @@ I also use =flycheck-posframe= to have a quick idea of what is going on at the p
 
     :config
     (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc)))
-
-  (use-package flycheck-posframe
-    :disabled t
-    :tags '("CORE" "UI")
-    :after flycheck
-    :hook (flycheck-mode . flycheck-posframe-mode)
-    :config
-    (setq flycheck-posframe-warning-prefix "\u26a0 "))
 #+end_src
 
 ** DONE Commenting
@@ -8040,7 +8006,6 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
 
   (use-package tramp-hlo
     :tags '("SYSTEM" "SERVER" "CONNECTED")
-    :disabled t ;; SLM TODO: check this when emacs-stable will move to 31
     :config
     (tramp-hlo-setup))
 
@@ -8551,15 +8516,6 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
       (if (daemonp)
           (add-hook 'after-make-frame-functions #'load-fonts)
         (load-default-fonts))))
-
-  (use-package all-the-icons-nerd-fonts
-    :ensure (all-the-icons-nerd-fonts :host github :repo "mohkale/all-the-icons-nerd-fonts")
-    :tags '("VISUAL" "ICONS")
-    :after all-the-icons
-    :defer t
-    :disabled t
-    :config
-    (all-the-icons-nerd-fonts-prefer))
 
   (use-package org-agenda-category-icons
     :ensure (:host github :repo "egregius313/org-agenda-category-icons")
