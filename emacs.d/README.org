@@ -584,9 +584,6 @@ This choice has been made due its the simplicity and its recursive nature.
                             (group (mode-match "*Magit* (non-status)" (rx bos (or "magit" "forge") "-"))
                                    (auto-directory))
 
-                            ;; Subgroup for Helm buffers.
-                            (mode-match "*Helm*" (rx bos "helm-"))
-
                             ;; Remaining special buffers are grouped automatically by mode.
                             (auto-mode))
 
@@ -2902,7 +2899,6 @@ Completion is one of the biggest time-saver feature a text editor can have.
 I rely on three key completion systems for different purposes:
   - =CORFU= is used for inline completion (mainly to access programming helpers and snippets)
   - =vertico= is used as the standard mini-buffer based completion
-  - =helm= is provided for some specific completion tools which are interesting but are not supported by =completing-read=
 
 *** DONE CORFU
 CLOSED: [2021-01-03 Sun 17:42]
@@ -2910,13 +2906,13 @@ CLOSED: [2021-01-03 Sun 17:42]
 :ID:       f1d3c4c5-4319-47b7-a688-0db0f93afe40
 :END:
 
-#+transclude: [[file:keytable_summary.org::corfu-doc-entry-keybindings]]
+#+transclude: [[file:keytable_summary.org::corfu-popinfo-entry-keybindings]]
 #+transclude: [[file:keytable_summary.org::cape-entry-keybindings]]
 
 #+begin_src emacs-lisp
   (use-package corfu
     :tags '("COMPLETION")
-    :ensure (:host github :repo "minad/corfu" :files ("corfu.el"))
+    :ensure (:host github :repo "minad/corfu" :files (:defaults "extensions/corfu-*.el"))
     :custom
     (corfu-cycle t) ;; Enable cycling for `corfu-next/previous'
     (corfu-auto nil) ;; Enable auto completion
@@ -2940,7 +2936,7 @@ CLOSED: [2021-01-03 Sun 17:42]
 
   (use-package corfu-history
     :tags '("COMPLETION")
-    :ensure (:host github :repo "minad/corfu" :files ("extensions/corfu-history.el"))
+    :ensure nil
     :after corfu
     :config
     (add-to-list 'savehist-additional-variables 'corfu-history)
@@ -2950,14 +2946,13 @@ CLOSED: [2021-01-03 Sun 17:42]
     (corfu-history-length 200)
     :demand)
 
-  (use-package corfu-doc
+  (use-package corfu-popinfo
     :tags '("COMPLETION")
-    :ensure (:host github :repo "minad/corfu" :files ("extensions/corfu-doc.el"))
-    :disabled t
+    :ensure nil
     :after corfu
     :bind (
       :map corfu-map
-      <<keybindings-gen(table=corfu-doc-entry-keybindings)>>
+      <<keybindings-gen(table=corfu-popinfo-entry-keybindings)>>
     ))
 
 
@@ -3031,36 +3026,6 @@ Nothing fancy happens here, just its activation and a couple of setups related t
 
     ;; Enable recursive minibuffers
     (setq enable-recursive-minibuffers t))
-#+end_src
-
-*** DONE Helm
-CLOSED: [2021-01-03 Sun 17:43]
-:PROPERTIES:
-:ID:       7881fad0-6eba-4169-901d-afde30308256
-:END:
-I use Helm for some specific cases which requires an important visibility space completion.
-Once again, nothing fancy here, the configuration to have a better UX.
-
-#+transclude: [[file:keytable_summary.org::Helm]] :only-contents
-
-#+begin_src emacs-lisp
-  (use-package helm
-    :tags '("COMPLETION")
-    :functions helm-show-completion-default-display-function
-    :bind (
-      <<keybindings-gen(table=helm-info-entry-keybindings)>>
-    )
-
-    :config
-    (setq helm-scroll-amount 4 ; scroll 4 lines other window using M-<next>/M-<prior>
-          helm-quick-update t ; do not display invisible candidates
-          helm-idle-delay 0.01 ; be idle for this many seconds, before updating in delayed sources.
-          helm-input-idle-delay 0.01 ; be idle for this many seconds, before updating candidate buffer
-          helm-show-completion-display-function #'helm-show-completion-default-display-function
-          helm-split-window-default-side 'below ;; open helm buffer in another window
-          helm-split-window-inside-p t ;; open helm buffer inside current window, not occupy whole other window
-          helm-candidate-number-limit 200 ; limit the number of displayed canidates
-          helm-move-to-line-cycle-in-source nil)) ; move to end or beginning of source when reaching top or bottom of source.
 #+end_src
 
 *** DONE Extension [100%]
@@ -3597,24 +3562,6 @@ For now it consists of simply removing any trailing whitespace.
 Emacs is dense and provides a lot of features.
 Too many to remember everything.
 This part is there to help to navigate the documentation more easily.
-
-** DONE Key bindinds
-CLOSED: [2021-01-03 Sun 11:18]
-:PROPERTIES:
-:ID:       588c4f5c-c7c2-4da7-9018-fd1e61ac2015
-:END:
-=helm-descbinds= is a useful package which provides a way to list all the shortcuts available in the current buffer.
-
-#+transclude: [[file:keytable_summary.org::Keybindings]] :only-contents
-
-#+begin_src emacs-lisp
-  (use-package helm-descbinds
-    :tags '("CORE" "DOCUMENTATION")
-    :commands (helm-descbinds)
-    :bind (
-      <<keybindings-gen(table=helm-descbinds-entry-keybindings)>>
-    ))
-#+end_src
 
 ** DONE Helpful
 CLOSED: [2021-01-03 Sun 11:19]
@@ -6800,11 +6747,6 @@ Because, I prefer to have the completion system, =company=, configured locally f
   (use-package ol-emacs-slack
     :ensure (:host github :repo "ag91/ol-emacs-slack")
     :tags '("CONNECTED" "CHAT" "SLACK"))
-
-  (use-package helm-slack
-    :ensure (helm-slack :type git :host github :repo "yuya373/helm-slack")
-    :tags '("CONNECTED" "CHAT" "SLACK" "COMPLETION")
-    :after (slack helm))
 #+end_src
 
 *** DONE Telega
@@ -8565,15 +8507,6 @@ CLOSED: [2023-11-25 Sat 10:00]
          (swiper . swiper)
          (swiper-all . swiper-all)
          (git-grep . counsel-git-grep))
-
-        ((mode . helm-mode)
-         (find . helm-find-files)
-         (recent . helm-recentf)
-         (buffer . helm-buffers-list)
-         (mx . helm-M-x)
-         (swiper . helm-swoop)
-         (swiper-all . helm-multi-swoop)
-         (git-grep . helm-grep-do-git-grep))
 
         ((mode . ido-mode)
          (file . ido-find-file)

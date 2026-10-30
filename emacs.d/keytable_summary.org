@@ -356,27 +356,18 @@
 :PROPERTIES:
 :ID:       5ebe22af-eb16-4fdc-b8cf-7413869f4247
 :END:
-#+NAME: corfu-doc-entry-keybindings
-| Key | Function              | Description |
-|-----+-----------------------+-------------|
-| M-p | corfu-doc-scroll-down |             |
-| M-n | corfu-doc-scroll-up   |             |
-| M-d | corfu-doc-toggle      |             |
+#+NAME: corfu-popinfo-entry-keybindings
+| Key | Function                  | Description |
+|-----+---------------------------+-------------|
+| M-p | corfu-popinfo-scroll-down |             |
+| M-n | corfu-popinfo-scroll-up   |             |
+| M-d | corfu-popinfo-toggle      |             |
 
 #+NAME: cape-entry-keybindings
 | Key     | Function            | Description |
 |---------+---------------------+-------------|
 | C-<tab> | completion-at-point |             |
 | C-c p   | cape-prefix-map     |             |
-** Helm
-:PROPERTIES:
-:ID:       3d02cc27-a582-4e15-8921-4fff2269d409
-:END:
-
-#+NAME: helm-info-entry-keybindings
-| Key   | Function  | Description |
-|-------+-----------+-------------|
-| C-h i | helm-info |             |
 
 ** Marginalia
 :PROPERTIES:
@@ -512,16 +503,6 @@
 :PROPERTIES:
 :ID:       0ad5a3b0-2283-4fff-8527-3aa383f9a08b
 :END:
-** Keybindings
-:PROPERTIES:
-:ID:       2c7b33b7-59cc-4942-84df-43533eccafb5
-:END:
-
-#+NAME: helm-descbinds-entry-keybindings
-| Key   | Function       | Description |
-|-------+----------------+-------------|
-| C-h b | helm-descbinds |             |
-
 ** Helpful
 :PROPERTIES:
 :ID:       7fe9a888-235e-4b01-8878-a1f314c9fce9
