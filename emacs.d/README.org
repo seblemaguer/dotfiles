@@ -21,7 +21,7 @@
 This is my emacs configuration file. It is under version control and available, among other
 configurations, at this repository: https://github.com/seblemaguer/dotfiles
 
-* DONE Command line management
+* DONE Header and command line management
 CLOSED: [2025-05-08 Thu 09:57]
 :PROPERTIES:
 :ID:       42569b59-48db-4832-a639-18e3ec531b09
@@ -30,6 +30,8 @@ This part is dedicated to support some configuration using the command line by d
 For now, only the option =--no-connection= is defined in order enforce the loading without packages requiring internet.
 
 #+begin_src emacs-lisp
+  ;;; init.el --- -*- lexical-binding: t -*-
+
   (defvar no-connection nil
     "Flag indicating if we are operating without any internet connection")
 
@@ -158,7 +160,9 @@ Before anything happens, we start the server to avoid conflict if there is a pro
 loading phase.
 
 #+begin_src emacs-lisp
-  (server-start)
+  (require 'server)
+  (unless (or (daemonp) (server-running-p))
+    (server-start))
 #+end_src
 
 We also provide a helper to shutdown properly the server.
