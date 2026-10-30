@@ -188,20 +188,6 @@ CLOSED: [2021-01-03 Sun 10:46]
 :END:
 This section define the fundamental variables and helpers which are recurrently used in the configuration.
 
-*** DONE Deal with warning issues in "nativecomp"
-CLOSED: [2021-06-24 Thu 12:42]
-:PROPERTIES:
-:ID:       6ba6a19d-13c2-4a60-bc6d-7bb75c2c3422
-:END:
-Emacs 28 supports native compilation, but it creates a lot of warnings.
-I preferred to disable the report while waiting for a better solution.
-
-#+BEGIN_SRC emacs-lisp
-  (when (>= emacs-major-version 28)
-    (setq comp-async-report-warnings-errors nil
-          native-comp-async-report-warnings-errors nil))
-#+END_SRC
-
 *** DONE Define some important variables
 CLOSED: [2021-01-03 Sun 10:39]
 :PROPERTIES:
@@ -407,8 +393,7 @@ All my passwords are stored in a keepassxc database. I am relying on keepass-mod
         (setq auth-sources `(,keepass-db))
         (keepass-auth-source-enable))
 
-    (warn "keepassxc-cli is not available. No passwords will be accessible")
-  )
+    (warn "keepassxc-cli is not available. No passwords will be accessible"))
 #+END_SRC
 
 *** DONE Private configuration
@@ -1169,8 +1154,7 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
           ;; Edition
           org-list-allow-alphabetical t
           org-highlight-latex-and-related '(latex)
-          org-ditaa-jar-path "/usr/share/ditaa/ditaa.jar"
-          org-babel-results-keyword "results" ;; Display images directly in the buffer
+          org-babel-results-keyword "results"
           org-confirm-babel-evaluate nil
           org-startup-with-inline-images t
           org-return-follows-link t)
@@ -1267,9 +1251,12 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
     (defun html2org-clipboard ()
       "Convert clipboard contents from HTML to Org and then paste (yank)."
       (interactive)
-      (kill-new
-       (shell-command-to-string "xclip -o -t text/html | pandoc -f html -t json | pandoc -f json -t org | sed 's/ / /g'"))
-      (yank))
+      (let ((tool (if (getenv "WAYLAND_DISPLAY")
+                      "wl-paste --type text/html"
+                    "xclip -o -t text/html")))
+        (kill-new (shell-command-to-string
+                   (format "%s | pandoc -f html -t org --wrap=none" tool)))
+        (yank)))
 
     (defun generate-org-heading-ids ()
       (interactive)
@@ -2439,7 +2426,7 @@ I am also using =pdf-view-restore= to keep track of where I was before closing e
     :after pdf-tools
     :tags '("DOCUMENT" "DESKTOP")
     :hook
-    (pdf-view-mode-hook . pdf-view-restore-mode))
+    (pdf-view-mode . pdf-view-restore-mode))
 
   (when (executable-find "diffpdf")
     (use-package diffpdf
@@ -2790,7 +2777,7 @@ As I tend to read using a remarkable, I also added a helper to transfer the arti
       (interactive)
       (let ((pdf-file (org-entry-get (point) "NOTER_DOCUMENT")))
         (if (and pdf-file (file-exists-p pdf-file))
-            (shell-command (format "micromamba run -n local_environment rm_import -t / \"%s\"" pdf-file))
+            (call-process "micromamba" nil "*rm-import*" t "run" "-n" "local_environment" "rm_import" "-t" "/" pdf-file)
           (message "No associated PDF found or PDF file doesn't exist")))))
 #+end_src
 
@@ -3094,7 +3081,7 @@ CLOSED: [2021-05-27 Thu 18:31]
   (use-package orderless
     :tags '("COMPLETION")
     :init
-    (setq completion-styles '(orderless)
+    (setq completion-styles '(orderless basic)
           completion-category-defaults nil
           completion-category-overrides '((file (styles partial-completion)))))
 #+END_SRC
@@ -3260,9 +3247,10 @@ Finally, my own snippets are stored in the directory =~/.emacs.d/third_parties/s
 
     (eval-after-load 'yasnippet '(third-parties-snippets-initialize)))
 
-  (use-package yasnippet-snippets
+  (use-package consult-yasnippet
+    :ensure (consult-yasnippet :host github :repo "mohkale/consult-yasnippet")
     :tags '("COMPLETION")
-    :ensure (consult-yasnippet :host github :repo "mohkale/consult-yasnippet"))
+    :after (consult yasnippet))
 
   (use-package yasnippet-capf
     :tags '("COMPLETION")
@@ -3817,24 +3805,15 @@ CLOSED: [2021-01-03 Sun 21:28]
     (defun my-eglot-organize-imports () (interactive)
            (eglot-code-actions nil nil "source.organizeImports" t))
 
-    (setq native-comp-speed 3)
-    (unless (string= (system-name) work-hostname)
-      (setq native-comp-compiler-options '("-march=znver3" "-Ofast" "-g0" "-fno-finite-math-only"
-                                           "-fgraphite-identity" "-floop-nest-optimize" "-fdevirtualize-at-ltrans"
-                                           "-fipa-pta" "-fno-semantic-interposition" "-flto=auto" "-fuse-linker-plugin")
-            native-comp-driver-options '("-march=znver3" "-Ofast" "-g0" "-fno-finite-math-only"
-                                         "-fgraphite-identity" "-floop-nest-optimize" "-fdevirtualize-at-ltrans"
-                                         "-fipa-pta" "-fno-semantic-interposition" "-flto=auto" "-fuse-linker-plugin")))
-
     :config
     (add-to-list 'eglot-server-programs
-                 '(((c-mode c++-mode) . ("clangd"))))
+                 '((c-mode c++-mode c-ts-mode c++-ts-mode) . ("clangd")))
     (add-to-list 'eglot-server-programs
-                 '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio")))
+                 '((python-mode python-ts-mode)            . ("basedpyright-langserver" "--stdio")))
     (add-to-list 'eglot-server-programs
-                 '((qml-mode qml-ts-mode) . ("qml-language-server")))
+                 '((qml-mode qml-ts-mode)                  . ("qml-language-server")))
     (add-to-list 'eglot-server-programs
-                 '((markdown-mode text-mode org-mode) . ("harper-ls" "--stdio")))
+                 '((markdown-mode text-mode org-mode)      . ("harper-ls" "--stdio")))
 
     (setq-default eglot-workspace-configuration
                   '(:basedpyright (:typeCheckingMode "recommended")
@@ -3878,7 +3857,7 @@ CLOSED: [2021-01-03 Sun 21:28]
 
   (use-package mason
     :ensure (:host github :repo "deirn/mason.el")
-    :tags '("IDE" "PROGRAMMING")
+    :tags '("IDE" "PROGRAMMING" "CONNECTED")
     :config
     (mason-ensure))
 
@@ -5697,10 +5676,14 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
 
   (use-package comint-mime
     :tags '("TERM")
-    :when (display-graphic-p)
     :hook
-    ((shell-mode-hook . comint-mime-setup)
-     (inferior-python-mode-hook . comint-mime-setup)))
+    ((shell-mode           . comint-mime-setup)
+     (inferior-python-mode . comint-mime-setup))
+    :init
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (when (display-graphic-p frame)
+                  (require 'comint-mime)))))
 
   (use-package comint-histories
     :tags '("TERM")
@@ -5728,13 +5711,9 @@ I have a specific PowerLevel10K theme for emacs vterm which is more compact (see
       :length 2000)
 
     (define-key comint-mode-map (kbd "C-r") #'(lambda () (interactive)
-                                                (let ((ivy-sort-functions-alist nil)
-                                                      (ivy-prescient-enable-sorting nil)
-                                                      (vertico-sort-function nil)
+                                                (let ((vertico-sort-function nil)
                                                       (vertico-sort-override-function nil)
-                                                      (vertico-prescient-enable-sorting nil)
-                                                      (selectrum-should-sort nil)
-                                                      (selectrum-prescient-enable-sorting nil))
+                                                      (vertico-prescient-enable-sorting nil))
                                                   (call-interactively #'comint-histories-search-history)))))
 #+END_SRC
 
@@ -5955,7 +5934,8 @@ To manage the trash via emacs, =trashed= provides a really interface.
       (defun empty-trash()
         "Command to empty the trash (for now gnome/linux specific)"
         (interactive)
-        (shell-command "rm -rf ~/.local/share/Trash/*"))
+        (when (yes-or-no-p "Permanently delete everything in the trash? ")
+          (shell-command "rm -rf ~/.local/share/Trash/*")))
 
       (defun open-trash-dir()
         "Command to open the trash dir"
@@ -6224,25 +6204,6 @@ Emacs is my only email client.
 It is based around the ecosystem =mu/mu4e= which provides everything we need to deal with emails.
 This configuration is articulated around three parts: the authentification part, the composing emails part and the mu4e part.
 
-*** DONE Authentification
-CLOSED: [2021-01-05 Tue 08:20]
-:PROPERTIES:
-:ID:       e1ea4fea-562c-4786-98af-7cc80e11c7d2
-:END:
-In previous emacs version (< 27), it was necessary to configure the package =starttls=.
-This configuration is remaining here for backward compatibility purposes.
-
-#+begin_src emacs-lisp
-  (use-builtin starttls
-    :tags '("CONNECTED")
-    :if (< emacs-major-version 27)
-    :config
-    (setq starttls-use-gnutls t
-          starttls-gnutls-program "gnutls-cli"
-          starttls-extra-arguments '("--insecure")
-          auth-sources '("~/.authinfo.gpg")))
-#+end_src
-
 *** DONE Composing emails
 CLOSED: [2021-01-05 Tue 08:27]
 :PROPERTIES:
@@ -6404,7 +6365,6 @@ I also redesigned the header buffer.
       (mu4e-compose-context-policy 'ask-if-none)
       (mu4e-confirm-quit nil)
       (message-dont-reply-to-names #'mu4e-personal-or-alternative-address-p)
-      (mu4e-update-interval nil)
 
       ;; Gui
       (mu4e-view-show-addresses t)
@@ -7568,8 +7528,9 @@ I also rely on =envrc= to load ~direnv~ configurations.
   (use-package exec-path-from-shell
     :tags '("SYSTEM")
     :config
-    (setq exec-path-from-shell-arguments nil)
-    (exec-path-from-shell-initialize))
+    (setq exec-path-from-shell-arguments '("-l"))
+    (when (or (daemonp) (memq window-system '(mac ns x pgtk)))
+      (exec-path-from-shell-initialize)))
 
   (when (executable-find "dtach")
     (use-package detached
@@ -7710,6 +7671,8 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
         (prodigy-stop-service service t))))
 
   (use-package osx-location
+    :tags '("CONNECTED" "SYSTEM" "PROCESSES")
+    :if (eq system-type 'darwin)
     :ensure (
        :package "osx-location"
        :fetcher github
@@ -7795,7 +7758,7 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
     (tramp-hlo-setup))
 
   (use-package tramp-rpc
-    :ensure (:url "https://github.com/ArthurHeymans/emacs-tramp-rpc" :rev :newest :lisp-dir "lisp")
+    :ensure (:protocol ssh :type git :host github :repo "ArthurHeymans/emacs-tramp-rpc" :lisp-dir "lisp")
     :tags '("SYSTEM" "SERVER" "CONNECTED")
     :after tramp)
 
@@ -8259,7 +8222,7 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
 
 #+begin_src emacs-lisp
   (use-package all-the-icons
-    :tags '("VISUAL" "ICONS")
+    :tags '("VISUAL" "ICONS" "CONNECTED")
     :config
     (defun set-icon-fonts (CODE-FONT-ALIST)
       "Utility to associate many unicode points with specified fonts."
@@ -8270,8 +8233,6 @@ To do so, I rely mainly on the ~nerdfonts~ collection.
 
     (defun load-default-fonts ()
       "Helper to load the default fonts when it should be when using the daemon."
-      (when (and (not (member "all-the-icons" (font-family-list))) (display-graphic-p))
-        (all-the-icons-install-fonts t))
 
       ;; The icons you see are not the correct icons until this is evaluated!
       (set-icon-fonts
