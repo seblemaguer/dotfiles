@@ -7685,20 +7685,19 @@ I prefere to use my own fork as I would like to expand a bit more the rendering.
     ;; (tramp-debug-buffer t)
 
     :init
-    ;; (set-default 'tramp-default-proxies-alist (quote ((".*" "\\`root\\'" "/ssh:%h:"))))
     (defun sudo-edit-current-file ()
       "Edit the current file as root"
       (interactive)
-      (let ((position (point)))
-        (find-alternate-file
-         (if (file-remote-p (buffer-file-name))
-             (let ((vec (tramp-dissect-file-name (buffer-file-name))))
-               (tramp-make-tramp-file-name
-                "sudo"
-                (tramp-file-name-user vec)
-                (tramp-file-name-host vec)
-                (tramp-file-name-localname vec)))
-           (concat "/sudo::" (buffer-file-name))))
+      (let ((position (point))
+            ((file (or buffer-file-name (user-error "Buffer has no file")))))
+        (find-file
+         (if (file-remote-p file)
+             (let ((vec (tramp-dissect-file-name file)))
+               (format "/%s:%s|sudo:%s:%s"
+                       (tramp-file-name-user vec)
+                       (tramp-file-name-host vec)
+                       (tramp-file-name-localname vec)))
+           (concat "/sudo::" file)))
         (goto-char position))))
 
   (use-package tramp-hlo
