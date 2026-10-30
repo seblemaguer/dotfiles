@@ -692,10 +692,13 @@ Finally, =ddp= is used to supper query-based search in the buffer (this depends 
   (use-package fast-scroll
     :tags '("CORE" "NAVIGATION")
     :hook
-    (fast-scroll-start      . (lambda () (flycheck-mode -1)))
-    (fast-scroll-end        . (lambda () (flycheck-mode 1)))
+    (fast-scroll-start      . (lambda ()
+                                (setq my/flycheck-was-on (bound-and-true-p flycheck-mode))
+                                (when my/flycheck-was-on (flycheck-mode -1))))
+    (fast-scroll-end        . (lambda () (when my/flycheck-was-on (flycheck-mode 1))))
 
     :config
+    (defvar-local my/flycheck-was-on nil)
     (fast-scroll-config)
     (fast-scroll-mode 1))
 
@@ -903,10 +906,11 @@ snapshot-timemachine package.
           (let* ((basic-name (make-backup-file-name fn))
                  (base-versions (concat (file-name-nondirectory basic-name)
                                         ".~"))
-                 (backup-extract-version-start (length base-versions))
                  (high-water-mark 0)
                  (number-to-delete 0)
                  possibilities deserve-versions-p versions)
+
+            (setq backup-extract-version-start (length base-versions))
             (condition-case ()
                 (setq possibilities (file-name-all-completions
                                      base-versions
@@ -1143,7 +1147,6 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
           ;; Refiling
           org-refile-targets '((nil              . (:maxlevel . 6))
                                (org-agenda-files . (:maxlevel . 6)))
-          org-completion-use-ido nil
           org-refile-use-outline-path 'file
           org-outline-path-complete-in-steps nil
           org-refile-allow-creating-parent-nodes 'confirm
@@ -6199,7 +6202,6 @@ As I am quite absent-minded, I use a reminder to not forget the attachment: =mes
           message-kill-buffer-on-exit t
           message-signature-file nil
           message-fill-column 130
-          org-msg-enforce-css (org-msg-css-file-to-list (format "%s/third_parties/styles/org-msg.css" user-emacs-directory))
           org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:nil"
           org-msg-greeting-name-limit 3
           org-msg-startup "hidestars indent inlineimages"
@@ -6213,6 +6215,11 @@ As I am quite absent-minded, I use a reminder to not forget the attachment: =mes
                                (insert-file-contents
                                 (format "%s/third_parties/mail/signature" user-emacs-directory))
                                (buffer-string))))
+
+    (let ((css (expand-file-name "third_parties/styles/org-msg.css"
+                                   user-emacs-directory)))
+      (when (file-exists-p css)
+        (setq org-msg-enforce-css (org-msg-css-file-to-list css))))
 
     (defun myorg/mu4e-compose-org-msg()
       (org-hide-block-all)
@@ -7600,12 +7607,12 @@ Currently, it is mainly used to start/stop emails but it is likely to be expande
       (define-mail-services))
 
     (prodigy-define-service
-     :name "davcal"
-     :command "ssh"
-     :args `("-nNT" "-L" "1080:localhost:1080" ,work-hostname)
-     :tas '(perso ssh irc)
-     :stop-signal 'sigterm
-     :kill-process-buffer-on-stop t)
+      :name "davcal"
+      :command "ssh"
+      :args `("-nNT" "-L" "1080:localhost:1080" ,work-hostname)
+      :tags '(perso ssh irc)
+      :stop-signal 'sigterm
+      :kill-process-buffer-on-stop t)
 
     (defun prodigy-force-stop-all-service ()
       "Helper to force kill all service"
