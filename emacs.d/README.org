@@ -1289,6 +1289,11 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
       (when (member (buffer-file-name) org-agenda-files)
         (generate-org-heading-ids)))
 
+    (defcustom org-highlight-translation-tag "translation"
+      "The filetag used to determine if `org-highlight-translation-mode' should be activated when loading the current ORG file."
+      :type 'str
+      :group 'org)
+
     (define-minor-mode org-highlight-translation-mode
       "Helper mode to highlight translated word marked using square brackets."
       :group 'org
@@ -2591,7 +2596,13 @@ In this section, the global note taking part is configured. It relies on =vulpea
             ;; update tags if changed
             (when (or (seq-difference tags original-tags)
                       (seq-difference original-tags tags))
-              (apply #'vulpea-buffer-tags-set tags)))))))
+              (apply #'vulpea-buffer-tags-set tags))))))
+
+    (defun my/vocab-highlight-maybe ()
+      (when (member org-highlight-translation-tag (vulpea-buffer-tags-get))
+        (org-highlight-translation-mode 1)))
+
+    (add-hook 'org-mode-hook #'my/vocab-highlight-maybe))
 
   (use-package vulpea-ui
     :tags '("ORG" "USER" "CONNECTED"))
