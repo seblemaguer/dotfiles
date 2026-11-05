@@ -57,7 +57,7 @@
 
 ;; Ensure that the proper compat is used to get compat-macs
 (use-package compat :ensure (:wait t))
-(use-package org :ensure (:wait t))
+(use-package org-contrib :ensure (:wait t))
 
 (unload-feature 'eldoc t)
 (setq custom-delayed-init-variables '())

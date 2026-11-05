@@ -1300,10 +1300,6 @@ Then, it defines the fundamentals of the GTD pipeline by adding some TODO keywor
       (if org-highlight-translation-mode
           (highlight-regexp "\\[[a-zA-Z ?'/-]+\\]" 'font-lock-string-face)
         (unhighlight-regexp "\\[[a-zA-Z ?'/-]+\\]"))))
-
-  (use-package org-contrib
-    :ensure (:wait t)
-    :tags '("ORG"))
 #+end_src
 
 ** DONE Source [100%]
@@ -1347,8 +1343,7 @@ Babel is the key feature for litterate programming in =org-mode=.
 This section provides the configuration for babel by first configuring jupyter.
 
 #+begin_src emacs-lisp
-  (use-builtin ob ;; org-contrib
-    :after (org-contrib)
+  (use-builtin ob
     :tags '("ORG")
     :config
 
@@ -1493,8 +1488,7 @@ CLOSED: [2021-07-19 Mon 09:24]
 This part contains some extra configurations which allows to write clean org documents while still having an efficient rendering.
 
 #+begin_src emacs-lisp
-  (use-builtin ox-extra ;; org-contrib
-    :after (org-contrib ox)
+  (use-builtin ox-extra
     :tags '("ORG")
     :config
     (ox-extras-activate '(ignore-headlines latex-header-blocks)))
@@ -1561,8 +1555,7 @@ The key part is that we are using minted to deal with the source.
 Therefore, we have to modify the call to the =latexmk= command (which is therefore required).
 
 #+begin_src emacs-lisp
-  (use-builtin ox-latex ;; org-contrib
-    :after (org-contrib ox)
+  (use-builtin ox-latex
     :tags '("ORG" "LATEX")
     :config
     (setq org-latex-listings t
@@ -1617,8 +1610,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
 
     (advice-add 'org-latex-headline :around #'ox-latex-env))
 
-  (use-builtin ox-beamer ;; org-contrib
-    :after (org-contrib ox)
+  (use-builtin ox-beamer
     :tags '("ORG" "LATEX")
     :config
     (defun my-beamer-bold (contents backend info)
@@ -1626,8 +1618,7 @@ Therefore, we have to modify the call to the =latexmk= command (which is therefo
         (replace-regexp-in-string "\\`\\\\[A-Za-z0-9]+" "\\\\textbf" contents)))
     (add-to-list 'org-export-filter-bold-functions 'my-beamer-bold))
 
-  (use-builtin ox-bibtex ;; org-contrib
-    :after (org-contrib ox)
+  (use-builtin ox-bibtex
     :tags '("ORG" "LATEX")
     :defer t)
 
@@ -1683,8 +1674,7 @@ This package is mainly use to bookmark webpages from the web browser.
     :tags '("ORG")
     :commands (org-ql-search org-ql-view org-ql-view-recent-items))
 
-  (use-builtin org-protocol ;; org-contrib
-    :after (org-contrib)
+  (use-builtin org-protocol
     :tags '("ORG"))
 
 #+end_src
@@ -1703,8 +1693,7 @@ I also use capturing mechanism to save recipes and some interesting websites.
     :tags '("ORG" "CAPTURE" "DESKTOP")
     :commands (doct))
 
-  (use-builtin org-capture ;; org-contrib
-    :after (org-contrib)
+  (use-builtin org-capture
     :tags '("ORG" "CAPTURE" "DESKTOP")
     :if (file-directory-p cloud-org-root-dir)
     :commands (org-capture)
@@ -1785,7 +1774,6 @@ format. This is really useful to homogeneise documentation.
 
 #+begin_src emacs-lisp
   (use-package org-web-tools
-    :after (org)
     :tags '("ORG" "CAPTURE" "DESKTOP" "CONNECTED"))
 #+end_src
 
@@ -2171,7 +2159,6 @@ This is why I use this configuration.
 
 #+begin_src emacs-lisp
   (use-builtin org-archive
-    :after (org-contrib)
     :tags '("ORG")
     :config
     (setq org-archive-default-command 'org-archive-subtree)
@@ -2714,7 +2701,6 @@ CLOSED: [2022-02-10 Thu 07:10]
        )
     )
 
-    ;; :after (embark)
     :config
     ;; Make the 'citar' bindings available from `embark-act'.
     ;; (add-to-list 'embark-keymap-alist '(bibtex . citar-map))
