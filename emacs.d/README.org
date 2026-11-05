@@ -7785,21 +7785,25 @@ The machine should have a GPU and we will only use =ollama= (so server is assume
 
 In order to install the server simply run the following:
 
-#+begin_src sh
+#+NAME: llm-model
+#+header: :tangle no :exports code :results value :cache yes
+#+begin_src elisp
+  "qwen3.5:latest"
+#+end_src
+
+#+begin_src sh :noweb yes
   # Install ollama client
   curl -fsSL https://ollama.com/install.sh | sh
 
   # Get Llama models
-  ollama pull llama3:8b-instruct-q8_0
-  ollama pull qwen2.5:3b
-  ollama pull qwen2.5-coder:3b
+  ollama pull "<<llm-model>>"
 #+end_src
 
 Also, it may be useful to modify the variable =OLLAMA_MODELS= in the service file as the default path is =/usr/share/ollama/models=.
 
 #+transclude: [[file:keytable_summary.org::ellama-entry-keybindings]]
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :noweb yes
   (when (executable-find "ollama")
     (use-package ellama
       :tags '("HELPERS" "HEAVY" "GPU")
@@ -7807,28 +7811,23 @@ Also, it may be useful to modify the variable =OLLAMA_MODELS= in the service fil
         <<keybindings-gen(table=ellama-entry-keybindings)>>
       )
 
+      :hook (org-ctrl-c-ctrl-c-hook . ellama-chat-send-last-message)
       :init
-      (setopt ellama-language "Finnish")
-
       (require 'llm-ollama)
-
-      (setopt ellama-provider (make-llm-ollama :chat-model "gemma4:latest"
-  	                                     :embedding-model "nomic-embed-text"
-  	                                     :default-chat-non-standard-params '(("num_ctx" . 8192))))
-      ;; Naming new sessions with llm
-      (setopt ellama-naming-provider (make-llm-ollama :chat-model  "gemma4:latest"
-                                                      :embedding-model "nomic-embed-text"
-                                                      :default-chat-non-standard-params '(("stop" . ("\n")))))
-      (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
-
-
-      ;; customize display buffer behaviour
-      (setopt ellama-chat-display-action-function #'display-buffer-full-frame)
-      (setopt ellama-instant-display-action-function #'display-buffer-at-bottom)
-
+      (setopt ellama-provider
+              (make-llm-ollama
+               :chat-model  "<<llm-model()>>"
+               :embedding-model "nomic-embed-text"
+               :default-chat-non-standard-params '(("num_ctx" . 32768))))
+      (setopt ellama-language "Finnish"
+              ellama-naming-scheme 'ellama-generate-name-by-llm
+              ellama-chat-display-action-function #'display-buffer-full-frame
+              ellama-instant-display-action-function #'display-buffer-at-bottom)
       :config
-      ;; send last message in chat buffer with C-c C-c
-      (add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message)))
+      (ellama-context-header-line-global-mode +1)
+      (ellama-session-header-line-global-mode +1)
+      (advice-add 'pixel-scroll-precision :before #'ellama-disable-scroll)
+      (advice-add 'end-of-buffer :after #'ellama-enable-scroll)))
 #+end_src
 
 *** DONE Weather forecast
