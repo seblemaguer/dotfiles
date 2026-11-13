@@ -172,12 +172,7 @@
 
 * Ghostty
 #+BEGIN_SRC conf :tangle ~/.config/ghostty/config.ghostty :mkdirp yes
-  font-family = "Liga SFMono Nerd Font"
-  font-size = 10
-  font-feature = "calt"
-  font-feature = "ss01"
-  font-feature = "zero"
-
+  font-family = "MesloLGS NF-10"
   window-padding-x = 15
   window-padding-y = 15
   window-theme = "dark"
@@ -204,7 +199,7 @@
   shell-integration-features = "cursor,sudo"
   clipboard-read = "allow"
   clipboard-write = "allow"
-  bold-is-bright = true
+  # bold-is-bright = true
 
   window-vsync = true
   macos-secure-input-indication = true
