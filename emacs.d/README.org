@@ -1994,7 +1994,10 @@ As I have my own way of being organized, I redefined completely the groups.
             (:name "Important"
                    :priority "A")
 
-            ;; Important thing
+            (:name "Important deadline soon"
+                   :priority "A"
+                   :deadline future)
+
             (:name "Important but unscheduled"
                    :priority "A"
                    :scheduled nil)
