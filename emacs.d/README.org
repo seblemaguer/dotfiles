@@ -2459,25 +2459,6 @@ I use =org-pdftools= to add an org link type for =pdftools=.
     :hook (org-mode . org-pdftools-setup-link))
 #+END_SRC
 
-** DONE Epub
-CLOSED: [2021-02-09 Tue 16:15]
-:PROPERTIES:
-:ID:       e199a7b0-2f71-4b36-b2aa-b9c5ebb8ffc6
-:END:
-I am using =nov= to read epub files.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package nov
-    :ensure (nov :depth nil)
-    :tags '("DESKTOP" "DOCUMENT")
-    :commands (nov-mode)
-    :custom
-    (nov-text-width t)
-    :mode ((rx ".epub" eos) . nov-mode)
-    :config
-    (add-hook 'nov-mode-hook 'olivetti-mode))
-#+END_SRC
-
 * DONE Notes taking & academic organizing [100%]
 :PROPERTIES:
 :ID:       17c49933-86c7-477e-a7a2-ded9e09c313c
