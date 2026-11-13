@@ -6500,20 +6500,10 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
           org-caldav-show-sync-results nil)
     (load-calendars))
 
-  (use-package org-timeblock
-    :tags '("ORG" "CALENDAR")
-    :ensure (org-timeblock :type git
-                           :host github
-                           :repo "ichernyshovvv/org-timeblock")
-    :custom
-    (org-timeblock-span 7)
-    (org-timeblock-scale-options '(8 . 22))
-    (org-timeblock-inbox-file (concat (file-truename user-emacs-directory) ".org-timeblock-inbox.org" ))
-
-    :config
-    (unless (file-exists-p org-timeblock-inbox-file)
-      (write-region "" nil org-timeblock-inbox-file))
-    (add-to-list 'org-agenda-files org-timeblock-inbox-file))
+  (use-package org-timegrid
+    :tags '("ORG" "CALENDAR" "DESKTOP")
+    :ensure (:host github :repo "Gleek/org-timegrid")
+    :commands (org-timegrid-week))
 #+END_SRC
 
 ** DONE Chat [100%]
