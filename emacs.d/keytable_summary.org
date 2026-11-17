@@ -5,13 +5,22 @@
 #+DESCRIPTION:
 #+KEYWORDS:
 #+LANGUAGE:  en
-#+OPTIONS:   H:5 num:nil toc:nil prop:nil \n:nil @:nil ::nil |:t ^:t -:t f:t *:t <:t todo:nil stat:nil
+#+OPTIONS: ':t *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:t c:nil
+#+OPTIONS: creator:nil d:(not LOGBOOK) date:t e:t email:nil f:t inline:t
+#+OPTIONS: num:nil p:nil pri:nil prop:nil stat:nil tags:t tasks:t tex:t timestamp:t
+#+OPTIONS: toc:nil
+#+OPTIONS: todo:nil |:t
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
-# #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/main.css" />
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="default.css" />
-#+HTML_HEAD: <script src='default.js'></script>
+#+COLUMNS: %55ITEM(Details) %8Effort(Effort){:} %8CLOCKSUM(Clocked){:}
+
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/main.css" />
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://seblemaguer.github.io/css/print.css" />
+#+HTML_HEAD: <script src="https://seblemaguer.github.io/lib/default.js"></script>
+#+HTML_HEAD: <script src="https://seblemaguer.github.io/lib/print.js"></script>
+#+HTML_HEAD: <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
 #+LATEX_CLASS: myarticle
+#+PROPERTY: header-args :eval never-export
 
 * Hydra
 :PROPERTIES:
@@ -1167,8 +1176,8 @@
 | C-<f10> | remind-bindings-specific-mode     |      |
 |---------+-----------------------------------+------|
 | <f12>   | org-agenda                        |      |
-| S-<f12> | org-timeblock                     |      |
-| C-<f12> | vulpea-hydra/body         |      |
+| S-<f12> | org-timegrid-week                 |      |
+| C-<f12> | vulpea-hydra/body                 |      |
 | M-<f12> | org-roam-project-dashboard-show   |      |
 |---------+-----------------------------------+------|
 

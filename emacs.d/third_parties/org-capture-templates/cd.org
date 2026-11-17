@@ -1,4 +1,4 @@
-* TODO %^{Artist} - %^{Title}
+* TODO %^{Artist} - %^{Title}                                 :Full_length:
 SCHEDULED: %(org-insert-time-stamp (org-read-date nil t))
 :PROPERTIES:
 :CATEGORY: Release

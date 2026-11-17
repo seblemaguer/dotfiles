@@ -6487,7 +6487,10 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
   (use-package org-timegrid
     :tags ORG CALENDAR DESKTOP
     :ensure (:host github :repo "Gleek/org-timegrid")
-    :commands (org-timegrid-week))
+    :commands (org-timegrid-week)
+    :init
+    (setq ;; org-timegrid-org-capture-file "~/org/calendar.org"
+          org-timegrid-org-tag-color-alist '(("work" . indigo) ("personal" . green) ("Full_length" . pink))))
 #+END_SRC
 
 ** DONE Chat [100%]
