@@ -1703,7 +1703,7 @@ I also use capturing mechanism to save recipes and some interesting websites.
                   ("Calendar"
                    :keys "c"
                    :type entry
-                   :file ,(format "%s/calendars/work.org" user-emacs-directory)
+                   :file ,(format "%s/calendars/proton.org" user-emacs-directory)
                    :template-file ,(format "%s/third_parties/org-capture-templates/calendar.org" user-emacs-directory))
 
                   ("TODO"
@@ -6473,15 +6473,11 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
     :tags ORG CONNECTED CALENDAR
     :init
     (add-to-list 'org-agenda-default-files (format "%s/calendars/perso.org" user-emacs-directory))
-
     :config
-    (setq org-icalendar-timezone "Europe/Helsinki"
-          org-icalendar-alarm-time 15
-          org-icalendar-include-todo 'all
-          org-icalendar-use-deadline '(event-if-not-todo todo-due)
-          org-icalendar-use-scheduled '(todo-start event-if-todo event-if-not-todo)
-          org-icalendar-with-timestamps t
-          org-caldav-show-sync-results nil)
+    (setq org-caldav-files nil
+          org-caldav-show-sync-results nil
+          org-icalendar-timezone "Europe/Helsinki")
+
     (load-calendars))
 
   (use-package org-timegrid
@@ -6489,8 +6485,10 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
     :ensure (:host github :repo "Gleek/org-timegrid")
     :commands (org-timegrid-week)
     :init
-    (setq ;; org-timegrid-org-capture-file "~/org/calendar.org"
-          org-timegrid-org-tag-color-alist '(("work" . indigo) ("personal" . green) ("Full_length" . pink))))
+    (setq org-timegrid-org-tag-color-alist '(("calendar" . indigo)
+                                             ("release" . pink)
+                                             ("mail" . purple)
+                                             ("rss" . yellow))))
 #+END_SRC
 
 ** DONE Chat [100%]
