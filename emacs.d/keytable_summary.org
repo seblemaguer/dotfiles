@@ -1178,7 +1178,7 @@
 | <f12>   | org-agenda                        |      |
 | S-<f12> | org-timegrid-week                 |      |
 | C-<f12> | vulpea-hydra/body                 |      |
-| M-<f12> | org-roam-project-dashboard-show   |      |
+| M-<f12> | vulpea-project-dashboard-show     |      |
 |---------+-----------------------------------+------|
 
 ** Menu bindings

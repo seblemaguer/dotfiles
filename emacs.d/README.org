@@ -2498,24 +2498,17 @@ In this section, the global note taking part is configured. It relies on =vulpea
 #+begin_src emacs-lisp
   (use-package vulpea
     :if (file-directory-p cloud-org-root-dir)
-    :tags ORG USER CONNECTED
+    :tags ORG USER
     :pretty-hydra
     ((:title "Vulpea" :color teal :hint nil)
-     ("Navigation" (
-                    <<hydra-keybindings-gen(table=vulpea-navigation-bindings)>>
-                    )
-      "Creation" (
-                  <<hydra-keybindings-gen(table=vulpea-creation-bindings)>>
-                  )
-      "Bibliography" (
-                      <<hydra-keybindings-gen(table=vulpea-bibliography-bindings)>>
-                      )
-      "Helpers" (
-                 <<hydra-keybindings-gen(table=vulpea-helpers-bindings)>>
-                 )))
+     ("Navigation" (<<hydra-keybindings-gen(table=vulpea-navigation-bindings)>>)
+      "Creation" (<<hydra-keybindings-gen(table=vulpea-creation-bindings)>>)
+      "Bibliography" (<<hydra-keybindings-gen(table=vulpea-bibliography-bindings)>>)
+      "Helpers" (<<hydra-keybindings-gen(table=vulpea-helpers-bindings)>>)))
 
     :hook
     (before-save . vulpea-project-update-tag)
+
     :config
     (setq vulpea-db-sync-directories `(,cloud-org-root-dir)
           vulpea-db-async-extraction 'full
@@ -2576,11 +2569,11 @@ In this section, the global note taking part is configured. It relies on =vulpea
     (add-hook 'org-mode-hook #'my/vocab-highlight-maybe))
 
   (use-package vulpea-ui
-    :tags ORG USER CONNECTED)
+    :tags ORG USER )
 
   (use-package vulpea-agenda
     :ensure (:protocol ssh :type git :host github :repo "darcamo/vulpea-agenda")
-    :tags ORG USER CONNECTED
+    :tags ORG USER
     :custom
     (vulpea-agenda-tags '("agenda" "project"))
     :init
@@ -2590,13 +2583,35 @@ In this section, the global note taking part is configured. It relies on =vulpea
 
   (use-package vulpea-capf
     :ensure (:protocol ssh :type git :host github :repo "neonmei/vulpea-capf")
-    :tags ORG USER CONNECTED
+    :tags ORG USER
     :hook (org-mode . vulpea-capf-mode))
 
   (use-package vulpea-graph
     :ensure (:protocol ssh :type git :host github :repo "Arenile/vulpea-graph-ui" :files ("*.el" "assets"))
-    :tags ORG USER CONNECTED UI
+    :tags ORG USER DESKTOP
     :commands (vulpea-graph vulpea-graph-mode))
+
+  (use-package vulpea-project-dashboard
+    :ensure (:protocol ssh :type git :host github :repo "seblemaguer/org-roam-project-dashboard" :files ("vulpea-project-dashboard.el"))
+    :tags ORG PROJECT_MANAGEMENT
+    :after vulpea
+    :commands (vulpea-project-dashboard-show)
+    :custom
+    (vulpea-project-dashboard-list-tags '("research" "tools" "duties" "application" "perso" "teaching" "training"))
+    (vulpea-project-dashboard-threshold-tasks 5)
+
+    :custom-face
+    (vulpea-project-dashboard-todo     ((t :background "red1"
+                                           :foreground "black"
+                                           :weight bold
+                                           :box (:line-width 2 :style released-button))))
+    (vulpea-project-dashboard-priority ((t :foreground "#3498db"
+                                           :weight semibold
+                                           :box (:color "#ecf0f1" :line-width (-1 . -2))
+                                           :inverse-video t)))
+    (vulpea-project-dashboard-header   ((t :inherit outline-1 :weight ultra-bold :height 150)))
+    (vulpea-project-dashboard-project  ((t :inherit outline-2 :weight bold)))
+    (vulpea-project-dashboard-task     ((t :inherit outline-4))))
 #+end_src
 
 ** DONE Bibliography management
