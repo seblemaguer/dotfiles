@@ -205,9 +205,6 @@ Some default values related to emacs' core behaviour, like the garbage collector
   (defvar default-plugin-dir (concat user-emacs-directory "plugins")
     "The plugins directory")
 
-  (defvar org-agenda-default-files `(,(concat cloud-org-root-dir"perso/music/shopping_list.org"))
-    "Agenda files which are not managed by vulpea")
-
   ;; Don't screw up my files with custom
   (setq custom-file (concat user-emacs-directory "custom.el"))
   (load custom-file 'noerror)
@@ -6487,7 +6484,7 @@ For the calendar, I am using =org-caldav= coupled with =davmail= as backends.
   (use-package org-caldav
     :tags ORG CONNECTED CALENDAR
     :init
-    (add-to-list 'org-agenda-default-files (format "%s/calendars/perso.org" user-emacs-directory))
+    (add-to-list 'org-agenda-files (format "%scalendars/proton.org" user-emacs-directory))
     :config
     (setq org-caldav-files nil
           org-caldav-show-sync-results nil
